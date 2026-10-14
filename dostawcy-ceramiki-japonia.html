@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fabryki ceramiki Japonia</title><meta name="description" content="Duże japońskie fabryki ceramiki z kontaktem po angielsku"><style>
+:root{
+  --bg:#f7f5f1; --surface:#ffffff; --surface2:#f0ece4; --text:#1f1d1a; --muted:#6b655c;
+  --border:#e1dbd0; --accent:#1f4e79; --accent-soft:#e3ecf5; --red:#b23a2b;
+  --s5:#1e7a46; --s4:#4f8f2f; --s3:#b08a12; --s2:#c0662a; --s1:#9a3b3b;
+  --warn-bg:#fff4dc; --warn-border:#e8c873;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141311; --surface:#1d1c19; --surface2:#262420; --text:#ece8e1; --muted:#a49d92;
+    --border:#34312b; --accent:#7fb0e0; --accent-soft:#1f2c3a; --red:#e07b6c;
+    --s5:#4cc283; --s4:#8fc35f; --s3:#e0bb45; --s2:#e8925a; --s1:#d27a7a;
+    --warn-bg:#2d2616; --warn-border:#6b5a28;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141311; --surface:#1d1c19; --surface2:#262420; --text:#ece8e1; --muted:#a49d92;
+  --border:#34312b; --accent:#7fb0e0; --accent-soft:#1f2c3a; --red:#e07b6c;
+  --s5:#4cc283; --s4:#8fc35f; --s3:#e0bb45; --s2:#e8925a; --s1:#d27a7a;
+  --warn-bg:#2d2616; --warn-border:#6b5a28;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+header h1{font-size:28px;margin:0 0 6px;letter-spacing:-.01em}
+header p.sub{color:var(--muted);margin:0 0 18px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+nav.toc a{text-decoration:none;font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text)}
+nav.toc a:hover{border-color:var(--accent)}
+section{margin:36px 0}
+h2{font-size:21px;margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{font-size:16px;margin:18px 0 8px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi b{display:block;font-size:26px;line-height:1.1}
+.kpi span{color:var(--muted);font-size:13px}
+.box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:10px;padding:12px 16px;font-size:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+table.simple{width:100%;border-collapse:collapse;font-size:14px}
+table.simple th,table.simple td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+table.simple th{background:var(--surface2);font-weight:600}
+.tscroll{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+.bars .row{display:grid;grid-template-columns:200px 1fr 40px;gap:10px;align-items:center;margin:6px 0;font-size:13px}
+.bars .track{background:var(--surface2);border-radius:4px;height:14px;overflow:hidden}
+.bars .fill{height:100%;background:var(--accent);border-radius:4px}
+@media (max-width:560px){.bars .row{grid-template-columns:120px 1fr 32px}}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.controls input,.controls select{font:inherit;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+.controls input{flex:1 1 220px;min-width:0}
+.controls button{font:inherit;padding:8px 12px;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;cursor:pointer}
+:root[data-theme="dark"] .controls button{color:#111}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .controls button{color:#111}}
+.count{color:var(--muted);font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+@media (max-width:420px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card h4{margin:0;font-size:16px;line-height:1.3}
+.card .jp{color:var(--muted);font-size:13px}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tag{font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--surface2);border:1px solid var(--border);white-space:nowrap}
+.tag.cat{background:var(--accent-soft);border-color:transparent}
+.score{font-weight:700;font-size:12px;padding:2px 8px;border-radius:999px;color:#fff}
+.sc5{background:var(--s5)}.sc4{background:var(--s4)}.sc3{background:var(--s3)}.sc2{background:var(--s2)}.sc1{background:var(--s1)}
+:root[data-theme="dark"] .score{color:#111}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .score{color:#111}}
+dl{margin:4px 0 0;display:grid;grid-template-columns:92px 1fr;gap:3px 10px;font-size:13.5px}
+dt{color:var(--muted)}
+dd{margin:0;overflow-wrap:anywhere}
+.note{font-size:13.5px;border-top:1px dashed var(--border);padding-top:8px;margin-top:4px}
+.ver{font-size:11.5px;color:var(--muted)}
+ol li,ul li{margin:4px 0}
+pre.mail{white-space:pre-wrap;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:13px;overflow-wrap:anywhere}
+.theme-btn{float:right;font:inherit;font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);cursor:pointer}
+footer{color:var(--muted);font-size:12.5px;margin-top:40px;border-top:1px solid var(--border);padding-top:12px}
+@media print{nav.toc,.controls,.theme-btn{display:none}.card{break-inside:avoid}}
+.pages{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.pages a{font-weight:600;text-decoration:none;padding:8px 14px;border-radius:8px;border:1px solid var(--accent);color:var(--accent)}
+.pages a.on{background:var(--accent);color:var(--bg)}
+.good{color:var(--s5);font-weight:600}.bad{color:var(--red);font-weight:600}.mid{color:var(--s3);font-weight:600}
+.country{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.country h3{margin:0 0 6px}
+.country .rate{font-size:22px;font-weight:700}
+
+</style></head><body><div class="wrap"><header>
+  <button class="theme-btn" id="themeBtn" type="button">Jasny / ciemny</button>
+  <nav class="pages"><a class="on" href="dostawcy-ceramiki-japonia.html">Japonia</a><a  href="dostawcy-ceramiki-azja.html">Wietnam i inne kraje Azji</a></nav>
+  <h1>Japońskie fabryki ceramiki stołowej i dekoracyjnej</h1>
+  <p class="sub"><span class='nCount'></span> fabryk produkujących w Japonii, z kontaktem po angielsku lub działem eksportu. Do importu dużych wolumenów filiżanek, talerzyków, kubków i dekoracji zamiast z Chin. Bez małych warsztatów rodzinnych, pośredników i marek produkujących poza Japonią. Stan na 14.10.2026.</p>
+  <nav class="toc"><a href="#podsumowanie">Podsumowanie</a><a href="#cla">Cła: Japonia vs Chiny</a><a href="#top">Top</a><a href="#lista">Lista fabryk</a><a href="#ryzyka">Ryzyka</a><a href="#mail">Szablon zapytania</a><a href="#metoda">Metodologia</a></nav>
+</header>
+<div class="warn"><b>Ważne:</b> dane zebrano z oficjalnych domen firm (przez wyniki wyszukiwarki), z katalogów eksporterów, list wystawców targów i z prasy branżowej. Strony nie były otwierane bezpośrednio. Przed pierwszym kontaktem sprawdź e-mail i telefon na stronie firmy. Stawki celne potwierdź w ISZTAR4/TARIC na dzień odprawy.</div><section id="podsumowanie"><h2>1. Podsumowanie</h2>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="box"><h3 style="margin-top:0">Wnioski</h3><ul><li><b>Na liście są tylko fabryki w Japonii z kontaktem po angielsku</b>, działem eksportu lub doświadczeniem eksportowym: <span class="nCount"></span> zakładów. Usunięte zostały małe warsztaty rodzinne, pośrednicy i marki produkujące poza Japonią.</li>
+<li><b>Cło przemawia za Japonią:</b> 0% (umowa UE–Japonia) wobec ok. 91% dla porcelany z Chin (12% cła + 79% antydumpingu od 7.02.2026).</li>
+<li><b>Ograniczenie to skala.</b> Japońskie fabryki zatrudniają zwykle 50–150 osób; największy jest NIKKO (ok. 570 os.). Przy dużych wolumenach trzeba rozłożyć zamówienia na kilka zakładów z Mino (Gifu) i Hasami, a do tego dodać fabryki z Turcji lub Wietnamu (druga strona).</li>
+<li><b>Do własnej marki (OEM)</b> nadają się m.in. Awasaka, Koyo Touki, Saikai Toki, Ceramic Japan i Marumo Takagi.</li>
+<li><b>Dekoracje i figurki:</b> Chugai Toen (Seto). Figurki z Chin (6913) nie mają antydumpingu, więc tu przewaga Japonii jest mniejsza.</li></ul></div>
+    <div class="box"><h3 style="margin-top:0">Rozkład oceny</h3><div class="bars" id="scoreBars"></div>
+      <h3>Fabryki wg regionu</h3><div class="bars" id="regionBars"></div></div>
+  </div></section><section id="cla"><h2>2. Cła: Japonia vs Chiny</h2><div class="grid2"><div class="box">
+  <h3 style="margin-top:0">Chiny: stan na 14.10.2026</h3>
+  <ul>
+    <li><b>Zwykłe cło (MFN):</b> porcelana stołowa (6911 10 00) 12%, pozostała ceramika stołowa (6912) 5–9%.</li>
+    <li><b>Cło antydumpingowe: 79% dla wszystkich chińskich producentów</b> od 7.02.2026 (rozporządzenie wykonawcze UE 2026/274). Zastąpiło wcześniejsze stawki 13,1–36,1%.</li>
+    <li><b>Razem:</b> ok. <b class="bad">91%</b> dla porcelany i ok. 84–88% dla kamionki i fajansu. Do tego VAT 23%.</li>
+    <li>Antydumping obejmuje zastawę stołową i kuchenną (6911 10, 6912 00 21–29). <b>Nie obejmuje figurek i ozdób (6913)</b>, które mają tylko cło 3,5–6%.</li>
+    <li>Środek obowiązuje do ok. 10.2030. Niemiecki importer zaskarżył stawkę 79% do Sądu UE, ale do czasu wyroku cło jest pobierane.</li>
+  </ul>
+</div>
+  <div class="box"><h3 style="margin-top:0">Japonia</h3><ul>
+    <li><b>Umowa o partnerstwie gospodarczym UE–Japonia (EPA):</b> <b class="good">0%</b> na zastawę i ozdoby ceramiczne pochodzące z Japonii.</li>
+    <li>Warunek: oświadczenie o pochodzeniu (statement on origin) z numerem eksportera na fakturze albo „wiedza importera”.</li>
+    <li>Bez dowodu pochodzenia płaci się zwykłe cło: 12% dla porcelany, 5–9% dla pozostałej ceramiki.</li>
+    <li>Na japońską ceramikę nie ma ceł antydumpingowych.</li>
+  </ul></div></div>
+  <h3>Ile cła od 10 000 EUR towaru</h3><div class='tscroll'><table class='simple'><thead><tr><th>Kraj pochodzenia</th><th>Cło łącznie</th><th>Cło od 10 000 EUR</th><th>VAT 23% (do odliczenia)</th><th>Oszczędność na cle vs Chiny</th></tr></thead><tbody><tr><td><b>Chiny</b></td><td class='bad'>91%</td><td>9 100 EUR</td><td>4 393 EUR</td><td>–</td></tr><tr><td><b>Japonia</b></td><td class='good'>0%</td><td>0 EUR</td><td>2 300 EUR</td><td>9 100 EUR</td></tr></tbody></table></div><p class='ver'>Przykład dla porcelanowej zastawy stołowej (CN 6911 10 00) o wartości celnej 10 000 EUR, czyli cenie towaru z transportem do granicy UE. Stawki preferencyjne wymagają poprawnego dowodu pochodzenia. VAT importowy liczy się od wartości celnej powiększonej o cło. Czynny podatnik VAT może go odliczyć, ale cło jest kosztem bezzwrotnym.</p>
+  <p>Porównanie z Wietnamem, Turcją, Koreą i innymi krajami jest na stronie <a href="dostawcy-ceramiki-azja.html#cla">Wietnam i inne kraje Azji</a>.</p></section><section id="top"><h2>3. Top 15: od kogo zacząć</h2>
+  <div class="tscroll"><table class="simple"><thead><tr><th>#</th><th>Fabryka</th><th>Dlaczego</th><th>Kontakt</th></tr></thead><tbody id="topTable"></tbody></table></div></section><section id="lista">
+  <h2>4. Lista fabryk</h2>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Szukaj: nazwa, miasto, produkt…" aria-label="Szukaj">
+    <select id="fRegion" aria-label="Region"><option value="">Region: wszystkie</option></select>
+    <select id="fCat" aria-label="Kategoria"><option value="">Wszystkie kategorie</option>
+      <option value="K">Kubki</option><option value="F">Filiżanki/spodki</option><option value="T">Talerze/talerzyki</option><option value="D">Dekoracje</option></select>
+    <select id="fScore" aria-label="Ocena"><option value="0">Każda ocena</option><option value="5">Tylko 5</option><option value="4">4 i więcej</option><option value="3">3 i więcej</option></select>
+    <select id="fType" aria-label="Typ"><option value="">Każdy typ</option></select>
+    <button id="csv" type="button">Pobierz CSV (Excel)</button>
+  </div>
+  <p class="count" id="count"></p>
+  <p class="ver">Ocena 1–5 oznacza przydatność dla importera dużych wolumenów z UE: skala produkcji, kontakt po angielsku, doświadczenie eksportowe i certyfikaty.</p>
+  <div class="cards" id="cards"></div>
+</section><section id='ryzyka'><h2>Ryzyka i jak je ograniczyć</h2><div class='tscroll'><table class='simple'><thead><tr><th>Ryzyko</th><th>Opis</th><th>Jak ograniczyć</th></tr></thead><tbody><tr><td>Cena</td><td>Japońska ceramika jest droższa od chińskiej, ale różnica w cle wynosi ok. 91 punktów procentowych na korzyść Japonii</td><td>Porównywać koszt z cłem (landed cost), a nie samą cenę FOB. Negocjować ceny dla dużych wolumenów i stałych wzorów</td></tr>
+<tr><td>Pochodzenie towaru</td><td>Niektóre japońskie marki produkują w Chinach lub innych krajach Azji</td><td>Na liście są tylko zakłady w Japonii. W umowie i tak wymagać „Made in Japan” oraz oświadczenia o pochodzeniu na fakturze</td></tr>
+<tr><td>Wydajność</td><td>Japońskie fabryki są mniejsze od chińskich. Przy dużych wolumenach potrzebne są dłuższe terminy</td><td>Rozłożyć zamówienia na 3–5 fabryk z Mino i Hasami, planować produkcję z wyprzedzeniem 3–4 miesięcy</td></tr>
+<tr><td>Kurs JPY/PLN</td><td>Wahania jena</td><td>Ceny w JPY z zabezpieczeniem walutowym albo negocjacja cen w USD lub EUR</td></tr>
+<tr><td>Kontakt z żywnością</td><td>W UE obowiązują limity migracji ołowiu i kadmu (dyrektywa 84/500/EWG z późn. zm.) oraz wymóg deklaracji zgodności</td><td>Raporty z badań Pb/Cd (np. SGS, Intertek), test pierwszej dostawy w polskim laboratorium, deklaracja zgodności od producenta</td></tr>
+<tr><td>Fałszywe maile / zmiana konta</td><td>Częste przy imporcie z Azji</td><td>Weryfikować dane konta bankowego telefonicznie. Nigdy nie zmieniać rachunku na podstawie samego maila</td></tr>
+<tr><td>Płatności</td><td>Przy pierwszych zamówieniach standardem jest T/T z zaliczką 30% i resztą przed załadunkiem</td><td>Zamówienie próbne, inspekcja przed wysyłką (PSI), akredytywa przy większych kwotach</td></tr></tbody></table></div></section><section id="mail">
+  <h2>Szablon pierwszego zapytania (EN)</h2>
+  <pre class="mail">Subject: Wholesale inquiry from Poland – porcelain cups, saucers, mugs and decorative items
+
+Dear Sir or Madam,
+
+We are [COMPANY NAME], an importer and wholesaler of tableware and home decor based in Poland, supplying [retail chains / HoReCa / online shops] in Central Europe.
+
+We are looking for a long-term supplier of Japanese-made ceramics:
+ - cups & saucers, mugs, small plates (14–20 cm)
+ - decorative ceramic items (vases, figurines)
+
+Could you kindly send us:
+ 1. Your wholesale/export catalogue and price list (FOB or EXW, JPY or EUR)
+ 2. Minimum order quantity (per item / per order) and lead time
+ 3. Whether products are manufactured in Japan (we require Japanese origin for the EU–Japan EPA, i.e. a statement on origin on the invoice)
+ 4. Lead/cadmium migration test reports (EU Directive 84/500/EEC) if available
+ 5. Possibility of OEM / private label and sample order terms
+
+Estimated first order: [quantity / value]. Delivery to: Gdańsk / Hamburg (sea) or by courier for samples.
+
+Thank you in advance. We look forward to your reply.
+
+Best regards,
+[Name, position]
+[Company, address, VAT EU number, website, phone]</pre>
+  <p class="ver">Japońskie firmy chętniej odpowiadają na krótkie i konkretne maile z informacją o firmie i skali zamówień. Do firm bez angielskiej strony warto dołączyć krótkie tłumaczenie na japoński.</p>
+</section>
+<section id="metoda"><h2>Metodologia i ograniczenia</h2><ul>
+  <li>Dane z wyników wyszukiwania: oficjalne domeny, katalogi eksporterów (JETRO, izby handlowe), listy wystawców targów (Ambiente, Maison&amp;Objet), prasa branżowa i bazy firm. Strony nie były otwierane bezpośrednio, więc linki i e-maile trzeba potwierdzić.</li>
+  <li>Oznaczenie weryfikacji: <i>domena</i> to dane ze strony firmy, <i>JETRO</i> to katalog JETRO, <i>pośrednie</i> to targi, katalogi lub prasa.</li>
+  <li>Nie wpisano żadnego e-maila ani telefonu, którego nie było w źródłach. „Brak publicznie” oznacza kontakt przez formularz lub stronę.</li>
+  <li>Usunięto małe warsztaty rodzinne, pośredników handlowych, platformy, dystrybutorów w UE oraz marki z produkcją poza Japonią (m.in. Noritake, Narumi, Miyama, Futada). Zostały fabryki z angielskim kontaktem, działem eksportu lub doświadczeniem eksportowym.</li>
+  <li>Stawki celne pochodzą z rozporządzeń UE, Access2Markets i źródeł wtórnych. Wartości oznaczone „do potwierdzenia w TARIC” wymagają sprawdzenia przed odprawą.</li>
+</ul></section>
+<footer>Opracowanie: analiza dostawców ceramiki stołowej i dekoracyjnej. Dane orientacyjne, nie stanowią porady celnej ani prawnej. Stan na 14.10.2026.</footer><script>
+const D = [{"n": "Kaneko Kohyo Pottery Mfg.", "jp": "株式会社カネコ小兵製陶所", "g": "Mino (Gifu)", "city": "Toki", "web": "https://www.ko-hyo.com/english/", "email": "overseasinfo@ko-hyo.com; info@ko-hyo.com", "tel": "+81-572-58-3433 / +81-572-57-8168", "form": "https://www.ko-hyo.com/english/contact.html", "addr": "292-1 Oroshi-cho, Toki-shi, Gifu 509-5202", "prod": "Kubki, filiżanki, talerze 14–18 cm, miski (seria Rinka, kolekcja Sebastian Conran)", "exp": "Strona EN, osobny e-mail eksportowy, sprzedaż wyłącznie B2B na cały świat, eksport od 2001 r., dystrybutor w USA, Maison&Objet", "year": "1921", "size": "ok. 20 os.", "note": "Gotowy eksporter B2B ze wzornictwem pod gust europejski. Segment premium, MOQ nieopublikowane.", "s": 5, "c": "KFT", "t": "Fabryka", "v": "domena + JETRO", "own": ""}, {"n": "AWASAKA Inc.", "jp": "株式会社アワサカ", "g": "Mino (Gifu)", "city": "Mizunami", "web": "https://www.awasaka.com/en", "email": "tabletalk@awasaka.com", "tel": "+81-572-67-1228", "form": "https://www.awasaka.com/en/contact", "addr": "1-1 Sunoshi-cho, Mizunami-shi, Gifu 509-6127", "prod": "Marka Table Talk: kubki, filiżanki, talerze, figurki, upominki", "exp": "Strona EN, hurt dowolnej wielkości, OEM, eksport do ok. 20 krajów (m.in. UK, DE, USA, CA), platforma goooods", "year": "1993", "size": "14 os.", "note": "Producent i hurtownik z OEM i eksportem do UE. Używaj tylko adresu tabletalk@, bo firma ostrzega przed fałszywymi mailami.", "s": 5, "c": "KFTD", "t": "Fabryka", "v": "domena + JETRO", "own": ""}, {"n": "Marumitsu Poterie (Studio M' / SOBOKAI)", "jp": "株式会社マルミツポテリ", "g": "Aichi (Seto / Nagoja / Tokoname)", "city": "Seto", "web": "https://www.marumitsu.jp/eng/", "email": "export@marumitsu.jp; info@marumitsu.jp", "tel": "+81-561-82-1010", "form": "https://pro.marumitsu.jp/ (konto handlowe)", "addr": "207 Benten-cho, Seto, Aichi 489-0945", "prod": "Kubki, filiżanki, talerzyki, miski w stylu casual i rustykalnym", "exp": "Strona EN, e-mail eksportowy, formularz konta handlowego, wysyłka międzynarodowa, sprzedaż w USA", "year": "1950", "size": "ok. 100 os.", "note": "Jeden z najlepiej dopasowanych: styl popularny w Europie i gotowa ścieżka eksportu.", "s": 5, "c": "KFT", "t": "Fabryka (własna marka)", "v": "domena", "own": ""}, {"n": "Ceramic Japan Co., Ltd.", "jp": "株式会社セラミック・ジャパン", "g": "Aichi (Seto / Nagoja / Tokoname)", "city": "Seto", "web": "https://ceramic-japan.co.jp/en/", "email": "brak publicznie", "tel": "+81-561-42-0182 / +81-561-42-5510", "form": "https://ceramic-japan.co.jp/en/contact/", "addr": "60-4 Nakashinano-cho, Seto, Aichi 480-1218", "prod": "Designerskie kubki, filiżanki, talerzyki, wazony, dekoracje", "exp": "Strona EN, OEM w małych seriach (od ok. 50 szt.), wieloletni wystawca Ambiente, eksport do UE, USA i AU", "year": "1973", "size": "mała", "note": "Świetny do OEM i własnej linii designerskiej. Ceny wyższe.", "s": 5, "c": "KFTD", "t": "Fabryka (własna marka)", "v": "domena", "own": ""}, {"n": "Saikai Toki Co., Ltd.", "jp": "西海陶器株式会社", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Hasami (Nagasaki)", "web": "https://www.saikaitoki.com/company", "email": "brak publicznie", "tel": "+81-956-85-5555 (fax +81-956-85-2381)", "form": "formularz na saikaitoki.com", "addr": "2124 Oshikize-go, Hasami-cho, Higashisonogi-gun, Nagasaki 859-3701", "prod": "Kubki, filiżanki, spodki, talerze, czajniczki; marki common i HASAMI PORCELAIN; OEM", "exp": "Największy producent Hasami-yaki, eksport do USA, Azji i Europy, OEM, współpraca z projektantami (Barber & Osgerby)", "year": "1946", "size": "duża (ok. 130 os.)", "note": "Nowoczesna porcelana do układania w stos, dobra pod rynek europejski. Zamawiać bezpośrednio w centrali w Hasami.", "s": 5, "c": "KFT", "t": "Fabryka", "v": "pośrednie", "own": ""}, {"n": "Koyo Touki Co., Ltd. (KOYO)", "jp": "光洋陶器株式会社", "g": "Mino (Gifu)", "city": "Toki", "web": "https://www.koyotoki.co.jp/", "email": "brak publicznie", "tel": "do ustalenia", "form": "formularz na koyotoki.co.jp", "addr": "1497-3 Izumi-cho Kujiri, Toki-shi, Gifu", "prod": "Filiżanki, kubki, talerze, zestawy, linia HoReCa, dripper ORIGAMI", "exp": "Założona w 1964 r. jako eksporter, OEM, pełna produkcja na miejscu, KOYO BASE", "year": "1964", "size": "ok. 120 os.", "note": "Duży producent z tradycją eksportową i OEM, mocny w akcesoriach do kawy. Kontakt trzeba potwierdzić.", "s": 4, "c": "KFT", "t": "Fabryka", "v": "pośrednie", "own": ""}, {"n": "Showa Seito Co., Ltd.", "jp": "昭和製陶株式会社", "g": "Mino (Gifu)", "city": "Toki (Dachi)", "web": "", "email": "brak publicznie", "tel": "+81-572-59-2151", "form": "", "addr": "2035 Dachi-cho, Toki-shi, Gifu 509-5401", "prod": "Naczynia stołowe i wyroby ceramiczne (filiżanki, talerze)", "exp": "JETRO: handel bezpośredni i pośredni; eksport m.in. do Wielkiej Brytanii, Holandii, Francji, Niemiec, USA, Kanady, Australii i Azji", "year": "1943", "size": "55 os.", "note": "Fabryka z bezpośrednim eksportem do kilku krajów UE, co jest dużym plusem. Brak potwierdzonej strony WWW i e-maila.", "s": 4, "c": "KFT", "t": "Fabryka", "v": "JETRO", "own": ""}, {"n": "Tono Toki Co., Ltd.", "jp": "東濃陶器株式会社", "g": "Mino (Gifu)", "city": "Toki (Dachi)", "web": "http://www.tono-toki.com", "email": "tono-toki@crux.ocn.ne.jp", "tel": "+81-572-59-3131", "form": "", "addr": "1435 Dachi-cho, Toki-shi, Gifu 509-5401", "prod": "Naczynia stołowe w stylu japońskim, zachodnim i chińskim, figurki/ozdoby ceramiczne", "exp": "JETRO: eksport pośredni naczyń i ozdób do ponad 10 krajów (Chiny, Hongkong, Tajwan, Korea, USA i in.); fax +81-572-59-3822", "year": "1941", "size": "80 os.", "note": "Duża, stara fabryka z doświadczeniem eksportowym i publicznym e-mailem. Eksport głównie przez pośredników, więc trzeba sprawdzić gotowość do sprzedaży bezpośredniej do UE.", "s": 4, "c": "KFTD", "t": "Fabryka", "v": "JETRO", "own": ""}, {"n": "Kanesada Seito Co., Ltd.", "jp": "カネ定製陶株式会社", "g": "Mino (Gifu)", "city": "Toki (Dachi)", "web": "http://www.kanesada-seito.com/", "email": "brak publicznie", "tel": "+81-572-59-8762", "form": "", "addr": "2467 Dachi-cho, Toki-shi, Gifu 509-5401", "prod": "Naczynia stołowe i ozdoby z porcelany/kamionki Mino", "exp": "JETRO: eksport pośredni do ponad 20 krajów (Azja, USA, Kanada, Europa, Australia, Brazylia); fax +81-572-59-1538", "year": "1943", "size": "50 os.", "note": "Średnia fabryka z szerokim doświadczeniem eksportowym, również do Europy. Kontakt raczej po japońsku, eksport przez pośredników.", "s": 4, "c": "KFTD", "t": "Fabryka", "v": "JETRO", "own": ""}, {"n": "Marumo Takagi Toki Co., Ltd.", "jp": "株式会社丸モ高木陶器", "g": "Mino (Gifu)", "city": "Tajimi", "web": "https://www.marumo1887.com/", "email": "info@marumo-century.com (grupa, do potwierdzenia)", "tel": "+81-572-22-3810", "form": "https://www.marumo1887.com/contact/", "addr": "1-12-1 Ichinokura-cho, Tajimi-shi, Gifu 507-0814", "prod": "Kubki, czarki, szklanki „Cold & Warm” zmieniające kolor, zastawa HoReCa", "exp": "Dział zagraniczny od 2014 r., targi w Hongkongu i Singapurze, katalog EN, produkty na zamówienie", "year": "1887", "size": "mała", "note": "Rozpoznawalna marka z produkcją na zamówienie, ale profil raczej HoReCa i sake.", "s": 4, "c": "KF", "t": "Fabryka", "v": "domena", "own": ""}, {"n": "Hakusan Porcelain", "jp": "白山陶器株式会社", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Hasami", "web": "https://www.hakusan-porcelain.com/", "email": "brak publicznie", "tel": "+81-956-85-3251", "form": "formularz na stronie", "addr": "1334 Yunomuta-go, Hasami-cho, Nagasaki 859-3702", "prod": "Filiżanki, kubki, czajniczki, talerze, spodki", "exp": "Eksport do AU, USA i Europy, strona EN (ABOUT)", "year": "1779 (piec)", "size": "52 os.", "note": "Uznana marka designerska, wiele nagród Good Design. Linia premium.", "s": 4, "c": "KFT", "t": "Fabryka (własna marka)", "v": "pośrednie", "own": ""}, {"n": "Bunzan Seito", "jp": "文山製陶有限会社", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Arita (Saga)", "web": "https://www.bunzan.co.jp/", "email": "brak publicznie", "tel": "+81-954-45-2215", "form": "", "addr": "〒844-0007 佐賀県西松浦郡有田町白川1-7-1 (fabryka: Takeo, Yamauchi)", "prod": "Porcelana Arita: talerze, kubki, szklanki ceramiczne, kolekcja 'ceramic mimic fabric'", "exp": "Jedyny piec tunelowy w Arita (produkcja seryjna), nagroda OMOTENASHI SELECTION 2020, sklep online", "year": "1953", "size": "b.d.", "note": "Piec tunelowy daje zdolność do większych wolumenów – dobry kandydat na stałe dostawy; kontakt japoński.", "s": 4, "c": "KFT", "t": "Fabryka", "v": "domena", "own": ""}, {"n": "224porcelain (Tsujiyo Seitosho)", "jp": "224porcelain（辻与製陶所系）", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Ureshino (Saga)", "web": "https://www.224porcelain.com/", "email": "info@224porcelain.com", "tel": "+81-954-43-9322", "form": "", "addr": "〒843-0303 佐賀県嬉野市嬉野町吉田丁4074", "prod": "Porcelana Hizen Yoshida: kubki, filiżanki, talerzyki, dzbanki do herbaty, przedmioty dekoracyjne", "exp": "Wystawca Maison&Objet Paryż (od 2014), kolaboracje z projektantami, sklep 224 shop+saryo", "year": "2012 (marka); manufaktura rodzinna z ery Edo", "size": "b.d.", "note": "Nowoczesny design i doświadczenie targowe w UE – bardzo dobry kandydat dla importera; produkcja w Ureshino, wolumeny średnie.", "s": 5, "c": "KFTD", "t": "Fabryka", "v": "domena", "own": ""}, {"n": "Arita Porcelain Lab (Yazaemon kiln)", "jp": "アリタポーセリンラボ / 弥左ヱ門窯", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Arita", "web": "https://aritaporcelainlab.com/en/", "email": "info@aritaporcelainlab.com", "tel": "+81-955-43-2221", "form": "formularz na stronie", "addr": "3037-8 Kuromuta-hei, Arita-cho, Saga 844-0022", "prod": "Filiżanki, kubki, talerze, dekoracje (złoto, platyna)", "exp": "Strona EN, współprace z Guerlain, Ladurée i Mandarin Oriental Paris", "year": "1804", "size": "mała/średnia", "note": "Luksusowa linia z własną fabryką, otwarta na kolaboracje.", "s": 4, "c": "KFTD", "t": "Fabryka", "v": "pośrednie", "own": ""}, {"n": "Fukagawa Seiji", "jp": "深川製磁株式会社", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Arita", "web": "https://www.fukagawa-seiji.co.jp/en/", "email": "brak publicznie", "tel": "+81-955-46-2251", "form": "https://www.fukagawa-seiji.co.jp/contact/", "addr": "111 Haraake-otsu, Arita-cho, Saga 849-4176", "prod": "Filiżanki, kubki, talerze, wazony; ponad 3000 pozycji", "exp": "Strona EN, sprzedaż w sklepach europejskich (np. AT)", "year": "1894", "size": "średnia/duża", "note": "Luksus, dostawca dworu cesarskiego.", "s": 3, "c": "KFTD", "t": "Duża fabryka / grupa", "v": "pośrednie", "own": ""}, {"n": "Koransha Co., Ltd.", "jp": "株式会社香蘭社", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Arita", "web": "https://www.koransha.co.jp/", "email": "brak publicznie", "tel": "+81-955-43-2131", "form": "https://www.koransha.co.jp/form/", "addr": "1-3-8 Hiei, Arita-cho, Saga 844-8601", "prod": "Filiżanki ze spodkami, kubki, talerze, wazony, dekoracje (motyw orchidei)", "exp": "Historia eksportowa od XIX w., strona zagraniczna", "year": "1879", "size": "duża", "note": "Prestiżowa marka do linii prezentowej, nie do wolumenu.", "s": 3, "c": "KFTD", "t": "Duża fabryka / grupa", "v": "pośrednie", "own": ""}, {"n": "Momota Touen (1616/arita japan)", "jp": "百田陶園", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Arita", "web": "https://1616arita.jp/en/", "email": "info@momota-touen.jp (do potwierdzenia)", "tel": "+81-955-42-2519", "form": "strona kontaktowa 1616arita.jp", "addr": "Arita Será, 2351-169 Akasaka-hei, Arita-cho, Saga 844-0024", "prod": "Linie TY Standard i S&B Colour Porcelain: kubki, filiżanki, talerze, spodki", "exp": "Strona EN, sprzedaż w wielu krajach, sprzedaż zagraniczna potroiła się (Nikkei)", "year": "2012 (marka)", "size": "mała/średnia", "note": "Linia designerska. W niektórych krajach może mieć wyłącznego dystrybutora, więc trzeba zapytać o Polskę. Ceny wyższe.", "s": 4, "c": "KFT", "t": "Fabryka (własna marka)", "v": "pośrednie", "own": ""}, {"n": "Maruhiro (marka HASAMI)", "jp": "有限会社マルヒロ", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Hasami", "web": "https://hasamiyaki.jp/", "email": "brak publicznie", "tel": "+81-956-37-8666", "form": "formularz na stronie", "addr": "704-1 Yunomuta-go, Hasami-cho, Nagasaki 859-3702", "prod": "Kubki HASAMI (block mug), talerze, miski", "exp": "Częściowo strona EN, produkty na zamówienie dla firm", "year": "1957", "size": "mała/średnia", "note": "Popularna marka. Warunki eksportu nieopublikowane.", "s": 3, "c": "KT", "t": "Fabryka (własna marka)", "v": "pośrednie", "own": ""}, {"n": "Kouraku Kiln", "jp": "幸楽窯", "g": "Kiusiu (Arita / Hasami / Karatsu)", "city": "Arita (Saga)", "web": "https://kouraku.jp.net/", "email": "brak publicznie", "tel": "+81-955-42-4121", "form": "https://kouraku.jp.net/contact/", "addr": "佐賀県西松浦郡有田町丸尾丙2512", "prod": "Praktyczna zastawa Arita dla restauracji i ryokanów: talerzyki, czarki, kubki", "exp": "Na liście firm JETRO (2020), anglojęzyczny personel, zwiedzanie fabryki", "year": "b.d.", "size": "b.d.", "note": "Producent zastawy dla gastronomii z anglojęzyczną obsługą – dobry kandydat B2B; kontakt do uzupełnienia przez JETRO Saga.", "s": 4, "c": "KFT", "t": "Fabryka", "v": "domena", "own": ""}, {"n": "GINPO (Ginpo Toki)", "jp": "銀峯陶器株式会社", "g": "Mie / Shiga / Kioto", "city": "Yokkaichi", "web": "https://ginpo.co.jp/", "email": "info@ginpo.co.jp", "tel": "+81-59-331-2345", "form": "https://ginpo.co.jp/contact", "addr": "13-25 Mitsuya-cho, Yokkaichi, Mie", "prod": "Donabe, naczynia żaroodporne, zastawa (Hana Mishima, COTTO)", "exp": "Eksport do Azji (JETRO), ISO 9001, częściowo strony EN, hurt przez agentów", "year": "1932", "size": "średni", "note": "Lider donabe. Dobre uzupełnienie o kategorię naczyń kuchennych.", "s": 3, "c": "KT", "t": "Fabryka", "v": "domena", "own": ""}, {"n": "Nagatani-en (Nagatani Seito)", "jp": "長谷製陶株式会社 / 長谷園", "g": "Mie / Shiga / Kioto", "city": "Iga", "web": "https://igamono.co.jp/", "email": "brak publicznie", "tel": "+81-595-44-1511", "form": "https://igamono.co.jp/contact", "addr": "569 Marubashira, Iga, Mie 518-1325", "prod": "Donabe, kamado-san, zastawa, kubki", "exp": "NY International Gift Fair od 2011 r., agent w USA", "year": "1832", "size": "70 os.", "note": "Marka premium. Mało typowych filiżanek.", "s": 3, "c": "KT", "t": "Fabryka", "v": "domena", "own": ""}, {"n": "Chugai Toen Co., Ltd.", "jp": "株式会社中外陶園", "g": "Aichi (Seto / Nagoja / Tokoname)", "city": "Seto", "web": "https://chugaitoen.co.jp/", "email": "brak publicznie", "tel": "+81-561-84-0894 (STUDIO 894)", "form": "formularz na chugaitoen.co.jp", "addr": "50 Yakushi-cho, Seto, Aichi", "prod": "Figurki: maneki-neko, zodiak, lalki sezonowe, dzwonki furin, dekoracje", "exp": "Przez ok. 30 lat produkcja figurek na eksport, obecnie głównie rynek krajowy", "year": "1952", "size": "58 os.", "note": "Najlepszy kandydat w kategorii figurek i dekoracji. Kontakt raczej po japońsku.", "s": 3, "c": "D", "t": "Fabryka", "v": "domena", "own": ""}, {"n": "NIKKO Company (NIKKO Fine Bone China)", "jp": "ニッコー株式会社", "g": "Inne regiony", "city": "Hakusan, Ishikawa", "web": "https://www.nikko-company.co.jp/en/tabletop/", "email": "brak publicznie", "tel": "brak publicznie", "form": "", "addr": "383 Ainoki-machi, Hakusan, Ishikawa 924-8686, Japonia", "prod": "Porcelana i fine bone china: filiżanki ze spodkami, kubki, talerze, zastawa hotelowa (HoReCa), linie designerskie (np. Sori Yanagi)", "exp": "Spółka giełdowa; angielska strona tabletop; spółka zależna w USA (Nikko Ceramics Inc., Nowy Jork); wystawca Maison&Objet; dostawca hoteli i restauracji. Certyfikatów ISO/LFGB nie potwierdzono w wyszukiwaniu.", "own": "lokalny (japońska spółka giełdowa)", "year": "1908", "size": "ok. 571 os. (skonsolidowane, 03.2026, łącznie z działami pozastołowymi); przychód grupy ok. 16 mld JPY; własne fabryki porcelany (Hakusan) i bone china (Tsurugi, od 1982)", "note": "Największy w pełni japoński producent fine bone china z produkcją wyłącznie w Ishikawie; doświadczenie eksportowe i HoReCa. Wysokie ceny japońskie i umowne ograniczenia sprzedaży niektórych linii mogą utrudniać tani import masowy.", "s": 4, "c": "KFT", "t": "Duża fabryka / grupa", "v": "pośrednie"}];
+const TOP = ["Kaneko Kohyo Pottery Mfg.", "AWASAKA Inc.", "Marumitsu Poterie (Studio M' / SOBOKAI)", "Saikai Toki Co., Ltd.", "NIKKO Company (NIKKO Fine Bone China)", "Showa Seito Co., Ltd.", "Tono Toki Co., Ltd.", "Kanesada Seito Co., Ltd.", "Koyo Touki Co., Ltd. (KOYO)", "Ceramic Japan Co., Ltd.", "Hakusan Porcelain", "Bunzan Seito", "224porcelain (Tsujiyo Seitosho)", "Marumo Takagi Toki Co., Ltd.", "Chugai Toen Co., Ltd."];
+const WHY = {"Kaneko Kohyo Pottery Mfg.": "Sprzedaje tylko B2B, ma osobny e-mail eksportowy i nowoczesny design", "AWASAKA Inc.": "OEM, eksport do ok. 20 krajów (DE, UK), angielski kontakt", "Marumitsu Poterie (Studio M' / SOBOKAI)": "Ok. 100 pracowników, e-mail eksportowy, konto handlowe", "Saikai Toki Co., Ltd.": "Największy producent z Hasami (ok. 130 os.), OEM, eksport", "NIKKO Company (NIKKO Fine Bone China)": "Największy japoński producent fine bone china (ok. 570 os.), cała produkcja w Japonii, strona EN", "Showa Seito Co., Ltd.": "Fabryka w Dachi (55 os.), eksport bezpośredni do UK, NL, FR i DE", "Tono Toki Co., Ltd.": "Ok. 80 os., eksport do ponad 10 krajów, publiczny e-mail", "Kanesada Seito Co., Ltd.": "Ok. 50 os., eksport do ponad 20 krajów, w tym do Europy", "Koyo Touki Co., Ltd. (KOYO)": "Ok. 120 os., eksportuje od 1964 r., OEM", "Ceramic Japan Co., Ltd.": "OEM od ok. 50 szt., wystawca Ambiente, strona EN", "Hakusan Porcelain": "Uznana marka designerska (52 os.), eksport, strona EN", "Bunzan Seito": "Piec tunelowy w Aricie, czyli produkcja seryjna", "224porcelain (Tsujiyo Seitosho)": "Nowoczesna porcelana Hizen, wystawca Maison&Objet", "Marumo Takagi Toki Co., Ltd.": "Dział zagraniczny, katalog EN, produkty na zamówienie", "Chugai Toen Co., Ltd.": "Figurki i dekoracje (58 os.), fabryka w Seto"};
+const CFG = {"csv": "fabryki-ceramiki-japonia.csv", "region": "Region", "kpi": "fabryk w Japonii"};
+const CATN = {K:"kubki",F:"filiżanki",T:"talerze",D:"dekoracje"};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const isUrl = s => /^https?:\/\//.test(s||"");
+const emailHtml = e => !e ? "–" : esc(e).replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, m => `<a href="mailto:${m}">${m}</a>`);
+const linkHtml = (u, label) => {
+  if(!u) return "–";
+  const m = String(u).match(/https?:\/\/[^\s;,)]+/);
+  return m ? esc(String(u).slice(0,m.index)) + `<a href="${esc(m[0])}" target="_blank" rel="noopener">${esc(label||m[0])}</a>` + (label?"":esc(String(u).slice(m.index+m[0].length))) : esc(u);
+};
+
+document.querySelectorAll(".nCount").forEach(e=>e.textContent=D.length);
+const regions = [...new Set(D.map(d=>d.g))];
+const types = [...new Set(D.map(d=>d.t))].sort();
+const kpis = [
+  [D.length, CFG.kpi],
+  [D.filter(d=>d.s>=4).length, "z oceną 4–5"],
+  [D.filter(d=>/@/.test(d.email)).length, "z publicznym adresem e-mail"],
+  [D.filter(d=>/OEM|ODM|private label|własn\w* mark/i.test(d.exp+" "+d.prod+" "+d.t)).length, "z OEM / produkcją pod własną marką"],
+  [regions.length, CFG.region==="Kraj" ? "krajów" : "regionów"]
+];
+document.getElementById("kpis").innerHTML = kpis.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${esc(l)}</span></div>`).join("");
+function bars(el, rows){
+  const max = Math.max(1, ...rows.map(r=>r[1]));
+  document.getElementById(el).innerHTML = rows.map(([l,v])=>`<div class="row"><span>${esc(l)}</span><div class="track"><div class="fill" style="width:${v/max*100}%"></div></div><b>${v}</b></div>`).join("");
+}
+bars("scoreBars",[5,4,3,2,1].map(s=>["Ocena "+s, D.filter(d=>d.s===s).length]).filter(r=>r[1]>0));
+bars("regionBars",regions.map(r=>[r, D.filter(d=>d.g===r).length]).sort((a,b)=>b[1]-a[1]));
+
+document.getElementById("topTable").innerHTML = TOP.map((name,i)=>{
+  const d = D.find(x=>x.n===name); if(!d) return "";
+  return `<tr><td>${i+1}</td><td><b>${esc(d.n)}</b><br><span class="ver">${esc(d.g)} · ${esc(d.city)}</span></td><td>${esc(WHY[name]||d.note)}</td><td>${linkHtml(d.web,"strona")}<br>${emailHtml(d.email)}<br>${esc(d.tel)}</td></tr>`;
+}).join("");
+
+const fR = document.getElementById("fRegion"), fT = document.getElementById("fType");
+regions.forEach(r=>fR.insertAdjacentHTML("beforeend",`<option>${esc(r)}</option>`));
+types.forEach(t=>fT.insertAdjacentHTML("beforeend",`<option>${esc(t)}</option>`));
+function filtered(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const r = fR.value, c = document.getElementById("fCat").value, s = +document.getElementById("fScore").value, t = fT.value;
+  return D.filter(d => (!r||d.g===r) && (!c||d.c.includes(c)) && d.s>=s && (!t||d.t===t) &&
+    (!q || [d.n,d.jp,d.city,d.prod,d.exp,d.note,d.own].join(" ").toLowerCase().includes(q)))
+    .sort((a,b)=>b.s-a.s || a.n.localeCompare(b.n));
+}
+function render(){
+  const list = filtered();
+  document.getElementById("count").textContent = `Wyświetlono ${list.length} z ${D.length} fabryk`;
+  document.getElementById("cards").innerHTML = list.map(d=>`
+  <article class="card">
+    <div class="meta"><span class="score sc${d.s}">${d.s}/5</span><span class="tag">${esc(d.t)}</span><span class="tag">${esc(d.g)}</span></div>
+    <h4>${esc(d.n)}</h4>
+    <div class="jp">${d.jp?esc(d.jp)+" · ":""}${esc(d.city)}</div>
+    <div class="meta">${d.c.split("").map(k=>`<span class="tag cat">${CATN[k]}</span>`).join("")}</div>
+    <dl>
+      <dt>Strona</dt><dd>${linkHtml(d.web)}</dd>
+      <dt>E-mail</dt><dd>${emailHtml(d.email)}</dd>
+      <dt>Telefon</dt><dd>${esc(d.tel||"–")}</dd>
+      <dt>Formularz</dt><dd>${linkHtml(d.form)}</dd>
+      <dt>Adres</dt><dd>${esc(d.addr||"–")}</dd>
+      <dt>Produkty</dt><dd>${esc(d.prod)}</dd>
+      <dt>Eksport/B2B</dt><dd>${esc(d.exp)}</dd>
+      ${d.own?`<dt>Właściciel</dt><dd>${esc(d.own)}</dd>`:""}
+      <dt>Rok / skala</dt><dd>${esc(d.year)} · ${esc(d.size)}</dd>
+    </dl>
+    <div class="note"><b>Ocena:</b> ${esc(d.note)}</div>
+    <div class="ver">Weryfikacja: ${esc(d.v)}</div>
+  </article>`).join("");
+}
+["q","fRegion","fCat","fScore","fType"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+render();
+
+document.getElementById("csv").addEventListener("click",()=>{
+  const cols = [["n","Firma"],["jp","Nazwa lokalna"],["g",CFG.region],["city","Miasto"],["t","Typ"],["s","Ocena"],["web","Strona"],["email","E-mail"],["tel","Telefon"],["form","Formularz"],["addr","Adres"],["prod","Produkty"],["exp","Eksport/B2B"],["own","Właściciel"],["year","Rok"],["size","Skala"],["note","Ocena opisowa"],["v","Weryfikacja"]];
+  const q = v => '"' + String(v??"").replace(/"/g,'""') + '"';
+  const rows = [cols.map(c=>q(c[1])).join(";")].concat(filtered().map(d=>cols.map(c=>q(d[c[0]])).join(";")));
+  const blob = new Blob(["﻿"+rows.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = CFG.csv; a.click();
+});
+
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+});
+
+</script>
+</body></html>
