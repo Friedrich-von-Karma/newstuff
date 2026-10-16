@@ -1,0 +1,451 @@
+<title>Bar w Łodzi – opłacalność</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,500..900&family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: jedna kolumna raportu (~72ch) z szerszymi tabelami; nagłówek jak plakat koncertowy z OFF Piotrkowskiej */
+:root{
+  --bg:#f3f1ec; --surface:#fbfaf7; --ink:#1d1b1a; --muted:#625c55; --line:#d9d3c8;
+  --brick:#8f2f22; --amber:#b77a0a; --amber-soft:#f3e3bf;
+  --good:#2f6b3a; --good-soft:#dcebd9; --bad:#a1281c; --bad-soft:#f4d9d4; --warn:#8a6100; --warn-soft:#f3e7c6;
+  --f-display:"Anybody","Arial Narrow",Impact,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#161413; --surface:#1f1c1a; --ink:#ece6dd; --muted:#a59d93; --line:#3a3430;
+  --brick:#e0725f; --amber:#e3ab3e; --amber-soft:#3a2e15;
+  --good:#7fc28a; --good-soft:#1f3322; --bad:#ef8a7b; --bad-soft:#3d1f1a; --warn:#e5bb5a; --warn-soft:#3a3016;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#161413; --surface:#1f1c1a; --ink:#ece6dd; --muted:#a59d93; --line:#3a3430;
+  --brick:#e0725f; --amber:#e3ab3e; --amber-soft:#3a2e15;
+  --good:#7fc28a; --good-soft:#1f3322; --bad:#ef8a7b; --bad-soft:#3d1f1a; --warn:#e5bb5a; --warn-soft:#3a3016;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:980px;margin:0 auto}
+.prose{max-width:72ch}
+a{color:var(--brick);text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.05;margin:0}
+h2{font-size:clamp(1.6rem,3.6vw,2.2rem);font-weight:850;font-stretch:80%;text-transform:uppercase;letter-spacing:.01em}
+h3{font-size:1.2rem;font-weight:750;font-stretch:90%;margin-top:8px}
+p{margin:0}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* hero */
+header.hero{padding-block:48px 32px;border-bottom:3px solid var(--ink);display:grid;gap:18px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-size:clamp(2.6rem,9vw,5.6rem);font-weight:900;font-stretch:75%;text-transform:uppercase;letter-spacing:-.01em}
+.hero h1 span{color:var(--brick)}
+.hero .lead{font-size:1.15rem;max-width:62ch}
+.concepts{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--f-mono);font-size:.78rem;padding:4px 10px;border:1.5px solid var(--ink);border-radius:2px;text-transform:uppercase;letter-spacing:.06em}
+.chip.pick{background:var(--ink);color:var(--bg)}
+
+.note{border:1.5px dashed var(--amber);background:var(--amber-soft);padding:12px 16px;font-size:.92rem;max-width:72ch}
+
+section{padding-top:56px;display:grid;gap:18px}
+section > header{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:14px}
+.sec-n{font-family:var(--f-mono);font-size:.78rem;color:var(--brick);letter-spacing:.1em}
+
+/* key figures */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.fig{background:var(--surface);padding:16px;display:grid;gap:4px;align-content:start}
+.fig .k{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.fig .v{font-family:var(--f-display);font-weight:850;font-stretch:80%;font-size:1.9rem;line-height:1.05}
+.fig .s{font-size:.88rem;color:var(--muted)}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--f-mono);font-weight:500;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--bg);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;white-space:nowrap;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tr.total td{font-weight:700;background:var(--bg)}
+.w-min{min-width:640px}
+.w-mid{min-width:760px}
+.w-big{min-width:900px}
+
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.74rem;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.p-good{background:var(--good-soft);color:var(--good)}
+.p-bad{background:var(--bad-soft);color:var(--bad)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.stars{color:var(--amber);letter-spacing:1px;white-space:nowrap}
+.neg{color:var(--bad)} .pos{color:var(--good)}
+
+ul.clean{margin:0;padding-left:1.1em;display:grid;gap:8px;max-width:72ch}
+ol.steps{margin:0;padding-left:1.4em;display:grid;gap:10px;max-width:72ch}
+ol.steps li::marker{font-family:var(--f-mono);color:var(--brick)}
+
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.vcard{border:1.5px solid var(--ink);background:var(--surface);padding:14px 16px;display:grid;gap:6px;align-content:start}
+.vcard .q{font-family:var(--f-mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.vcard .a{font-weight:700}
+.vcard p{font-size:.92rem}
+
+.reco{border-left:6px solid var(--brick);background:var(--surface);padding:14px 18px;max-width:80ch}
+.reco b{color:var(--brick)}
+
+/* chart */
+.chart{border:1px solid var(--line);background:var(--surface);padding:14px}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{font-family:var(--f-mono);fill:var(--ink);font-size:13px}
+.chart .lbl{fill:var(--muted);font-size:12px}
+.chart .axis{stroke:var(--ink);stroke-width:1.5}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.bar-neg{fill:var(--bad)} .bar-pos{fill:var(--good)} .bar-lean{fill:var(--amber)}
+
+.sources{font-size:.85rem;color:var(--muted);display:grid;gap:6px;max-width:80ch;word-break:break-word}
+.sources a{color:var(--muted)}
+footer{margin-top:56px;padding-top:14px;border-top:3px solid var(--ink);font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){a{transition:color .15s}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Analiza opłacalności · Łódź · październik 2026</div>
+  <h1>Tanie piwo,<br><span>tanie drinki</span>,<br>Łódź</h1>
+  <p class="lead">Czy w Łodzi da się zarobić na barze słowiańskim, punkowym albo alternatywnym? Popyt, lokale z cenami, koszty startu, koszty miesięczne i scenariusze zysku.</p>
+  <div class="concepts" aria-label="Analizowane koncepty">
+    <span class="chip">słowiański</span><span class="chip">punkowy</span><span class="chip">alternatywny</span><span class="chip pick">rekomendacja: hybryda</span>
+  </div>
+  <p class="note"><b>O danych.</b> Portale z ogłoszeniami (Otodom, OLX, Domiporta, ZLM) były niedostępne podczas researchu, więc oferty lokali pochodzą z wyników wyszukiwarki. Ceny i dostępność trzeba sprawdzić na żywo. Koszty operacyjne to szacunki rynkowe. To analiza wstępna, nie porada prawna ani podatkowa.</p>
+</header>
+
+<section id="werdykt">
+  <header><span class="sec-n">1 · WERDYKT</span><h2>W skrócie</h2></header>
+  <div class="verdict">
+    <div class="vcard"><span class="q">Czy jest popyt?</span><span class="a">Tak, na odpowiednią cenę i klimat.</span><p>Łódź jest wrażliwa cenowo. Tani bar z charakterem trafia w lokalnych klientów i ok. 70 tys. studentów. Drogie lokale na Piotrkowskiej się zamykają.</p></div>
+    <div class="vcard"><span class="q">Czy to możliwe?</span><span class="a">Tak.</span><p>W lipcu 2026 liczono 42 pustostany na samym odcinku Piotrkowskiej od Mickiewicza do pl. Wolności. Masz siłę negocjacyjną.</p></div>
+    <div class="vcard"><span class="q">Ile na start?</span><span class="a num">ok. 180–400 tys. zł</span><p>Z rezerwą na pierwsze miesiące. Punk w lokalu po barze najtaniej, słowiański z porządnym wystrojem najdrożej.</p></div>
+    <div class="vcard"><span class="q">Ile trzeba sprzedać?</span><span class="a num">400–500 gości / tydz.</span><p>Próg rentowności to ok. 1 750–2 150 gości miesięcznie przy rachunku 32–40 zł.</p></div>
+    <div class="vcard"><span class="q">Ile można zarobić?</span><span class="a num">−13 … +25 tys. zł / mies.</span><p>Bazowo ok. 6 tys. zł z zatrudnioną obsługą, ok. 15 tys. zł gdy sam stoisz za barem i trzymasz koszty.</p></div>
+    <div class="vcard"><span class="q">Który koncept?</span><span class="a">Hybryda.</span><p>Marka słowiańska + muzyka punk/folk/metal/alternatywa + tanie piwo jako magnes. Marża na nalewkach, miodach pitnych i shotach.</p></div>
+  </div>
+  <p class="prose"><b>Najważniejsze ryzyka:</b> za mały ruch w tygodniu, hałas i skargi sąsiadów w kamienicach, rosnąca akcyza (projekt podwyżki od 2027 r.) i za niska marża, jeśli sprzedajesz głównie tanie piwo.</p>
+</section>
+
+<section id="rynek">
+  <header><span class="sec-n">2 · RYNEK I POPYT</span><h2>Kto przyjdzie</h2></header>
+  <div class="figs">
+    <div class="fig"><span class="k">Studenci 2025/26</span><span class="v num">~70 tys.</span><span class="s">Knight Frank</span></div>
+    <div class="fig"><span class="k">Mieszkańcy</span><span class="v num">~650 tys.</span><span class="s">populacja spada, centrum się odnawia</span></div>
+    <div class="fig"><span class="k">Puste lokale, Piotrkowska</span><span class="v num">42</span><span class="s">Mickiewicza → pl. Wolności, lipiec 2026</span></div>
+    <div class="fig"><span class="k">Zakaz w sklepach</span><span class="v num">22:00–6:00</span><span class="s">7 osiedli, w tym centrum. Bary wyłączone</span></div>
+  </div>
+  <ul class="clean">
+    <li><b>Siła nabywcza</b> jest niższa niż w Warszawie, Krakowie czy Wrocławiu. To przemawia za konceptem „tanio”, a przeciw drogim cocktail barom.</li>
+    <li><b>Piotrkowska pustoszeje.</b> W 2026 zamknęły się m.in. Ryżowa Buła, bar z shotami i Restauracja Komediowa (Piotrkowska 12). Media podają dwie przyczyny: ruch idzie do galerii, a właściciele nie są w stanie dalej podnosić cen. Drogie i nijakie lokale przegrywają, a nowy najemca może negocjować czynsz i okres bez czynszu.</li>
+    <li><b>Nocna prohibicja w sklepach</b> obejmuje m.in. osiedla Katedralna (Piotrkowska), Śródmieście-Wschód, Stare Polesie i Stary Widzew. Lokale gastronomiczne są wyłączone, więc po 22:00 bar przejmuje klientów, którzy wcześniej szli do Żabki. Status uchwały warto potwierdzić w Dzienniku Urzędowym Woj. Łódzkiego.</li>
+    <li><b>Akcyza.</b> Podwyżka na 2026 r. została zawetowana, ale MF wraca z projektem od 2027 r. (wcześniej +15% i +10% r/r). Szacunki mówią o +1,5 zł na butelce piwa. „Tanie piwo” będzie co roku trudniejsze do utrzymania.</li>
+  </ul>
+
+  <h3>Konkurencja (wybór)</h3>
+  <div class="tbl"><table class="w-mid">
+    <thead><tr><th>Lokal</th><th>Adres</th><th>Profil</th><th>Znaczenie dla ciebie</th></tr></thead>
+    <tbody>
+      <tr><td>6 Dzielnica</td><td>Piotrkowska 102 (3. piętro)</td><td>koncerty, wystawy, debaty</td><td>bezpośredni konkurent konceptu alternatywnego</td></tr>
+      <tr><td>Owoce i Warzywa</td><td>Traugutta 9, Piotrkowska 217</td><td>klubokawiarnia, DJ, wystawy, kino</td><td>silna marka alternatywna, mały lokal (70 m²)</td></tr>
+      <tr><td>Lizard King</td><td>Piotrkowska 62</td><td>bar muzyczny, koncerty, rock</td><td>konkurent konceptu punk/rock</td></tr>
+      <tr><td>OFF Piotrkowska</td><td>Piotrkowska 138/140</td><td>bary, kluby, food trucki</td><td>„zagłębie” alternatywy</td></tr>
+      <tr><td>DOM</td><td>Piotrkowska 138</td><td>klub/bar</td><td>jak wyżej</td></tr>
+      <tr><td>Football Pub</td><td>Piotrkowska 138/140</td><td>mikro-pub, tanie polskie piwo</td><td>konkurent cenowy</td></tr>
+      <tr><td>Bistro</td><td>Piotrkowska 71</td><td>zakąski i tanie piwo</td><td>konkurent cenowy</td></tr>
+      <tr><td>M3 Pub</td><td>Andrzeja 4</td><td>„bar mleczny z alkoholem”</td><td>konkurent cenowy</td></tr>
+      <tr><td>Pijalnia Wódki i Piwa</td><td>centrum</td><td>shoty i piwo za ok. 8 zł (recenzje)</td><td>benchmark cenowy</td></tr>
+      <tr><td>Wytwórnia, Magnetofon, Scenografia, OHM, Antrakt</td><td>różne</td><td>kluby koncertowe i taneczne</td><td>konkurencja o weekendową noc</td></tr>
+      <tr><td>PiwPaw</td><td>Piotrkowska 147</td><td>ponad 100 kranów, craft</td><td>inny, droższy klient</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose"><b>Luka rynkowa:</b> nie znalazłem w Łodzi baru o wyraźnej tematyce słowiańskiej. Koncept alternatywny jest najbardziej zatłoczony. Punk jest niszowy: lojalni klienci, ale mało pieniędzy na głowę. W regionie działa scena punk/metal, np. festiwal Summer Dying Loud (Aleksandrów Łódzki, wrzesień 2026).</p>
+
+  <h3>Porównanie konceptów</h3>
+  <div class="tbl"><table class="w-mid">
+    <thead><tr><th>Kryterium</th><th>Słowiański</th><th>Punkowy</th><th>Alternatywny</th></tr></thead>
+    <tbody>
+      <tr><td>Wyróżnialność w Łodzi</td><td><span class="pill p-good">wysoka</span></td><td><span class="pill p-warn">średnia</span></td><td><span class="pill p-bad">niska</span></td></tr>
+      <tr><td>Grupa docelowa</td><td>szeroka: studenci, pary, grupy, turyści</td><td>wąska, lojalna</td><td>szeroka: studenci, kreatywni</td></tr>
+      <tr><td>Średni rachunek</td><td><span class="pill p-good">najwyższy</span></td><td><span class="pill p-bad">najniższy</span></td><td><span class="pill p-warn">średni</span></td></tr>
+      <tr><td>Koszt wystroju</td><td><span class="pill p-bad">najwyższy</span></td><td><span class="pill p-good">najniższy</span></td><td><span class="pill p-warn">średni</span></td></tr>
+      <tr><td>Eventy</td><td>folk, pagan/folk metal, warsztaty, Kupała, Dziady</td><td>koncerty lokalnych kapel</td><td>koncerty, DJ, stand-up, planszówki, quizy</td></tr>
+      <tr><td>Instagram</td><td><span class="pill p-good">bardzo dobry</span></td><td><span class="pill p-warn">średni</span></td><td><span class="pill p-good">dobry</span></td></tr>
+      <tr><td>Hałas i zniszczenia</td><td><span class="pill p-good">niskie–średnie</span></td><td><span class="pill p-bad">wysokie</span></td><td><span class="pill p-warn">średnie</span></td></tr>
+      <tr><td>Ryzyko wizerunkowe</td><td>kicz „karczmy” albo skojarzenia z nacjonalistyczną estetyką. Trzeba świadomie budować markę</td><td>konflikty, potrzebna ochrona</td><td>małe</td></tr>
+    </tbody>
+  </table></div>
+  <p class="reco"><b>Rekomendacja: słowiański bar z punkowym i alternatywnym duchem.</b> Wystrój i karta słowiańska: miody pitne, nalewki autorskie, kwas chlebowy, piwa regionalne, proste zakąski bez pełnej kuchni (ogórki, smalec, chleb). Muzyka: punk, folk, pagan i folk metal, rock alternatywny. Tanie lane piwo i shoty przyciągają ludzi, a zarobek przychodzi z nalewek, miodów i drinków.</p>
+</section>
+
+<section id="lokale">
+  <header><span class="sec-n">3 · LOKALIZACJA</span><h2>Gdzie i za ile</h2></header>
+  <div class="figs">
+    <div class="fig"><span class="k">Średnia, cała Łódź</span><span class="v num">59 zł/m²</span><span class="s">Otodom, 528 ofert, 30.09.2026</span></div>
+    <div class="fig"><span class="k">Średnia, Śródmieście</span><span class="v num">71 zł/m²</span><span class="s">Otodom, 213 ofert</span></div>
+    <div class="fig"><span class="k">Oficyny i piwnice</span><span class="v num">22–40 zł/m²</span><span class="s">najlepszy stosunek ceny do lokalizacji</span></div>
+    <div class="fig"><span class="k">Witryny na deptaku</span><span class="v num">90–130 zł/m²</span><span class="s">za drogo na tani bar</span></div>
+  </div>
+
+  <h3>Strefy</h3>
+  <ul class="clean">
+    <li><b>Piotrkowska – oficyny i podwórka</b> (Narutowicza → Piłsudskiego i dalej do OFF Piotrkowska). Największy ruch nocny, czynsz 2–3× niższy niż z witryną. Bar „z bramy” pasuje do punku i słowiańskiego klimatu. <span class="pill p-good">najlepsza strefa</span></li>
+    <li><b>Okolice OFF Piotrkowska / Piotrkowska 140–220.</b> Publiczność alternatywna i studencka, blisko Politechniki i akademików.</li>
+    <li><b>Traugutta / 6 Sierpnia / Kilińskiego (Nowe Centrum).</b> Rosnąca strefa, ale nowe inwestycje kosztują ok. 90 zł/m², a mieszkańcy są wrażliwi na hałas.</li>
+    <li><b>Księży Młyn / Fuzja.</b> Klimat postindustrialny, czynsze premium 85–105 zł/m². Pasuje do drogiego konceptu, nie do taniego.</li>
+    <li><b>Lokale miejskie (ZLM).</b> Najniższe stawki, licytacje kilka razy w roku. Remont na koszt najemcy, zezwolenie na alkohol osobno.</li>
+  </ul>
+
+  <h3>Czego szukać</h3>
+  <ul class="clean">
+    <li><b>80–180 m²:</b> sala na 40–70 osób plus zaplecze. Na koncerty lepiej 150 m² lub więcej.</li>
+    <li><b>Lokal po gastronomii:</b> jest WC dla gości, instalacje, przeznaczenie w dokumentach. Oszczędność rzędu 30–80 tys. zł.</li>
+    <li><b>Piwnica lub suterena:</b> lepsza akustyka i mniej skarg. Wymaga wentylacji i drugiego wyjścia przy większej liczbie gości.</li>
+    <li><b>Zgoda wspólnoty lub właściciela</b> na alkohol i muzykę. Sprawdź, czy nad lokalem są mieszkania.</li>
+    <li><b>Odległość od szkół i kościołów:</b> sprawdź lokalne zasady w uchwale Rady Miejskiej przed podpisaniem umowy.</li>
+  </ul>
+
+  <h3>Konkretne lokale z ofert 2025–2026</h3>
+  <p class="prose">Czynsz netto z ogłoszeń. Opłaty eksploatacyjne i VAT często są osobno. Wszystko do weryfikacji.</p>
+  <div class="tbl"><table class="w-big">
+    <thead><tr><th>#</th><th>Lokalizacja</th><th class="r">Pow.</th><th class="r">Czynsz / mies.</th><th class="r">zł/m²</th><th>Uwagi</th><th>Ocena</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><b>Piotrkowska 60, oficyna</b> (AiA)</td><td class="r">122 m²</td><td class="r">≈ 6 550 zł</td><td class="r">32 + 21,73</td><td>lokal gastronomiczny, czynsz ok. 3 900 + eksploatacja ok. 2 650 zł</td><td class="stars" aria-label="5 na 5">★★★★★</td></tr>
+      <tr><td class="num">2</td><td><b>Piotrkowska 146</b> (okolica.pl)</td><td class="r">177 m²</td><td class="r">5 337 zł</td><td class="r">~30</td><td>południowa Piotrkowska, blisko OFF Piotrkowska</td><td class="stars" aria-label="5 na 5">★★★★★</td></tr>
+      <tr><td class="num">3</td><td><b>Piwnica −1 przy Piotrkowskiej</b>, po restauracji (Otodom)</td><td class="r">177 m²</td><td class="r">5 400 zł</td><td class="r">~31</td><td>po gastronomii, piwnica</td><td class="stars" aria-label="5 na 5">★★★★★</td></tr>
+      <tr><td class="num">4</td><td><b>Odrestaurowana kamienica, Śródmieście</b> (Domiporta)</td><td class="r">260 m²</td><td class="r">≈ 11 500 zł</td><td class="r">22 + 21,98</td><td>czynsz 5 EUR/m² + eksploatacja, 3 kaucje</td><td class="stars" aria-label="3 na 5">★★★☆☆</td></tr>
+      <tr><td class="num">5</td><td><b>Tuwima 3, suterena</b> (Otodom)</td><td class="r">380 m²</td><td class="r">14 000 zł</td><td class="r">~37</td><td>za duży na bar, raczej klub</td><td class="stars" aria-label="2 na 5">★★☆☆☆</td></tr>
+      <tr><td class="num">6</td><td><b>Kilińskiego 41</b> (Otodom)</td><td class="r">142 m²</td><td class="r">≈ 9 230 zł</td><td class="r">~65</td><td>parter, witryny, ogródek. Właściciel szuka kawiarni lub bistro</td><td class="stars" aria-label="2 na 5">★★☆☆☆</td></tr>
+      <tr><td class="num">7</td><td><b>6 Sierpnia, La Vie Art</b> (Domiporta)</td><td class="r">204 m²</td><td class="r">≈ 18 350 zł</td><td class="r">90</td><td>nowy budynek, narożnik</td><td class="stars" aria-label="1 na 5">★☆☆☆☆</td></tr>
+      <tr><td class="num">8</td><td><b>Fuzja, Tymienieckiego</b> (Otodom)</td><td class="r">77 m²</td><td class="r">6 754 zł</td><td class="r">87</td><td>Księży Młyn, premium, dużo mieszkańców</td><td class="stars" aria-label="2 na 5">★★☆☆☆</td></tr>
+      <tr><td class="num">9</td><td><b>Stare Polesie</b> (Otodom, prywatnie)</td><td class="r">64 m²</td><td class="r">5 120 zł</td><td class="r">80</td><td>mały, zabudowa mieszkaniowa</td><td class="stars" aria-label="2 na 5">★★☆☆☆</td></tr>
+      <tr><td class="num">10</td><td><b>Piotrkowska</b> (Domiporta)</td><td class="r">50 m²</td><td class="r">1 900 zł</td><td class="r">38</td><td>mikro shot-bar albo start z niskim ryzykiem</td><td class="stars" aria-label="3 na 5">★★★☆☆</td></tr>
+      <tr><td class="num">11</td><td><b>Księży Młyn, duże obiekty</b></td><td class="r">630 / 1 100 m²</td><td class="r">–</td><td class="r">35 / 55</td><td>tylko klub lub hala koncertowa</td><td class="stars" aria-label="1 na 5">★☆☆☆☆</td></tr>
+      <tr><td class="num">12</td><td><b>Lokale ZLM</b> (licytacje)</td><td class="r">różne</td><td class="r">strefowe</td><td class="r">najniższe</td><td>remont po stronie najemcy</td><td class="stars" aria-label="4 na 5">★★★★☆</td></tr>
+    </tbody>
+  </table></div>
+  <p class="reco"><b>Rekomendacja lokalowa:</b> 100–180 m² w oficynie lub piwnicy przy Piotrkowskiej (pozycje 1–3) za ok. 5,5–7 tys. zł netto miesięcznie z eksploatacją. Przy obecnych pustostanach negocjuj 2–3 miesiące bez czynszu na remont i kaucję w wysokości 2 czynszów zamiast 3.</p>
+</section>
+
+<section id="formalnosci">
+  <header><span class="sec-n">4 · FORMALNOŚCI</span><h2>Zezwolenia i opłaty</h2></header>
+  <div class="tbl"><table class="w-mid">
+    <thead><tr><th>Sprawa</th><th>Gdzie</th><th>Koszt / uwagi</th></tr></thead>
+    <tbody>
+      <tr><td>Działalność (JDG albo sp. z o.o.)</td><td>CEIDG / KRS</td><td>JDG za darmo. Sp. z o.o. ok. 350–600 zł + notariusz przy umowie tradycyjnej</td></tr>
+      <tr><td>Zatwierdzenie zakładu</td><td>Sanepid (PSSE Łódź)</td><td>wniosek min. 14–30 dni przed startem. Wymagane m.in. WC, umywalki, zmywarka do szkła</td></tr>
+      <tr><td>Ppoż. i BHP</td><td>rzeczoznawca, ewentualnie straż</td><td class="num">1–5 tys. zł</td></tr>
+      <tr><td>Zmiana sposobu użytkowania</td><td>Wydział Architektury</td><td>tylko gdy lokal nie jest usługowo-gastronomiczny</td></tr>
+      <tr><td><b>Zezwolenia na alkohol</b> (A: piwo i do 4,5% · B: 4,5–18% · C: ponad 18%)</td><td>UMŁ, opinia komisji ds. problemów alkoholowych</td><td><b>Pierwszy rok:</b> <span class="num">525 + 525 + 2 100 zł</span>, proporcjonalnie do miesięcy. <b>Kolejne lata:</b> A i B 1,4% sprzedaży powyżej 37 500 zł; C 2,7% sprzedaży powyżej 77 000 zł. Płatne w 3 ratach</td></tr>
+      <tr><td>Kasa fiskalna online + terminal</td><td>–</td><td><span class="num">2–5 tys. zł</span>. Alkohol ma 23% VAT, w praktyce będziesz czynnym płatnikiem VAT</td></tr>
+      <tr><td>ZAiKS + ZPAV / STOART / SAWP</td><td>organizacje zbiorowego zarządzania</td><td>muzyka w tle: kilkaset zł/mies. łącznie. Koncerty mają osobną stawkę</td></tr>
+      <tr><td>Ogródek letni</td><td>ZDiT albo wspólnota</td><td>opłata za m² dziennie</td></tr>
+      <tr><td>Hałas</td><td>–</td><td>cisza nocna 22–6. Wyciszenie lokalu to konieczna inwestycja</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="capex">
+  <header><span class="sec-n">5 · INWESTYCJA NA START</span><h2>Ile wyłożyć</h2></header>
+  <p class="prose">Lokal 100–150 m² po gastronomii, bez pełnej kuchni. Kwoty w tys. zł.</p>
+  <div class="tbl"><table class="w-min">
+    <thead><tr><th>Pozycja</th><th class="r">Punk (DIY)</th><th class="r">Alternatywny</th><th class="r">Słowiański</th></tr></thead>
+    <tbody>
+      <tr><td>Remont, adaptacja, WC, instalacje</td><td class="r">30–60</td><td class="r">40–80</td><td class="r">50–100</td></tr>
+      <tr><td>Lada barowa</td><td class="r">8–15</td><td class="r">15–25</td><td class="r">20–35</td></tr>
+      <tr><td>Chłodnictwo i nalewaki*</td><td class="r">0–20</td><td class="r">0–20</td><td class="r">0–20</td></tr>
+      <tr><td>Zmywarka do szkła, kostkarka, lodówki</td><td class="r">12–20</td><td class="r">12–20</td><td class="r">12–20</td></tr>
+      <tr><td>Meble (50 miejsc)</td><td class="r">5–12</td><td class="r">12–25</td><td class="r">25–50</td></tr>
+      <tr><td>Wystrój i dekoracje</td><td class="r">3–8</td><td class="r">8–15</td><td class="r">20–50</td></tr>
+      <tr><td>Nagłośnienie</td><td class="r">15–40</td><td class="r">15–40</td><td class="r">8–30</td></tr>
+      <tr><td>Wyciszenie i akustyka</td><td class="r">10–30</td><td class="r">10–30</td><td class="r">5–20</td></tr>
+      <tr><td>POS, kasa, terminal, monitoring, alarm</td><td class="r">6–12</td><td class="r">6–12</td><td class="r">6–12</td></tr>
+      <tr><td>Projekty, ekspertyzy, Sanepid, ppoż.</td><td class="r">3–10</td><td class="r">3–10</td><td class="r">3–10</td></tr>
+      <tr><td>Szkło i akcesoria barowe</td><td class="r">4–7</td><td class="r">5–8</td><td class="r">6–10</td></tr>
+      <tr><td>Pierwsze zatowarowanie</td><td class="r">12–18</td><td class="r">15–20</td><td class="r">18–25</td></tr>
+      <tr><td>Kaucja (2–3 czynsze)</td><td class="r">11–20</td><td class="r">11–20</td><td class="r">11–20</td></tr>
+      <tr><td>Zezwolenia, szyld, branding, otwarcie</td><td class="r">5–10</td><td class="r">6–12</td><td class="r">8–15</td></tr>
+      <tr class="total"><td>Suma bez rezerwy</td><td class="r">125–280</td><td class="r">160–340</td><td class="r">190–420</td></tr>
+      <tr><td>Rezerwa na 3–6 mies. rozruchu</td><td class="r">50–80</td><td class="r">50–80</td><td class="r">50–80</td></tr>
+      <tr class="total"><td>Realny budżet</td><td class="r">180–250</td><td class="r">220–320</td><td class="r">260–400</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">* <b>Wsparcie browaru:</b> browary i dystrybutorzy często użyczają nalewaków, chłodziarek i szkła w zamian za wyłączność na kranach i minimalny wolumen. To obniża wydatki o 15–30 tys. zł, ale tracisz swobodę wyboru piwa, np. regionalnego pod koncept słowiański.</p>
+</section>
+
+<section id="model">
+  <header><span class="sec-n">6 · MODEL FINANSOWY</span><h2>Ceny, koszty, wynik</h2></header>
+
+  <h3>Polityka cenowa „tanio” (ceny brutto)</h3>
+  <div class="tbl"><table class="w-min">
+    <thead><tr><th>Produkt</th><th class="r">Cena</th><th class="r">Koszt towaru netto</th><th class="r">Udział kosztu</th></tr></thead>
+    <tbody>
+      <tr><td>Lager lany 0,5 l</td><td class="r">10–12 zł</td><td class="r">4–5 zł</td><td class="r">45–55%</td></tr>
+      <tr><td>Piwo regionalne / kraft 0,4 l</td><td class="r">14–17 zł</td><td class="r">6–8 zł</td><td class="r">45–55%</td></tr>
+      <tr><td>Shot wódki 40 ml</td><td class="r">7–9 zł</td><td class="r">~2 zł</td><td class="r">25–35%</td></tr>
+      <tr><td>Nalewka 40 ml</td><td class="r">10–12 zł</td><td class="r">~3 zł</td><td class="r">25–35%</td></tr>
+      <tr><td>Miód pitny 100 ml</td><td class="r">12–15 zł</td><td class="r">3–4 zł</td><td class="r">30–35%</td></tr>
+      <tr><td>Prosty drink</td><td class="r">16–20 zł</td><td class="r">4–5 zł</td><td class="r">25–30%</td></tr>
+      <tr><td>Zakąska (ogórki, smalec, deska)</td><td class="r">8–25 zł</td><td class="r">–</td><td class="r">30–35%</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Tanie piwo przyciąga gości, ale ma najniższą marżę. Zarabiają shoty, nalewki, miody i drinki. Cel: koszt towaru średnio najwyżej 40% przychodu netto. Ceny kegów negocjuje się z przedstawicielem browaru, publicznych cenników nie ma.</p>
+
+  <h3>Koszty stałe miesięcznie (netto, lokal ok. 120 m²)</h3>
+  <div class="tbl"><table class="w-min">
+    <thead><tr><th>Pozycja</th><th class="r">Kwota</th><th>Założenie</th></tr></thead>
+    <tbody>
+      <tr><td>Czynsz + eksploatacja</td><td class="r">6 600 zł</td><td>jak Piotrkowska 60</td></tr>
+      <tr><td>Media</td><td class="r">2 500 zł</td><td>chłodzenie, woda, ogrzewanie</td></tr>
+      <tr><td>Personel</td><td class="r">13 500 zł</td><td>ok. 350–380 h × 35–38 zł. Minimalna stawka 2026: 31,40 zł/h</td></tr>
+      <tr><td>Ochrona (pt–sob)</td><td class="r">2 500 zł</td><td>punk i koncerty</td></tr>
+      <tr><td>ZUS właściciela</td><td class="r">2 300 zł</td><td>na start ulga i preferencyjny ZUS</td></tr>
+      <tr><td>Księgowość</td><td class="r">800 zł</td><td></td></tr>
+      <tr><td>ZAiKS i pokrewne</td><td class="r">600 zł</td><td>muzyka w tle</td></tr>
+      <tr><td>Zezwolenia alkoholowe</td><td class="r">300–1 100 zł</td><td>rośnie z obrotem</td></tr>
+      <tr><td>POS, internet, oprogramowanie</td><td class="r">500 zł</td><td></td></tr>
+      <tr><td>Prowizje kartowe</td><td class="r">~1% obrotu</td><td></td></tr>
+      <tr><td>Marketing, eventy, zespoły, DJ</td><td class="r">2 000 zł</td><td></td></tr>
+      <tr><td>Ubezpieczenie</td><td class="r">200 zł</td><td></td></tr>
+      <tr><td>Naprawy, szkło, drobne</td><td class="r">800 zł</td><td></td></tr>
+      <tr><td>Śmieci, środki czystości</td><td class="r">400 zł</td><td></td></tr>
+      <tr class="total"><td>Razem</td><td class="r">33–34 tys. zł</td><td>bez kosztu towaru</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Scenariusze: wynik operacyjny miesięcznie</h3>
+  <p class="prose">Bar otwarty wt–nd. Koszt towaru 40% przychodu netto, VAT 23%. Wynik przed podatkiem dochodowym.</p>
+  <div class="chart" role="img" aria-label="Wynik miesięczny: pesymistyczny minus 13,1 tys. zł, bazowy plus 5,8 tys., bazowy oszczędny plus 15,5 tys., optymistyczny plus 24,6 tys.">
+    <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg">
+      <!-- skala: x = 250 + v*12 (v w tys. zł), zakres −15…+30 -->
+      <line class="grid" x1="70" y1="20" x2="70" y2="200"/>
+      <line class="grid" x1="130" y1="20" x2="130" y2="200"/>
+      <line class="grid" x1="370" y1="20" x2="370" y2="200"/>
+      <line class="grid" x1="490" y1="20" x2="490" y2="200"/>
+      <line class="grid" x1="610" y1="20" x2="610" y2="200"/>
+      <line class="axis" x1="250" y1="15" x2="250" y2="200"/>
+      <text class="lbl" x="70" y="218" text-anchor="middle">−15</text>
+      <text class="lbl" x="250" y="218" text-anchor="middle">0</text>
+      <text class="lbl" x="370" y="218" text-anchor="middle">+10</text>
+      <text class="lbl" x="490" y="218" text-anchor="middle">+20</text>
+      <text class="lbl" x="610" y="218" text-anchor="middle">+30 tys. zł</text>
+
+      <rect class="bar-neg" x="92.8" y="28" width="157.2" height="30"/>
+      <text x="258" y="48">Pesymistyczny  −13,1</text>
+
+      <rect class="bar-pos" x="250" y="70" width="69.6" height="30"/>
+      <text x="328" y="90">Bazowy  +5,8</text>
+
+      <rect class="bar-lean" x="250" y="112" width="186" height="30"/>
+      <text x="444" y="132">Bazowy oszczędny  +15,5</text>
+
+      <rect class="bar-pos" x="250" y="154" width="295.2" height="30"/>
+      <text x="246" y="174" text-anchor="end">Optymistyczny</text>
+      <text x="553" y="174">+24,6</text>
+    </svg>
+  </div>
+  <div class="tbl"><table class="w-big">
+    <thead><tr><th>Scenariusz</th><th class="r">Gości / tydz.</th><th class="r">Gości / mies.</th><th class="r">Rachunek</th><th class="r">Obrót brutto</th><th class="r">Przychód netto</th><th class="r">Towar</th><th class="r">Koszty stałe</th><th class="r">Wynik / mies.</th></tr></thead>
+    <tbody>
+      <tr><td>Pesymistyczny</td><td class="r">300</td><td class="r">~1 300</td><td class="r">32 zł</td><td class="r">41,6 tys.</td><td class="r">33,8 tys.</td><td class="r">13,5 tys.</td><td class="r">33,4 tys.</td><td class="r neg"><b>−13,1 tys.</b></td></tr>
+      <tr><td>Bazowy</td><td class="r">520</td><td class="r">~2 250</td><td class="r">36 zł</td><td class="r">81,1 tys.</td><td class="r">65,9 tys.</td><td class="r">26,4 tys.</td><td class="r">33,8 tys.</td><td class="r pos"><b>+5,8 tys.</b></td></tr>
+      <tr><td>Bazowy oszczędny**</td><td class="r">520</td><td class="r">~2 250</td><td class="r">36 zł</td><td class="r">81,1 tys.</td><td class="r">65,9 tys.</td><td class="r">23,7 tys. (36%)</td><td class="r">26,7 tys.</td><td class="r pos"><b>+15,5 tys.</b></td></tr>
+      <tr><td>Optymistyczny*</td><td class="r">750</td><td class="r">~3 250</td><td class="r">40 zł</td><td class="r">129,9 tys.</td><td class="r">105,6 tys.</td><td class="r">42,2 tys.</td><td class="r">38,8 tys.</td><td class="r pos"><b>+24,6 tys.</b></td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose" style="font-size:.88rem;color:var(--muted)">* więcej personelu i ochrony. ** właściciel lub dwóch wspólników za barem w większości zmian, czynsz ok. 5 tys. zł (ZLM albo piwnica), więcej sprzedaży nalewek i shotów. 520 gości tygodniowo to np. wt–czw po 50, pt–sob po 160, nd 40.</p>
+
+  <h3>Próg rentowności i zwrot</h3>
+  <div class="figs">
+    <div class="fig"><span class="k">Rachunek 32 zł</span><span class="v num">~500 / tydz.</span><span class="s">~2 160 gości miesięcznie</span></div>
+    <div class="fig"><span class="k">Rachunek 36 zł</span><span class="v num">~445 / tydz.</span><span class="s">~1 920 gości miesięcznie</span></div>
+    <div class="fig"><span class="k">Rachunek 40 zł</span><span class="v num">~400 / tydz.</span><span class="s">~1 730 gości miesięcznie</span></div>
+  </div>
+  <div class="tbl"><table class="w-min">
+    <thead><tr><th>Scenariusz</th><th class="r">Zwrot inwestycji ok. 250 tys. zł</th></tr></thead>
+    <tbody>
+      <tr><td>Pesymistyczny</td><td class="r neg">brak. Rezerwa znika po ok. 5 mies.</td></tr>
+      <tr><td>Bazowy</td><td class="r">ok. 3,5 roku</td></tr>
+      <tr><td>Bazowy oszczędny</td><td class="r">ok. 16–18 mies.</td></tr>
+      <tr><td>Optymistyczny</td><td class="r pos">ok. 10–12 mies.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="reco"><b>Wniosek:</b> model „tanie piwo, tanie drinki” działa tylko przy dużym ruchu i pracy właściciela za barem. Dźwignie zysku: podnieść średni rachunek z 32 do 40 zł (nalewki, miody, deski, zestawy typu „piwo + shot za 15 zł”); zapełnić środek tygodnia (quizy, punkowe karaoke, jam sessions, planszówki, wieczory słowiańskie); niski czynsz w oficynie, piwnicy albo lokalu ZLM; kontrola strat na piwie.</p>
+</section>
+
+<section id="ryzyka">
+  <header><span class="sec-n">7 · RYZYKA</span><h2>Co może pójść źle</h2></header>
+  <div class="tbl"><table class="w-mid">
+    <thead><tr><th>Ryzyko</th><th>Prawdop.</th><th>Jak ograniczyć</th></tr></thead>
+    <tbody>
+      <tr><td>Za mały ruch w tygodniu</td><td><span class="pill p-bad">wysokie</span></td><td>stały kalendarz eventów, współpraca z samorządami studenckimi i kapelami, social media od pierwszego dnia remontu</td></tr>
+      <tr><td>Hałas, skargi, kontrole</td><td><span class="pill p-bad">wysokie</span></td><td>piwnica lub oficyna bez mieszkań nad lokalem, wyciszenie, limiter dźwięku, koncerty do 22–23 w tygodniu</td></tr>
+      <tr><td>Wzrost akcyzy i cen hurtowych</td><td><span class="pill p-bad">wysokie</span></td><td>nie wiązać marki z konkretną ceną. Komunikować „najtaniej w okolicy”</td></tr>
+      <tr><td>Rosnąca płaca minimalna</td><td><span class="pill p-bad">pewne</span></td><td>grafik dopasowany do ruchu, właściciel za barem</td></tr>
+      <tr><td>Zniszczenia, bójki, kradzieże</td><td><span class="pill p-warn">średnie</span></td><td>ochrona w weekendy, monitoring, regulamin, szkło hartowane, kubki na koncerty</td></tr>
+      <tr><td>Wizerunek konceptu słowiańskiego</td><td><span class="pill p-warn">średnie</span></td><td>folklor, mitologia, humor, otwartość. Unikać symboli kojarzonych z nacjonalizmem</td></tr>
+      <tr><td>Wypowiedzenie umowy po remoncie</td><td><span class="pill p-warn">średnie</span></td><td>umowa na 5+ lat, opcja przedłużenia, zwrot nakładów albo okres bez czynszu</td></tr>
+      <tr><td>Uchwały alkoholowe</td><td><span class="pill p-good">niskie–średnie</span></td><td>przed umową sprawdzić w UMŁ, czy adres kwalifikuje się do zezwolenia</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="plan">
+  <header><span class="sec-n">8 · PLAN DZIAŁANIA</span><h2>Kolejne kroki</h2></header>
+  <ol class="steps">
+    <li><b>Tydzień 1–2:</b> obejrzyj 5–8 lokali z tabeli i aktualne oferty (Otodom, OLX, Domiporta, licytacje ZLM). Rozmawiaj z właścicielami lokali po gastronomii.</li>
+    <li><b>Równolegle:</b> zapytaj w UMŁ o zezwolenie dla konkretnego adresu, w Sanepidzie o wymagania, w ZAiKS o cennik dla baru z koncertami.</li>
+    <li><b>Spotkaj 2–3 browary i hurtownie:</b> ceny kegów, użyczenie sprzętu, premie na start. Porównaj z browarami regionalnymi.</li>
+    <li><b>Test popytu przed umową:</b> 2–3 imprezy „słowiańsko-punkowe” w istniejącym klubie i Instagram z zapisami. Jeśli przyjdzie po 100+ osób, popyt jest potwierdzony.</li>
+    <li><b>Negocjacje:</b> 2–3 miesiące bez czynszu na remont, kaucja 2 czynsze, umowa na 5 lat.</li>
+    <li><b>Remont i wnioski:</b> zezwolenia mogą zająć ok. 30 dni lub dłużej. Licz 3–4 miesiące od umowy do otwarcia.</li>
+    <li><b>Otwarcie:</b> najlepiej wrzesień–październik (start roku akademickiego) albo marzec.</li>
+  </ol>
+</section>
+
+<section id="zrodla">
+  <header><span class="sec-n">9 · ŹRÓDŁA</span><h2>Skąd dane</h2></header>
+  <div class="sources">
+    <a href="https://www.otodom.pl/pl/wyniki/wynajem/lokal/lodzkie/lodz">Otodom – lokale użytkowe na wynajem, Łódź</a>
+    <a href="https://www.otodom.pl/pl/oferty/wynajem/lokal/lodz/srodmiescie">Otodom – Śródmieście</a>
+    <a href="https://www.nieruchomosci.aia.pl/lokal-gastronomiczny-122m2-ul-piotrkowska-60-centrum-lodzi/">AiA – lokal gastronomiczny 122 m², Piotrkowska 60</a>
+    <a href="https://www.domiporta.pl/nieruchomosci/wynajme-gastronomia-lodz-srodmiescie-260m2/147744998">Domiporta – punkt gastronomiczny 260 m², Śródmieście</a>
+    <a href="https://www.domiporta.pl/lokal-uzytkowy/wynajme/lodzkie/lodz">Domiporta – lokale użytkowe, Łódź</a>
+    <a href="https://www.okolica.pl/komercyjne/wynajme/lodz/srodmiescie/">Okolica.pl – lokale komercyjne, Śródmieście</a>
+    <a href="https://www.otodom.pl/pl/oferta/gastronomia-w-centrum-142-m-witryny-i-ogrodek-ul-kilinskiego-41-ID4DkW8">Otodom – Kilińskiego 41</a>
+    <a href="https://www.otodom.pl/pl/wyniki/wynajem/lokal/lodzkie/lodz/lodz/lodz/polesie">Otodom – Polesie</a>
+    <a href="https://www.otodom.pl/pl/wyniki/wynajem/lokal/lodzkie/lodz/lodz/lodz/widzew">Otodom – Widzew</a>
+    <a href="https://www.otodom.pl/pl/oferty/wynajem/lokal/lodz/ksiezy-mlyn">Otodom – Księży Młyn</a>
+    <a href="https://lodz.nieruchomosci-online.pl/lokale-uzytkowe,gastronomiczne/">Nieruchomości-online – lokale gastronomiczne</a>
+    <a href="https://zlm.lodz.pl/dla-najemcy/lokale-uzytkowe/licytacja-09032026/">ZLM – licytacja 09.03.2026</a>
+    <a href="https://rewitalizacja.uml.lodz.pl/rewitalizacja/dla-przedsiebiorcow/wynajem-lokalu-uzytkowego/">Rewitalizacja UMŁ – wynajem lokalu użytkowego</a>
+    <a href="https://jakiwniosek.pl/wnioski/firma/koncesja-na-sprzedaz-alkoholu/lodz">Zezwolenia na alkohol Łódź – opłaty</a>
+    <a href="https://tvn24.pl/lodz/nocna-prohibicja-w-lodzi-sa-wyniki-konsultacji-st8524465">TVN24 – nocna prohibicja w Łodzi</a>
+    <a href="https://www.money.pl/gospodarka/lodz-decyduje-o-nocnej-prohibicji-na-poczatek-w-centrum-miasta-7170776488541088a.html">Money.pl – nocna prohibicja w centrum</a>
+    <a href="https://notesfrompoland.com/?p=85135">Notes from Poland – prohibicja na 7 osiedlach</a>
+    <a href="https://dzienniklodzki.pl/z-centrum-lodzi-znikaja-kolejne-lubiane-lokale-gastronomiczne-piotrkowska-wyglada-ponuro/ar/c13p2-28732845">Dziennik Łódzki – zamknięcia na Piotrkowskiej</a>
+    <a href="https://lodz.naszemiasto.pl/restauracja-komediowa-rafala-paczesia-przy-piotrkowskiej-w-lodzi-zostanie-zamknieta/ar/c17p2-29262773">Nasze Miasto – Restauracja Komediowa</a>
+    <a href="https://lodz.naszemiasto.pl/tag/pustostany">Nasze Miasto – pustostany</a>
+    <a href="https://content.knightfrank.com/research/2297/documents/pl/lodz-atrakcyjnosc-miast-i-rynek-biurowy-i-pol-2026-13020.pdf">Knight Frank – Łódź, I poł. 2026</a>
+    <a href="https://www.infakt.pl/blog/?p=79844">inFakt – płaca minimalna 2026</a>
+    <a href="https://www.pit.pl/?p=7710">PIT.pl – koszt pracodawcy 2026</a>
+    <a href="https://www.podatnik.info/publikacje/akcyza-na-alkohol-w-gore-co-to-oznacza-dla-konsumentow-i-rynku,642685">Podatnik.info – akcyza</a>
+    <a href="https://forsal.pl/kraj/aktualnosci/artykuly/11266991,zapadla-decyzja-w-rzadzie-piwo-cydr-i-wodka-znow-podrozeja.html">Forsal – akcyza od 2027</a>
+    <a href="https://gopos.pl/blog/2026/02/12/jak-otworzyc-bar-lub-pub-koszty-licencje-i-kluczowe-kroki-do-startu/">GoPOS – jak otworzyć bar (2026)</a>
+    <a href="https://www.braindesign.pl/ile-bar-zarabia-na-piwie-marza-i-koszty-otwarcia-wlasnego-pubu/">Brain Design – marża na piwie</a>
+    <a href="https://www.upmenu.com/pl/blog/muzyka-do-restauracji">UpMenu – ZAiKS w gastronomii</a>
+    <a href="https://inyourpocket.com/poland/lodz/venues/6-dzielnica">In Your Pocket – 6 Dzielnica</a>
+    <a href="https://muno.pl/kluby/owoce-i-warzywa-lodz/">Muno – Owoce i Warzywa</a>
+    <a href="https://muno.pl/kluby/lizard-king-lodz/">Muno – Lizard King</a>
+    <a href="https://goout.net/pl/lodz/kluby/lvzibmwkkzr/">GoOut – kluby w Łodzi</a>
+    <a href="https://gdziejemy.pl/restauracje/lodz/napoje-alkoholowe">Gdziejemy – bary w Łodzi 2026</a>
+    <a href="https://www.frontstagefestivals.com/festivals/punk/near/masovia">Frontstage – Summer Dying Loud 2026</a>
+  </div>
+</section>
+
+<footer>Analiza wstępna, październik 2026. Kwoty to szacunki i ceny ofertowe. Przed decyzją zweryfikuj je u właścicieli lokali, w UMŁ, Sanepidzie i u dostawców.</footer>
+</div>
