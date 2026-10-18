@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Figures from China: Analysis</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: report with a sticky contents sidebar on desktop, one column on phones.
+   Motif: the authenticity hologram from a figure box as the only decorative accent. */
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --ink:#131a2a; --ink-2:#4a5368; --ink-3:#6b7489;
+  --line:#dde2ea; --accent:#2a78d6; --accent-soft:#e6effb; --bar-weak:#a9b7cc;
+  --good:#1d7f47; --good-bg:#e5f4ea; --warn:#9a6400; --warn-bg:#fbf0d9; --bad:#b83232; --bad-bg:#fbe6e6;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f121a; --surface:#161b25; --ink:#e7eaf1; --ink-2:#aab1c2; --ink-3:#8a92a6;
+    --line:#2a3142; --accent:#3987e5; --accent-soft:#1a2740; --bar-weak:#4b5870;
+    --good:#4cc07f; --good-bg:#14301f; --warn:#e0a942; --warn-bg:#33270f; --bad:#ec7a7a; --bad-bg:#3a1a1a;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f121a; --surface:#161b25; --ink:#e7eaf1; --ink-2:#aab1c2; --ink-3:#8a92a6;
+  --line:#2a3142; --accent:#3987e5; --accent-soft:#1a2740; --bar-weak:#4b5870;
+  --good:#4cc07f; --good-bg:#14301f; --warn:#e0a942; --warn-bg:#33270f; --bad:#ec7a7a; --bad-bg:#3a1a1a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:40px;padding-block:32px 80px}
+@media (min-width:1000px){.wrap{grid-template-columns:230px minmax(0,1fr)}}
+nav.toc{font-size:14px}
+@media (min-width:1000px){nav.toc{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 24px);align-self:start;max-height:calc(100vh - 48px);overflow:auto}}
+nav.toc details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+nav.toc summary{cursor:pointer;font-weight:600;font-family:var(--f-display)}
+nav.toc ol{margin:10px 0 0;padding-left:20px;display:grid;gap:4px}
+nav.toc a{color:var(--ink-2);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);text-decoration:underline}
+main{min-width:0;display:grid;gap:56px}
+section{display:grid;gap:16px;min-width:0}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0;letter-spacing:-0.01em}
+h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800}
+h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;padding-top:8px}
+h3{font-size:1.15rem;font-weight:700;margin-top:8px}
+p,li{max-width:70ch}
+p{margin:0}
+ul,ol{margin:0;padding-left:22px;display:grid;gap:6px}
+a{color:var(--accent)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.lede{font-size:1.15rem;color:var(--ink-2)}
+.muted{color:var(--ink-3);font-size:14px}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header.hero{display:grid;gap:18px}
+.verdict{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+@media (max-width:560px){.verdict{grid-template-columns:1fr}}
+.holo{width:124px;height:124px;padding:10px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:conic-gradient(from 210deg,#9fd8ff,#c9b6ff,#ffc4e6,#fff1a8,#b6ffd9,#9fd8ff);
+  color:#131a2a;font-family:var(--f-display);font-weight:800;line-height:1.05;font-size:12.5px;letter-spacing:.01em;box-shadow:inset 0 0 0 3px rgba(255,255,255,.55)}
+.holo span{display:block;font-family:var(--f-mono);font-size:10px;font-weight:500;letter-spacing:.08em;margin-top:4px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px}
+.tile{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:2px;align-content:start}
+.tile b{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:1.2rem;font-weight:500;white-space:nowrap}
+.tile small{color:var(--ink-3);font-size:13px;line-height:1.35}
+.callout{border:1px solid var(--line);background:var(--accent-soft);border-radius:12px;padding:14px 18px;display:grid;gap:8px}
+.callout.warn{background:var(--warn-bg)}
+.callout.bad{background:var(--bad-bg)}
+.callout.good{background:var(--good-bg)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--ink-2);font-size:13px;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.total td{font-weight:600;background:var(--bg)}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.chip.good{background:var(--good-bg);color:var(--good)}
+.chip.warn{background:var(--warn-bg);color:var(--warn)}
+.chip.bad{background:var(--bad-bg);color:var(--bad)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;counter-reset:step;list-style:none;padding:0}
+.flow li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;counter-increment:step;display:grid;gap:4px;align-content:start}
+.flow li::before{content:counter(step);font-family:var(--f-mono);font-size:12px;color:var(--accent)}
+.flow li b{font-family:var(--f-display)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.card h3{margin:0}
+figure{margin:0;display:grid;gap:8px}
+figcaption{font-size:14px;color:var(--ink-3)}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:520px;height:auto}
+.chart text{font-family:var(--f-body);fill:var(--ink-2)}
+.chart .lbl{font-family:var(--f-mono);font-size:12px;fill:var(--ink)}
+.chart .ax{stroke:var(--line);stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink-2)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+dl.gloss{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:8px 18px;margin:0}
+dl.gloss dt{font-weight:600}
+dl.gloss dd{margin:0;color:var(--ink-2)}
+@media (max-width:560px){dl.gloss{grid-template-columns:1fr}dl.gloss dd{margin-bottom:8px}}
+.src{font-size:13px;color:var(--ink-3);word-break:break-word}
+.src li{max-width:none}
+footer{font-size:13px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="toc" aria-label="Contents">
+  <details id="toc-d">
+    <summary>Contents</summary>
+    <ol>
+      <li><a href="#verdict">Verdict at a glance</a></li>
+      <li><a href="#model">How the business works</a></li>
+      <li><a href="#product">What exactly we sell</a></li>
+      <li><a href="#market">Market and size</a></li>
+      <li><a href="#countries">Where to sell</a></li>
+      <li><a href="#competition">Competition and saturation</a></li>
+      <li><a href="#arbitrage">Price gaps China / Japan / EU</a></li>
+      <li><a href="#economics">What one figure earns</a></li>
+      <li><a href="#logistics">Logistics</a></li>
+      <li><a href="#legal">Law, customs and tax</a></li>
+      <li><a href="#form">Business form and channels</a></li>
+      <li><a href="#finance">Year-1 financial plan</a></li>
+      <li><a href="#budget">Optimal budget</a></li>
+      <li><a href="#quality">Quality over quantity</a></li>
+      <li><a href="#scale">Large volumes</a></li>
+      <li><a href="#forecast">Forecast 2026–2030</a></li>
+      <li><a href="#risks">Risks</a></li>
+      <li><a href="#timeline">Timeline</a></li>
+      <li><a href="#gonogo">Go / no-go criteria</a></li>
+      <li><a href="#check">To verify before launch</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </details>
+</nav>
+
+<main>
+
+<header class="hero">
+  <p class="eyebrow">Feasibility study · as of 18 October 2026</p>
+  <h1>Pre-owned collectible figures from China for the EU market</h1>
+  <p class="lede">A profitability analysis of importing second-hand anime figures (in the best possible condition) from China to Poland and selling them across the European Union. The company: a Polish limited company (sp. z o.o.) buying stock from a related sourcing company in China. Every term is explained, so no prior knowledge of the figure market is needed.</p>
+</header>
+
+<section id="verdict">
+  <h2>Verdict at a glance</h2>
+  <div class="verdict">
+    <div class="holo" aria-hidden="true">CONDITIONAL<br>YES<span>PILOT 2027</span></div>
+    <div style="display:grid;gap:8px;min-width:0">
+      <p><strong>The business makes sense as a specialist, curated shop for pre-owned mid- and high-end figures that are verified as authentic and graded on a condition scale.</strong> It does not make sense as a cheap bulk trade in the lowest-priced figures.</p>
+      <p>One number decides the outcome: <strong>the purchase price in China</strong>. At prices from typical Xianyu listings the margin is 10–14% and the business does not work. At prices from whole-collection buyouts and bargains (about 30–35% of the net retail price) the margin rises to 22–31% and the business works.</p>
+      <p>Recommendation: <strong>start in 2027 with a paid pilot</strong> (2–3 rail shipments, sales in Poland and Germany) and move to full scale only once the thresholds in <a href="#gonogo">“Go / no-go criteria”</a> are met. The pilot can be very small: a few expensive or a few dozen carefully chosen figures a month (section <a href="#quality">“Quality over quantity”</a>).</p>
+    </div>
+  </div>
+  <div class="tiles">
+    <div class="tile"><span class="eyebrow">Year-1 revenue</span><b>≈ €177k</b><small>base case, about 1,800 figures sold (≈ PLN 750k)</small></div>
+    <div class="tile"><span class="eyebrow">Year-1 result</span><b>≈ +€6k</b><small>before owners' pay; range −€18k to +€37k</small></div>
+    <div class="tile"><span class="eyebrow">Unit margin</span><b>≈ 22%</b><small>after all variable costs, at target purchase prices</small></div>
+    <div class="tile"><span class="eyebrow">Optimal capital</span><b>≈ €54k</b><small>in two tranches: about €24k for the pilot and €30k after the decision</small></div>
+    <div class="tile"><span class="eyebrow">December 2027 pace</span><b>≈ €7.4k</b><small>monthly operating profit at the seasonal peak, base case</small></div>
+  </div>
+  <div class="callout warn">
+    <p><strong>Three things that can kill the business and must be resolved before the first purchase:</strong></p>
+    <ol>
+      <li><strong>Toy law:</strong> cheap prize figures without a CE mark may be classed as toys, which cannot be imported and sold without documentation. This shapes the product mix.</li>
+      <li><strong>Full VAT:</strong> goods imported from China cannot be sold under the VAT margin scheme. We pay VAT on the full price, while private sellers on Vinted or OLX pay none.</li>
+      <li><strong>Bootlegs (counterfeits):</strong> the Chinese second-hand market is flooded with them. One counterfeit sold can destroy the brand and carries criminal liability.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="model">
+  <h2>How the business works</h2>
+  <p>It is arbitrage (buying where it is cheaper and selling where it is more expensive) combined with a service. China has a huge number of collectors selling off their collections, so pre-owned figures are relatively cheap there. EU buyers have no easy access to them: Xianyu (China's equivalent of eBay classifieds) does not ship abroad, and buying through agents means duty, VAT on delivery, carrier fees and weeks of waiting. Our added value is <strong>“verified original, honestly described condition, shipped from Poland in 1–3 days, with an invoice and a right to return”</strong>.</p>
+  <ol class="flow">
+    <li><b>Buying in China</b>The sourcing company buys on Xianyu, in second-hand shops and through whole-collection buyouts.</li>
+    <li><b>Checks in China</b>Authenticity and condition check, photos, bootlegs rejected before shipping.</li>
+    <li><b>Transport</b>Consolidated rail freight (LCL) every 4–6 weeks, 1–3 m³ at a time, 12–18 days in transit.</li>
+    <li><b>Clearance in Poland</b>Customs agent, duty 4.7–6.5%, import VAT settled in the VAT return (art. 33a).</li>
+    <li><b>Warehouse in Poland</b>Second check, A/B/C condition grading, professional photos, listings.</li>
+    <li><b>Sales</b>Allegro, eBay.de/.fr, own shop, live selling (TikTok Shop, Whatnot).</li>
+    <li><b>Delivery</b>InPost, DPD, Packeta. Double-boxed so the collector's box arrives untouched.</li>
+  </ol>
+  <p class="muted">Why the B2B model (the Chinese company sells to the Polish company) beats shipping parcels from China straight to customers: since 1 July 2026 every low-value parcel from China to the EU pays €3 duty per tariff line, and from 1 November 2026 a €2 EU handling fee is added. Bulk import into an EU warehouse avoids these charges; competitors shipping directly from China do not.</p>
+</section>
+
+<section id="product">
+  <h2>What exactly we sell</h2>
+  <p>“Anime figure” covers several very different products. They differ in price, margin, counterfeit risk and legal status.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Segment</th><th>Examples</th><th class="r">Used price in EU</th><th>Bootleg risk</th><th>Legal status</th><th>Rating</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Prize figures</strong> (Japanese arcade and lottery prizes)</td><td>Banpresto, SEGA, Taito, FuRyu: One Piece, Dragon Ball</td><td class="r">€15–40</td><td>Medium</td><td>Borderline: may count as toys (CE needed)</td><td><span class="chip warn">bundles only</span></td></tr>
+      <tr><td><strong>Nendoroid / figma</strong> (small, poseable)</td><td>Good Smile Company, Max Factory</td><td class="r">€25–60</td><td>High</td><td>Borderline: poseable, so “for play”</td><td><span class="chip warn">selectively</span></td></tr>
+      <tr><td><strong>Scale figures 1/7, 1/8</strong> (detailed, static)</td><td>Good Smile, Kotobukiya, Alter, Kadokawa: Rem, Frieren, Miku</td><td class="r">€80–200</td><td>High for hit titles</td><td>Good case for “collector item 14+”</td><td><span class="chip good">core range</span></td></tr>
+      <tr><td><strong>Premium / statues</strong> (1/4, resin, limited)</td><td>Prime 1 Studio, FREEing 1/4, licensed resin statues</td><td class="r">€250–800</td><td>Very high</td><td>Usually outside toy law</td><td><span class="chip good">selected deals</span></td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Condition scale</strong> (modelled on Japan's Mandarake and AmiAmi), worth publishing in the shop: <span class="num">A</span> = like new, complete; <span class="num">B</span> = minor marks, complete; <span class="num">C</span> = visible flaws or missing parts. Figure and box are graded separately, because box condition is a large part of the value for collectors.</p>
+  <p><strong>Best-selling franchises</strong>: evergreen (One Piece, Dragon Ball, Evangelion, Hatsune Miku, Gundam), current hits (Demon Slayer, Jujutsu Kaisen, Chainsaw Man, Frieren) and gacha-game characters (NIKKE, Blue Archive, Genshin Impact, Azur Lane). Chinese collectors are strongest in the last group, so supply in China is deepest there. Pre-owned prices for a franchise rise when a new season or film comes out, so buy 6–12 months ahead (One Piece: anime remake in February 2027; Frieren: season 3 reported for October 2027).</p>
+</section>
+
+<section id="market">
+  <h2>Market and size</h2>
+  <p>Research firms disagree widely because each defines the “anime market” differently. We therefore give ranges and the most credible reference points.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Indicator</th><th class="r">Value</th><th>Source and reliability</th></tr></thead>
+    <tbody>
+      <tr><td>Global anime market 2024</td><td class="r">≈ $25bn</td><td>Association of Japanese Animations (most credible); +14.8% YoY, overseas now 56.5%</td></tr>
+      <tr><td>Anime market growth to 2030</td><td class="r">9–10% a year</td><td>Consensus of several firms (Grand View, Maximize, ResearchAndMarkets)</td></tr>
+      <tr><td>Global anime merchandise 2025</td><td class="r">≈ $9–12bn</td><td>GMI, SNS Insider; Europe named the fastest-growing region</td></tr>
+      <tr><td>Global anime figure market</td><td class="r">$2.2–8.7bn</td><td>About 4x spread depending on definition</td></tr>
+      <tr><td>Bandai Namco Toys &amp; Hobby (FY to 3/2026)</td><td class="r">¥674bn, +12.9%</td><td>Hard company data; growth driven by premium figures and overseas demand</td></tr>
+      <tr><td>“Kidults” (buyers 12+) in EU5 toys</td><td class="r">≈ €5.7bn, +14%</td><td>Circana; 32% of the toy market, 35% in Germany</td></tr>
+      <tr><td>Crunchyroll paid subscribers</td><td class="r">21m+ (05/2026)</td><td>+24% in a year</td></tr>
+      <tr><td>Vinted (benchmark for EU recommerce)</td><td class="r">GMV €10.8bn, +47%</td><td>2025 data; “hobbies &amp; collectables” category added</td></tr>
+      <tr><td><strong>EU pre-owned anime figure market (own estimate)</strong></td><td class="r"><strong>€80–200m</strong></td><td>Low confidence, no primary data. Derived from Europe's share (12–18%) and the secondary-market share (15–25%)</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Conclusion:</strong> the general trends are strong and well documented: growing anime audiences in Europe, adult collector spending and recommerce. According to Ampere Analysis, 7 of the 10 countries with the fastest-growing interest in anime worldwide are European (Finland, Germany, Italy, UK, France, Poland, Spain). Even a 0.5% share of the niche means €0.4–1m of revenue a year, more than a small company can handle in year one. <strong>Market size is not the constraint. Margin and trust are.</strong></p>
+  <div class="callout warn"><p><strong>Warning signs:</strong> French manga sales have been falling since their 2022 peak (−9% by volume in 2024), Japan Expo attendance is flat (about 222k), and eBay describes EU consumer confidence as weak. The blind-box craze (Labubu) cooled abruptly: resale prices in China fell by 88%. That is a warning against holding large stocks of hype-driven items.</p></div>
+</section>
+
+<section id="countries">
+  <h2>Where to sell: country ranking</h2>
+  <p>Criteria: fandom strength, purchasing power, share of online buyers, shipping cost from Poland, VAT rate (lower VAT leaves more of the same price) and available sales channels. Out of €120 gross the net amount is: Germany €100.8, France €100, Spain and Netherlands €99.2, Italy €98.4, Poland €97.6.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Country</th><th class="r">VAT</th><th class="r">Shipping from PL</th><th>Why</th><th>Channels</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><strong>Germany</strong></td><td class="r">19%</td><td class="r">€6–11</td><td>Largest population, high purchasing power, highest kidult share in EU5, manga is 2/3 of comics. Lowest VAT among large markets. Close and cheap to reach.</td><td>eBay.de, own shop, Whatnot, TikTok Shop DE</td></tr>
+      <tr><td class="num">2</td><td><strong>France</strong></td><td class="r">20%</td><td class="r">€7–14</td><td>Deepest fandom in the EU, world's #2 manga market, Japan Expo, record toy market (€4.7bn). Harder packaging rules (Citeo, Triman).</td><td>eBay.fr, Leboncoin, Rakuten, TikTok Shop FR</td></tr>
+      <tr><td class="num">3</td><td><strong>Poland</strong></td><td class="r">23%</td><td class="r">€2.6–3.8</td><td>Test market and logistics base. No Polish shop specialising in pre-owned anime figures was found, so the niche is open. Lower prices and the highest VAT.</td><td>Allegro, own shop, TikTok Shop PL (since 06/2026)</td></tr>
+      <tr><td class="num">4</td><td><strong>Italy</strong></td><td class="r">22%</td><td class="r">€7–14</td><td>Very strong fandom (Lucca Comics: 280k tickets, comics sales tripled since 2019), but only about 62% of internet users buy online.</td><td>eBay.it, TikTok Shop IT</td></tr>
+      <tr><td class="num">5</td><td><strong>Netherlands, Belgium</strong></td><td class="r">21%</td><td class="r">€6–12</td><td>Wealthy and very digital (94% buy online in NL). Served in English, French and German.</td><td>Own shop, Bol, eBay</td></tr>
+      <tr><td class="num">6</td><td><strong>Spain</strong></td><td class="r">21%</td><td class="r">€8–16</td><td>Big conventions (Manga Barcelona: 167k), but lower purchasing power and pricier shipping.</td><td>eBay.es, TikTok Shop ES</td></tr>
+      <tr><td class="num">7</td><td><strong>Nordics</strong></td><td class="r">25–25.5%</td><td class="r">€10–15</td><td>Wealthy, Finland has the fastest-growing anime interest, but high VAT and small volume.</td><td>Own shop</td></tr>
+      <tr><td class="num">8</td><td><strong>Czechia, Slovakia, Hungary, Romania</strong></td><td class="r">21–27%</td><td class="r">€4–8</td><td>Cheap shipping via Packeta, little local competition, lower prices.</td><td>Own shop, Allegro (CZ/SK)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">VAT note: until total B2C sales to other EU countries exceed €10,000 a year, Polish VAT of 23% applies everywhere. Above that threshold the customer's country rate applies, declared quarterly in Poland through the OSS scheme. Opting into OSS from the start pays off, because German and French VAT is lower than Polish VAT.</p>
+  <p><strong>Recommended order:</strong> start in Poland and Germany (months 1–3), then France and Italy (from months 4–6), and the rest of the EU through the own shop and eBay.</p>
+</section>
+
+<section id="competition">
+  <h2>Competition and saturation</h2>
+  <div class="grid2">
+    <div class="card"><h3>Japanese giants</h3><p>Mandarake, Suruga-ya, AmiAmi (pre-owned), Solaris Japan, Nin-Nin-Game. Huge range and a strong reputation for condition grading. Weakness: 1–8 weeks delivery, and the EU buyer pays 19–27% VAT, the €3 duty and a €2–8 carrier fee on top. A €40 pre-owned figure costs an EU buyer <strong>€65–90</strong> delivered.</p></div>
+    <div class="card"><h3>Proxy agents</h3><p>Buyee, ZenMarket (Japan), Superbuy, CSSBuy, Hoobuy (China and Xianyu). Used mainly by experienced buyers. The “rep” (replica) community that uses Chinese proxies makes this channel full of bootlegs.</p></div>
+    <div class="card"><h3>EU shops</h3><p>Almost all sell new figures only. Specialist pre-owned figure shops are rare (e.g. Manayga in Berlin, mostly manga). <strong>None was found in Poland.</strong></p></div>
+    <div class="card"><h3>Private sellers</h3><p>Vinted, OLX, Kleinanzeigen, Leboncoin, eBay. They dominate the cheap end and pay no VAT. A race to the lowest price on cheap prize figures.</p></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Market segment</th><th>Saturation</th><th>Conclusion</th></tr></thead>
+    <tbody>
+      <tr><td>New figures</td><td><span class="chip bad">high</span></td><td>Stay out. Many EU shops, and the weak yen makes buying from Japan cheap.</td></tr>
+      <tr><td>Cheap pre-owned prize figures</td><td><span class="chip bad">high</span></td><td>Only as add-ons in bundles or mystery boxes.</td></tr>
+      <tr><td>Curated, graded, guaranteed scale figures (€80–300) held in the EU</td><td><span class="chip good">low</span></td><td>The main opportunity. Nobody in the EU does this the Mandarake/AmiAmi way.</td></tr>
+      <tr><td>Poland and Central &amp; Eastern Europe</td><td><span class="chip good">very low</span></td><td>No specialist, few listings in PLN and in Polish.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout bad"><p><strong>Vinted is out as a channel.</strong> Vinted Pro (business accounts) is not available in Poland, and since early 2026 Vinted has been mass-blocking Polish accounts that sell commercially. In addition, from 30 sales or €2,000 a year the platform reports the seller to the tax authority (DAC7).</p></div>
+  <p><strong>Saturation verdict:</strong> the market is crowded at the bottom (cheap figures, private sellers) and under-supplied in the middle and at the top (curated, graded, guaranteed). A “verified original, graded condition, shipped from Poland” model stands out. A “cheapest price” model does not.</p>
+</section>
+
+<section id="arbitrage">
+  <h2>Price gaps: China, Japan, EU</h2>
+  <p>Example prices for pre-owned, complete, boxed figures in B/B+ condition. Rate: €1 ≈ 7.6–7.7 CNY. Values are estimates from typical market levels. Confirm them with 10–20 sold listings per model before launch.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Example</th><th class="r">Xianyu (China)</th><th class="r">Japan, used</th><th class="r">EU resale</th><th class="r">Gross multiple</th></tr></thead>
+    <tbody>
+      <tr><td>Banpresto prize (One Piece, DBZ)</td><td class="r">€5–13</td><td class="r">€9–21</td><td class="r">€20–40</td><td class="r">2–3x</td></tr>
+      <tr><td>Nendoroid (common)</td><td class="r">€17–34</td><td class="r">€18–36</td><td class="r">€35–60</td><td class="r">1.7–2x</td></tr>
+      <tr><td>Scale 1/7 (Rem, Kadokawa/GSC)</td><td class="r">€32–78</td><td class="r">€41–90</td><td class="r">€80–160</td><td class="r">1.8–2.5x</td></tr>
+      <tr><td>Frieren 1/7 GSC (new, hot)</td><td class="r">€58–97</td><td class="r">€76–106</td><td class="r">€130–200</td><td class="r">≈ 1.8x</td></tr>
+      <tr><td>Alter 1/7 (older Saber, Miku)</td><td class="r">€52–143</td><td class="r">€60–150</td><td class="r">€120–260</td><td class="r">≈ 2x</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><strong>China is 10–30% cheaper than Japan</strong> on popular models, because many Chinese collectors are leaving the hobby and PVC figure prices in China have been falling for several years.</li>
+    <li><strong>Japan is often cheaper for rare and vintage figures.</strong> Chinese collectors buy from Suruga-ya and Mandarake themselves.</li>
+    <li><strong>The real bargains are in whole-collection buyouts</strong> and in oversupplied titles. Mercari (Japan's Vinted) even runs an official Xianyu store, which pushes prices of popular models up to Japanese levels.</li>
+    <li>A 2x multiple sounds good, but after VAT, freight, duty, fees, shipping and returns much less is left (next section).</li>
+  </ul>
+  <h3>Is a 2x price gap enough?</h3>
+  <p>New figures in Poland, Spain and other EU countries often cost <strong>twice as much as in China</strong>. That is a good sign, but much of the gap is not distributor profit. It is costs we would bear too: 19–27% VAT, duty, freight, platform fees, delivery, returns and marketing. For a scale figure these costs (excluding the purchase itself) take about <strong>44% of net revenue</strong>.</p>
+  <p>The key measure is the <strong>multiple</strong>: EU selling price incl. VAT divided by the purchase price in China.</p>
+  <div class="tbl"><table>
+    <thead><tr><th class="r">Multiple</th><th class="r">Unit margin</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td class="r">2.0x</td><td class="r">−4.5%</td><td><span class="chip bad">loss</span> The typical gap for <em>new</em> figures. That is why new figures are out.</td></tr>
+      <tr><td class="r">2.2x</td><td class="r">0%</td><td>Break-even</td></tr>
+      <tr><td class="r">2.5x</td><td class="r">7.6%</td><td><span class="chip warn">too little</span> Won't cover fixed costs</td></tr>
+      <tr><td class="r">3.0x</td><td class="r">15.7%</td><td><span class="chip warn">borderline</span></td></tr>
+      <tr><td class="r">3.3x</td><td class="r">19.3%</td><td><span class="chip good">minimum target</span></td></tr>
+      <tr><td class="r">4.0x</td><td class="r">25.8%</td><td><span class="chip good">good</span> Typical for whole-collection buyouts</td></tr>
+      <tr><td class="r">5.0x</td><td class="r">31.8%</td><td><span class="chip good">very good</span> Bargains and discontinued figures</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>That is why the second-hand model works and trading new figures does not.</strong> A used figure is cheaper than a new one in China, while a good used figure sells close to the new price in the EU. The two gaps add up. Example (estimate) for a 1/7 figure that costs about CNY 800 (€105) new in China and about €210 in Poland or Spain:</p>
+  <ul>
+    <li><strong>Used, bought from a listing</strong> (about CNY 500, €66), sold in A condition for about €160: 2.4x multiple, about 6% margin. <span class="chip bad">not worth it</span></li>
+    <li><strong>Bought in a collection buyout</strong> (about CNY 350, €46), sold for €160: 3.5x multiple, about 21% margin. <span class="chip good">worth it</span></li>
+    <li><strong>Discontinued figure</strong> (bought at €66), sold at or above the new price (€210+): 3.2x+ multiple, about 18% margin or more. <span class="chip good">worth it</span></li>
+  </ul>
+  <p class="muted">The same logic holds across the EU. New figure prices in Spain, Germany or France are close to Polish ones; mainly VAT differs (19–23% in the large countries). A simple test before every purchase: <strong>am I buying for less than a third of the price this figure will realistically sell for in the EU?</strong> If not, don't buy.</p>
+</section>
+
+<section id="economics">
+  <h2>What one figure earns</h2>
+  <p>Calculation for three typical figures with rail freight, full VAT (21% on average) and current purchase prices from listings. Euros, excluding fixed costs.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>€ per unit</th><th class="r">Prize (€25)</th><th class="r">Scale 1/7 (€120)</th><th class="r">Premium (€400)</th></tr></thead>
+    <tbody>
+      <tr><td>Retail price incl. VAT</td><td class="r">25.00</td><td class="r">120.00</td><td class="r">400.00</td></tr>
+      <tr><td><strong>Net revenue (excl. VAT)</strong></td><td class="r"><strong>20.66</strong></td><td class="r"><strong>99.17</strong></td><td class="r"><strong>330.58</strong></td></tr>
+      <tr><td>Purchase in China</td><td class="r">5.92 (CNY 45)</td><td class="r">42.11 (CNY 320)</td><td class="r">144.74 (CNY 1,100)</td></tr>
+      <tr><td>Handling in China and clearance</td><td class="r">1.00</td><td class="r">3.50</td><td class="r">8.00</td></tr>
+      <tr><td>Rail freight</td><td class="r">2.50</td><td class="r">4.50</td><td class="r">33.00</td></tr>
+      <tr><td>Duty (4.7% / 4.7% / 6.5%) and insurance</td><td class="r">0.48</td><td class="r">2.54</td><td class="r">12.79</td></tr>
+      <tr class="total"><td>Landed cost</td><td class="r">9.90</td><td class="r">52.65</td><td class="r">198.52</td></tr>
+      <tr><td>Platform and payment fees</td><td class="r">3.00</td><td class="r">13.20</td><td class="r">36.00</td></tr>
+      <tr><td>Shipping subsidy, packaging, packing</td><td class="r">3.10</td><td class="r">6.00</td><td class="r">18.00</td></tr>
+      <tr><td>Returns, damage, chargebacks</td><td class="r">0.83</td><td class="r">4.96</td><td class="r">19.83</td></tr>
+      <tr><td>Marketing</td><td class="r">1.50</td><td class="r">8.40</td><td class="r">24.00</td></tr>
+      <tr class="total"><td>Unit margin (current purchase prices)</td><td class="r">2.33 (11%)</td><td class="r">13.96 (14%)</td><td class="r">34.22 (10%)</td></tr>
+    </tbody>
+  </table></div>
+  <figure>
+    <div class="chart" role="img" aria-label="Bar chart: unit margin as a percentage of net revenue for three segments at three purchase-price levels. Prize: 11.6, 21.6 and 28.3 percent. Scale: 14.3, 24.0 and 31.0 percent. Premium: 10.5, 19.1 and 25.4 percent. Target line at 20 percent.">
+      <svg viewBox="0 0 640 310" xmlns="http://www.w3.org/2000/svg">
+        <line class="ax" x1="50" x2="625" y1="250" y2="250"/>
+        <line class="ax" x1="50" x2="625" y1="187.1" y2="187.1" stroke-dasharray="2 4"/>
+        <line class="ax" x1="50" x2="625" y1="61.4" y2="61.4" stroke-dasharray="2 4"/>
+        <line x1="50" x2="625" y1="124.3" y2="124.3" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text x="44" y="254" font-size="12" text-anchor="end">0%</text>
+        <text x="44" y="191" font-size="12" text-anchor="end">10%</text>
+        <text x="44" y="128" font-size="12" text-anchor="end">20%</text>
+        <text x="44" y="65" font-size="12" text-anchor="end">30%</text>
+        <text x="58" y="118" font-size="11">target: 20%</text>
+        <rect x="75" y="177.1" width="40" height="72.9" rx="3" fill="var(--bar-weak)"><title>Prize, bought at CNY 45: 11.6%</title></rect>
+        <rect x="123" y="114.2" width="40" height="135.8" rx="3" fill="var(--accent)"><title>Prize, bought at CNY 30: 21.6%</title></rect>
+        <rect x="171" y="72.1" width="40" height="177.9" rx="3" fill="var(--accent)"><title>Prize, bought at CNY 20: 28.3%</title></rect>
+        <text class="lbl" x="95" y="171" text-anchor="middle">11.6</text>
+        <text class="lbl" x="143" y="108" text-anchor="middle">21.6</text>
+        <text class="lbl" x="191" y="66" text-anchor="middle">28.3</text>
+        <text x="95" y="266" font-size="11" text-anchor="middle">CNY 45</text>
+        <text x="143" y="266" font-size="11" text-anchor="middle">30</text>
+        <text x="191" y="266" font-size="11" text-anchor="middle">20</text>
+        <text x="143" y="290" font-size="13" font-weight="600" text-anchor="middle">Prize (€25)</text>
+        <rect x="265" y="160.1" width="40" height="89.9" rx="3" fill="var(--bar-weak)"><title>Scale, bought at CNY 320: 14.3%</title></rect>
+        <rect x="313" y="99.1" width="40" height="150.9" rx="3" fill="var(--accent)"><title>Scale, bought at CNY 250: 24.0%</title></rect>
+        <rect x="361" y="55.1" width="40" height="194.9" rx="3" fill="var(--accent)"><title>Scale, bought at CNY 200: 31.0%</title></rect>
+        <text class="lbl" x="285" y="154" text-anchor="middle">14.3</text>
+        <text class="lbl" x="333" y="93" text-anchor="middle">24.0</text>
+        <text class="lbl" x="381" y="49" text-anchor="middle">31.0</text>
+        <text x="285" y="266" font-size="11" text-anchor="middle">CNY 320</text>
+        <text x="333" y="266" font-size="11" text-anchor="middle">250</text>
+        <text x="381" y="266" font-size="11" text-anchor="middle">200</text>
+        <text x="333" y="290" font-size="13" font-weight="600" text-anchor="middle">Scale 1/7 (€120)</text>
+        <rect x="455" y="184" width="40" height="66" rx="3" fill="var(--bar-weak)"><title>Premium, bought at CNY 1,100: 10.5%</title></rect>
+        <rect x="503" y="129.9" width="40" height="120.1" rx="3" fill="var(--bar-weak)"><title>Premium, bought at CNY 900: 19.1%</title></rect>
+        <rect x="551" y="90.3" width="40" height="159.7" rx="3" fill="var(--accent)"><title>Premium, bought at CNY 750: 25.4%</title></rect>
+        <text class="lbl" x="475" y="178" text-anchor="middle">10.5</text>
+        <text class="lbl" x="523" y="124" text-anchor="middle">19.1</text>
+        <text class="lbl" x="571" y="84" text-anchor="middle">25.4</text>
+        <text x="475" y="266" font-size="11" text-anchor="middle">CNY 1100</text>
+        <text x="523" y="266" font-size="11" text-anchor="middle">900</text>
+        <text x="571" y="266" font-size="11" text-anchor="middle">750</text>
+        <text x="523" y="290" font-size="13" font-weight="600" text-anchor="middle">Premium (€400)</text>
+      </svg>
+    </div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>margin of 20% or more (profitable)</span><span><i style="background:var(--bar-weak)"></i>below 20% (unprofitable)</span></div>
+    <figcaption>Unit margin (% of net revenue) at three purchase-price levels in China. The first bar in each group is a typical listing price; the others are prices from collection buyouts and bargains.</figcaption>
+  </figure>
+  <div class="callout good">
+    <p><strong>The golden buying rule:</strong> the purchase price must not exceed <strong>about 35% of the net retail price</strong> for scale and premium figures, and <strong>about 25%</strong> for prize figures. For a figure selling at €120 that means buying at no more than about CNY 250 (€33). Every purchase should go through a simple calculator before payment.</p>
+  </div>
+  <p class="muted">Other sensitivities: air freight instead of rail cuts the margin by about €2.5 (prize), €8 (scale) and €40 (premium), so premium figures lose money by air. A 5% rise of the yuan against the euro cuts the margin by 2–3 percentage points.</p>
+</section>
+
+<section id="logistics">
+  <h2>Logistics</h2>
+  <p>Figure boxes are big and light. Air carriers then charge by <strong>volumetric weight</strong> (volume / 6000) instead of actual weight. A 20×15×30 cm box “weighs” 1.5 kg for them even if it actually weighs 0.6 kg. That is why <strong>rail</strong> is the default mode and air is only for expensive, fast-selling pieces.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>China → Poland</th><th class="r">Rate 2025–26</th><th class="r">Time</th><th class="r">Per scale figure</th></tr></thead>
+    <tbody>
+      <tr><td>Rail LCL (via Małaszewicze)</td><td class="r">$155–200/m³, about €300–400/m³ door to door</td><td class="r">12–18 days</td><td class="r">≈ €3.5–5</td></tr>
+      <tr><td>Sea LCL (to Gdańsk)</td><td class="r">$62–160/m³ + port charges</td><td class="r">30–50 days</td><td class="r">≈ €2.5–4</td></tr>
+      <tr><td>Consolidated air</td><td class="r">$5–8.5/kg</td><td class="r">6–11 days</td><td class="r">≈ €10–14</td></tr>
+      <tr><td>Express courier (DHL, FedEx, SF)</td><td class="r">$7–40/kg</td><td class="r">3–7 days</td><td class="r">≈ €13–25</td></tr>
+    </tbody>
+  </table></div>
+  <h3>All ways to ship from China: cost per figure compared</h3>
+  <p>Transit time doesn't matter, so only cost per unit and risk count. The key difference: <strong>couriers and air freight charge by volume</strong> (volumetric weight, for couriers L × W × H / 5000), while <strong>the post usually charges by actual weight</strong>. Figure boxes are big and light, so couriers come out very expensive and the post surprisingly cheap.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Mode</th><th class="r">Scale figure</th><th class="r">Prize figure</th><th class="r">Time</th><th>Pros and cons</th><th>Rating</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sea container (FCL)</strong></td><td class="r">€0.5–1.4</td><td class="r">€0.3–0.7</td><td class="r">35–50 days</td><td>Cheapest, but the container must be filled (a 20' holds about 2,000–2,600 boxes)</td><td><span class="chip good">at scale</span></td></tr>
+      <tr><td><strong>Rail container (FCL)</strong></td><td class="r">€1–1.6</td><td class="r">€0.5–0.8</td><td class="r">12–25 days</td><td>Almost as cheap as sea, cash comes back faster</td><td><span class="chip good">at scale</span></td></tr>
+      <tr><td><strong>Sea groupage (LCL)</strong></td><td class="r">€2.5–4</td><td class="r">€1.2–2</td><td class="r">30–50 days</td><td>From about 1 m³ (about 100 boxes), one customs declaration</td><td><span class="chip good">pilot and growth</span></td></tr>
+      <tr><td><strong>Rail groupage (LCL)</strong></td><td class="r">€3.5–5</td><td class="r">€1.7–2.5</td><td class="r">12–18 days</td><td>As above, faster</td><td><span class="chip good">pilot and growth</span></td></tr>
+      <tr><td><strong>Post: economy parcels up to 20–30 kg</strong> (China Post, surface)</td><td class="r">€2.8–4.3</td><td class="r">€1.5–2</td><td class="r">6–12 weeks</td><td>Billed by weight, not volume, so cheap for light boxes. No minimum. But: weak tracking, higher risk of crushing and loss, size limits, each parcel cleared separately (Polish Post fees), uncertain 2026 service availability and rates</td><td><span class="chip good">good for the pilot, small figures</span></td></tr>
+      <tr><td><strong>“Door-to-door, duty included” lines</strong> (中欧专线, 双清包税, rail, sea or air)</td><td class="r">€4–7</td><td class="r">€2–3</td><td class="r">15–45 days</td><td>Convenient, but usually cleared under someone else's VAT number, often undervalued. No VAT deduction, no import documents for the company, risk of seizure and tax trouble</td><td><span class="chip bad">not the “tax included” version</span></td></tr>
+      <tr><td><strong>Consolidated air freight</strong> (from about 100 kg)</td><td class="r">€9–11</td><td class="r">€4–5</td><td class="r">6–11 days</td><td>Fast, but you pay for volume</td><td><span class="chip warn">urgent only</span></td></tr>
+      <tr><td><strong>Express courier</strong> (DHL, FedEx, UPS, SF), large 21–300 kg shipments at a Chinese forwarder's discount</td><td class="r">€15–31</td><td class="r">€7–14</td><td class="r">3–7 days</td><td>Fastest, clearance included in the service, but 2–6 times the cost of post and 10–30 times the cost of a container</td><td><span class="chip bad">premium only</span></td></tr>
+      <tr><td><strong>EMS</strong> (postal express)</td><td class="r">≈ €27</td><td class="r">≈ €13</td><td class="r">about 10 days</td><td>Expensive, 20 kg per-parcel limit to Poland</td><td><span class="chip bad">no</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">Costs exclude duty and VAT, per packed scale figure (about 0.011 m³, about 0.8 kg) and prize figure (about 0.005 m³, about 0.4 kg). Postal parcels assume 20–30 kg with 7–19 figures each. Postal and courier rates come from forwarders' pages, not official tariffs, so confirm them with quotes.</p>
+  <div class="callout">
+    <p><strong>Recommendation:</strong> for the pilot (first 200–600 units) compare three quotes: <strong>post (20–30 kg parcels), sea groupage and rail groupage</strong>. Post wins at small volumes and for light prize figures; groupage wins for scale figures and larger batches. At 1,000+ units a month: a 20' container by sea or rail. Use couriers only for single expensive premium figures. Don't use “tax included” lines.</p>
+    <p>Since time doesn't matter, sea instead of rail saves about €0.5–1 per unit. It does tie up cash for about 3–4 weeks longer: at 1,000 units a month that is about €40k more stock in transit.</p>
+  </div>
+  <p class="muted">Customs note for postal shipping: parcels up to €150 pay €3 duty per tariff line since 1.07.2026 and a €2 fee from 1.11.2026. Parcels above €150 need a full customs declaration. Deliberately splitting one delivery into small parcels to stay below the threshold is not allowed. Pack parcels as the order dictates and settle import VAT in the company's name.</p>
+  <ul>
+    <li><strong>Rhythm:</strong> a 1–3 m³ shipment every 4–6 weeks (about 100–110 medium boxes fit in 1 m³).</li>
+    <li><strong>Clearance:</strong> customs agent PLN 150–400 per declaration. At 200 units per shipment that is about €1.5–2.5 per unit including local delivery.</li>
+    <li><strong>Insurance:</strong> 0.25–0.35% of value. Standard policies often exclude box damage, which is critical for collectors, so negotiate it.</li>
+    <li><strong>Chinese New Year</strong> (February) halts logistics for 6–8 weeks. Build stock before it.</li>
+    <li><strong>Delivery to customers:</strong> InPost in Poland PLN 11–16 net, Germany €6–11, France and Italy €7–14, Spain €8–16. InPost International does not serve Germany, so use DPD, GLS or Packeta there.</li>
+    <li><strong>Packaging:</strong> double box with filler: €0.6–1 (small), €1.5–2.5 (medium), €4–8 (premium). Do not cut corners here.</li>
+    <li><strong>Own warehouse, not a 3PL:</strong> every pre-owned figure is a unique item that needs photos and a condition description, which outsourced warehouses handle badly. Budget €1–3 per unit for photos, grading and listing.</li>
+  </ul>
+</section>
+
+<section id="legal">
+  <h2>Law, customs and tax</h2>
+  <p class="muted">This section is an overview based on available sources, not legal advice. Points marked as uncertain must be confirmed with an adviser (list in <a href="#check">“To verify before launch”</a>).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Area</th><th>What the law says</th><th>What it means for us</th><th>Risk</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Customs classification</strong></td><td>Character figures most often fall under CN 9503 00 21 (“dolls”, including decorative ones): 4.7% duty. Purely ornamental statuettes go to 3926 40 00: 6.5%. Code 9703 (original sculptures) does not cover mass production.</td><td>Apply for a free <strong>BTI</strong> (binding tariff information) for 2–3 figure types. Valid 3 years across the EU.</td><td><span class="chip warn">medium</span></td></tr>
+      <tr><td><strong>Anti-dumping</strong></td><td>No EU anti-dumping measures on Chinese figures.</td><td>Check TARIC additional codes on each import.</td><td><span class="chip good">low</span></td></tr>
+      <tr><td><strong>Customs value</strong></td><td>Transaction value, also between related companies, if the relationship did not affect the price.</td><td>Keep purchase evidence for every item (Xianyu screenshots, payments, photos) and a written agreement with the Chinese company at a market markup.</td><td><span class="chip warn">medium</span></td></tr>
+      <tr><td><strong>Import VAT 23%</strong></td><td>Fully deductible. Art. 33a of the Polish VAT Act allows settling it in the JPK return instead of paying cash at the border.</td><td>Requires active VAT status, a customs representative, no-arrears certificates and monthly filing. Then import VAT does not tie up cash.</td><td><span class="chip good">low</span></td></tr>
+      <tr><td><strong>€3 parcel duty</strong></td><td>Since 1.07.2026 €3 duty per tariff line in parcels up to €150; from 1.11.2026 an extra €2 handling fee.</td><td><strong>Does not apply</strong> to B2B bulk import above €150. It hits competitors shipping directly from China and Japan. Do not split shipments into small parcels.</td><td><span class="chip good">opportunity</span></td></tr>
+      <tr><td><strong>VAT margin scheme</strong></td><td>The used-goods margin scheme (art. 120) covers only goods bought from private individuals and similar parties in the EU. <strong>Imports are not covered</strong> (CJEU C‑203/10). Figures are not “collectors' items” for VAT (code 9705).</td><td>VAT on the full sale price. Structural price disadvantage against private sellers. Exception: figures bought from private individuals in the EU can use the margin scheme (separate records).</td><td><span class="chip bad">high (margin)</span></td></tr>
+      <tr><td><strong>OSS</strong></td><td>€10,000 annual threshold across the whole EU. Above it, the customer's country VAT, filed quarterly in Poland (VIU‑DO).</td><td>Register for OSS from the start, as VAT in DE and FR is lower than in Poland. Do not hold stock in Amazon warehouses in other countries.</td><td><span class="chip good">low</span></td></tr>
+      <tr><td><strong>Transfer pricing</strong></td><td>The companies are related (≥25% in both). Local documentation only from PLN 10m of goods purchases a year, but prices must always be at arm's length.</td><td>Agreement: the Chinese company as a sourcing agent with a 5–15% cost-plus markup. Consistent with the customs value.</td><td><span class="chip good">low</span></td></tr>
+      <tr><td><strong>Chinese side</strong></td><td>Purchases from private Xianyu sellers come without invoices (fapiao). Since 2025 Xianyu reports sellers to the Chinese tax authority. New PRC VAT Law since 1.01.2026. No export VAT refund on used goods.</td><td>A limited company (有限公司) owned by a Chinese citizen rather than a sole trader. Settle through banks in EUR/USD, no netting. A Chinese adviser is essential.</td><td><span class="chip warn">medium</span></td></tr>
+      <tr><td><strong>GPSR</strong> (product safety)</td><td>Regulation 2023/988 applies since 13.12.2024, including to second-hand goods. The Polish company is the <strong>importer</strong>.</td><td>Importer sticker on every box, warnings (“not for children under 3, small parts”, “for collectors 15+”) in the customer's language, manufacturer data in listings, a recall procedure.</td><td><span class="chip warn">medium</span></td></tr>
+      <tr><td><strong>Toy law</strong></td><td>Directive 2009/48/EC (new Regulation 2025/2509 from 2030). “Products for collectors 14+” with a visible indication are excluded, but the label alone is not enough for a cheap, robust figure (Commission guidance no. 20).</td><td>Scale and premium figures: good case for “not a toy”. Prize, Nendoroid, figma: at risk. If it is a toy, it needs CE, a declaration of conformity and EN 71 tests, and <strong>a used toy without CE cannot be placed on the market</strong>. Buy prize figures in CE versions (European distribution) or limit them.</td><td><span class="chip bad">high</span></td></tr>
+      <tr><td><strong>Chemicals (REACH)</strong></td><td>Phthalates ≤0.1% in soft PVC in all products; lead in PVC ≤0.1% since 29.05.2025.</td><td>Main risk: old figures and bootlegs. Random XRF or lab screening.</td><td><span class="chip warn">medium</span></td></tr>
+      <tr><td><strong>Counterfeits</strong></td><td>Customs detains and destroys counterfeits (Reg. 608/2013). Selling them carries up to 2 years, or up to 5 years as a regular source of income (art. 305 Polish Industrial Property Law).</td><td>Verification procedure, destroy suspect items in China before export, money-back guarantee on counterfeits with no time limit.</td><td><span class="chip bad">high</span></td></tr>
+      <tr><td><strong>Parallel import of originals</strong></td><td>Trademark rights are exhausted only by the first sale <strong>in the EEA</strong>. Commercially importing originals first sold in Japan or China is formally an infringement (CJEU Silhouette, Davidoff, Laserdisken).</td><td>Rarely enforced against small sellers of used goods, but the risk grows with volume, especially on Amazon. Worth getting an IP lawyer's opinion.</td><td><span class="chip warn">medium, latent</span></td></tr>
+      <tr><td><strong>Marketing and names</strong></td><td>Descriptive use of character and manufacturer names in listings is allowed.</td><td>No logos, official artwork or character names in the company or domain name. Only own photos of the actual item.</td><td><span class="chip good">low</span></td></tr>
+      <tr><td><strong>Consumer law</strong></td><td>14-day no-reason return. Liability for non-conformity: 2 years, can be cut to 1 year for used goods (with prior notice). Omnibus: lowest price of the last 30 days on promotions.</td><td>Very precise condition descriptions limit claims. Some countries do not allow shortening liability, so check DE, FR, IT, ES.</td><td><span class="chip good">low</span></td></tr>
+      <tr><td><strong>Packaging (EPR)</strong></td><td>Poland: BDO. Germany: LUCID and a dual-system contract before the first parcel. France: Citeo, IDU number, Triman marking. Spain: producer register. PPWR from 12.08.2026 (possible deferral for EU firms).</td><td>Start with PL, DE and FR. Add countries as sales grow. Compliance providers charge about €100–500 per country per year.</td><td><span class="chip warn">medium</span></td></tr>
+      <tr><td><strong>DAC7 and KSeF</strong></td><td>Platforms report sellers. B2B invoices via KSeF from 1.04.2026.</td><td>Reconciled sales records and an invoicing system integrated with KSeF.</td><td><span class="chip good">low</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Polish limited company: practical points</h3>
+  <ul>
+    <li><strong>Formation:</strong> via the S24 online system about PLN 250, but S24 requires a PESEL number for every shareholder and board member. A shareholder without a PESEL means a notarial deed (PLN 1,000–2,500), a sworn translator and an apostille. It takes 2–6 weeks. Minimum capital PLN 5,000.</li>
+    <li><strong>9% CIT</strong> for small taxpayers (up to about PLN 8.5m revenue). Dividends to a Chinese resident: 10% under the PL–CN treaty, with a residence certificate.</li>
+    <li><strong>Estonian CIT:</strong> shareholders may be foreigners (natural persons), but it requires employees and is sensitive to related-party transactions. <strong>Not in year one.</strong> Revisit once profitable.</li>
+    <li><strong>Full accounting:</strong> PLN 1,000–3,000 a month (imports, OSS, several platforms, JPK, KSeF).</li>
+    <li><strong>Registrations:</strong> VAT‑R (active VAT), VAT‑UE, VIU‑R (OSS), EORI (free on PUESC), BDO, CRBR (within 7 days).</li>
+    <li><strong>Social security (ZUS):</strong> a board member appointed by resolution without pay pays no ZUS. With two shareholders there is no “shareholder ZUS”.</li>
+  </ul>
+</section>
+
+<section id="form">
+  <h2>Business form and sales channels</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Model</th><th>Pros</th><th>Cons</th><th>Rating</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Marketplaces</strong>: Allegro, eBay.de/.fr/.it</td><td>Traffic from day one, platform trust, fast demand validation</td><td>9–14% fees, competing with private and Japanese sellers</td><td><span class="chip good">launch</span></td></tr>
+      <tr><td><strong>Own shop</strong> (self-built, e.g. with AI help)</td><td>Highest margin, brand, authenticity guarantee and condition-scale pages, repeat customers</td><td>Traffic and trust must be earned (ads, content)</td><td><span class="chip good">from month 3–6</span></td></tr>
+      <tr><td><strong>Live selling</strong>: TikTok Shop (PL since 06/2026, DE, FR, IT, ES), Whatnot (DE)</td><td>Sells unique items very well; live unboxing and grading builds trust</td><td>TikTok Shop's “pre-owned” category is still rolling out in the EU and may need approval. TikTok fee 9%.</td><td><span class="chip good">from month 4–6</span></td></tr>
+      <tr><td><strong>Sourcing on request</strong> (“we'll find your figure”)</td><td>No stock risk (deposit), uses the depth of the Chinese market for rare items</td><td>Competes with proxies. The value is verification and a VAT-inclusive delivered price with no surprises.</td><td><span class="chip good">from month 3</span></td></tr>
+      <tr><td><strong>Consignment from EU collectors</strong></td><td>Stock without capital, margin scheme possible when buying from EU private individuals</td><td>Complex operations</td><td><span class="chip warn">year 2</span></td></tr>
+      <tr><td><strong>B2B wholesale to EU shops</strong></td><td>Volume, shops lack pre-owned stock</td><td>Low margin (selling at 50–60% of retail)</td><td><span class="chip warn">optional</span></td></tr>
+      <tr><td><strong>Mystery boxes</strong></td><td>Clears cheap prize figures, good for live streams</td><td>Reputation risk and consumer-protection scrutiny</td><td><span class="chip warn">supplement</span></td></tr>
+      <tr><td><strong>Vinted, Amazon, Etsy</strong></td><td>—</td><td>Vinted Pro unavailable in PL and account bans. Amazon requires approval for used toys and is most exposed to parallel-import disputes. Etsy only allows items 20+ years old.</td><td><span class="chip bad">skip</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p><strong>Recommended form:</strong> <strong>a specialist shop for pre-owned mid- and high-end figures</strong>, with a public condition scale and an authenticity guarantee. Hybrid sales: Allegro and eBay.de at launch (validation and traffic), the own shop as the hub of trust and repeat customers, live selling as the growth channel, and sourcing on request as a safe revenue stream with no stock risk. <strong>Not</strong> a cheap-figure shop, not a wholesaler, not Vinted.</p></div>
+  <p><strong>Product mix (year 1):</strong> about 50–55% of units scale figures and Nendoroids (the profit core), about 10–15% premium (only buyout bargains), about 30–35% cheap prize figures (only CE versions and in bundles, for traffic and live streams).</p>
+  <p><strong>Marketing:</strong> the cheapest customer acquisition in this niche is free content: unboxings, collection showcases and “live grading” on TikTok, Instagram and YouTube Shorts. Paid Facebook and Instagram ads rarely pay back on figures under €30. Google Shopping (median EU CPC about €0.36) for specific models. Customer acquisition cost: about €20–50, but a collector buys 4–10 times a year. Budget: 5–8% of revenue.</p>
+</section>
+
+<section id="finance">
+  <h2>Year-1 financial plan (2027)</h2>
+  <p>Assumptions: setup in January–March, sales from April, peak in Q4 (about 35–40% of annual sales). Rail freight bought 2 months ahead, 15% of stock does not sell on time and is marked down, import VAT settled in the return. <strong>No owners' pay.</strong> Rate €1 = PLN 4.25. The model cautiously assumes about €1.27k of fixed costs a month (including rented space). With online accounting and your own office these fall to about €260, improving the year by about €10k (base case: about +€16k instead of +€5.9k).</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th class="r">Pessimistic</th><th class="r">Base</th><th class="r">Optimistic</th></tr></thead>
+    <tbody>
+      <tr><td>Purchase price</td><td class="r">listing prices</td><td class="r">target (~35%)</td><td class="r">bargains (~28%)</td></tr>
+      <tr><td>Figures sold</td><td class="r">≈ 1,070</td><td class="r">≈ 1,780</td><td class="r">≈ 2,490</td></tr>
+      <tr><td>Net revenue</td><td class="r">€106k</td><td class="r">€177k</td><td class="r">€248k</td></tr>
+      <tr><td>Average unit margin</td><td class="r">12.6%</td><td class="r">21.9%</td><td class="r">28.6%</td></tr>
+      <tr><td>Fixed costs (about €1.27k/month from April)</td><td class="r">€13.2k</td><td class="r">€13.2k</td><td class="r">€13.2k</td></tr>
+      <tr><td>One-off setup costs and launch marketing</td><td class="r">€13.5k</td><td class="r">€13.5k</td><td class="r">€13.5k</td></tr>
+      <tr class="total"><td>Year-1 operating result</td><td class="r">−€17.8k</td><td class="r">+€5.9k</td><td class="r">+€36.8k</td></tr>
+      <tr><td>Peak cash requirement</td><td class="r">€49k</td><td class="r">€47k</td><td class="r">€37k</td></tr>
+      <tr><td>Monthly operating profit in December</td><td class="r">≈ €1.7k</td><td class="r">≈ €7.4k</td><td class="r">≈ €14.7k</td></tr>
+    </tbody>
+  </table></div>
+  <figure>
+    <div class="chart" role="img" aria-label="Line chart: cumulative cash in 2027 in thousands of euros for three scenarios. All start at minus 11 thousand in January. Lowest point in October: pessimistic minus 49, base minus 47, optimistic minus 37. December: pessimistic minus 41, base minus 27, optimistic minus 2.">
+      <svg viewBox="0 0 740 300" xmlns="http://www.w3.org/2000/svg">
+        <line class="ax" x1="60" x2="610" y1="30" y2="30"/>
+        <line class="ax" x1="60" x2="610" y1="78.9" y2="78.9" stroke-dasharray="2 4"/>
+        <line class="ax" x1="60" x2="610" y1="127.8" y2="127.8" stroke-dasharray="2 4"/>
+        <line class="ax" x1="60" x2="610" y1="176.7" y2="176.7" stroke-dasharray="2 4"/>
+        <line class="ax" x1="60" x2="610" y1="225.6" y2="225.6" stroke-dasharray="2 4"/>
+        <text x="52" y="34" font-size="12" text-anchor="end">0</text>
+        <text x="52" y="83" font-size="12" text-anchor="end">−12</text>
+        <text x="52" y="132" font-size="12" text-anchor="end">−24</text>
+        <text x="52" y="181" font-size="12" text-anchor="end">−35</text>
+        <text x="52" y="230" font-size="12" text-anchor="end">−47</text>
+        <g font-size="11" text-anchor="middle">
+          <text x="60" y="272">Jan</text><text x="110" y="272">Feb</text><text x="160" y="272">Mar</text><text x="210" y="272">Apr</text><text x="260" y="272">May</text><text x="310" y="272">Jun</text><text x="360" y="272">Jul</text><text x="410" y="272">Aug</text><text x="460" y="272">Sep</text><text x="510" y="272">Oct</text><text x="560" y="272">Nov</text><text x="610" y="272">Dec</text>
+        </g>
+        <text x="335" y="292" font-size="11" text-anchor="middle">months of 2027 · € thousand</text>
+        <polyline fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round" points="60,76 110,88.7 160,109.2 210,126.8 260,145.4 310,158.1 360,169.8 410,184.5 460,208 510,234.4 560,223.6 610,201.1"/>
+        <polyline fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" points="60,76 110,91.6 160,118 210,136.6 260,154.2 310,164.9 360,171.8 410,181.6 460,202.1 510,225.6 560,192.3 610,140.5"/>
+        <polyline fill="none" stroke="var(--s3)" stroke-width="2" stroke-linejoin="round" points="60,76 110,94.5 160,123.9 210,141.5 260,155.2 310,160 360,159.1 410,159.1 460,171.8 510,183.5 560,123.9 610,37.8"/>
+        <circle cx="510" cy="225.6" r="4.5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"><title>Base, October: −€47k (peak requirement)</title></circle>
+        <circle cx="510" cy="234.4" r="4.5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"><title>Pessimistic, October: −€49k</title></circle>
+        <circle cx="510" cy="183.5" r="4.5" fill="var(--s3)" stroke="var(--surface)" stroke-width="2"><title>Optimistic, October: −€37k</title></circle>
+        <text class="lbl" x="618" y="41">Optimistic −2</text>
+        <text class="lbl" x="618" y="144">Base −27</text>
+        <text class="lbl" x="618" y="205">Pessimistic −41</text>
+        <text class="lbl" x="510" y="252" text-anchor="middle">peak need: Oct</text>
+      </svg>
+    </div>
+    <div class="legend"><span><i style="background:var(--s1)"></i>Base</span><span><i style="background:var(--s2)"></i>Pessimistic</span><span><i style="background:var(--s3)"></i>Optimistic</span></div>
+    <figcaption>Cumulative cash in 2027. The most money is tied up in October, because holiday-season stock is bought in advance. From November cash comes back.</figcaption>
+  </figure>
+  <p><strong>How to read this:</strong> in the base case year one ends slightly positive but pays nobody a salary. That is normal for a stock-based business that first builds inventory and recognition. The end-of-year pace matters more: about €7.4k of operating profit a month in December means <strong>year two can pay one person a salary</strong>. Base-case estimate for year two: 3,600–4,200 figures, €350–420k revenue, €47–66k operating profit before salaries.</p>
+</section>
+
+<section id="budget">
+  <h2>Optimal budget</h2>
+  <p>Most of the capital goes not into the shop but into <strong>stock in transit and on the shelf</strong>: 90–150 days pass between paying in China and receiving the platform payout. A self-built platform costs next to nothing.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Item</th><th class="r">Amount</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Company formation (notary, translations, court register)</td><td class="r">€1.4k</td><td>A shareholder without a PESEL raises the cost</td></tr>
+      <tr><td>Tax adviser and transfer-pricing agreement</td><td class="r">€2.4k</td><td>VAT, OSS, agreement with the Chinese company</td></tr>
+      <tr><td>IP lawyer</td><td class="r">€0.9k</td><td>Parallel-import risk, marketing rules</td></tr>
+      <tr><td>Product compliance (toy vs collectible opinion, REACH tests, labels)</td><td class="r">€1.4k</td><td>TÜV, SGS or Intertek lab</td></tr>
+      <tr><td>Sourcing company in China</td><td class="r">€1.4k</td><td>Registration, bank account, adviser</td></tr>
+      <tr><td>Equipment (photo, lighting, shelving, scale, starter packaging)</td><td class="r">€2.0k</td><td></td></tr>
+      <tr><td>EPR registrations (PL, DE, FR), brand, domain</td><td class="r">€1.1k</td><td></td></tr>
+      <tr class="total"><td>Total setup costs</td><td class="r">€10.6k</td><td></td></tr>
+      <tr><td>Launch marketing</td><td class="r">€3.0k</td><td>Content, first campaigns, trial live streams</td></tr>
+      <tr><td>Working capital: stock in transit and on shelves, fixed costs until payback</td><td class="r">≈ €33k</td><td>Peak in October (Q4 purchases)</td></tr>
+      <tr><td>Reserve (about 15%)</td><td class="r">≈ €7k</td><td>Yuan rate, held shipment, slow stock</td></tr>
+      <tr class="total"><td><strong>Optimal total budget</strong></td><td class="r"><strong>≈ €54k</strong></td><td>≈ PLN 230k</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout good">
+    <p><strong>Spend it in two tranches:</strong></p>
+    <ul>
+      <li><strong>Tranche 1, pilot (about €21–26k):</strong> setup costs, 2–3 rail shipments (about 300–400 figures in total, mostly scale), sales in Poland and Germany until the end of June 2027.</li>
+      <li><strong>Tranche 2, scaling (about €28–33k):</strong> released only if the decision thresholds are met in July 2027. Q4 stock, France and Italy, live selling.</li>
+    </ul>
+    <p>A smaller budget (under about €24k) is enough for the pilot but cannot build stock for the holiday season, which brings over a third of annual sales.</p>
+  </div>
+</section>
+
+<section id="quality">
+  <h2>The “quality over quantity” option</h2>
+  <p>Instead of chasing thousands of units: fewer figures, carefully chosen. Mainly 1/7 and premium figures in A condition, each verified and well described. Cheap prize figures only as an add-on (about 10%). The partners do the grading and photos themselves, and stock arrives by post or by sea or rail groupage.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Monthly sales</th><th class="r">Monthly revenue</th><th class="r">Monthly profit (target prices)</th><th class="r">Monthly profit (worse purchase prices)</th><th class="r">Capital in stock</th></tr></thead>
+    <tbody>
+      <tr><td><strong>100 units</strong></td><td class="r">≈ €16k</td><td class="r">≈ €3.1k</td><td class="r">≈ €2.0k</td><td class="r">≈ €23k</td></tr>
+      <tr><td><strong>200 units</strong></td><td class="r">≈ €32k</td><td class="r">≈ €6.5k</td><td class="r">≈ €4.2k</td><td class="r">≈ €46k</td></tr>
+      <tr><td><strong>300 units</strong></td><td class="r">≈ €48k</td><td class="r">≈ €9.9k</td><td class="r">≈ €6.5k</td><td class="r">≈ €70k</td></tr>
+      <tr><td><strong>500 units</strong></td><td class="r">≈ €80k</td><td class="r">≈ €16.7k</td><td class="r">≈ €11k</td><td class="r">≈ €116k</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">Mix: 10% prize, 60% 1/7 figures, 30% premium. Average selling price about €195 incl. VAT (about €120 in the “volume” mix). Profit after fixed costs of about €260 a month (online accounting, own office, no warehouse), before salaries. At 300–500 units a bit more space or packing help may be needed. Capital is about 3 months of stock in transit and on the shelf. Estimates.</p>
+  <ul>
+    <li><strong>More profit per figure:</strong> about €34 instead of about €25. 200 units in the quality option earn as much as about 300 in the “volume” mix, with fewer photos, listings, parcels and complaints.</li>
+    <li><strong>Quality premium:</strong> A-condition items with an authenticity guarantee can sell about 5–15% above anonymous listings. At +10% on price the margin rises from about 21% to about 26%, and profit at 200 units from about €6.5k to about €8.9k a month.</li>
+    <li><strong>Fewer legal problems:</strong> 1/7 and premium figures are the easiest to defend as collector products rather than toys, so the CE-mark risk almost disappears.</li>
+    <li><strong>Less work and space:</strong> 100–300 units a month can be handled by the partners in a small unit, without hiring warehouse staff.</li>
+    <li><strong>A better brand:</strong> fewer returns, more repeat customers and referrals, cheaper marketing.</li>
+  </ul>
+  <div class="callout warn"><p><strong>Downsides:</strong> more capital per unit, since a premium figure costs €100–200 to buy. Expensive figures sell more slowly (often 1–3 months). Premium bootlegs are the best made and the most costly mistake. Good items are scarcer, so some will have to be bought in Japan. Large premium boxes don't fit postal parcels, so they travel by groupage.</p></div>
+  <p><strong>Year 1 in the quality option (estimate):</strong> growth from about 40 to about 250 units a month, about 1,200 figures in total, about €193k revenue, about +€18.5k result (with minimal fixed costs), about €40k peak cash need and about €8.2k profit in December. That beats the “volume” mix with a third fewer units.</p>
+  <h3>The smallest scale: from a few to a few dozen figures a month</h3>
+  <p>At the start it may be a few expensive figures or a dozen to a few dozen units a month, not hundreds. At that scale the result depends mainly on <strong>fixed costs</strong>. A limited company costs money every month even with zero sales: accounting, software, packaging registrations.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Monthly sales</th><th class="r">Revenue</th><th class="r">Profit on sales</th><th class="r">Result with minimal costs (≈€260/mo)</th><th class="r">Result with full costs (≈€1,270/mo)</th><th class="r">Capital in stock</th></tr></thead>
+    <tbody>
+      <tr><td>5 premium figures</td><td class="r">≈ €1.7k</td><td class="r">≈ €340</td><td class="r">≈ +€80</td><td class="r">≈ −€930</td><td class="r">≈ €2.5k</td></tr>
+      <tr><td>10 premium figures</td><td class="r">≈ €3.3k</td><td class="r">≈ €680</td><td class="r">≈ +€420</td><td class="r">≈ −€590</td><td class="r">≈ €5k</td></tr>
+      <tr><td>20 units (half 1/7, half premium)</td><td class="r">≈ €4.3k</td><td class="r">≈ €900</td><td class="r">≈ +€640</td><td class="r">≈ −€370</td><td class="r">≈ €6.3k</td></tr>
+      <tr><td>30 units</td><td class="r">≈ €5.8k</td><td class="r">≈ €1.2k</td><td class="r">≈ +€960</td><td class="r">≈ −€50</td><td class="r">≈ €8.4k</td></tr>
+      <tr><td>50 units (quality mix)</td><td class="r">≈ €8.0k</td><td class="r">≈ €1.7k</td><td class="r">≈ +€1.4k</td><td class="r">≈ +€430</td><td class="r">≈ €11.6k</td></tr>
+      <tr><td>80 units (quality mix)</td><td class="r">≈ €12.9k</td><td class="r">≈ €2.7k</td><td class="r">≈ +€2.5k</td><td class="r">≈ +€1.4k</td><td class="r">≈ €18.6k</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">The premium figure assumed sells for €400 and is bought for CNY 900, earning about €68 per unit. A 1/7 figure: €120 / CNY 250, about €22 per unit. Results before salaries. “Minimal costs”: online accounting about PLN 500–900, own office with no rent, no warehouse, software on cheap plans, only the required registrations (BDO, LUCID, Citeo via a provider). Estimates.</p>
+  <ul>
+    <li><strong>Break-even:</strong> with minimal costs about <strong>4 premium figures or about 8 quality-mix units</strong> a month. With full costs about 19 premium or about 37 units.</li>
+    <li><strong>Very expensive figures change the maths:</strong> an €800 item at the same purchase ratio earns about twice as much as a €400 one. A few of those a month can cover the company's costs.</li>
+    <li><strong>Shipping small quantities:</strong> groupage has a minimum charge of about 1 m³ plus fixed port or terminal fees, which comes to €50–80 per unit for a handful of boxes. For a few to a dozen figures a month, <strong>post</strong> is better: a large premium box (4–6 kg) costs about €25–30 as an economy parcel billed by weight. Statues too big for a postal parcel are worth batching and shipping every 2–3 months.</li>
+    <li><strong>Legal form at micro scale:</strong> a limited company must keep full accounts, but an online accounting office (about PLN 500–900 a month at low document volumes) makes the company worthwhile from a dozen or so units a month. Imports, OSS and several platforms raise the online accounting price, so get a quote upfront.</li>
+  </ul>
+  <div class="callout"><p><strong>Realistic expectations:</strong> a dozen to a few dozen figures a month means <strong>an extra €500–2,300 a month</strong>, not a salary. But it is the cheapest and safest way to test buying, authentication, pricing and demand, with €2.5–12k tied up in stock instead of €47k.</p></div>
+  <div class="callout good"><p><strong>Recommendation:</strong> start with <strong>10–50 carefully chosen units a month</strong> on lean costs (a test of buying and demand), then move to the quality option, targeting <strong>200–300 units a month</strong> by the end of year 1 and <strong>300–500</strong> in year 2. Treat large volumes (next section) as a later option, only if a steady source of good items is found.</p></div>
+</section>
+
+<section id="scale">
+  <h2>Large volumes: how many units a month make sense</h2>
+  <p>The model in the earlier sections covers the ramp-up year. The end goal is large volumes, thousands of units rather than a few. Scale makes freight and clearance cheaper per unit. But it also brings three constraints: <strong>supply of authentic boxed figures in China, B2C demand per seller in the EU, and capital tied up in stock</strong>.</p>
+  <h3>What gets cheaper at scale</h3>
+  <ul>
+    <li><strong>Freight:</strong> a full 40' container by rail (Chengdu–Łódź is on the timetable, 12–14 days) costs about $5,500–7,000 and holds about 4,800–6,400 small boxes. That is about <strong>$1–1.7 per figure</strong>, versus €3.5–5 for small LCL shipments. Sea is cheaper still ($0.5–1.5) but 2–3 weeks slower.</li>
+    <li><strong>Clearance:</strong> the declaration cost spreads over thousands of units. From about one container a month it is worth applying for <strong>AEO</strong> status (clearance at your own warehouse, fewer inspections, a lower guarantee). It takes 6–12 months to obtain.</li>
+  </ul>
+  <h3>What doesn't get cheaper, and grows</h3>
+  <ul>
+    <li><strong>Labour:</strong> every used figure is a unique item. Checking, grading, photos, listing and packing take 12–16 minutes, about <strong>€2.5–3.3 per unit</strong> at Łódź warehouse wages. 1,000 units a month is about 2 full-time staff; 5,000 is 8–10.</li>
+    <li><strong>Supply of originals:</strong> the Chinese second-hand market is now a buyer itself: collectible resale on Xianyu grew over 300% in 2025, and China imports used figures from Japan. Bulk “by weight” lots are mostly loose, unboxed figures, often bootlegs or recasts. Estimate: <strong>about 1,000 a month is realistic</strong> with 2–4 buyers in China, 70–80% of them cheap prize figures. <strong>5,000 boxed originals a month is very hard</strong> without standing contracts with collection buyers and without sourcing in Japan.</li>
+    <li><strong>Demand per seller:</strong> the largest Japanese figure seller on eBay sells about 4,500 units a month worldwide. An EU seller doing <strong>1,000–2,000 used figures a month</strong> would already be top-tier.</li>
+    <li><strong>Excess sold as wholesale lots loses money:</strong> lots sell at about 35–50% of retail. With our purchase and freight costs every figure sold in a lot loses money, unless it was bought for less than about 25% of the net retail price.</li>
+  </ul>
+  <h3>Monthly results at different volumes</h3>
+  <p class="muted">Full scale, i.e. after 12–18 months. Target purchase prices, container freight, warehouse labour as a per-unit cost, 10% write-off for bootlegs and defects. No management salaries. Estimates; €1 = PLN 4.25.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Scenario</th><th class="r">Revenue a year</th><th class="r">Margin</th><th class="r">Operating profit a month</th><th class="r">Capital in stock</th><th>Rating</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1,000 units/month</strong>, all B2C, curated mix</td><td class="r">≈ €1.2m</td><td class="r">22%</td><td class="r">≈ €19.9k</td><td class="r">≈ €110k</td><td><span class="chip good">year-2 target</span></td></tr>
+      <tr><td><strong>1,500 units/month</strong>, all B2C, curated mix</td><td class="r">≈ €1.6m</td><td class="r">21%</td><td class="r">≈ €24.2k</td><td class="r">≈ €153k</td><td><span class="chip good">optimum</span></td></tr>
+      <tr><td>1,000 units/month, worse purchase prices</td><td class="r">≈ €1.0m</td><td class="r">14%</td><td class="r">≈ €9.5k</td><td class="r">≈ €105k</td><td><span class="chip warn">warning</span></td></tr>
+      <tr><td>2,500 units/month, 2,000 of them B2C, curated mix (needs Japan sourcing and top-tier demand)</td><td class="r">≈ €2.6m</td><td class="r">19%</td><td class="r">≈ €35k</td><td class="r">≈ €272k</td><td><span class="chip warn">conditional</span></td></tr>
+      <tr><td>2,500 units/month, 1,300 of them in lots, prize-heavy</td><td class="r">≈ €1.6m</td><td class="r">7%</td><td class="r">≈ €2.6k</td><td class="r">≈ €226k</td><td><span class="chip bad">no</span></td></tr>
+      <tr><td>5,000 units/month, 3,500 of them in lots, prize-heavy</td><td class="r">≈ €2.1m</td><td class="r">−5%</td><td class="r">≈ −€21k</td><td class="r">≈ €356k</td><td><span class="chip bad">loss</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout">
+    <p><strong>Conclusion:</strong> the optimal volume is <strong>about 1,000–1,500 units a month, sold one by one to retail customers</strong>, with the mix shifted towards scale and premium figures. That is about €1.2–1.6m of revenue and about €240–290k of operating profit a year (before management salaries), with about €110–150k tied up in stock. Higher volume makes sense only if the supply of good items and retail demand grow with it. Simply adding cheap figures and selling the excess in lots wipes out the profit.</p>
+  </div>
+  <h3>What changes at large scale</h3>
+  <ul>
+    <li><strong>Delivery rhythm:</strong> a 40' container is 3–5 months of sales at 1,000–1,500 units a month, so a 20' container every 1–2 months or 10–15 m³ LCL monthly works better. Rail over sea, because it frees cash faster.</li>
+    <li><strong>Own 300–500 m² warehouse in Łódź or Stryków</strong> (about €2–3.5k a month): receiving, photo studio, packing. An outsourced warehouse at most for packing fast movers.</li>
+    <li><strong>Catalogue and automation:</strong> an internal model database (JAN code → name, maker, reference photos) and BaseLinker to list on Allegro, eBay, TikTok Shop and the own shop. The process then becomes “scan, grade, shoot”.</li>
+    <li><strong>Buying in China as a team:</strong> 2–4 buyers, standing agreements with collection buyers (ideally issuing fapiao invoices) and a second sourcing route in Japan for scale and premium figures.</li>
+    <li><strong>Formal thresholds:</strong> transfer-pricing documentation from PLN 10m (≈ €2.35m) of annual purchases from the Chinese company (about 4,900 units a month at €40 each); Intrastat from PLN 2.8m of dispatches to other EU countries; missing invoices on the Chinese side become a serious tax issue.</li>
+    <li><strong>Legal risk grows with volume:</strong> mixed containers from China fit customs risk profiles. A few bootlegs can get a whole consignment detained, and brand owners are more likely to act against large, visible sellers (parallel import). An IP lawyer's opinion becomes mandatory before the first container.</li>
+  </ul>
+  <p><strong>Path to get there:</strong> year 1: pilot and growth to about 400–500 units a month (rail LCL). Year 2: 1,000–1,500 units a month (20' container or large LCL, own warehouse, 2–4 people in China, AEO). Beyond that only once the criteria are met and with extra sources (Japan, consignment from EU collectors).</p>
+</section>
+
+<section id="forecast">
+  <h2>Forecast 2026–2030</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Scenario</th><th class="r">Niche growth a year</th><th class="r">EU pre-owned figure market 2030</th><th>Assumptions</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Base</strong></td><td class="r">9–11%</td><td class="r">€130–320m</td><td>Anime grows about 9–10% a year, the secondary-market share rises, kidult spending growth slows, EUR/JPY at 160–180</td></tr>
+      <tr><td><strong>Optimistic</strong></td><td class="r">14–18%</td><td class="r">€160–450m</td><td>The yen strengthens (Japanese competition weakens), big 2027 releases (One Piece, Frieren 3), new figures get pricier and push buyers to pre-owned</td></tr>
+      <tr><td><strong>Pessimistic</strong></td><td class="r">2–4%</td><td class="r">€90–230m</td><td>EU stagnation, end of the collecting craze, a weaker yen, counterfeit scandals from China</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><strong>The yen rate is the key competitive risk.</strong> EUR/JPY at about 177 (October 2026) versus 120–130 in 2020–21 makes buying from Japan historically cheap. A stronger yen (below 150) improves our position; a weaker yen hurts it.</li>
+    <li><strong>New figures keep getting pricier:</strong> 1/7 figures now often cost ¥28,000–33,000. High prices for new figures push buyers towards pre-owned, which is the heart of our offer.</li>
+    <li><strong>Regulation works in our favour:</strong> the €3 parcel duty (to 2028), the €2 handling fee from November 2026 and the planned full removal of the €150 exemption around 2028 raise the cost of buying directly from Asia, not of an importer with an EU warehouse.</li>
+    <li><strong>Realistic company revenue in 2028–2030 (base case):</strong> €0.3–1.5m a year (3,000–12,000 figures), i.e. 0.2–0.5% of the niche.</li>
+  </ul>
+</section>
+
+<section id="risks">
+  <h2>Risks</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>Purchase prices too high (margin below 15%)</td><td><span class="chip bad">high</span></td><td><span class="chip bad">critical</span></td><td>Hard buying rule (max 35% of net price), whole-collection buyouts, calculator before every purchase</td></tr>
+      <tr><td>Selling a counterfeit</td><td><span class="chip warn">medium</span></td><td><span class="chip bad">critical</span></td><td>Double check (China and Poland), hologram photos, money-back guarantee, avoid hot new releases from uncertain sources</td></tr>
+      <tr><td>Prize figures classed as toys without CE</td><td><span class="chip warn">medium</span></td><td><span class="chip warn">serious</span></td><td>Lab opinion, CE versions, lower prize share</td></tr>
+      <tr><td>Parallel-import claims</td><td><span class="chip good">low</span></td><td><span class="chip warn">serious</span></td><td>IP lawyer opinion, avoid Amazon, no logos or official artwork</td></tr>
+      <tr><td>Slow-moving stock</td><td><span class="chip warn">medium</span></td><td><span class="chip warn">serious</span></td><td>Don't buy on hype, markdowns after 90 days, bundles, mystery boxes</td></tr>
+      <tr><td>Transport damage</td><td><span class="chip warn">medium</span></td><td><span class="chip warn">moderate</span></td><td>Double packing, insurance covering boxes, rail instead of air transhipments</td></tr>
+      <tr><td>Stronger yuan</td><td><span class="chip warn">medium</span></td><td><span class="chip warn">moderate</span></td><td>5% price buffer, buy currency in batches, settle via Wise or bank</td></tr>
+      <tr><td>Chinese-side tax issues (no invoices)</td><td><span class="chip warn">medium</span></td><td><span class="chip warn">moderate</span></td><td>Chinese limited company, receipts from sellers, Chinese tax adviser</td></tr>
+      <tr><td>Weak yen makes Japan cheaper for buyers than us</td><td><span class="chip warn">medium</span></td><td><span class="chip warn">moderate</span></td><td>Compete on convenience and trust, not price. Gacha segments where China has the edge.</td></tr>
+      <tr><td>Platform account bans</td><td><span class="chip warn">medium</span></td><td><span class="chip warn">moderate</span></td><td>Several channels at once, own shop as the base, full GPSR compliance in listings</td></tr>
+      <tr><td>Partner conflict or dependence on one supplier</td><td><span class="chip warn">medium</span></td><td><span class="chip bad">critical</span></td><td>Shareholders' agreement, written sourcing agreement covering prices, returns and counterfeits, alternative sources (Japan, EU consignment)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="timeline">
+  <h2>Timeline</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Period</th><th>Stage</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td>Nov–Dec 2026</td><td>Preparation</td><td>Tax adviser, BTI applications, IP lawyer and lab opinions, shareholders' agreement, Polish company formation, EORI, VAT, OSS. Manual review of 100–200 sold listings (Xianyu, eBay.de, Allegro).</td></tr>
+      <tr><td>Jan–Feb 2027</td><td>Foundations</td><td>Chinese company, sourcing agreement, authenticity procedure, condition scale, first purchases before Chinese New Year. BDO, LUCID, Citeo registrations. Shop build.</td></tr>
+      <tr><td>Mar 2027</td><td>First shipment</td><td>Rail LCL 1–1.5 m³, clearance with art. 33a, photos, grading, GPSR labels.</td></tr>
+      <tr><td>Apr–Jun 2027</td><td>Pilot</td><td>Allegro and eBay.de, shop launch, sourcing on request, first TikTok content. 2–3 shipments.</td></tr>
+      <tr><td><strong>Jul 2027</strong></td><td><strong>Decision 1</strong></td><td>Review pilot thresholds. Continue and release tranche 2, or stop or adjust.</td></tr>
+      <tr><td>Jul–Sep 2027</td><td>Scaling</td><td>France and Italy, TikTok Shop and Whatnot, Q4 purchasing (stock must be in Poland by the end of October).</td></tr>
+      <tr><td>Oct–Dec 2027</td><td>Peak season</td><td>Black Friday, holidays, live selling, bundles.</td></tr>
+      <tr><td><strong>Jan 2028</strong></td><td><strong>Decision 2</strong></td><td>Review the year against the criteria below. Scale (salary, bigger shipments, EU consignment, Estonian CIT) or wind down.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="gonogo">
+  <h2>Go / no-go criteria</h2>
+  <p>Thresholds derived from the financial model. All are measurable from sales data.</p>
+  <h3>Decision 1: after the pilot (July 2027)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Indicator</th><th class="r">Continue</th><th class="r">Stop</th></tr></thead>
+    <tbody>
+      <tr><td>Unit margin after all variable costs</td><td class="r">≥ 20%</td><td class="r">&lt; 15%</td></tr>
+      <tr><td>Average purchase cost as % of net price (scale and premium)</td><td class="r">≤ 35%</td><td class="r">&gt; 42%</td></tr>
+      <tr><td>Share of a shipment sold within 90 days</td><td class="r">≥ 60%</td><td class="r">&lt; 40%</td></tr>
+      <tr><td>Counterfeits found in Poland (after the China check)</td><td class="r">&lt; 2%</td><td class="r">&gt; 5%</td></tr>
+      <tr><td>Counterfeits sold</td><td class="r">0</td><td class="r">any</td></tr>
+      <tr><td>Returns and complaints</td><td class="r">≤ 6%</td><td class="r">&gt; 12%</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Decision 2: after a year (January 2028)</h3>
+  <ol>
+    <li>Unit margin over the last 3 months ≥ 20%.</li>
+    <li>Operating profit before salaries in Q4 ≥ €3.5k (PLN 15k) a month, a path to paying one person.</li>
+    <li>Annual revenue ≥ €118k (PLN 500k).</li>
+    <li>Slow stock (over 180 days) ≤ 15% of inventory value.</li>
+    <li>Repeat customers ≥ 20% of orders, seller rating ≥ 4.8/5.</li>
+    <li>Zero customs, legal or counterfeit incidents. BTIs received.</li>
+    <li>At least 2 sales channels each with ≥ 20% share (no dependence on one platform).</li>
+  </ol>
+  <div class="callout">
+    <p><strong>Decision rule:</strong> 7 of 7 met: scale up (salary, bigger shipments, new countries). 4–6: fix the weak points and give the business another 6 months. 3 or fewer, or a margin below 15%: wind down and sell off the stock.</p>
+  </div>
+</section>
+
+<section id="check">
+  <h2>To verify before launch</h2>
+  <p>Some figures in this report are estimates, because price sites and official databases were not always readable automatically. Before spending money on stock:</p>
+  <ol>
+    <li><strong>Real prices:</strong> manually collect 10–20 sold listings for each of 20–30 models (Xianyu “已售”, eBay.de “verkauft”, Allegro “ended”, Suruga-ya).</li>
+    <li><strong>Customs agent and BTI:</strong> classification (9503 or 3926), valuation of used goods, setting up art. 33a.</li>
+    <li><strong>Tax adviser:</strong> VAT and OSS, confirmation that the margin scheme is unavailable, transfer-pricing agreement, Estonian CIT for later.</li>
+    <li><strong>Lab (TÜV, SGS, Intertek):</strong> toy or collectible under guidance no. 20, REACH tests, GPSR label templates.</li>
+    <li><strong>IP lawyer:</strong> parallel-import risk and rules for using names in marketing.</li>
+    <li><strong>Chinese adviser:</strong> company form, export declaration method, VAT on exports of used goods without invoices, Xianyu reporting, currency settlement.</li>
+    <li><strong>Quotes:</strong> rail LCL to Małaszewicze or Warsaw, InPost and DPD contract rates, Allegro and eBay.de fee tables for the figure category.</li>
+    <li><strong>Platforms:</strong> whether TikTok Shop accepts used figures in its “pre-owned” category, and Whatnot availability for Polish businesses.</li>
+    <li><strong>Google Trends:</strong> 5-year trend for “figurka anime”, “Anime Figur”, “figurine manga”, “figura anime” in each country.</li>
+  </ol>
+</section>
+
+<section id="glossary">
+  <h2>Glossary</h2>
+  <dl class="gloss">
+    <dt>Prize figure</dt><dd>A cheap figure originally made as a prize in Japanese arcade machines and lotteries (Banpresto, SEGA, Taito, FuRyu). Simple, 15–25 cm.</dd>
+    <dt>Scale figure</dt><dd>A detailed figure at scale (e.g. 1/7 = one seventh of the character's height), static, on a base. The most important collector segment.</dd>
+    <dt>Nendoroid / figma</dt><dd>Small figures with interchangeable parts (Nendoroid: big head; figma: poseable joints). Good Smile Company and Max Factory brands.</dd>
+    <dt>Premium statue, GK</dt><dd>Large 1/4 or resin figures, often limited. A GK (garage kit) is a resin kit you paint yourself.</dd>
+    <dt>Bootleg</dt><dd>A counterfeit figure, often cast from a copy of the original mould, sold as the original. Called 祖国版 or 高仿 in China.</dd>
+    <dt>Authenticity hologram</dt><dd>A sticker on the box confirming the licence (Good Smile, Aniplex, Bandai Spirits). Not every maker uses them, and they can be faked.</dd>
+    <dt>A/B/C condition scale</dt><dd>Grading of figure and box condition, modelled on Japanese second-hand shops.</dd>
+    <dt>Xianyu (闲鱼, Goofish)</dt><dd>China's largest second-hand marketplace (Alibaba), like eBay classifieds or Vinted. Ships only within mainland China.</dd>
+    <dt>Proxy (agent)</dt><dd>A company that buys in Asia on a customer's behalf and ships it to them for a fee (Buyee, ZenMarket, Superbuy).</dd>
+    <dt>Gacha</dt><dd>Mobile games with randomised character draws (Genshin Impact, NIKKE, Blue Archive). They have many figure collectors.</dd>
+    <dt>Kidults</dt><dd>Adults and teens (12+) who buy toys and collectibles for themselves.</dd>
+    <dt>Arbitrage</dt><dd>Earning from the price difference of the same good in two markets.</dd>
+    <dt>B2B / B2C</dt><dd>Business-to-business / business-to-consumer sales.</dd>
+    <dt>LCL</dt><dd>Less than Container Load: consolidated freight, you pay for your space in a container (per m³), not the whole container.</dd>
+    <dt>CBM, m³</dt><dd>Cubic metre, the billing unit for sea and rail freight. Fits about 100–110 medium figure boxes.</dd>
+    <dt>Volumetric weight</dt><dd>A “calculated” weight from parcel volume (L × W × H / 6000). The carrier charges the higher of actual and volumetric weight.</dd>
+    <dt>CN code / TARIC</dt><dd>The EU product code that sets the duty rate. TARIC is the database of all EU rates and measures.</dd>
+    <dt>BTI (WIT)</dt><dd>Binding Tariff Information: a free, binding customs decision on a product's code. Valid 3 years across the EU.</dd>
+    <dt>EORI</dt><dd>A company's identification number for EU customs. Free.</dd>
+    <dt>Art. 33a Polish VAT Act</dt><dd>A simplification that lets import VAT be settled in the VAT return (paid and deducted at once) instead of paid in cash at clearance.</dd>
+    <dt>VAT margin scheme</dt><dd>VAT charged only on the margin, not the full price. Available for used goods bought from private individuals in the EU, not for imports.</dd>
+    <dt>OSS</dt><dd>One Stop Shop: the EU system for declaring VAT on B2C sales to other EU countries in one return in Poland.</dd>
+    <dt>IOSS</dt><dd>Import One Stop Shop: the OSS equivalent for parcels up to €150 shipped from outside the EU. Not relevant to us (bulk import).</dd>
+    <dt>Transfer pricing</dt><dd>Prices in transactions between related companies. They must be at “arm's length”, i.e. what independent companies would agree.</dd>
+    <dt>Fapiao</dt><dd>China's official VAT invoice. Private Xianyu sellers don't issue them.</dd>
+    <dt>GPSR</dt><dd>EU General Product Safety Regulation (2023/988). Duties for importers and online sellers, including for used goods.</dd>
+    <dt>CE, EN 71</dt><dd>CE is the EU conformity mark, mandatory for toys among others. EN 71 is the set of toy safety standards.</dd>
+    <dt>REACH</dt><dd>EU chemicals rules, including limits on phthalates and lead in PVC.</dd>
+    <dt>EPR, BDO, LUCID, Citeo</dt><dd>Extended producer responsibility for packaging: registers and fees in Poland (BDO), Germany (LUCID) and France (Citeo).</dd>
+    <dt>DAC7</dt><dd>The obligation for online platforms to report sellers to tax authorities.</dd>
+    <dt>KSeF</dt><dd>Poland's National e-Invoicing System, mandatory for B2B invoices from 2026.</dd>
+    <dt>Parallel import</dt><dd>Importing original goods from outside the EEA without the brand owner's consent. Can formally infringe trademark rights.</dd>
+    <dt>Unit margin</dt><dd>Contribution margin: net revenue minus all variable costs of a unit (stock, freight, duty, fees, shipping, returns, marketing), before fixed costs.</dd>
+    <dt>Sell-through</dt><dd>The share of a delivery sold within a set time (e.g. 90 days).</dd>
+    <dt>CAC</dt><dd>Customer acquisition cost (mostly advertising).</dd>
+    <dt>3PL</dt><dd>An outsourced warehouse and fulfilment provider.</dd>
+    <dt>Recommerce</dt><dd>Online trade in used goods (Vinted, eBay).</dd>
+    <dt>Mystery box</dt><dd>A bundle with random contents sold at a fixed price.</dd>
+    <dt>Consignment</dt><dd>Selling someone else's goods for a commission. The supplier is paid only after the sale.</dd>
+  </dl>
+</section>
+
+<section id="sources">
+  <h2>Sources</h2>
+  <p class="muted">Selected sources. Some pages were reachable only through search results, so open the primary source before final decisions.</p>
+  <ul class="src">
+    <li>Anime market (AJA): https://www.animenewsnetwork.com/news/2025-10-30/global-anime-market-grew-15-percent-to-record-3.84-trillion-yen-in-2024/.230464</li>
+    <li>Grand View Research, anime market: https://tools.prnewswire.com/en-us/live/20813/release/20260618EN87367</li>
+    <li>Anime merchandise (GMI): https://www.gminsights.com/industry-analysis/anime-merchandising-market</li>
+    <li>Bandai Namco FY3/2026: https://www.bandainamco.co.jp/files/ir/financialstatements/pdf/20260513_en_Complement.pdf</li>
+    <li>Kidults in the EU (Circana): https://www.spielwarenmesse.de/en/mag/toy-market-news/kidults-are-driving-growth-in-europes-toy-market/</li>
+    <li>Crunchyroll 21m: https://www.advanced-television.com/2026/05/08/crunchyroll-surpasses-21m-subs/</li>
+    <li>Ampere, anime interest growth in Europe: https://www.streamtvinsider.com/video/europe-drives-new-interest-anime-netflix-crunchyroll-boost-awareness</li>
+    <li>Vinted 2025: https://fashionunited.com/news/business/vinted-reaches-1-1-billion-euros-in-revenue-for-2025-accepting-a-strategic-drop-in-profits/2026040971654</li>
+    <li>Japan Expo 2026: https://www.livreshebdo.fr/article/japan-expo-2026-plus-de-222-000-visiteurs-pour-son-25e-anniversaire</li>
+    <li>Lucca Comics 2025: https://multiplayer.it/notizie/lucca-comics-games-si-chiude-numeri-record-annunciate-date-edizione-2026.html</li>
+    <li>French manga market: https://www.livreshebdo.fr/article/le-marche-de-la-bande-dessinee-en-repli-en-2024</li>
+    <li>Pop Mart and Labubu: https://www2.yicaiglobal.com/news/labubu-prices-plunge-up-to-88-on-chinese-resale-sites</li>
+    <li>EUR/JPY rate: https://www.ecb.europa.eu/stats/exchange/eurofxref/html/eurofxref-graph-jpy.en.html</li>
+    <li>China “guzi” market: https://jingdaily.com/posts/china-youth-trends-guzi-collectibles-market-guide-2025</li>
+    <li>€3 parcel duty: https://commission.europa.eu/news-and-media/news/ensuring-fairness-and-safety-eur3-customs-duty-low-value-parcels-2026-06-29_en</li>
+    <li>EU customs reform (handling fee): https://taxation-customs.ec.europa.eu/Customs/eu-Customs-Reform_en</li>
+    <li>Classification 9503: https://www.thetradehub.eu/en/customs/classification-guide/9503</li>
+    <li>Art. 33a VAT: https://akademialtca.pl/blog/wdrozenie-ais-import-plus-a-zmiany-w-zasadach-rozliczania-importowego-vat-dla-podmiotow-korzystajacych-z-uproszczenia-art-33a-ustawy-vat-aspekty-praktyczne</li>
+    <li>Margin scheme and imports: https://poradnikprzedsiebiorcy.pl/-vat-marza-przy-imporcie-samochodow-uzywanych-czy-mozna-skorzystac</li>
+    <li>Transfer pricing 2025/2026: https://akademialtca.pl/blog/terminy-na-sporzadzenie-dokumentacji-cen-transferowych-za-2025-r</li>
+    <li>China platform reporting: https://www.china-briefing.com/news/china-platform-information-reporting-rules/</li>
+    <li>GPSR and used goods: https://riskandcompliance.freshfields.com/post/102jz8q/the-new-eu-general-product-safety-regulation-implications-for-sellers-of-second</li>
+    <li>Toy Safety Regulation 2025/2509: https://eur-lex.europa.eu/eli/reg/2025/2509/oj</li>
+    <li>Commission toy guidance: https://single-market-economy.ec.europa.eu/sectors/toys/toy-safety/guidance_en</li>
+    <li>EPR in Europe 2026: https://lappa.org/blog/epr/epr-compliance-in-europe-2026-for-marketplaces-and-online-sellers-2/</li>
+    <li>9% CIT in 2026: https://akademialtca.pl/blog/kto-moze-placic-9-proc-cit-w-2026-r-znamy-juz-limity</li>
+    <li>Estonian CIT and non-residents: https://akademialtca.pl/blog/uczestnictwo-nierezydenta-w-spolce-opodatkowanej-cit-estonskim</li>
+    <li>S24 without PESEL: https://pro.rp.pl/prawo-w-firmie/art13939561-rejestracja-spolki-przez-internet-bez-pesel-nie-zarejestrujesz-s24</li>
+    <li>Vinted account bans in Poland: https://spidersweb.pl/2026/02/vinted-blokady-kont-sprzedaz-komercyjna.html</li>
+    <li>TikTok Shop in Poland: https://www.netinfluencer.com/tiktok-shop-expands-to-austria-belgium-the-netherlands-and-poland/</li>
+    <li>TikTok Shop 9% fee: https://channelx.world/2025/12/tiktok-shop-fees-to-rise-to-9-in-europe/</li>
+    <li>Whatnot fees: https://www.whatnot.com/en-GB/seller/fees</li>
+    <li>eBay.de fee changes 07/2026: https://www.valueaddedresource.net/ebay-germany-july-2026-fee-changes/</li>
+    <li>Allegro fees: https://www.shoper.pl/learn/artykul/prowizje-allegro-rodzaje-i-aktualne-stawki-dla-sprzedawcow</li>
+    <li>Rail LCL to Poland: https://goodhopefreight.com/railway/lcl-rates.html</li>
+    <li>Air freight China–Poland: https://www.sino-shipping.com/de/freight-china-poland/</li>
+    <li>InPost 2026 prices: https://www.chip.pl/2026/02/inpost-zmiana-cennik-uslug-taniej</li>
+    <li>Meta Ads benchmarks: https://www.adamigo.ai/blog/meta-ads-cpm-cpc-benchmarks-by-country-2026</li>
+    <li>EU e-commerce CAC: https://eightx.co/blog/eu-ecommerce-cac-benchmark</li>
+    <li>Counterfeits, Good Smile: https://partner.goodsmile.info/support/eng/fake/en/3517/</li>
+    <li>Spotting bootlegs: https://zenmarket.jp/en/blog/post/14142/how-to-tell-fake-bootleg-anime-figures</li>
+    <li>Mandarake shipping: https://earth.mandarake.co.jp/help/en/shipping_options-en.html</li>
+    <li>Japan Figure Store, VAT from 06/2026: https://japan-figure.com/zh-hant/pages/customs-process</li>
+    <li>China figure market and price drops: https://www.chinaventure.com.cn/news/116-20240725-382182.html</li>
+    <li>EMS rates to Poland (forwarder): https://goodhopefreight.com/ems/price-poland.html</li>
+    <li>DHL and FedEx China–Poland rates (forwarder): https://goodhopefreight.com/poland/dhl.html</li>
+    <li>China Post surface mail: https://www.Ship24.com/couriers/china-post-tracking/china-post-surface-mail</li>
+    <li>DHL volumetric weight (divisor 5000): https://www.dhl.com/discover/en-us/ship-with-dhl/services/get-a-rate-quote-and-transit-time</li>
+  </ul>
+</section>
+
+<footer>
+  <p>Report based on publicly available data as of 18.10.2026. Figures marked as estimates come from our own model and need verification. This document is not legal or tax advice.</p>
+</footer>
+
+</main>
+</div>
+<script>try{if(window.matchMedia("(min-width:1000px)").matches)document.getElementById("toc-d").open=true}catch(e){}</script>
+</body>
+</html>
