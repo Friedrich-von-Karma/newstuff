@@ -1,0 +1,258 @@
+---
+/**
+ * Kontakt w stylu „Nocne terrarium”: pełny ekran, ogromny e-mail, kafle Messenger / Facebook / Instagram.
+ * Używany jako ostatnia scena strony głównej i jako nagłówek strony Kontakt.
+ */
+import { site } from '../data/site';
+import { photos, photoSrc, photoPage } from '../data/photos';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** h1 na stronie Kontakt, h2 jako scena na stronie głównej */
+  level?: 'h1' | 'h2';
+  /** tekst nad nagłówkiem, np. „Scena VI · Kontakt” */
+  num?: string;
+  id?: string;
+}
+const { lang, level = 'h2', num, id } = Astro.props;
+const tr = useTranslations(lang);
+const pl = lang === 'pl';
+const c = site.contact;
+const [local, domain] = c.email.split('@');
+const photoId = 'blatta-orientalis';
+const p = photos[photoId];
+const H = level;
+const t = pl
+  ? { alt: 'Karaczan wschodni (Blatta orientalis) – samiec', write: 'Napisz', heading: 'Kontakt', photo: 'Fot.' }
+  : { alt: 'Oriental cockroach (Blatta orientalis) – male', write: 'Write', heading: 'Contact', photo: 'Photo:' };
+const socials = [
+  { label: tr('contact.messenger'), value: c.messenger.replace('https://', ''), href: c.messenger },
+  { label: tr('contact.facebook'), value: c.facebookName, href: c.facebook },
+  { label: tr('contact.instagram'), value: c.instagramName, href: c.instagram },
+];
+---
+
+<section class="contact" id={id} aria-labelledby={`${id ?? 'contact'}-h`}>
+  {
+    p && (
+      <div class="bgimg" data-par="0.15">
+        <img src={photoSrc(p, 1280)} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" />
+      </div>
+    )
+  }
+  <div class="rv">
+    {num && <div class="num">{num}</div>}
+    <H class={level === 'h1' ? 'h-display ttl' : 'vh'} id={`${id ?? 'contact'}-h`}>{level === 'h1' ? <>{t.heading}<em>.</em></> : tr('contact.title')}</H>
+    <p class="intro">{tr('contact.lead')}</p>
+  </div>
+  <a class="mail rv" style="--d:.1s" href={`mailto:${c.email}`} aria-label={`${tr('contact.email')}: ${c.email}`}>
+    <span>{local}</span><span>@{domain}</span>
+  </a>
+  <div class="socials rv" style="--d:.2s">
+    {
+      socials.map((s) => (
+        <a href={s.href} target="_blank" rel="noopener">
+          <small>{s.label}</small>
+          <b>{s.value}</b>
+        </a>
+      ))
+    }
+  </div>
+  <slot />
+  {
+    p && (
+      <div class="credit">
+        {t.alt}. {t.photo} {p.author} ·{' '}
+        <a href={p.licenseUrl} target="_blank" rel="noopener license">
+          {p.license}
+        </a>{' '}
+        ·{' '}
+        <a href={photoPage(p)} target="_blank" rel="noopener">
+          Wikimedia Commons
+        </a>
+      </div>
+    )
+  }
+</section>
+
+<script>
+  // Paralaksa teł oznaczonych [data-par] (kontakt, przerywniki).
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pars = Array.from(document.querySelectorAll<HTMLElement>('[data-par]'));
+  if (!reduce && pars.length) {
+    let ticking = false;
+    const run = () => {
+      ticking = false;
+      const h = window.innerHeight;
+      for (const el of pars) {
+        const r = (el.parentElement as HTMLElement).getBoundingClientRect();
+        if (r.bottom < 0 || r.top > h) continue;
+        const c = r.top + r.height / 2 - h / 2;
+        el.style.transform = `translate3d(0,${(c * -parseFloat(el.dataset.par ?? '0.15')).toFixed(1)}px,0)`;
+      }
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(run);
+      }
+    }, { passive: true });
+    run();
+  }
+</script>
+
+<style>
+  .ttl {
+    margin: 4px 0 18px;
+  }
+  .ttl em {
+    font-style: normal;
+    color: var(--amber);
+  }
+  .contact {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 130px var(--gut) 110px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .bgimg {
+    position: absolute;
+    inset: -10% 0;
+    z-index: -3;
+    background:
+      radial-gradient(60% 50% at 65% 45%, #2b2114 0%, transparent 70%),
+      linear-gradient(160deg, #16231a, #0b120d);
+    will-change: transform;
+  }
+  .bgimg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.6) brightness(0.35);
+  }
+  .contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(80% 70% at 30% 55%, rgba(11, 18, 13, 0.5), rgba(11, 18, 13, 0.92) 80%),
+      linear-gradient(180deg, var(--bg), transparent 30%, transparent 70%, var(--bg));
+  }
+  .contact::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 60vmax;
+    height: 60vmax;
+    left: -20vmax;
+    bottom: -30vmax;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 140, 50, 0.22), transparent 65%);
+    animation: breathe 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .intro {
+    color: var(--muted);
+    max-width: 52ch;
+    margin: 0;
+  }
+  .mail {
+    display: block;
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(30px, 8.4vw, 118px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-decoration: none;
+    margin: 26px 0 50px;
+    overflow-wrap: anywhere;
+    font-variation-settings: 'opsz' 144;
+  }
+  .mail span {
+    display: block;
+    transition: color 0.4s;
+  }
+  .mail span:last-child {
+    font-style: italic;
+    color: var(--amber2);
+    text-shadow: 0 0 70px rgba(232, 165, 71, 0.4);
+  }
+  .mail:hover span:first-child {
+    color: var(--amber2);
+  }
+  .socials {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--line2);
+    max-width: 1100px;
+  }
+  .socials a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 22px 40px 22px 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line2);
+    position: relative;
+    min-width: 0;
+  }
+  .socials a + a {
+    padding-left: 20px;
+    border-left: 1px solid var(--line2);
+  }
+  .socials small {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .socials b {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(22px, 2.3vw, 32px);
+    font-style: italic;
+    transition: color 0.3s;
+    overflow-wrap: anywhere;
+  }
+  .socials a:hover b {
+    color: var(--amber2);
+  }
+  .socials a::after {
+    content: '↗';
+    position: absolute;
+    right: 16px;
+    top: 22px;
+    color: var(--amber);
+    transition: transform 0.35s;
+  }
+  .socials a:hover::after {
+    transform: translate(3px, -3px);
+  }
+  .credit {
+    position: absolute;
+    right: var(--gut);
+    bottom: 24px;
+    text-align: right;
+    max-width: 360px;
+  }
+  @media (max-width: 860px) {
+    .socials {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .socials a + a {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .credit {
+      left: var(--gut);
+      text-align: left;
+    }
+  }
+</style>

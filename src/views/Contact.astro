@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import ContactLinks from '../components/ContactLinks.astro';
+import ContactScene from '../components/ContactScene.astro';
 import { routes, useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -9,72 +9,118 @@ interface Props {
 const { lang } = Astro.props;
 const tr = useTranslations(lang);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
+const t = pl
+  ? {
+      num: 'Blattodea.pl · Kontakt',
+      ordersLbl: 'I · zamówienia',
+      orders: 'Zamówienia',
+      cart: 'Otwórz koszyk',
+      idLbl: 'II · oznaczanie',
+      id: 'Oznaczanie',
+      idGo: 'Oznacz karaczana',
+      key: 'Klucz',
+    }
+  : {
+      num: 'Blattodea.pl · Contact',
+      ordersLbl: 'I · orders',
+      orders: 'Orders',
+      cart: 'Open the cart',
+      idLbl: 'II · identification',
+      id: 'Identification',
+      idGo: 'Identify a cockroach',
+      key: 'Key',
+    };
 ---
 
 <Base lang={lang} title={tr('contact.title')} description={tr('contact.lead')} alt={routes.contact[other]} active="contact">
-  <div class="wrap">
-    <header class="titlepage">
-      <span class="kicker">{lang === 'pl' ? 'Korespondencja' : 'Correspondence'} · V</span>
-      <h1>{tr('contact.title')}</h1>
-      <p class="lead">{tr('contact.lead')}</p>
-    </header>
-    <div data-reveal><ContactLinks lang={lang} /></div>
-    <div class="hints">
-      <div class="sheet" data-reveal="left">
-        <span class="type no">№ 1</span>
-        <h2>{tr('pricelist.order')}</h2>
-        <p>{tr('contact.orderHint')}</p>
-        <a href={routes.pricelist[lang]}>{tr('nav.pricelist')} →</a>
+  <ContactScene lang={lang} level="h1" num={t.num} id="contact" />
+
+  <section class="wrap hints" aria-label={pl ? 'Wskazówki' : 'Tips'}>
+    <article class="hint rv">
+      <div class="lbl">{t.ordersLbl}</div>
+      <h2>{t.orders}</h2>
+      <p>{tr('contact.orderHint')}</p>
+      <div class="acts">
+        <button type="button" class="btn" data-open-cart>{t.cart} <span class="arr">→</span></button>
+        <a class="btn quiet" href={routes.pricelist[lang]}>{tr('nav.pricelist')} <span class="arr">→</span></a>
       </div>
-      <div class="sheet" data-reveal="right">
-        <span class="type no">№ 2</span>
-        <h2>{lang === 'pl' ? 'Oznaczanie' : 'Identification'}</h2>
-        <p>{tr('contact.idHint')}</p>
-        <a href={routes.key[lang]}>{tr('nav.key')} →</a>
+    </article>
+    <article class="hint rv" style="--d:.12s">
+      <div class="lbl">{t.idLbl}</div>
+      <h2>{t.id}</h2>
+      <p data-glossary>{tr('contact.idHint')}</p>
+      <div class="acts">
+        <a class="btn" href={routes.identify[lang]}>{t.idGo} <span class="arr">→</span></a>
+        <a class="btn quiet" href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
       </div>
-    </div>
-  </div>
+    </article>
+  </section>
 </Base>
 
 <style>
   .hints {
     display: grid;
-    gap: 1.5rem;
-    margin-top: 2.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding-bottom: clamp(70px, 10vw, 130px);
   }
-  @media (min-width: 760px) {
-    .hints {
-      grid-template-columns: 1fr 1fr;
-    }
+  .hint {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: clamp(24px, 3vw, 44px);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: linear-gradient(160deg, var(--bg3), var(--bg2));
+    transition:
+      border-color 0.5s,
+      box-shadow 0.7s;
+  }
+  .hint::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 110%;
+    aspect-ratio: 1;
+    right: -50%;
+    bottom: -70%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 165, 71, 0.15), transparent 60%);
+    animation: breathe 7s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .hint + .hint::before {
+    background: radial-gradient(circle, rgba(125, 154, 87, 0.2), transparent 60%);
+    animation-delay: -3s;
+  }
+  .hint:hover {
+    border-color: rgba(232, 165, 71, 0.45);
+    box-shadow: 0 30px 80px -30px rgba(232, 165, 71, 0.25);
   }
   h2 {
-    font-size: 1.9rem;
+    font-size: clamp(32px, 3.4vw, 48px);
+    font-weight: 300;
+    font-style: italic;
   }
-  .sheet {
-    position: relative;
-    background-color: #fbf8ef;
-    background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(60, 90, 120, 0.12) 31px 32px);
-    border: 1px solid #d6c9a6;
-    border-top: 3px solid var(--stamp-red);
-    padding: 1.6rem 1.6rem 1.3rem;
-    box-shadow: 0 20px 30px -22px rgba(40, 25, 10, 0.6);
+  p {
+    color: #d3cfbf;
+    margin: 0;
+    max-width: 52ch;
+    flex: 1;
   }
-  .hints > div:nth-child(1) {
-    rotate: -0.6deg;
+  .acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
   }
-  .hints > div:nth-child(2) {
-    rotate: 0.6deg;
-  }
-  .no {
-    position: absolute;
-    top: 0.8rem;
-    right: 1rem;
-    font-size: 0.75rem;
-    color: var(--stamp-red);
-  }
-  .sheet a {
-    font-family: var(--f-caps);
-    font-weight: 700;
-    letter-spacing: 0.04em;
+  @media (max-width: 760px) {
+    .hints {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 </style>

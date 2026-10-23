@@ -7,31 +7,123 @@ interface Props {
 }
 const { lang } = Astro.props;
 const tr = useTranslations(lang);
+const pl = lang === 'pl';
+const t = pl ? { kicker: 'Błąd 404 · ciemny kąt', or: 'Albo zajrzyj do:' } : { kicker: 'Error 404 · a dark corner', or: 'Or try:' };
+const links = [
+  { href: routes.pricelist[lang], label: tr('nav.pricelist') },
+  { href: routes.species[lang], label: tr('nav.species') },
+  { href: routes.key[lang], label: tr('nav.keyShort') },
+  { href: routes.blog[lang], label: tr('nav.blog') },
+];
 ---
 
-<Base lang={lang} title={tr('404.title')} alt={lang === 'pl' ? routes.home.en : routes.home.pl}>
-  <div class="wrap nf">
-    <p class="big caps">404</p>
-    <h1>{tr('404.title')}</h1>
-    <p class="lead">{tr('404.text')}</p>
-    <p><a class="btn" href={routes.home[lang]}>{tr('404.back')}</a></p>
-  </div>
+<Base lang={lang} title={tr('404.title')} alt={pl ? routes.home.en : routes.home.pl}>
+  <section class="nf">
+    <div class="glowspot g1" aria-hidden="true"></div>
+    <div class="glowspot g2" aria-hidden="true"></div>
+    <div class="nf-in">
+      <div class="kicker rv">{t.kicker}</div>
+      <p class="big" aria-hidden="true">
+        <span style="--d:.1s">4</span><span class="o" style="--d:.25s">0</span><span style="--d:.4s">4</span>
+      </p>
+      <h1 class="h-display rv" style="--d:.3s">{tr('404.title')}</h1>
+      <p class="lead rv" style="--d:.45s">{tr('404.text')}</p>
+      <p class="acts rv" style="--d:.6s">
+        <a class="btn" href={routes.home[lang]}>{tr('404.back')} <span class="arr">→</span></a>
+      </p>
+      <nav class="more rv" style="--d:.75s" aria-label={t.or}>
+        <span class="lbl">{t.or}</span>
+        {links.map((l) => <a class="link" href={l.href}>{l.label}</a>)}
+      </nav>
+    </div>
+  </section>
 </Base>
 
 <style>
   .nf {
-    text-align: center;
-    padding-top: 4rem;
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding: 130px var(--gut) 90px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .g1 {
+    width: 70vmax;
+    height: 70vmax;
+    right: -25vmax;
+    top: -25vmax;
+    background: radial-gradient(circle, rgba(255, 170, 70, 0.2), rgba(232, 120, 40, 0.06) 40%, transparent 66%);
+    animation-duration: 7s;
+  }
+  .g2 {
+    width: 50vmax;
+    height: 50vmax;
+    left: -20vmax;
+    bottom: -25vmax;
+    background: radial-gradient(circle, rgba(125, 154, 87, 0.16), transparent 65%);
+    animation-delay: -4s;
+  }
+  .nf-in {
+    width: 100%;
+    max-width: var(--wrap);
+    margin: 0 auto;
   }
   .big {
-    font-size: clamp(6rem, 20vw, 11rem);
-    line-height: 1;
-    margin: 0;
-    color: var(--brass-dark);
-    opacity: 0.6;
+    margin: 0 0 10px;
+    font-family: var(--serif);
+    font-weight: 200;
+    font-size: clamp(120px, 26vw, 360px);
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    color: var(--amber2);
+    text-shadow: 0 0 80px rgba(232, 165, 71, 0.4);
+    display: flex;
+    overflow: hidden;
+    padding-bottom: 0.04em;
+    font-variation-settings: 'opsz' 144;
+  }
+  .big span {
+    display: inline-block;
+    transform: translateY(105%);
+    animation: rise 1.4s cubic-bezier(0.2, 0.75, 0.15, 1) forwards;
+    animation-delay: var(--d);
+  }
+  .big .o {
+    font-style: italic;
+    color: var(--fern);
+    text-shadow: 0 0 80px rgba(169, 191, 127, 0.35);
+  }
+  @keyframes rise {
+    to {
+      transform: none;
+    }
   }
   .lead {
-    color: var(--ink-soft);
+    margin: 22px 0 0;
+    font-family: var(--serif);
     font-style: italic;
+    font-size: clamp(19px, 1.8vw, 24px);
+    color: var(--muted);
+  }
+  .acts {
+    margin: 34px 0 0;
+  }
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 22px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    max-width: 720px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .big span {
+      transform: none;
+    }
   }
 </style>

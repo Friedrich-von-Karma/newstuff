@@ -9,35 +9,49 @@ interface Props {
 }
 const { posts, lang } = Astro.props;
 const tr = useTranslations(lang);
+const more = lang === 'pl' ? 'Czytaj' : 'Read';
 ---
 
 <ul class="posts">
   {
-    posts.map((p, i) => (
-      <li data-reveal style={`--d:${i * 120}`}>
-        <article>
-          <span class="card-no type">No. {String(posts.length - i).padStart(3, '0')}</span>
-          {p.data.cover && <img src={p.data.cover} alt={p.data.coverAlt ?? ''} loading="lazy" />}
-          <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date, lang)}</time>
-          <h3>
-            <a href={`${routes.blog[lang]}${postSlug(p)}/`}>{p.data.title}</a>
-          </h3>
-          <p>{p.data.description}</p>
-          <ul class="tags">
-            {p.data.tags.map((t) => (
-              <li>
-                <a href={`${routes.blog[lang]}tag/${slugify(t)}/`}>#{t}</a>
-              </li>
-            ))}
-            {p.data.sample && (
-              <li>
-                <span class="stamp sample">{tr('sample.badge')}</span>
-              </li>
+    posts.map((p, i) => {
+      const href = `${routes.blog[lang]}${postSlug(p)}/`;
+      return (
+        <li class="rv" style={`--d:${(Math.min(i, 5) * 0.08).toFixed(2)}s`}>
+          <article class="pcard">
+            {p.data.cover && (
+              <a class="cover" href={href} tabindex="-1" aria-hidden="true">
+                <img src={p.data.cover} alt="" loading="lazy" decoding="async" />
+              </a>
             )}
-          </ul>
-        </article>
-      </li>
-    ))
+            <div class="body">
+              <div class="meta">
+                <time datetime={p.data.date.toISOString().slice(0, 10)}>{formatDate(p.data.date, lang)}</time>
+                {p.data.sample && <span class="smp">{tr('sample.badge')}</span>}
+              </div>
+              <h3>
+                <a href={href}>{p.data.title}</a>
+              </h3>
+              <p>{p.data.description}</p>
+              <div class="foot">
+                {p.data.tags.length > 0 && (
+                  <ul class="tags">
+                    {p.data.tags.map((t) => (
+                      <li>
+                        <a href={`${routes.blog[lang]}tag/${slugify(t)}/`}>{t}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <a class="go" href={href} aria-label={`${more}: ${p.data.title}`}>
+                  {more} <span class="arr">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        </li>
+      );
+    })
   }
 </ul>
 
@@ -47,99 +61,140 @@ const tr = useTranslations(lang);
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 2rem;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   }
-  @media (min-width: 760px) {
-    .posts {
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    }
-  }
-  /* karta katalogowa */
-  article {
+  .pcard {
     position: relative;
     height: 100%;
-    background-color: #fbf8ef;
-    background-image: repeating-linear-gradient(180deg, transparent 0 27px, rgba(60, 90, 120, 0.16) 27px 28px);
-    background-position: 0 92px;
-    border: 1px solid #d8cba8;
-    border-top: 3px solid var(--stamp-red);
-    padding: 1.4rem 1.4rem 1.2rem;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    box-shadow: 0 16px 26px -18px rgba(40, 25, 10, 0.6);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(160deg, var(--bg3), var(--bg2));
     transition:
-      rotate 0.5s var(--ease),
-      translate 0.5s var(--ease),
-      box-shadow 0.5s var(--ease);
+      border-color 0.5s,
+      box-shadow 0.7s,
+      transform 0.6s var(--ease);
   }
-  li:nth-child(odd) article {
-    rotate: -0.8deg;
-  }
-  li:nth-child(even) article {
-    rotate: 0.7deg;
-  }
-  article:hover {
-    rotate: 0deg !important;
-    translate: 0 -5px;
-    box-shadow: 0 24px 34px -18px rgba(40, 25, 10, 0.6);
-  }
-  article::before {
-    /* otwór na pręt katalogu */
+  .pcard::before {
     content: '';
     position: absolute;
-    left: 50%;
-    bottom: 10px;
-    width: 16px;
-    height: 10px;
-    translate: -50% 0;
-    border-radius: 999px;
-    background: var(--paper-2);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    width: 120%;
+    aspect-ratio: 1;
+    right: -60%;
+    bottom: -80%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 165, 71, 0.14), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.8s;
+    pointer-events: none;
   }
-  .card-no {
-    position: absolute;
-    top: 0.7rem;
-    right: 1rem;
-    font-size: 0.72rem;
-    color: var(--stamp-red);
+  .pcard:hover {
+    border-color: rgba(232, 165, 71, 0.45);
+    box-shadow: 0 30px 80px -30px rgba(232, 165, 71, 0.25);
+    transform: translateY(-4px);
   }
-  img {
+  .pcard:hover::before {
+    opacity: 1;
+  }
+  .cover {
+    display: block;
     aspect-ratio: 16 / 9;
-    object-fit: cover;
+    overflow: hidden;
+    position: relative;
+  }
+  .cover img {
     width: 100%;
-    margin-bottom: 0.4rem;
-    border: 6px solid #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.8) brightness(0.8);
+    transition: transform 1.2s var(--ease);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, var(--bg3));
+  }
+  .pcard:hover .cover img {
+    transform: scale(1.05);
+  }
+  .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: clamp(20px, 2.4vw, 30px);
+  }
+  .meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
   }
   time {
-    font-family: var(--f-type);
-    font-size: 0.78rem;
-    color: var(--ink-faint);
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fern);
+    font-size: 15px;
+  }
+  .smp {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border: 1px solid var(--line2);
+    padding: 2px 7px;
   }
   h3 {
-    margin: 0;
-    font-size: 1.75rem;
+    font-size: clamp(24px, 2.2vw, 32px);
+    font-weight: 300;
+    line-height: 1.1;
   }
   h3 a {
-    color: var(--bottle-800);
     text-decoration: none;
-    background: linear-gradient(var(--brass-light), var(--brass-light)) 0 100% / 0 2px no-repeat;
-    transition: background-size 0.5s var(--ease);
+    transition: color 0.3s;
   }
   h3 a:hover {
-    background-size: 100% 2px;
-    color: var(--wood-600);
+    color: var(--amber2);
   }
   p {
-    color: var(--ink-soft);
-    font-size: 0.98rem;
-    margin: 0 0 0.6rem;
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0;
     flex: 1;
-    line-height: 28px;
+  }
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    margin-top: 6px;
   }
   .tags {
-    margin-bottom: 1.2rem;
-    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+  }
+  .go {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber2);
+    text-decoration: none;
+    margin-left: auto;
+  }
+  .go .arr {
+    display: inline-block;
+    transition: transform 0.35s;
+  }
+  .go:hover .arr {
+    transform: translateX(4px);
   }
 </style>
