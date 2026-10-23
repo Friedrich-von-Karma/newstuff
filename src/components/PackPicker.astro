@@ -1,7 +1,7 @@
 ---
 /**
- * Wybór wariantu paczki (10 szt.: nimfy / mix / imago) i przycisk zamówienia.
- * Przycisk „Zamów” otwiera e-mail z tematem zawierającym gatunek i wybrany wariant.
+ * Wybór wariantu paczki 10 szt. (nimfy / mix / imago), cena, „Do koszyka” i „Zamów od razu”.
+ * Gdy gatunku brak lub jest „wkrótce” – zamiast zamawiania przycisk „Powiadom mnie” (zapis na listę oczekujących).
  */
 import type { CollectionEntry } from 'astro:content';
 import { site } from '../data/site';
@@ -11,73 +11,157 @@ import { formatPrice, packOptions } from '../lib/content';
 interface Props {
   item: CollectionEntry<'pricelist'>;
   lang: Lang;
-  /** dodatkowe przyciski obok „Zamów” */
-  extra?: { href: string; label: string }[];
+  /** domyślnie zaznaczony wariant */
+  initial?: 'nymph' | 'mix' | 'adult';
+  /** większa cena (np. na dużym kaflu) */
+  big?: boolean;
 }
-const { item, lang, extra = [] } = Astro.props;
+const { item, lang, initial, big = false } = Astro.props;
 const tr = useTranslations(lang);
+const pl = lang === 'pl';
 const d = item.data;
 const options = packOptions(d.packs);
-const canOrder = d.status !== 'out';
+const orderable = d.status === 'available' || d.status === 'low';
+const first = options.find((o) => o.kind === initial) ?? options[0];
 const group = `pack-${item.id}-${Math.random().toString(36).slice(2, 6)}`;
-const subjectFor = (kind: string) =>
-  `${tr('pack.order')}: ${d.latin} – ${tr('pack.pcs')}, ${tr(`pack.${kind}` as UiKey)}`;
-const first = options[0];
+const label = (k: string) => tr(`pack.${k}` as UiKey);
+const subjectFor = (k: string) => `${tr('pack.order')}: ${d.latin} – ${tr('pack.pcs')}, ${label(k)}`;
+const t = pl
+  ? {
+      choose: 'Wariant paczki',
+      add: 'Do koszyka',
+      added: 'Dodano',
+      now: 'Zamów od razu',
+      notify: 'Powiadom mnie',
+      waitHint: d.status === 'soon' ? 'Gatunek pojawi się wkrótce – zapisz się na listę oczekujących.' : 'Chwilowo brak – zapisz się, a dam znać, gdy będzie dostępny.',
+      waitSubject: `Lista oczekujących: ${d.latin}`,
+      waitBody: `Dzień dobry,\nproszę o wiadomość, gdy ${d.latin} będzie dostępny.\nInteresujący mnie wariant: {v} (paczka 10 szt.).\n\nPozdrawiam`,
+      per: '/ 10 szt.',
+    }
+  : {
+      choose: 'Pack option',
+      add: 'Add to cart',
+      added: 'Added',
+      now: 'Order now',
+      notify: 'Notify me',
+      waitHint: d.status === 'soon' ? 'Coming soon – join the waiting list.' : 'Out of stock for now – join the list and I will let you know.',
+      waitSubject: `Waiting list: ${d.latin}`,
+      waitBody: `Hello,\nplease let me know when ${d.latin} is available.\nOption I am interested in: {v} (pack of 10).\n\nBest regards`,
+      per: '/ 10 pcs',
+    };
+const waitHref = (k: string) =>
+  `mailto:${site.contact.email}?subject=${encodeURIComponent(t.waitSubject)}&body=${encodeURIComponent(t.waitBody.replace('{v}', label(k)))}`;
 ---
 
-<div class="picker" data-picker>
-  <fieldset class="opts" disabled={!canOrder}>
-    <legend class="visually-hidden">{tr('pack.choose')} – {d.latin}</legend>
+<div
+  class:list={['picker', { big }]}
+  data-picker
+  data-id={item.id}
+  data-latin={d.latin}
+  data-email={site.contact.email}
+  data-wait-subject={t.waitSubject}
+  data-wait-body={t.waitBody}
+>
+  <fieldset class="variants">
+    <legend>{t.choose}</legend>
     {
-      options.map((o, i) => (
-        <label class="opt">
+      options.map((o) => (
+        <label class="var">
           <input
             type="radio"
             name={group}
             value={o.kind}
-            checked={i === 0}
+            checked={o.kind === first?.kind}
+            data-price={o.price}
+            data-price-label={formatPrice(o.price, lang)}
+            data-label={label(o.kind)}
             data-subject={subjectFor(o.kind)}
           />
-          <span class="opt-name">
-            {tr(`pack.${o.kind}` as UiKey)}
-            {o.kind === 'mix' && <small>{tr('pack.mixHint')}</small>}
+          <span>
+            <small>{label(o.kind)}</small>
+            {formatPrice(o.price, lang)}
           </span>
-          <span class="opt-price mono">{formatPrice(o.price, lang)}</span>
         </label>
       ))
     }
   </fieldset>
-  <p class="per type">{tr('pack.size')}</p>
-  <div class="actions">
+
+  <div class="buy">
+    <div class="price" aria-live="polite">
+      <span data-price-out>{first ? formatPrice(first.price, lang) : '—'}</span>
+      <small>{t.per}</small>
+    </div>
     {
-      canOrder && first && (
-        <a
-          class="btn small order"
-          data-email={site.contact.email}
-          href={`mailto:${site.contact.email}?subject=${encodeURIComponent(subjectFor(first.kind))}`}
-        >
-          {tr('pricelist.order')}
-        </a>
+      orderable && first ? (
+        <div class="acts">
+          <button type="button" class="btn add" data-add>
+            <span data-add-label>{t.add}</span> <span class="arr">+</span>
+          </button>
+          <a class="btn ghost small now" data-now href={`mailto:${site.contact.email}?subject=${encodeURIComponent(subjectFor(first.kind))}`}>
+            {t.now}
+          </a>
+        </div>
+      ) : (
+        first && (
+          <div class="acts">
+            <a class="btn ghost notify" data-notify href={waitHref(first.kind)}>
+              <span class="bell" aria-hidden="true">
+                ◔
+              </span>{' '}
+              {t.notify}
+            </a>
+          </div>
+        )
       )
     }
-    {
-      extra.map((e) => (
-        <a class="btn dark small" href={e.href}>
-          {e.label}
-        </a>
-      ))
-    }
   </div>
+  {!orderable && <p class="wait">{t.waitHint}</p>}
+  <span class="added-msg" data-added-msg data-text={t.added} aria-live="polite"></span>
 </div>
 
 <script>
-  // Zmiana wariantu podmienia temat e-maila w przycisku „Zamów”.
-  document.querySelectorAll<HTMLElement>('[data-picker]').forEach((picker) => {
-    const order = picker.querySelector<HTMLAnchorElement>('a.order');
-    picker.addEventListener('change', (e) => {
-      const input = e.target as HTMLInputElement;
-      if (!order || input.type !== 'radio' || !input.dataset.subject) return;
-      order.href = `mailto:${order.dataset.email}?subject=${encodeURIComponent(input.dataset.subject)}`;
+  import { cart, openCart } from '../scripts/cart';
+
+  document.querySelectorAll<HTMLElement>('[data-picker]').forEach((p) => {
+    if (p.dataset.ready) return;
+    p.dataset.ready = '1';
+    const out = p.querySelector<HTMLElement>('[data-price-out]');
+    const now = p.querySelector<HTMLAnchorElement>('[data-now]');
+    const notify = p.querySelector<HTMLAnchorElement>('[data-notify]');
+    const email = p.dataset.email ?? '';
+    const sel = () => p.querySelector<HTMLInputElement>('input[type=radio]:checked');
+
+    p.addEventListener('change', () => {
+      const r = sel();
+      if (!r) return;
+      if (out) {
+        out.classList.remove('flip');
+        void out.offsetWidth;
+        out.textContent = r.dataset.priceLabel ?? '';
+        out.classList.add('flip');
+      }
+      if (now) now.href = `mailto:${email}?subject=${encodeURIComponent(r.dataset.subject ?? '')}`;
+      if (notify)
+        notify.href = `mailto:${email}?subject=${encodeURIComponent(p.dataset.waitSubject ?? '')}&body=${encodeURIComponent(
+          (p.dataset.waitBody ?? '').replace('{v}', r.dataset.label ?? ''),
+        )}`;
+    });
+
+    p.querySelector<HTMLButtonElement>('[data-add]')?.addEventListener('click', (e) => {
+      const r = sel();
+      if (!r) return;
+      cart.add({
+        id: p.dataset.id ?? '',
+        latin: p.dataset.latin ?? '',
+        kind: r.value as 'nymph' | 'mix' | 'adult',
+        kindLabel: r.dataset.label ?? r.value,
+        price: Number(r.dataset.price),
+      });
+      const btn = e.currentTarget as HTMLButtonElement;
+      btn.classList.remove('pulse');
+      void btn.offsetWidth;
+      btn.classList.add('pulse');
+      openCart();
     });
   });
 </script>
@@ -85,101 +169,136 @@ const first = options[0];
 <style>
   .picker {
     display: grid;
-    gap: 0.5rem;
-  }
-  .opts {
-    border: 0;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.4rem;
-    min-width: 0;
-  }
-  .opt {
+    gap: 14px;
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.45rem 0.75rem 0.45rem 2.1rem;
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid #d3c49e;
-    cursor: pointer;
-    transition:
-      background 0.25s var(--ease),
-      border-color 0.25s var(--ease),
-      translate 0.25s var(--ease);
   }
-  .opt:hover {
-    border-color: var(--brass-dark);
-    translate: 2px 0;
-  }
-  .opt input {
-    position: absolute;
-    opacity: 0;
-  }
-  /* kółko jak w formularzu z epoki */
-  .opt::before {
-    content: '';
-    position: absolute;
-    left: 0.7rem;
-    top: 50%;
-    width: 0.85rem;
-    height: 0.85rem;
-    translate: 0 -50%;
-    border-radius: 50%;
-    border: 1.5px solid var(--wood-600);
-    background: #fff;
-    transition: box-shadow 0.25s var(--ease);
-  }
-  .opt:has(input:checked) {
-    background: var(--label);
-    border-color: var(--bottle-600);
-    box-shadow: inset 3px 0 0 var(--bottle-600);
-  }
-  .opt:has(input:checked)::before {
-    box-shadow: inset 0 0 0 3px #fff;
-    background: var(--bottle-600);
-    border-color: var(--bottle-600);
-  }
-  .opt:has(input:focus-visible) {
-    outline: 2px solid var(--brass);
-    outline-offset: 2px;
-  }
-  .opt-name {
-    flex: 1;
-    font-family: var(--f-display);
-    font-weight: 600;
-    font-size: 1.15rem;
-    line-height: 1.1;
-  }
-  .opt-name small {
-    display: block;
-    font-family: var(--f-type);
-    font-weight: normal;
-    font-size: 0.66rem;
-    color: var(--ink-faint);
-  }
-  .opt-price {
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  .opts:disabled .opt {
-    cursor: default;
-    opacity: 0.6;
-  }
-  .opts:disabled .opt:hover {
-    translate: none;
-  }
-  .per {
-    margin: 0;
-    font-size: 0.72rem;
-    color: var(--ink-faint);
-    text-align: right;
-  }
-  .actions {
+  .variants {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-top: 0.2rem;
+    gap: 6px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  .variants legend {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 8px;
+    padding: 0;
+  }
+  .var {
+    position: relative;
+    cursor: pointer;
+  }
+  .var input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .var span {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 13px 7px;
+    border: 1px solid var(--line2);
+    background: rgba(11, 18, 13, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    font-size: 12.5px;
+    line-height: 1.25;
+    color: var(--muted);
+    transition: all 0.35s;
+    border-radius: 2px;
+  }
+  .var span small {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text);
+  }
+  .var:hover span {
+    border-color: rgba(232, 165, 71, 0.6);
+  }
+  .var input:checked + span {
+    background: rgba(232, 165, 71, 0.16);
+    border-color: var(--amber);
+    color: var(--amber2);
+    box-shadow: inset 0 0 20px rgba(232, 165, 71, 0.12);
+  }
+  .var input:checked + span small {
+    color: var(--amber2);
+  }
+  .var input:focus-visible + span {
+    outline: 2px solid var(--amber2);
+    outline-offset: 2px;
+  }
+  .buy {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+  .price {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(32px, 3vw, 44px);
+    line-height: 0.9;
+    color: var(--amber2);
+    white-space: nowrap;
+  }
+  .big .price {
+    font-size: clamp(38px, 3.6vw, 56px);
+  }
+  .price small {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    margin-left: 6px;
+  }
+  .price :global(.flip) {
+    display: inline-block;
+    animation: flip 0.45s var(--ease);
+  }
+  @keyframes flip {
+    from {
+      opacity: 0;
+      transform: translateY(40%);
+      filter: blur(6px);
+    }
+  }
+  .acts {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .add.pulse {
+    animation: pulse 0.6s var(--ease);
+  }
+  @keyframes pulse {
+    40% {
+      transform: scale(1.06);
+      box-shadow: 0 0 40px rgba(232, 165, 71, 0.6);
+    }
+  }
+  .bell {
+    color: var(--amber);
+  }
+  .wait {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .added-msg {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
   }
 </style>

@@ -5,7 +5,7 @@ import CommonsPhoto from '../components/CommonsPhoto.astro';
 import PackPicker from '../components/PackPicker.astro';
 import { site } from '../data/site';
 import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
-import { getPricelist, getSpecies } from '../lib/content';
+import { getPricelist, getPricelistUpdated, getSpecies } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -18,7 +18,8 @@ const pl = lang === 'pl';
 const [items, species] = await Promise.all([getPricelist(), getSpecies()]);
 const speciesById = new Map(species.map((s) => [s.id, s]));
 const anySample = items.some((i) => i.data.sample);
-const updated = new Date(site.pricelistUpdated);
+const updatedIso = getPricelistUpdated();
+const updated = new Date(updatedIso);
 ---
 
 <Base lang={lang} title={tr('pricelist.title')} description={tr('pricelist.lead')} alt={routes.pricelist[other]} active="pricelist">
@@ -28,7 +29,7 @@ const updated = new Date(site.pricelistUpdated);
       <h1>{tr('pricelist.title')}</h1>
       <p class="lead">{tr('pricelist.lead')}</p>
       <p class="updated type">
-        {tr('pricelist.updated')}: <time datetime={site.pricelistUpdated}>{formatDate(updated, lang)}</time>
+        {tr('pricelist.updated')}: <time datetime={updatedIso}>{formatDate(updated, lang)}</time>
       </p>
     </header>
 
@@ -75,7 +76,7 @@ const updated = new Date(site.pricelistUpdated);
                   </p>
                 </div>
                 <div class="buy">
-                  <PackPicker item={item} lang={lang} extra={profile ? [{ href: `${routes.species[lang]}${profile.id}/`, label: tr('pricelist.profile') }] : []} />
+                  <PackPicker item={item} lang={lang} />
                 </div>
               </li>
             );

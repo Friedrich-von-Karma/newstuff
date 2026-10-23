@@ -22,7 +22,7 @@ const pl = lang === 'pl';
   p ? (
     <figure class:list={['cphoto', cls]}>
       <span class="frame">
-        <img src={photoSrc(p, width)} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" referrerpolicy="no-referrer" />
+        <img src={photoSrc(p, width)} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" />
       </span>
       <figcaption class="credit">
         {!compact && p.subject && <span class="subj">{p.subject[lang]}. </span>}
@@ -39,7 +39,10 @@ const pl = lang === 'pl';
   ) : (
     <figure class:list={['cphoto', 'missing', cls]}>
       <span class="frame">
-        <span class="nophoto type">{pl ? 'brak zdjęcia na wolnej licencji' : 'no freely licensed photo yet'}</span>
+        <span class="nophoto">
+          <b>{pl ? 'brak zdjęcia' : 'no photo'}</b>
+          {pl ? 'na wolnej licencji' : 'under a free licence yet'}
+        </span>
       </span>
     </figure>
   )
@@ -56,41 +59,24 @@ const pl = lang === 'pl';
     position: relative;
     overflow: hidden;
     aspect-ratio: 4 / 3;
-    background: var(--paper-3);
+    background:
+      radial-gradient(60% 50% at 65% 45%, #2b2114 0%, transparent 70%),
+      linear-gradient(160deg, #16231a, #0b120d);
+    border-radius: 3px;
   }
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: scale 0.9s var(--ease);
+    filter: saturate(0.85) brightness(0.88);
+    transition:
+      transform 1.2s var(--ease),
+      filter 0.8s;
   }
-  .nophoto {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.8rem;
-    color: var(--ink-faint);
-    background:
-      repeating-linear-gradient(45deg, transparent 0 10px, rgba(120, 90, 50, 0.07) 10px 11px),
-      var(--paper-2);
+  .cphoto:hover img {
+    filter: saturate(1) brightness(0.95);
   }
   .credit {
-    font-family: var(--f-type);
-    font-size: 0.66rem;
-    line-height: 1.4;
-    color: var(--ink-faint);
-    padding-top: 0.4rem;
-  }
-  .credit a {
-    color: inherit;
-  }
-  .credit a:hover {
-    color: var(--wood-600);
-  }
-  .subj {
-    color: var(--ink-soft);
+    padding-top: 6px;
   }
 </style>

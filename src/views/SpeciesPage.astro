@@ -147,7 +147,7 @@ const hasPhoto = !!photos[entry.id];
             <section class="buy" data-reveal="right" style="--d:150">
               <h2>{tr('species.inPricelist')}</h2>
               <span class={`stamp ${price.data.status} big`}>{tr(`status.${price.data.status}`)}</span>
-              <PackPicker item={price} lang={lang} extra={[{ href: routes.pricelist[lang], label: tr('nav.pricelist') }]} />
+              <PackPicker item={price} lang={lang} />
             </section>
           )
         }

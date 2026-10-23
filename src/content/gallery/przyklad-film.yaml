@@ -1,0 +1,11 @@
+# PRZYKŁAD – film: wrzuć .mp4 do public/images/hodowla/ i wpisz w src, albo podaj youtube: <id filmu>
+sample: true
+kind: video
+title:
+  pl: "Karmienie kolonii Gromphadorhina portentosa"
+  en: "Feeding a Gromphadorhina portentosa colony"
+caption:
+  pl: "Krótki film z wieczornego karmienia."
+  en: "A short clip from evening feeding."
+species: gromphadorhina-portentosa
+date: 2026-10-05

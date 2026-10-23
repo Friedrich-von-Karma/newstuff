@@ -1,5 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
+import { load as loadYaml } from 'js-yaml';
+import pricelistRaw from '../data/pricelist.yaml?raw';
 
 export function slugify(s: string) {
   return s
@@ -76,4 +78,23 @@ export function packOptions(packs: Packs) {
 
 export function minPackPrice(packs: Packs) {
   return Math.min(...packOptions(packs).map((o) => o.price));
+}
+
+/** Data ostatniej aktualizacji cennika (pole `updated` w src/data/pricelist.yaml), RRRR-MM-DD. */
+export function getPricelistUpdated(): string {
+  const d = (loadYaml(pricelistRaw) as { updated?: string | Date })?.updated;
+  if (d instanceof Date) return d.toISOString().slice(0, 10);
+  return String(d ?? '');
+}
+
+/** Zweryfikowane obserwacje do mapy. */
+export async function getObservations() {
+  const all = await getCollection('observations');
+  return all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+}
+
+/** Galeria „Z mojej hodowli” (najnowsze najpierw), opcjonalnie tylko dla jednego gatunku. */
+export async function getGallery(species?: string) {
+  const all = await getCollection('gallery', (g) => !species || g.data.species === species);
+  return all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }

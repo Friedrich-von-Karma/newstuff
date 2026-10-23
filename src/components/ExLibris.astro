@@ -1,78 +1,99 @@
 ---
-/** Logo Blattodea.pl – ex libris: „Amata Blattodea” (łac. „ukochane karaczany”). */
+/** Logo Blattodea.pl – ex libris „Amata Blattodea” (łac. „ukochane karaczany”), bursztynowa wersja nocna. */
 interface Props {
-  dark?: boolean;
-  /** wersja do nagłówka: mniejsza, bez dolnej linii na wąskim ekranie */
-  compact?: boolean;
+  big?: boolean;
   class?: string;
 }
-const { dark = false, compact = false, class: cls } = Astro.props;
+const { big = false, class: cls } = Astro.props;
 ---
 
-<span class:list={['exlibris', { dark, compact }, cls]} role="img" aria-label="Amata Blattodea – M. Stachowiak, MMXXVI">
-  <span class="top" aria-hidden="true">Amata</span>
-  <span class="name" aria-hidden="true">Blattodea</span>
-  <span class="rule" aria-hidden="true"></span>
-  <span class="sig" aria-hidden="true">M. Stachowiak · MMXXVI</span>
+<span class:list={['exl', { big }, cls]} role="img" aria-label="Amata Blattodea – M. Stachowiak, MMXXVI">
+  <span class="exl-in" aria-hidden="true">
+    <span class="l1">Amata</span>
+    <span class="l2">Blattodea</span>
+    <span class="rule"></span>
+    <span class="l3">M. Stachowiak · MMXXVI</span>
+  </span>
 </span>
 
 <style>
-  .exlibris {
-    --c: #553823;
-    --ink: #16271c;
-    --bg: var(--label);
-    display: inline-grid;
-    justify-items: center;
-    gap: 0.18em;
-    padding: 0.75em 1.35em 0.7em;
-    border: 3px double var(--c);
-    outline: 1px solid var(--c);
-    outline-offset: 4px;
-    background: var(--bg);
-    color: var(--c);
-    font-size: 16px;
-    line-height: 1;
+  .exl {
+    display: inline-flex;
+    color: var(--amber2);
+    padding: 3px;
+    border: 1px solid rgba(232, 165, 71, 0.55);
+    border-radius: 2px;
+    flex: none;
   }
-  .dark {
-    --c: #dcc08a;
-    --ink: #f6efdc;
-    --bg: transparent;
+  .exl-in {
+    border: 3px double rgba(232, 165, 71, 0.75);
+    padding: 5px 12px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    background: rgba(11, 18, 13, 0.35);
   }
-  .top,
-  .sig {
-    font-family: var(--f-caps);
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    font-size: 0.72em;
+  .l1,
+  .l3 {
+    font-family: var(--serif);
+    font-variant: small-caps;
+    text-transform: lowercase;
+    letter-spacing: 0.32em;
+    font-size: 10px;
+    line-height: 1.2;
+    color: var(--muted);
+    padding-left: 0.32em;
     white-space: nowrap;
   }
-  .top {
-    letter-spacing: 0.32em;
-    padding-left: 0.32em;
-  }
-  .name {
-    font-family: var(--f-display);
+  .l2 {
+    font-family: var(--serif);
     font-style: italic;
-    font-weight: 600;
-    font-size: 2.4em;
-    color: var(--ink);
-    margin: 0.05em 0 0.02em;
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: var(--amber2);
   }
   .rule {
-    width: 62%;
+    width: 70%;
     height: 1px;
-    background: currentColor;
+    background: rgba(232, 165, 71, 0.6);
+    margin: 3px 0 2px;
   }
-  .compact {
-    font-size: 11px;
-    padding: 0.55em 1.1em 0.55em;
-    outline-offset: 3px;
+  .l3 {
+    font-size: 8.5px;
+    letter-spacing: 0.22em;
   }
-  .compact .name {
-    font-size: 2.2em;
+  .big {
+    padding: 5px;
   }
-  .compact .top,
-  .compact .sig {
-    font-size: 0.78em;
+  .big .exl-in {
+    padding: 12px 30px 13px;
+    border-width: 4px;
+  }
+  .big .l1 {
+    font-size: 14px;
+  }
+  .big .l2 {
+    font-size: 46px;
+  }
+  .big .l3 {
+    font-size: 12px;
+  }
+  .big .rule {
+    margin: 7px 0 5px;
+  }
+  @media (max-width: 560px) {
+    .l2 {
+      font-size: 20px;
+    }
+    .big .l2 {
+      font-size: 38px;
+    }
+    .big .exl-in {
+      padding: 10px 20px;
+    }
   }
 </style>

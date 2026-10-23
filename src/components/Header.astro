@@ -10,297 +10,307 @@ interface Props {
 const { lang, alt, active } = Astro.props;
 const tr = useTranslations(lang);
 
-const nav: { key: RouteKey; label: string; n: string }[] = [
-  { key: 'pricelist', label: tr('nav.pricelist'), n: 'I' },
-  { key: 'species', label: tr('nav.species'), n: 'II' },
-  { key: 'key', label: tr('nav.keyShort'), n: 'III' },
-  { key: 'blog', label: tr('nav.blog'), n: 'IV' },
-  { key: 'contact', label: tr('nav.contact'), n: 'V' },
+const nav: { key: RouteKey; label: string }[] = [
+  { key: 'pricelist', label: tr('nav.pricelist') },
+  { key: 'species', label: tr('nav.species') },
+  { key: 'gallery', label: tr('nav.gallery') },
+  { key: 'key', label: tr('nav.keyShort') },
+  { key: 'map', label: tr('nav.map') },
+  { key: 'blog', label: tr('nav.blog') },
+  { key: 'contact', label: tr('nav.contact') },
+];
+const extra: { key: RouteKey; label: string }[] = [
+  { key: 'identify', label: tr('nav.identify') },
+  { key: 'compare', label: tr('nav.compare') },
+  { key: 'glossary', label: tr('nav.glossary') },
 ];
 ---
 
-<header class="masthead">
-  <div class="topline">
-    <div class="wrap topline-in">
-      <span>Coll. Blattodea · Polonia</span>
-      <span class="hide-sm">{tr('site.tagline')}</span>
-      <a class="lang" href={alt} hreflang={lang === 'pl' ? 'en' : 'pl'} lang={lang === 'pl' ? 'en' : 'pl'}>
-        <span class:list={{ on: lang === 'pl' }}>PL</span> / <span class:list={{ on: lang === 'en' }}>EN</span>
-        <span class="visually-hidden"> – {tr('lang.switch')}</span>
-      </a>
-    </div>
-  </div>
-  <div class="wrap bar">
-    <a class="brand" href={routes.home[lang]} aria-label="Blattodea.pl – start">
-      <ExLibris dark compact />
+<header class="top" data-top>
+  <a class="brand" href={routes.home[lang]} aria-label="Blattodea.pl – start">
+    <ExLibris />
+  </a>
+  <nav class="nav" id="site-nav" aria-label={tr('nav.menu')}>
+    {
+      nav.map((n) => (
+        <a href={routes[n.key][lang]} class:list={{ on: active === n.key }} aria-current={active === n.key ? 'page' : undefined}>
+          {n.label}
+        </a>
+      ))
+    }
+    <span class="more">
+      {
+        extra.map((n) => (
+          <a href={routes[n.key][lang]} class:list={{ on: active === n.key }} aria-current={active === n.key ? 'page' : undefined}>
+            {n.label}
+          </a>
+        ))
+      }
+    </span>
+  </nav>
+  <div class="tools">
+    <a class="lang" href={alt} hreflang={lang === 'pl' ? 'en' : 'pl'} lang={lang === 'pl' ? 'en' : 'pl'}>
+      {lang === 'pl' ? 'EN' : 'PL'}<span class="vh"> – {tr('lang.switch')}</span>
     </a>
-
-    <div class="menu">
-      <button class="toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-        <span class="burger" aria-hidden="true"></span>
-        <span>{tr('nav.menu')}</span>
-      </button>
-      <nav id="site-nav" aria-label={tr('nav.menu')}>
-        <ul>
-          {
-            nav.map((n) => (
-              <li>
-                <a href={routes[n.key][lang]} aria-current={active === n.key ? 'page' : undefined}>
-                  <span class="n">{n.n}</span>
-                  <span class="t">{n.label}</span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-    </div>
+    <button type="button" class="cartbtn" data-open-cart aria-label={tr('nav.cart')}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+      </svg>
+      <span class="badge" data-cart-badge hidden>0</span>
+    </button>
+    <button class="burger" type="button" aria-label={tr('nav.menu')} aria-expanded="false" aria-controls="site-nav"><span></span></button>
   </div>
 </header>
 
 <script>
-  const btn = document.querySelector<HTMLButtonElement>('.masthead .toggle');
-  const menu = document.querySelector<HTMLElement>('.masthead .menu');
-  const header = document.querySelector<HTMLElement>('.masthead');
-  btn?.addEventListener('click', () => {
-    const open = btn.getAttribute('aria-expanded') !== 'true';
-    btn.setAttribute('aria-expanded', String(open));
-    menu?.classList.toggle('open', open);
-  });
+  const top = document.querySelector<HTMLElement>('[data-top]');
+  const burger = top?.querySelector<HTMLButtonElement>('.burger');
+  const solid = () => top?.classList.toggle('solid', window.scrollY > 30);
+  solid();
+  window.addEventListener('scroll', solid, { passive: true });
+  const setMenu = (open: boolean) => {
+    document.documentElement.classList.toggle('menu-open', open);
+    burger?.setAttribute('aria-expanded', String(open));
+  };
+  burger?.addEventListener('click', () => setMenu(!document.documentElement.classList.contains('menu-open')));
+  top?.querySelectorAll('.nav a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && menu?.classList.contains('open')) {
-      menu.classList.remove('open');
-      btn?.setAttribute('aria-expanded', 'false');
-      btn?.focus();
+    if (e.key === 'Escape' && document.documentElement.classList.contains('menu-open')) {
+      setMenu(false);
+      burger?.focus();
     }
   });
-  // po przewinięciu nagłówek się zwęża
-  const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 40);
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
 </script>
 
 <style>
-  .masthead {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    color: var(--label);
-    background-color: var(--bottle-800);
-    background-image: var(--grain), linear-gradient(180deg, var(--bottle-700), var(--bottle-900));
-    border-bottom: 1px solid var(--brass-dark);
-    box-shadow:
-      0 1px 0 var(--bottle-900),
-      0 3px 0 -1px var(--brass-dark),
-      0 10px 24px -14px rgba(0, 0, 0, 0.7);
-  }
-  .topline {
-    border-bottom: 1px solid rgba(220, 192, 138, 0.18);
-    font-family: var(--f-type);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: var(--sage);
-    max-height: 40px;
-    overflow: hidden;
+  .top {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px var(--gut);
+    border-bottom: 1px solid transparent;
     transition:
-      max-height 0.35s var(--ease),
-      opacity 0.35s var(--ease);
+      background 0.5s,
+      padding 0.5s,
+      border-color 0.5s;
   }
-  .scrolled .topline {
-    max-height: 0;
-    opacity: 0;
-  }
-  .topline-in {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
-  }
-  .lang {
-    color: var(--sage);
-    text-decoration: none;
-    border: 1px solid rgba(220, 192, 138, 0.35);
-    padding: 0.05rem 0.6rem;
-  }
-  .lang .on {
-    color: var(--brass-light);
-  }
-  .lang:hover {
-    color: var(--label);
-    border-color: var(--brass);
-  }
-  @media (max-width: 640px) {
-    .hide-sm {
-      display: none;
-    }
-  }
-
-  .bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-height: 78px;
-    position: relative;
-    transition: min-height 0.35s var(--ease);
-  }
-  .scrolled .bar {
-    min-height: 62px;
+  .top.solid {
+    background: rgba(11, 18, 13, 0.74);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+    border-color: var(--line);
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
   .brand {
-    display: flex;
-    align-items: center;
     text-decoration: none;
-    padding: 6px 4px;
-    transition: transform 0.4s var(--ease);
+    flex: none;
+    transition: transform 0.5s var(--ease);
   }
   .brand:hover {
     transform: rotate(-1.5deg) scale(1.03);
   }
-  .brand :global(.exlibris) {
-    transition: font-size 0.35s var(--ease);
-  }
-  .scrolled .brand :global(.exlibris) {
-    font-size: 9.5px;
-  }
-  @media (max-width: 420px) {
-    .brand :global(.exlibris) {
-      font-size: 9.5px;
-    }
-  }
-
-  .toggle {
-    font: inherit;
-    font-family: var(--f-caps);
-    letter-spacing: 0.1em;
+  .nav {
     display: flex;
+    gap: clamp(12px, 1.8vw, 28px);
     align-items: center;
-    gap: 0.6rem;
-    background: transparent;
-    color: var(--label);
-    padding: 0.45rem 0.8rem;
-    border: 1px solid var(--brass-dark);
-    cursor: pointer;
   }
-  .burger,
-  .burger::before,
-  .burger::after {
-    display: block;
-    width: 18px;
-    height: 1.5px;
-    background: currentColor;
-    position: relative;
-    transition:
-      transform 0.3s var(--ease),
-      background 0.3s;
-  }
-  .burger::before,
-  .burger::after {
-    content: '';
-    position: absolute;
-  }
-  .burger::before {
-    top: -6px;
-  }
-  .burger::after {
-    top: 6px;
-  }
-  .open .burger {
-    background: transparent;
-  }
-  .open .burger::before {
-    transform: translateY(6px) rotate(45deg);
-  }
-  .open .burger::after {
-    transform: translateY(-6px) rotate(-45deg);
-  }
-
-  nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  nav a {
-    position: relative;
-    display: flex;
-    align-items: baseline;
-    gap: 0.4rem;
+  .nav a {
     text-decoration: none;
-    color: var(--label);
-    font-family: var(--f-display);
-    font-size: 1.22rem;
-    font-weight: 600;
+    font-size: 12.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    position: relative;
+    padding: 6px 0;
+    white-space: nowrap;
+    transition: color 0.3s;
   }
-  .n {
-    font-family: var(--f-caps);
-    font-size: 0.78rem;
-    color: var(--brass);
-    letter-spacing: 0.06em;
-  }
-  nav a::after {
+  .nav a::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -6px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--brass-light), transparent);
+    bottom: 0;
+    height: 1px;
+    background: var(--amber);
     transform: scaleX(0);
-    transition: transform 0.4s var(--ease);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease);
   }
-  nav a:hover {
-    color: var(--brass-light);
+  .nav a:hover,
+  .nav a.on {
+    color: var(--text);
   }
-  nav a:hover::after,
-  nav a[aria-current='page']::after {
+  .nav a:hover::after,
+  .nav a.on::after {
     transform: scaleX(1);
   }
-  nav a[aria-current='page'] {
-    color: var(--brass-light);
+  .more {
+    display: none;
+  }
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lang {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--line2);
+    border-radius: 999px;
+    padding: 6px 11px;
+    transition:
+      color 0.3s,
+      border-color 0.3s;
+  }
+  .lang:hover {
+    color: var(--amber2);
+    border-color: var(--amber);
+  }
+  .cartbtn {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line2);
+    background: var(--glass);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition:
+      border-color 0.3s,
+      box-shadow 0.4s;
+  }
+  .cartbtn:hover {
+    border-color: var(--amber);
+    box-shadow: 0 0 24px rgba(232, 165, 71, 0.3);
+  }
+  .cartbtn svg {
+    width: 21px;
+    height: 21px;
+    color: var(--amber2);
+  }
+  .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--amber);
+    color: #1a1208;
+    font-size: 11px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+  }
+  .badge:global(.bump) {
+    animation: bump 0.5s var(--ease);
+  }
+  @keyframes bump {
+    40% {
+      transform: scale(1.4);
+    }
+  }
+  .burger {
+    display: none;
+    background: none;
+    border: 1px solid var(--line2);
+    border-radius: 999px;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    position: relative;
+  }
+  .burger span,
+  .burger span::before,
+  .burger span::after {
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    height: 1.5px;
+    background: var(--text);
+    content: '';
+    transition: transform 0.35s;
+  }
+  .burger span {
+    top: 21px;
+  }
+  .burger span::before {
+    top: -6px;
+    left: 0;
+    right: 0;
+  }
+  .burger span::after {
+    top: 6px;
+    left: 0;
+    right: 0;
+  }
+  :global(.menu-open) .burger span {
+    background: transparent;
+  }
+  :global(.menu-open) .burger span::before {
+    transform: translateY(6px) rotate(45deg);
+  }
+  :global(.menu-open) .burger span::after {
+    transform: translateY(-6px) rotate(-45deg);
   }
 
-  @media (max-width: 899px) {
-    .menu nav {
-      position: absolute;
-      left: 16px;
-      right: 16px;
-      top: calc(100% + 8px);
-      background: var(--bottle-800);
-      background-image: var(--grain);
-      border: 1px solid var(--brass-dark);
-      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.8);
-      padding: 0.4rem 1.2rem;
-      clip-path: inset(0 0 100% 0);
+  @media (max-width: 1080px) {
+    .nav {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+      background: rgba(8, 13, 9, 0.97);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
       opacity: 0;
       pointer-events: none;
-      transition:
-        clip-path 0.45s var(--ease),
-        opacity 0.3s;
+      transition: opacity 0.45s;
     }
-    .menu.open nav {
-      clip-path: inset(0 0 0 0);
+    .nav a {
+      font-family: var(--serif);
+      font-size: clamp(28px, 7vw, 40px);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--text);
+      font-style: italic;
+      padding: 2px 0;
+    }
+    .more {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 18px;
+      margin-top: 14px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .more a {
+      font-family: var(--sans);
+      font-style: normal;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    :global(.menu-open) .nav {
       opacity: 1;
       pointer-events: auto;
     }
-    nav li + li {
-      border-top: 1px dashed rgba(220, 192, 138, 0.25);
-    }
-    nav a {
-      padding: 0.75rem 0;
-    }
-    nav a::after {
-      display: none;
-    }
-  }
-  @media (min-width: 900px) {
-    .toggle {
-      display: none;
-    }
-    nav ul {
-      display: flex;
-      gap: 1.9rem;
+    .burger {
+      display: block;
     }
   }
 </style>

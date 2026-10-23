@@ -1,5 +1,9 @@
 import { defineCollection, z } from 'astro:content';
 import { glob, file } from 'astro/loaders';
+import { load as loadYaml } from 'js-yaml';
+
+/** Pliki YAML w formacie { items: [...] } (wygodne do edycji w panelu /admin). */
+const itemsParser = (text: string) => ((loadYaml(text) as { items?: unknown[] })?.items ?? []) as Record<string, unknown>[];
 
 /** Tekst w dwóch językach. */
 const t = z.object({ pl: z.string(), en: z.string() });
@@ -64,7 +68,7 @@ const blog = defineCollection({
 
 /** Cennik – jeden plik src/data/pricelist.yaml. Każda pozycja to paczka 10 sztuk. */
 const pricelist = defineCollection({
-  loader: file('./src/data/pricelist.yaml'),
+  loader: file('./src/data/pricelist.yaml', { parser: itemsParser }),
   schema: z.object({
     latin: z.string(),
     /** Nazwa pliku profilu (bez .yaml), jeśli gatunek ma profil. */
@@ -83,4 +87,45 @@ const pricelist = defineCollection({
   }),
 });
 
-export const collections = { species, speciesNotes, blog, pricelist };
+/**
+ * Galeria „Z mojej hodowli” – jeden plik YAML na zdjęcie lub film w src/content/gallery/.
+ * Pliki zdjęć/filmów: public/images/hodowla/… (albo film z YouTube przez `youtube`).
+ */
+const gallery = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/gallery' }),
+  schema: z.object({
+    title: t,
+    kind: z.enum(['photo', 'video']),
+    /** ścieżka do pliku w public/, np. /images/hodowla/dubia-nimfy.jpg lub .mp4 */
+    src: z.string().optional(),
+    /** identyfikator filmu z YouTube (zamiast src) */
+    youtube: z.string().optional(),
+    /** miniatura filmu */
+    poster: z.string().optional(),
+    caption: t.optional(),
+    /** identyfikator gatunku (nazwa pliku profilu lub id z klucza) */
+    species: z.string().optional(),
+    date: z.coerce.date(),
+    sample: z.boolean().default(false),
+  }),
+});
+
+/** Zweryfikowane obserwacje karaczanów w Polsce – src/data/observations.yaml (lista items). */
+const observations = defineCollection({
+  loader: file('./src/data/observations.yaml', { parser: itemsParser }),
+  schema: z.object({
+    /** identyfikator gatunku z klucza (src/data/key.ts), np. ectobius-sylvestris */
+    species: z.string(),
+    lat: z.number(),
+    lng: z.number(),
+    place: z.string(),
+    date: z.coerce.date(),
+    /** kto przysłał (opcjonalnie, za zgodą) */
+    observer: z.string().optional(),
+    note: z.string().optional(),
+    /** zdjęcie w public/, np. /images/obserwacje/2026-07-kampinos.jpg */
+    photo: z.string().optional(),
+  }),
+});
+
+export const collections = { species, speciesNotes, blog, pricelist, gallery, observations };

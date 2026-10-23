@@ -1,0 +1,11 @@
+# PRZYKŁAD – podmień na własne zdjęcie
+sample: true
+kind: photo
+title:
+  pl: "Samica Shelfordella lateralis z ooteką"
+  en: "Shelfordella lateralis female with an ootheca"
+caption:
+  pl: "Ooteka to kapsuła z jajami – samica nosi ją na końcu odwłoka, zanim ją złoży."
+  en: "The ootheca is an egg case – the female carries it at the tip of her abdomen before laying it."
+species: shelfordella-lateralis
+date: 2026-10-12

@@ -13,9 +13,6 @@ export const site = {
     instagramName: '@insectastic',
   },
 
-  /** Data ostatniej zmiany cennika (RRRR-MM-DD). */
-  pricelistUpdated: '2026-10-23',
-
   /** Zasady wysyłki, odbioru i płatności pokazywane pod cennikiem. */
   shipping: {
     pl: [

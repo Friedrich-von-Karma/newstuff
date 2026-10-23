@@ -1,7 +1,6 @@
 ---
 import { site } from '../data/site';
-import { routes, useTranslations, type Lang } from '../i18n/ui';
-import ContactLinks from './ContactLinks.astro';
+import { routes, useTranslations, type Lang, type RouteKey } from '../i18n/ui';
 import ExLibris from './ExLibris.astro';
 
 interface Props {
@@ -10,94 +9,155 @@ interface Props {
 const { lang } = Astro.props;
 const tr = useTranslations(lang);
 const year = new Date().getFullYear();
+const pl = lang === 'pl';
+const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
+  {
+    h: pl ? 'Hodowla' : 'Breeding',
+    links: [
+      { key: 'pricelist', label: tr('nav.pricelist') },
+      { key: 'species', label: tr('nav.species') },
+      { key: 'compare', label: tr('nav.compare') },
+      { key: 'gallery', label: tr('nav.gallery') },
+    ],
+  },
+  {
+    h: pl ? 'Teren' : 'Field',
+    links: [
+      { key: 'key', label: tr('nav.key') },
+      { key: 'identify', label: tr('nav.identify') },
+      { key: 'map', label: tr('nav.map') },
+      { key: 'glossary', label: tr('nav.glossary') },
+    ],
+  },
+  {
+    h: pl ? 'Więcej' : 'More',
+    links: [
+      { key: 'blog', label: tr('nav.blog') },
+      { key: 'contact', label: tr('nav.contact') },
+    ],
+  },
+];
 ---
 
 <footer class="foot">
+  <div class="glow" aria-hidden="true"></div>
   <div class="wrap grid">
     <div class="colophon">
-      <ExLibris dark />
-      <p class="small">blattodea.pl · {tr('site.tagline')}</p>
+      <ExLibris big />
+      <p>{tr('site.tagline')}</p>
+      <p class="social">
+        <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+        <a href={site.contact.instagram} target="_blank" rel="noopener">Instagram {site.contact.instagramName}</a>
+        <a href={site.contact.facebook} target="_blank" rel="noopener">Facebook</a>
+        <a href={site.contact.messenger} target="_blank" rel="noopener">Messenger</a>
+      </p>
     </div>
-    <nav aria-label="Footer">
-      <p class="h caps">{lang === 'pl' ? 'Spis działów' : 'Contents'}</p>
-      <ul>
-        <li><a href={routes.pricelist[lang]}>{tr('nav.pricelist')}</a></li>
-        <li><a href={routes.species[lang]}>{tr('nav.species')}</a></li>
-        <li><a href={routes.key[lang]}>{tr('nav.key')}</a></li>
-        <li><a href={routes.blog[lang]}>{tr('nav.blog')}</a></li>
-        <li><a href={routes.contact[lang]}>{tr('nav.contact')}</a></li>
-      </ul>
-    </nav>
-    <div>
-      <p class="h caps">{tr('nav.contact')}</p>
-      <ContactLinks lang={lang} compact dark />
-    </div>
+    {
+      cols.map((c) => (
+        <nav aria-label={c.h}>
+          <p class="h">{c.h}</p>
+          {c.links.map((l) => (
+            <a href={routes[l.key][lang]}>{l.label}</a>
+          ))}
+        </nav>
+      ))
+    }
   </div>
   <div class="wrap legal">
     <p>© {year} {site.name}. {tr('footer.rights')}</p>
-    <p>{lang === 'pl' ? 'Zdjęcia gatunków: Wikimedia Commons – autorzy i licencje podane pod każdym zdjęciem.' : 'Species photos: Wikimedia Commons – author and licence shown under each photo.'}</p>
+    <p>
+      {pl ? 'Zdjęcia gatunków: Wikimedia Commons – autorzy i licencje podane pod zdjęciami.' : 'Species photos: Wikimedia Commons – authors and licences shown under each photo.'}{' '}
+      <a href="/admin/" rel="nofollow">Panel</a>
+    </p>
   </div>
 </footer>
 
 <style>
   .foot {
     position: relative;
-    margin-top: 3rem;
-    color: var(--paper-2);
-    background-color: var(--wood-800);
-    background-image: var(--grain), var(--woodgrain), linear-gradient(180deg, var(--wood-700), var(--wood-900));
-    border-top: 6px solid var(--wood-900);
-    box-shadow: inset 0 1px 0 var(--brass-dark), inset 0 8px 18px -10px rgba(0, 0, 0, 0.8);
-    padding: 3.5rem 0 1.5rem;
     overflow: hidden;
+    isolation: isolate;
+    border-top: 1px solid var(--line);
+    background: #080d09;
+    padding: clamp(60px, 8vw, 100px) 0 30px;
+  }
+  .glow {
+    position: absolute;
+    z-index: -1;
+    width: 60vmax;
+    height: 60vmax;
+    left: -25vmax;
+    bottom: -40vmax;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 140, 50, 0.16), transparent 65%);
+    animation: breathe 9s ease-in-out infinite;
   }
   .grid {
     display: grid;
-    gap: 2.2rem;
+    gap: 40px;
+    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
   }
-  @media (min-width: 800px) {
+  @media (max-width: 900px) {
     .grid {
-      grid-template-columns: 1.3fr 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .colophon {
+      grid-column: 1 / -1;
     }
   }
-  .colophon :global(.exlibris) {
-    margin: 6px 0 1.2rem 6px;
+  .colophon p {
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 46ch;
+    margin: 22px 0 0;
   }
-  .small {
-    font-size: 0.88rem;
-    color: var(--paper-3);
-    opacity: 0.8;
+  .social {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .social a {
+    color: var(--text);
+    text-decoration: none;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    overflow-wrap: anywhere;
+  }
+  .social a:hover {
+    color: var(--amber2);
+  }
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   .h {
-    font-size: 1.1rem;
-    color: var(--brass-light);
-    margin: 0 0 0.8rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid rgba(220, 192, 138, 0.25);
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 0.4rem;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 0 0 6px;
   }
   nav a {
-    color: var(--paper-2);
+    color: var(--muted);
     text-decoration: none;
+    font-size: 14px;
   }
   nav a:hover {
-    color: var(--brass-light);
+    color: var(--amber2);
   }
   .legal {
-    margin-top: 2.5rem;
-    border-top: 1px solid rgba(220, 192, 138, 0.2);
-    padding-top: 1.2rem;
-    font-size: 0.8rem;
-    color: var(--paper-3);
-    opacity: 0.75;
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--dim);
   }
   .legal p {
-    margin: 0 0 0.3rem;
+    margin: 0 0 4px;
+  }
+  .legal a {
+    color: var(--dim);
   }
 </style>
