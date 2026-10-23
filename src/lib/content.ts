@@ -70,10 +70,10 @@ export const packKinds = ['nymph', 'mix', 'adult'] as const;
 export type PackKind = (typeof packKinds)[number];
 export const PACK_SIZE = 10;
 
-type Packs = Partial<Record<PackKind, number>>;
+type Packs = Partial<Record<PackKind, number | null>>;
 
 export function packOptions(packs: Packs) {
-  return packKinds.filter((k) => packs[k] !== undefined).map((k) => ({ kind: k, price: packs[k]! }));
+  return packKinds.filter((k) => typeof packs[k] === 'number').map((k) => ({ kind: k, price: packs[k] as number }));
 }
 
 export function minPackPrice(packs: Packs) {

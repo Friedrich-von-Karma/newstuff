@@ -78,11 +78,11 @@ const pricelist = defineCollection({
     /** Cena (zł) za paczkę 10 szt. w danym wariancie. Wariant pominięty = niedostępny. */
     packs: z
       .object({
-        nymph: z.number().positive().optional(),
-        adult: z.number().positive().optional(),
-        mix: z.number().positive().optional(),
+        nymph: z.number().positive().nullish(),
+        adult: z.number().positive().nullish(),
+        mix: z.number().positive().nullish(),
       })
-      .refine((p) => Object.values(p).some((v) => v !== undefined), 'Podaj cenę co najmniej jednego wariantu'),
+      .refine((p) => Object.values(p).some((v) => typeof v === 'number'), 'Podaj cenę co najmniej jednego wariantu'),
     sample: z.boolean().default(false),
   }),
 });

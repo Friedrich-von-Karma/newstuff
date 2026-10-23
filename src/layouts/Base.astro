@@ -19,9 +19,11 @@ interface Props {
   alt: string;
   active?: RouteKey;
   image?: string;
+  /** nie pokazuj w wyszukiwarkach (np. strona podziękowania) */
+  noindex?: boolean;
 }
 
-const { lang, title, description, alt, active, image } = Astro.props;
+const { lang, title, description, alt, active, image, noindex = false } = Astro.props;
 const tr = useTranslations(lang);
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} – ${tr('site.tagline')}`;
 const desc = description ?? tr('home.lead');
@@ -40,6 +42,7 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="alternate" hreflang={lang} href={canonical} />
     <link rel="alternate" hreflang={other} href={altUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

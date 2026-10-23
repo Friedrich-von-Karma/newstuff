@@ -1,0 +1,367 @@
+---
+import Base from '../layouts/Base.astro';
+import { glossary } from '../data/glossary';
+import { routes, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
+const locale = pl ? 'pl' : 'en';
+
+const t = pl
+  ? {
+      title: 'Słowniczek',
+      desc: 'Najważniejsze pojęcia z hodowli i oznaczania karaczanów: ooteka, nimfa, linienie, przedplecze, pokrywy i inne – krótko i po polsku.',
+      num: 'Słowniczek · pojęcia',
+      h1a: 'Słowniczek',
+      h1b: 'pojęć',
+      lead: 'Krótkie wyjaśnienia terminów, które pojawiają się w profilach hodowlanych, w kluczu i na blogu. W tekstach na stronie są podkreślone kropkami – najedź lub stuknij, żeby zobaczyć definicję.',
+      search: 'Szukaj terminu',
+      placeholder: 'np. ooteka, nimfa, przedplecze…',
+      none: 'Brak terminów pasujących do wyszukiwania.',
+      count: 'terminów',
+      index: 'Indeks liter',
+      key: 'Klucz do karaczanów Polski',
+      species: 'Profile hodowlane',
+      link: 'link do tego terminu',
+    }
+  : {
+      title: 'Glossary',
+      desc: 'Key terms from cockroach keeping and identification: ootheca, nymph, moulting, pronotum, tegmina and more – short and plain.',
+      num: 'Glossary · terms',
+      h1a: 'Glossary',
+      h1b: 'of terms',
+      lead: 'Short explanations of the terms used in the care sheets, the key and the blog. In texts across the site they are underlined with dots – hover or tap to see the definition.',
+      search: 'Search terms',
+      placeholder: 'e.g. ootheca, nymph, pronotum…',
+      none: 'No terms match your search.',
+      count: 'terms',
+      index: 'Letter index',
+      key: 'Key to the cockroaches of Poland',
+      species: 'Care sheets',
+      link: 'link to this term',
+    };
+
+const items = glossary
+  .map((g) => ({ id: g.id, term: g.term[lang], def: g.def[lang], alt: g.term[other] }))
+  .sort((a, b) => a.term.localeCompare(b.term, locale, { sensitivity: 'base' }));
+const letterOf = (s: string) => s.charAt(0).toLocaleUpperCase(locale);
+const groups: { letter: string; items: typeof items }[] = [];
+for (const it of items) {
+  const l = letterOf(it.term);
+  const last = groups[groups.length - 1];
+  if (last && last.letter === l) last.items.push(it);
+  else groups.push({ letter: l, items: [it] });
+}
+const slug = (l: string) => `litera-${l.toLocaleLowerCase(locale)}`;
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.glossary[other]} active="glossary">
+  <section class="page glpage">
+    <div class="glowspot" style="width:600px;height:600px;right:-200px;top:20px;background:radial-gradient(circle,rgba(232,165,71,.12),transparent 65%)"></div>
+    <div class="glowspot" style="width:520px;height:520px;left:-220px;top:700px;background:radial-gradient(circle,rgba(125,154,87,.13),transparent 65%);animation-delay:-4s"></div>
+    <div class="wrap">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.num}</div>
+          <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        </div>
+        <p class="rv" style="--d:.15s">{t.lead}</p>
+      </div>
+
+      <div class="glbar rv">
+        <label class="gsearch">
+          <span class="vh">{t.search}</span>
+          <input type="search" id="gl-q" placeholder={t.placeholder} autocomplete="off" spellcheck="false" />
+        </label>
+        <nav class="letters" aria-label={t.index}>
+          {groups.map((g) => <a href={`#${slug(g.letter)}`} data-letter={g.letter}>{g.letter}</a>)}
+        </nav>
+        <div class="gcount" aria-live="polite"><b id="gl-n">{items.length}</b> {t.count}</div>
+      </div>
+
+      <div class="gl">
+        {
+          groups.map((g) => (
+            <section class="grp" id={slug(g.letter)} data-group={g.letter}>
+              <h2 class="letter" aria-hidden="true">{g.letter}</h2>
+              <dl>
+                {g.items.map((it) => (
+                  <div class="entry rv" id={it.id} data-text={`${it.term} ${it.alt} ${it.def}`.toLocaleLowerCase(locale)}>
+                    <dt>
+                      <a class="anchor" href={`#${it.id}`} aria-label={`${it.term} – ${t.link}`}>#</a>
+                      <span class="tm">{it.term}</span>
+                      <span class="alt" lang={other}>{it.alt}</span>
+                    </dt>
+                    <dd>{it.def}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ))
+        }
+        <p class="empty" id="gl-none" hidden>{t.none}</p>
+      </div>
+
+      <div class="glfoot rv">
+        <a class="link" href={routes.key[lang]}>{t.key} →</a>
+        <a class="link" href={routes.species[lang]}>{t.species} →</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const q = document.getElementById('gl-q') as HTMLInputElement | null;
+  if (q) {
+    const entries = [...document.querySelectorAll<HTMLElement>('.entry')];
+    const groups = [...document.querySelectorAll<HTMLElement>('[data-group]')];
+    const letters = [...document.querySelectorAll<HTMLAnchorElement>('.letters a')];
+    const n = document.getElementById('gl-n')!;
+    const none = document.getElementById('gl-none')!;
+    const norm = (s: string) => s.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g, 'l');
+    const texts = new Map(entries.map((e) => [e, norm(e.dataset.text || '')]));
+    const run = () => {
+      const v = norm(q.value.trim());
+      let shown = 0;
+      for (const e of entries) {
+        const ok = !v || texts.get(e)!.includes(v);
+        e.hidden = !ok;
+        if (ok) {
+          shown++;
+          e.classList.add('in');
+        }
+      }
+      for (const g of groups) {
+        const any = [...g.querySelectorAll<HTMLElement>('.entry')].some((e) => !e.hidden);
+        g.hidden = !any;
+        letters.find((a) => a.dataset.letter === g.dataset.group)?.classList.toggle('off', !any);
+      }
+      n.textContent = String(shown);
+      none.hidden = shown > 0;
+    };
+    q.addEventListener('input', run);
+    // wpisanie terminu w adresie (#ooteka) – pokaż wpis nawet przy aktywnym filtrze
+    window.addEventListener('hashchange', () => {
+      const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (el?.classList.contains('entry') && el.hidden) {
+        q.value = '';
+        run();
+        el.scrollIntoView();
+      }
+    });
+    // wpis z kotwicy od razu widoczny (bez czekania na animację pojawienia się)
+    const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target) target.classList.add('in');
+  }
+</script>
+
+<style>
+  .glpage {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+  }
+  .glbar {
+    position: sticky;
+    top: 84px;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding: 12px 16px;
+    margin-bottom: 30px;
+    border: 1px solid var(--line);
+    background: rgba(15, 25, 18, 0.82);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-radius: 4px;
+  }
+  .gsearch {
+    flex: 1 1 260px;
+    max-width: 420px;
+  }
+  .gsearch input {
+    padding-left: 38px;
+    background-image: radial-gradient(circle at 17px 50%, transparent 5px, var(--amber) 5px 6.3px, transparent 6.5px);
+  }
+  .letters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .letters a {
+    font-family: var(--serif);
+    font-size: 18px;
+    min-width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    color: var(--muted);
+    border-radius: 2px;
+    transition:
+      color 0.3s,
+      background 0.3s;
+  }
+  .letters a:hover {
+    color: var(--amber2);
+    background: rgba(232, 165, 71, 0.1);
+  }
+  .letters a.off {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .gcount {
+    margin-left: auto;
+    font-family: var(--serif);
+    color: var(--muted);
+  }
+  .gcount b {
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--amber2);
+  }
+
+  .gl {
+    display: grid;
+    gap: 10px;
+  }
+  .grp {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 0 30px;
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+    scroll-margin-top: 170px;
+  }
+  .letter {
+    font-family: var(--serif);
+    font-weight: 200;
+    font-style: italic;
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 0.9;
+    color: var(--amber2);
+    text-shadow: 0 0 50px rgba(232, 165, 71, 0.35);
+    position: sticky;
+    top: 170px;
+    align-self: start;
+  }
+  dl {
+    margin: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .entry {
+    position: relative;
+    padding: 16px 20px 18px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    scroll-margin-top: 170px;
+    transition:
+      border-color 0.5s,
+      background 0.5s,
+      box-shadow 0.6s;
+  }
+  .entry:hover {
+    background: rgba(235, 229, 211, 0.03);
+    border-color: var(--line);
+  }
+  .entry:target {
+    border-color: rgba(232, 165, 71, 0.55);
+    background: linear-gradient(150deg, rgba(232, 165, 71, 0.1), rgba(20, 33, 23, 0.7));
+    box-shadow: 0 0 60px -20px rgba(232, 165, 71, 0.5);
+    animation: glowin 1.6s var(--ease);
+  }
+  @keyframes glowin {
+    0% {
+      box-shadow: 0 0 0 0 rgba(232, 165, 71, 0.6);
+    }
+    40% {
+      box-shadow: 0 0 80px 0 rgba(232, 165, 71, 0.45);
+    }
+  }
+  dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    margin-bottom: 6px;
+  }
+  .tm {
+    font-family: var(--serif);
+    font-size: clamp(24px, 2.4vw, 32px);
+    font-style: italic;
+    line-height: 1.1;
+  }
+  .entry:target .tm {
+    color: var(--amber2);
+  }
+  .alt {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .anchor {
+    position: absolute;
+    left: -14px;
+    top: 22px;
+    font-family: var(--serif);
+    color: var(--amber);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .entry:hover .anchor,
+  .anchor:focus-visible {
+    opacity: 1;
+  }
+  dd {
+    margin: 0;
+    color: #d3cfbf;
+    max-width: 68ch;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .glfoot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    margin-top: 50px;
+  }
+
+  @media (max-width: 760px) {
+    .grp {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .letter {
+      position: static;
+      font-size: 54px;
+      margin-bottom: 4px;
+    }
+    .entry {
+      padding: 14px 4px 16px;
+    }
+    .entry:target {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+    .anchor {
+      display: none;
+    }
+    .gcount {
+      margin-left: 0;
+    }
+  }
+  @media (max-width: 560px) {
+    .glbar {
+      top: 72px;
+      position: static;
+    }
+  }
+</style>
