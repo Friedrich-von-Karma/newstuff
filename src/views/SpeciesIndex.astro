@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
-import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
 import { getPricelist, getSpecies } from '../lib/content';
+import { photos, photoSrc } from '../data/photos';
 
 interface Props {
   lang: Lang;
@@ -9,6 +10,7 @@ interface Props {
 const { lang } = Astro.props;
 const tr = useTranslations(lang);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
 
 const [species, pricelist] = await Promise.all([getSpecies(), getPricelist()]);
 const statusOf = new Map(pricelist.filter((p) => p.data.profile).map((p) => [p.data.profile!, p.data.status]));
@@ -17,118 +19,180 @@ const anySample = species.some((s) => s.data.sample);
 
 <Base lang={lang} title={tr('species.title')} description={tr('species.lead')} alt={routes.species[other]} active="species">
   <div class="wrap">
-    <header class="page-head">
-      <span class="eyebrow">II</span>
+    <header class="titlepage">
+      <span class="kicker">{pl ? 'Atlas hodowlany' : 'Breeding atlas'} · II</span>
       <h1>{tr('species.title')}</h1>
       <p class="lead">{tr('species.lead')}</p>
     </header>
 
     {anySample && <p class="notice">{tr('sample.note')}</p>}
 
-    <ul class="grid">
-      {
-        species.map((s, i) => {
-          const img = s.data.gallery[0];
-          const status = statusOf.get(s.id);
-          return (
-            <li>
-              <a href={`${routes.species[lang]}${s.id}/`} class="card">
-                <figure>
-                  <img src={img?.src ?? '/images/placeholder.svg'} alt={img?.alt[lang] ?? ''} loading="lazy" width="800" height="600" />
-                  <span class="fig smallcaps">
-                    {tr('species.fig')} {i + 1}
+    <div class="drawer">
+      <span class="drawer-tag type">{pl ? 'Szuflada 02 · gatunki hodowlane' : 'Drawer 02 · bred species'}</span>
+      <ul class="cells">
+        {
+          species.map((s, i) => {
+            const own = s.data.gallery[0];
+            const ph = photos[s.id];
+            const src = own?.src ?? (ph ? photoSrc(ph, 500) : undefined);
+            const status = statusOf.get(s.id);
+            return (
+              <li data-reveal="zoom" style={`--d:${i * 110}`}>
+                <a href={`${routes.species[lang]}${s.id}/`} class="cell">
+                  <span class="img">
+                    {src ? <img src={src} alt={own?.alt[lang] ?? s.data.latin} loading="lazy" referrerpolicy="no-referrer" /> : <span class="none type">—</span>}
+                    <span class="fig type">
+                      {tr('species.fig')} {i + 1}
+                    </span>
                   </span>
-                </figure>
-                <span class="body">
-                  <span class="latin name">{s.data.latin}</span>
-                  {s.data.commonName && <span class="common">{s.data.commonName[lang]}</span>}
-                  <span class="meta">
-                    <span>{s.data.family}</span>
-                    <span>·</span>
-                    <span>{tr(`species.difficulty.${s.data.difficulty}` as 'species.difficulty.1')}</span>
+                  <span class="label-card lab">
+                    <span class="latin name">{s.data.latin}</span>
+                    <span class="auth">{s.data.author}</span>
+                    {s.data.commonName && <span class="common">{s.data.commonName[lang]}</span>}
+                    <span class="meta">
+                      {s.data.family} · {tr(`species.difficulty.${s.data.difficulty}` as UiKey)} · {s.data.temperature}
+                    </span>
                   </span>
-                  {status && <span class={`badge ${status}`}>{tr(`status.${status}`)}</span>}
-                </span>
-              </a>
-            </li>
-          );
-        })
-      }
-    </ul>
+                  {status && <span class={`stamp ${status}`}>{tr(`status.${status}`)}</span>}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+    <p class="credits type">
+      {pl ? 'Zdjęcia poglądowe: Wikimedia Commons – autor i licencja na stronie każdego gatunku.' : 'Illustrative photos: Wikimedia Commons – author and licence on each species page.'}
+    </p>
   </div>
 </Base>
 
 <style>
-  .grid {
+  .drawer {
+    position: relative;
+    padding: 2.4rem 1.4rem 1.6rem;
+    background-color: var(--wood-700);
+    background-image: var(--grain), var(--woodgrain), linear-gradient(135deg, var(--wood-500), var(--wood-800) 55%, var(--wood-600));
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 220, 170, 0.15),
+      0 30px 50px -30px rgba(0, 0, 0, 0.8);
+  }
+  .drawer-tag {
+    position: absolute;
+    top: 0.6rem;
+    left: 50%;
+    translate: -50% 0;
+    background: linear-gradient(180deg, #ecd6a2, #b89458 55%, #d6b678);
+    color: var(--wood-900);
+    font-size: 0.72rem;
+    padding: 0.15rem 1rem;
+    border: 1px solid var(--brass-dark);
+    white-space: nowrap;
+  }
+  .cells {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 1.5rem;
+    gap: 1rem;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
-  .card {
+  .cell {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--card);
-    border: 1px solid var(--rule-strong);
-    outline: 1px solid var(--rule);
-    outline-offset: 3px;
-    margin: 4px;
+    padding: 1rem 1rem 1.2rem;
     text-decoration: none;
     color: var(--ink);
-    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    background-color: var(--foam);
+    background-image: var(--grain), radial-gradient(ellipse at 50% 20%, #f3ecd8, #dbcfae 90%);
+    box-shadow:
+      inset 0 4px 10px rgba(0, 0, 0, 0.35),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.25);
   }
-  .card:hover {
-    box-shadow: var(--shadow);
-    transform: translateY(-2px);
-  }
-  figure {
-    margin: 0;
+  .img {
     position: relative;
-    border-bottom: 1px solid var(--rule);
-  }
-  img {
+    display: block;
     aspect-ratio: 4 / 3;
-    object-fit: cover;
+    overflow: hidden;
+    border: 6px solid #fbf8ef;
+    box-shadow: 0 8px 14px -8px rgba(0, 0, 0, 0.6);
+    background: var(--paper-3);
+    transition:
+      translate 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+  .cell:hover .img {
+    translate: 0 -5px;
+    box-shadow: 0 16px 20px -10px rgba(0, 0, 0, 0.6);
+  }
+  .img img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 0.9s var(--ease);
+  }
+  .cell:hover .img img {
+    scale: 1.08;
+  }
+  .none {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    color: var(--ink-faint);
   }
   .fig {
     position: absolute;
-    left: 0.6rem;
-    bottom: 0.5rem;
-    font-size: 0.75rem;
-    background: rgba(251, 248, 240, 0.9);
-    padding: 0.1em 0.5em;
-    color: var(--ink-soft);
+    left: 0;
+    bottom: 0;
+    font-size: 0.65rem;
+    background: rgba(251, 248, 239, 0.92);
+    padding: 0.1rem 0.5rem;
   }
-  .body {
-    padding: 1rem 1.1rem 1.2rem;
+  .lab {
+    position: relative;
+    margin: -0.8rem 0.6rem 0;
+    rotate: -1deg;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    align-items: flex-start;
+    gap: 0.1rem;
+    padding: 0.6rem 0.8rem;
   }
   .name {
-    font-family: var(--serif-display);
-    font-size: 1.5rem;
+    font-family: var(--f-display);
+    font-size: 1.45rem;
     font-weight: 600;
-    line-height: 1.1;
-    color: var(--moss-dark);
+    line-height: 1.05;
+    color: var(--bottle-800);
   }
-  .card:hover .name {
-    color: var(--rust);
+  .cell:hover .name {
+    color: var(--wood-600);
+  }
+  .auth {
+    font-size: 0.7rem;
+    color: var(--ink-faint);
   }
   .common {
-    color: var(--ink-soft);
-    font-size: 0.95rem;
+    font-size: 0.8rem;
   }
   .meta {
-    display: flex;
-    gap: 0.4rem;
-    font-size: 0.82rem;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    border-top: 1px dotted #bfae86;
+    margin-top: 0.3rem;
+    padding-top: 0.3rem;
+  }
+  .cell .stamp {
+    position: absolute;
+    top: 1.6rem;
+    right: 1.6rem;
+    background: rgba(251, 247, 236, 0.85);
+  }
+  .credits {
+    font-size: 0.72rem;
     color: var(--ink-faint);
-    margin-bottom: 0.4rem;
+    text-align: center;
+    margin-top: 1.2rem;
   }
 </style>

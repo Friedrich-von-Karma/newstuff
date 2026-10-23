@@ -1,7 +1,9 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { site } from '../data/site';
+import { photos } from '../data/photos';
 import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
 import { formatPrice, getPriceForProfile, getSpeciesNote } from '../lib/content';
 
@@ -12,6 +14,7 @@ interface Props {
 const { lang, entry } = Astro.props;
 const tr = useTranslations(lang);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
 const d = entry.data;
 
 const price = await getPriceForProfile(entry.id);
@@ -19,7 +22,6 @@ const note = await getSpeciesNote(entry.id, lang);
 const Note = note ? (await render(note)).Content : null;
 
 const rows: { label: UiKey; value: string }[] = [
-  { label: 'species.family', value: d.family },
   { label: 'species.origin', value: d.origin[lang] },
   { label: 'species.size', value: d.size[lang] },
   { label: 'species.temperature', value: d.temperature },
@@ -28,76 +30,76 @@ const rows: { label: UiKey; value: string }[] = [
   { label: 'species.food', value: d.food[lang] },
   { label: 'species.reproduction', value: d.reproduction[lang] },
   { label: 'species.development', value: d.development[lang] },
-  { label: 'species.climbs', value: tr(d.climbs ? 'species.yes' : 'species.no') },
-  { label: 'species.flies', value: tr(d.flies ? 'species.yes' : 'species.no') },
 ];
 const difficultyLabel = tr(`species.difficulty.${d.difficulty}` as UiKey);
-const orderWord = lang === 'pl' ? 'Zamówienie' : 'Order';
+const orderWord = pl ? 'Zamówienie' : 'Order';
 const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''} – ${tr('species.card').toLowerCase()}: ${d.temperature}, ${d.humidity[lang]}, ${d.food[lang]}.`;
+const hasPhoto = !!photos[entry.id];
 ---
 
-<Base
-  lang={lang}
-  title={d.latin}
-  description={description}
-  alt={`${routes.species[other]}${entry.id}/`}
-  active="species"
-  image={d.gallery[0]?.src.endsWith('.svg') ? undefined : d.gallery[0]?.src}
->
+<Base lang={lang} title={d.latin} description={description} alt={`${routes.species[other]}${entry.id}/`} active="species" image={d.gallery[0]?.src}>
   <article class="wrap">
-    <p class="crumbs"><a href={routes.species[lang]}>← {tr('species.back')}</a></p>
+    <p class="crumbs type"><a href={routes.species[lang]}>← {tr('species.back')}</a></p>
 
-    <header class="head">
-      <span class="eyebrow">{d.family}</span>
+    <header class="titlepage head">
+      <span class="kicker">{d.family}</span>
       <h1>
         <span class="latin">{d.latin}</span>
-        {d.author && <span class="author">{d.author}</span>}
       </h1>
-      {d.commonName && <p class="common">{d.commonName[lang]}</p>}
-      {d.sample && <p class="notice">{tr('sample.note')}</p>}
+      <p class="auth type">{d.author}</p>
+      {d.commonName && <p class="lead">{d.commonName[lang]}</p>}
     </header>
+
+    {d.sample && <p class="notice">{tr('sample.note')}</p>}
 
     <div class="layout">
       <div class="main">
         {
-          d.gallery.length > 0 && (
-            <figure class="hero plate">
-              <img src={d.gallery[0].src} alt={d.gallery[0].alt[lang]} width="800" height="600" />
-              <figcaption>
-                <span class="smallcaps">{tr('species.fig')} 1.</span> <span class="latin">{d.latin}</span>
-                {d.gallery[0].caption && <> — {d.gallery[0].caption[lang]}</>}
-              </figcaption>
-            </figure>
+          (hasPhoto || d.gallery.length > 0) && (
+            <div class="plate" data-reveal="zoom">
+              <span class="corner tl" />
+              <span class="corner tr" />
+              <span class="corner bl" />
+              <span class="corner br" />
+              {d.gallery.length > 0 ? (
+                <figure class="own">
+                  <img src={d.gallery[0].src} alt={d.gallery[0].alt[lang]} />
+                  {d.gallery[0].caption && <figcaption class="type">{d.gallery[0].caption[lang]}</figcaption>}
+                </figure>
+              ) : (
+                <CommonsPhoto id={entry.id} lang={lang} alt={d.latin} width={1280} eager />
+              )}
+              <p class="plate-cap">
+                <span class="caps">{tr('species.fig')} 1.</span> <i>{d.latin}</i> {d.author}
+              </p>
+            </div>
           )
         }
 
         {
           Note && (
-            <section class="notes prose">
+            <section class="notes prose" data-reveal>
               <h2>{tr('species.notes')}</h2>
-              <Note />
+              <div class="dropcap">
+                <Note />
+              </div>
             </section>
           )
         }
 
         {
           d.gallery.length > 1 && (
-            <section class="gallery">
+            <section class="gallery" data-reveal>
               <h2>{tr('species.gallery')}</h2>
               <ul>
                 {d.gallery.slice(1).map((g, i) => (
                   <li>
-                    <figure>
-                      <a href={g.src} class="zoom" data-caption={g.caption?.[lang] ?? ''}>
-                        <img src={g.src} alt={g.alt[lang]} loading="lazy" width="800" height="600" />
-                      </a>
-                      <figcaption>
-                        <span class="smallcaps">
-                          {tr('species.fig')} {i + 2}.
-                        </span>{' '}
-                        {g.caption?.[lang]}
-                      </figcaption>
-                    </figure>
+                    <a href={g.src} class="zoom" data-caption={g.caption?.[lang] ?? ''}>
+                      <img src={g.src} alt={g.alt[lang]} loading="lazy" />
+                    </a>
+                    <p class="type">
+                      {tr('species.fig')} {i + 2}. {g.caption?.[lang]}
+                    </p>
                   </li>
                 ))}
               </ul>
@@ -107,8 +109,11 @@ const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''}
       </div>
 
       <aside class="side">
-        <section class="plate card">
-          <h2>{tr('species.card')}</h2>
+        <section class="card" data-reveal="right">
+          <header class="card-head">
+            <span class="type">{pl ? 'Karta hodowlana' : 'Care card'}</span>
+            <h2>{tr('species.card')}</h2>
+          </header>
           <dl>
             {
               rows.map((r) => (
@@ -118,6 +123,14 @@ const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''}
                 </div>
               ))
             }
+            <div>
+              <dt>{tr('species.climbs')}</dt>
+              <dd class:list={['yn', d.climbs ? 'yes' : 'no']}>{tr(d.climbs ? 'species.yes' : 'species.no')}</dd>
+            </div>
+            <div>
+              <dt>{tr('species.flies')}</dt>
+              <dd class:list={['yn', d.flies ? 'yes' : 'no']}>{tr(d.flies ? 'species.yes' : 'species.no')}</dd>
+            </div>
             <div>
               <dt>{tr('species.difficulty')}</dt>
               <dd>
@@ -132,16 +145,15 @@ const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''}
 
         {
           price && (
-            <section class="plate buy">
+            <section class="buy" data-reveal="right" style="--d:150">
               <h2>{tr('species.inPricelist')}</h2>
-              <p>
-                <span class={`badge ${price.data.status}`}>{tr(`status.${price.data.status}`)}</span>
-              </p>
+              <span class={`stamp ${price.data.status} big`}>{tr(`status.${price.data.status}`)}</span>
               <dl class="stages">
                 {price.data.prices.map((p) => (
                   <div>
                     <dt>{tr(`stage.${p.stage}`)}</dt>
-                    <dd>
+                    <span class="leader" />
+                    <dd class="mono">
                       {formatPrice(p.price, lang)}
                       {p.per > 1 && (
                         <span class="per">
@@ -155,11 +167,11 @@ const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''}
               </dl>
               <p class="actions">
                 {price.data.status !== 'out' && (
-                  <a class="button" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(`${orderWord}: ${d.latin}`)}`}>
+                  <a class="btn" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(`${orderWord}: ${d.latin}`)}`}>
                     {tr('pricelist.order')}
                   </a>
                 )}
-                <a class="button ghost" href={routes.pricelist[lang]}>
+                <a class="btn dark" href={routes.pricelist[lang]}>
                   {tr('nav.pricelist')}
                 </a>
               </p>
@@ -200,169 +212,246 @@ const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''}
   .crumbs {
     padding-top: 1.5rem;
     margin: 0;
-    font-size: 0.92rem;
+    font-size: 0.85rem;
   }
   .head {
-    padding: 1.2rem 0 1.5rem;
-    border-bottom: 1px solid var(--rule-strong);
-    box-shadow: 0 3px 0 -2px var(--rule);
     margin-bottom: 2rem;
   }
-  h1 {
-    margin-bottom: 0.15em;
+  .head h1 {
+    font-size: clamp(2.8rem, 7vw, 5rem);
   }
-  .author {
-    font-family: var(--serif-text);
-    font-size: 1rem;
-    font-weight: normal;
+  .auth {
     color: var(--ink-faint);
-    margin-left: 0.6rem;
-    white-space: nowrap;
-  }
-  .common {
-    font-size: 1.15rem;
-    color: var(--ink-soft);
-    margin: 0;
-  }
-  .head .notice {
-    margin: 1rem 0 0;
+    font-size: 0.9rem;
+    margin: 0 0 0.3rem;
   }
   .layout {
     display: grid;
-    gap: 2rem;
+    gap: 3rem;
   }
-  @media (min-width: 900px) {
+  @media (min-width: 960px) {
     .layout {
-      grid-template-columns: minmax(0, 1.4fr) minmax(340px, 1fr);
-      gap: 3rem;
+      grid-template-columns: minmax(0, 1.45fr) minmax(340px, 1fr);
       align-items: start;
     }
     .side {
       position: sticky;
-      top: 90px;
+      top: 100px;
     }
   }
-  .hero {
-    margin: 6px 6px 2rem;
-    padding: 0.75rem;
+
+  /* tablica z ozdobną ramą */
+  .plate {
+    position: relative;
+    background: var(--label);
+    padding: 1.4rem;
+    border: 1px solid var(--brass-dark);
+    outline: 1px solid var(--rule);
+    outline-offset: 7px;
+    box-shadow: 0 30px 40px -30px rgba(40, 25, 10, 0.7);
+    margin: 8px 8px 3rem;
   }
-  .hero img {
+  .corner {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--brass-dark);
+  }
+  .tl {
+    top: 6px;
+    left: 6px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .tr {
+    top: 6px;
+    right: 6px;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .bl {
+    bottom: 6px;
+    left: 6px;
+    border-right: 0;
+    border-top: 0;
+  }
+  .br {
+    bottom: 6px;
+    right: 6px;
+    border-left: 0;
+    border-top: 0;
+  }
+  .plate :global(.frame) {
+    aspect-ratio: 3 / 2;
+  }
+  .own {
+    margin: 0;
+  }
+  .own img {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
     object-fit: cover;
   }
-  figcaption {
-    font-size: 0.88rem;
-    color: var(--ink-soft);
+  .plate-cap {
+    text-align: center;
+    margin: 0.8rem 0 0;
     padding-top: 0.6rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
   }
-  .notes {
-    margin-bottom: 2rem;
-  }
+
   .notes h2,
-  .gallery h2,
-  .side h2 {
-    font-size: 1.6rem;
+  .gallery h2 {
+    font-size: 2rem;
   }
   .gallery ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 1rem;
+    gap: 1.2rem;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-  .gallery figure {
-    margin: 0;
-    background: var(--card);
-    border: 1px solid var(--rule);
-    padding: 0.5rem;
   }
   .gallery img {
     aspect-ratio: 4 / 3;
     object-fit: cover;
     width: 100%;
+    border: 6px solid #fff;
+    box-shadow: 0 8px 14px -8px rgba(0, 0, 0, 0.5);
   }
-  .card dl,
-  .stages {
+  .gallery p {
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+
+  /* karta hodowlana */
+  .card {
+    position: relative;
+    background-color: #fbf8ef;
+    background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(60, 90, 120, 0.12) 31px 32px);
+    border: 1px solid #d6c9a6;
+    border-top: 4px solid var(--bottle-600);
+    padding: 1.4rem 1.5rem 1.2rem;
+    box-shadow: 0 24px 34px -24px rgba(40, 25, 10, 0.6);
+  }
+  .card-head .type {
+    font-size: 0.72rem;
+    color: var(--stamp-red);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .card-head h2 {
+    font-size: 1.9rem;
+    margin: 0.2rem 0 0.8rem;
+  }
+  dl {
     margin: 0;
   }
-  .card dl div {
+  .card dl > div {
     display: grid;
     grid-template-columns: 8.5rem 1fr;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px dotted var(--rule-strong);
-  }
-  .card dl div:last-child {
-    border-bottom: 0;
+    gap: 0.8rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px dotted var(--rule);
   }
   .card dt {
-    font-variant: small-caps;
-    letter-spacing: 0.05em;
-    color: var(--ink-soft);
-    font-size: 0.92rem;
+    font-family: var(--f-caps);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--wood-600);
+    font-size: 0.98rem;
+    line-height: 1.3;
   }
-  dd {
+  .card dd {
     margin: 0;
+    font-size: 0.97rem;
   }
-  @media (max-width: 420px) {
-    .card dl div {
-      grid-template-columns: 1fr;
-      gap: 0.1rem;
-    }
+  .yn {
+    font-family: var(--f-type);
+  }
+  .yn.yes::before {
+    content: '✓ ';
+    color: var(--stamp-green);
+  }
+  .yn.no::before {
+    content: '✗ ';
+    color: var(--stamp-red);
   }
   .dots {
     display: inline-flex;
-    gap: 3px;
+    gap: 4px;
     margin-right: 0.5rem;
     vertical-align: middle;
   }
   .dot {
-    width: 9px;
-    height: 9px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    border: 1px solid var(--moss);
+    border: 1px solid var(--brass-dark);
   }
   .dot.on {
-    background: var(--moss);
+    background: radial-gradient(circle at 35% 30%, #f5e2b4, #b8945a 70%);
   }
+  @media (max-width: 420px) {
+    .card dl > div {
+      grid-template-columns: 1fr;
+      gap: 0.1rem;
+    }
+  }
+
   .buy {
-    margin-top: 1.75rem;
+    position: relative;
+    margin-top: 2rem;
+    padding: 1.4rem 1.5rem;
+    background: var(--label);
+    border: 1px dashed var(--brass-dark);
   }
-  .stages div {
+  .buy h2 {
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
+  }
+  .buy .big {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    font-size: 0.95rem;
+  }
+  .stages > div {
     display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.3rem 0;
-    border-bottom: 1px dotted var(--rule);
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
   }
   .stages dt {
-    color: var(--ink-soft);
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 1.12rem;
   }
   .stages dd {
-    font-variant-numeric: tabular-nums;
+    margin: 0;
     white-space: nowrap;
+    font-weight: 700;
   }
   .per {
     color: var(--ink-faint);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
+    font-weight: normal;
   }
   .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1rem 0 0;
+    gap: 0.7rem;
+    margin: 1.2rem 0 0;
   }
 
   .lightbox {
-    border: 1px solid var(--rule-strong);
-    background: var(--card);
-    padding: 1rem;
+    border: 8px solid var(--label);
+    background: var(--label);
+    padding: 0.5rem;
     max-width: min(960px, 94vw);
   }
   .lightbox::backdrop {
-    background: rgba(30, 24, 16, 0.75);
+    background: rgba(20, 14, 8, 0.82);
   }
   .lightbox img {
     max-height: 80vh;
@@ -373,16 +462,16 @@ const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''}
     text-align: right;
   }
   .lightbox button {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     line-height: 1;
     background: none;
     border: 0;
     cursor: pointer;
-    color: var(--ink);
   }
   .cap {
     text-align: center;
     margin: 0.5rem 0 0;
-    color: var(--ink-soft);
+    font-family: var(--f-type);
+    font-size: 0.85rem;
   }
 </style>

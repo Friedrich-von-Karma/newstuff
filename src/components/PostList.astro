@@ -13,9 +13,10 @@ const tr = useTranslations(lang);
 
 <ul class="posts">
   {
-    posts.map((p) => (
-      <li>
+    posts.map((p, i) => (
+      <li data-reveal style={`--d:${i * 120}`}>
         <article>
+          <span class="card-no type">No. {String(posts.length - i).padStart(3, '0')}</span>
           {p.data.cover && <img src={p.data.cover} alt={p.data.coverAlt ?? ''} loading="lazy" />}
           <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date, lang)}</time>
           <h3>
@@ -30,7 +31,7 @@ const tr = useTranslations(lang);
             ))}
             {p.data.sample && (
               <li>
-                <span class="badge sample plain">{tr('sample.badge')}</span>
+                <span class="stamp sample">{tr('sample.badge')}</span>
               </li>
             )}
           </ul>
@@ -46,50 +47,99 @@ const tr = useTranslations(lang);
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 1.25rem;
+    gap: 2rem;
   }
   @media (min-width: 760px) {
     .posts {
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     }
   }
+  /* karta katalogowa */
   article {
+    position: relative;
     height: 100%;
-    background: var(--card);
-    border: 1px solid var(--rule);
-    padding: 1.2rem 1.3rem;
+    background-color: #fbf8ef;
+    background-image: repeating-linear-gradient(180deg, transparent 0 27px, rgba(60, 90, 120, 0.16) 27px 28px);
+    background-position: 0 92px;
+    border: 1px solid #d8cba8;
+    border-top: 3px solid var(--stamp-red);
+    padding: 1.4rem 1.4rem 1.2rem;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    box-shadow: 0 16px 26px -18px rgba(40, 25, 10, 0.6);
+    transition:
+      rotate 0.5s var(--ease),
+      translate 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+  li:nth-child(odd) article {
+    rotate: -0.8deg;
+  }
+  li:nth-child(even) article {
+    rotate: 0.7deg;
+  }
+  article:hover {
+    rotate: 0deg !important;
+    translate: 0 -5px;
+    box-shadow: 0 24px 34px -18px rgba(40, 25, 10, 0.6);
+  }
+  article::before {
+    /* otwór na pręt katalogu */
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    width: 16px;
+    height: 10px;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: var(--paper-2);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  .card-no {
+    position: absolute;
+    top: 0.7rem;
+    right: 1rem;
+    font-size: 0.72rem;
+    color: var(--stamp-red);
   }
   img {
     aspect-ratio: 16 / 9;
     object-fit: cover;
     width: 100%;
     margin-bottom: 0.4rem;
-    border: 1px solid var(--rule);
+    border: 6px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
   time {
-    font-size: 0.82rem;
+    font-family: var(--f-type);
+    font-size: 0.78rem;
     color: var(--ink-faint);
-    font-variant: small-caps;
-    letter-spacing: 0.06em;
   }
   h3 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
   h3 a {
-    color: var(--moss-dark);
+    color: var(--bottle-800);
     text-decoration: none;
+    background: linear-gradient(var(--brass-light), var(--brass-light)) 0 100% / 0 2px no-repeat;
+    transition: background-size 0.5s var(--ease);
   }
   h3 a:hover {
-    color: var(--rust);
+    background-size: 100% 2px;
+    color: var(--wood-600);
   }
   p {
     color: var(--ink-soft);
-    font-size: 0.97rem;
-    margin: 0 0 0.4rem;
+    font-size: 0.98rem;
+    margin: 0 0 0.6rem;
     flex: 1;
+    line-height: 28px;
+  }
+  .tags {
+    margin-bottom: 1.2rem;
+    align-items: center;
   }
 </style>

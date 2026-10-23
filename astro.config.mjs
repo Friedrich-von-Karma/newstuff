@@ -6,6 +6,7 @@ export default defineConfig({
   site: 'https://blattodea.pl',
   trailingSlash: 'ignore',
   scopedStyleStrategy: 'class',
+  devToolbar: { enabled: false },
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'pl', locales: { pl: 'pl-PL', en: 'en-GB' } },

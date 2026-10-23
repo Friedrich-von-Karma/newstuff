@@ -38,41 +38,65 @@ const d = post.data;
     <div class="prose">
       <Content />
     </div>
-    <div class="ornament">❦</div>
+    <p class="end caps" aria-hidden="true">— finis —</p>
   </article>
 </Base>
 
 <style>
   .post {
-    max-width: calc(var(--measure) + 56px);
+    max-width: calc(var(--measure) + 64px);
   }
   .crumbs {
     padding-top: 1.5rem;
-    font-size: 0.92rem;
+    font-size: 0.85rem;
+    font-family: var(--f-type);
   }
   header {
-    padding: 1rem 0 1.5rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--rule-strong);
-    box-shadow: 0 3px 0 -2px var(--rule);
+    text-align: center;
+    padding: 1.5rem 0 2rem;
+    margin-bottom: 2.5rem;
+    border-top: 3px double var(--brass-dark);
+    border-bottom: 1px solid var(--rule);
   }
   time {
-    font-variant: small-caps;
-    letter-spacing: 0.08em;
-    color: var(--rust);
+    font-family: var(--f-type);
+    font-size: 0.85rem;
+    color: var(--stamp-red);
+  }
+  h1 {
+    margin: 0.5rem 0;
   }
   .lead {
     font-size: 1.15rem;
     color: var(--ink-soft);
+    font-style: italic;
+  }
+  header .tags {
+    justify-content: center;
   }
   .cover {
     width: 100%;
-    margin-bottom: 2rem;
-    border: 1px solid var(--rule);
-    padding: 6px;
-    background: var(--card);
+    margin-bottom: 2.5rem;
+    border: 10px solid #fbf8ef;
+    box-shadow: 0 20px 30px -20px rgba(0, 0, 0, 0.6);
   }
   .prose {
-    font-size: 1.08rem;
+    font-size: 1.1rem;
+    margin: 0 auto;
+  }
+  .prose :global(> p:first-of-type::first-letter) {
+    float: left;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 4.6rem;
+    line-height: 0.8;
+    padding: 0.4rem 0.55rem 0 0;
+    color: var(--wood-600);
+  }
+  .end {
+    text-align: center;
+    margin-top: 3rem;
+    color: var(--brass-dark);
+    letter-spacing: 0.3em;
   }
 </style>

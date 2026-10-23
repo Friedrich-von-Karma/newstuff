@@ -22,10 +22,10 @@ const title = tagName ? `${tr('blog.tag')} #${tagName}` : tr('blog.title');
 
 <Base lang={lang} title={title} description={tr('blog.lead')} alt={routes.blog[other]} active="blog">
   <div class="wrap">
-    <header class="page-head">
-      <span class="eyebrow">IV</span>
+    <header class="titlepage">
+      <span class="kicker">{lang === 'pl' ? 'Notatki z hodowli i terenu' : 'Notes from the breeding room and the field'} · IV</span>
       <h1>{title}</h1>
-      {tag ? <p><a href={routes.blog[lang]}>← {tr('blog.back')}</a></p> : <p class="lead">{tr('blog.lead')}</p>}
+      {tag ? <p class="type"><a href={routes.blog[lang]}>← {tr('blog.back')}</a></p> : <p class="lead">{tr('blog.lead')}</p>}
     </header>
 
     {
@@ -52,9 +52,7 @@ const title = tagName ? `${tr('blog.tag')} #${tagName}` : tr('blog.title');
   .tagbar {
     margin-bottom: 1.75rem;
   }
-  .tagbar a[aria-current='page'] {
-    background: var(--moss);
-    color: #fff;
-    border-color: var(--moss);
+  .tagbar .tags {
+    justify-content: center;
   }
 </style>

@@ -13,19 +13,22 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
 
 <Base lang={lang} title={tr('contact.title')} description={tr('contact.lead')} alt={routes.contact[other]} active="contact">
   <div class="wrap">
-    <header class="page-head">
+    <header class="titlepage">
+      <span class="kicker">{lang === 'pl' ? 'Korespondencja' : 'Correspondence'} · V</span>
       <h1>{tr('contact.title')}</h1>
       <p class="lead">{tr('contact.lead')}</p>
     </header>
-    <ContactLinks lang={lang} />
+    <div data-reveal><ContactLinks lang={lang} /></div>
     <div class="hints">
-      <div class="plate">
+      <div class="sheet" data-reveal="left">
+        <span class="type no">№ 1</span>
         <h2>{tr('pricelist.order')}</h2>
         <p>{tr('contact.orderHint')}</p>
         <a href={routes.pricelist[lang]}>{tr('nav.pricelist')} →</a>
       </div>
-      <div class="plate">
-        <h2>{tr('nav.keyShort')}</h2>
+      <div class="sheet" data-reveal="right">
+        <span class="type no">№ 2</span>
+        <h2>{lang === 'pl' ? 'Oznaczanie' : 'Identification'}</h2>
         <p>{tr('contact.idHint')}</p>
         <a href={routes.key[lang]}>{tr('nav.key')} →</a>
       </div>
@@ -45,6 +48,33 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
     }
   }
   h2 {
-    font-size: 1.6rem;
+    font-size: 1.9rem;
+  }
+  .sheet {
+    position: relative;
+    background-color: #fbf8ef;
+    background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(60, 90, 120, 0.12) 31px 32px);
+    border: 1px solid #d6c9a6;
+    border-top: 3px solid var(--stamp-red);
+    padding: 1.6rem 1.6rem 1.3rem;
+    box-shadow: 0 20px 30px -22px rgba(40, 25, 10, 0.6);
+  }
+  .hints > div:nth-child(1) {
+    rotate: -0.6deg;
+  }
+  .hints > div:nth-child(2) {
+    rotate: 0.6deg;
+  }
+  .no {
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+    font-size: 0.75rem;
+    color: var(--stamp-red);
+  }
+  .sheet a {
+    font-family: var(--f-caps);
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
 </style>

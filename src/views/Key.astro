@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Roach from '../components/Roach.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { characters, taxa } from '../data/key';
 import { routes, useTranslations, type Lang } from '../i18n/ui';
 
@@ -26,23 +26,26 @@ const data = {
 
 <Base lang={lang} title={tr('key.title')} description={tr('key.lead')} alt={routes.key[other]} active="key">
   <div class="wrap">
-    <header class="page-head">
-      <span class="eyebrow">III · Clavis Blattodeorum Poloniae</span>
+    <header class="titlepage">
+      <span class="kicker">Clavis Blattodeorum Poloniae · III</span>
       <h1>{tr('key.title')}</h1>
       <p class="lead">{tr('key.lead')}</p>
     </header>
     <p class="notice">{tr('key.draft')}</p>
 
     <div class="key">
-      <form class="features plate" aria-labelledby="features-h">
+      <form class="features" aria-labelledby="features-h">
+        <span class="clip" aria-hidden="true"></span>
         <div class="fhead">
           <h2 id="features-h">{tr('key.features')}</h2>
-          <button type="reset" class="button ghost small">{tr('key.reset')}</button>
+          <button type="reset" class="btn dark small">{tr('key.reset')}</button>
         </div>
         {
-          characters.map((c) => (
+          characters.map((c, ci) => (
             <fieldset>
-              <legend>{c.name[lang]}</legend>
+              <legend>
+                <span class="fn type">{String(ci + 1).padStart(2, '0')}</span> {c.name[lang]}
+              </legend>
               {c.help && <p class="help">{c.help[lang]}</p>}
               <div class="states">
                 {c.states.map((s) => (
@@ -76,10 +79,10 @@ const data = {
 
         <ol class="taxa">
           {
-            taxa.map((t) => (
-              <li class="taxon" data-id={t.id}>
-                <div class="thumb" aria-hidden="true">
-                  <Roach class="mini" />
+            taxa.map((t, i) => (
+              <li class="taxon" data-id={t.id} data-reveal style={`--d:${(i % 4) * 90}`}>
+                <div class="thumb">
+                  <CommonsPhoto id={t.id} lang={lang} alt={t.latin} width={500} />
                 </div>
                 <div class="tbody">
                   <h3>
@@ -87,8 +90,8 @@ const data = {
                   </h3>
                   {t.name?.[lang] && <p class="vern">{t.name[lang]}</p>}
                   <p class="badges">
-                    <span class={`badge plain st-${t.status}`}>{statusLabel[t.status]}</span>
-                    {t.verify && <span class="badge plain sample">{tr('key.verify')}</span>}
+                    <span class={`stamp ${t.status}`}>{statusLabel[t.status]}</span>
+                    {t.verify && <span class="stamp verify">{tr('key.verify')}</span>}
                   </p>
                   <p class="note">{t.note[lang]}</p>
                   <dl class="facts">
@@ -204,54 +207,79 @@ const data = {
 <style>
   .key {
     display: grid;
-    gap: 2rem;
+    gap: 2.5rem;
     align-items: start;
   }
-  @media (min-width: 960px) {
+  @media (min-width: 980px) {
     .key {
-      grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+      grid-template-columns: minmax(330px, 400px) minmax(0, 1fr);
     }
     .features {
       position: sticky;
-      top: 84px;
-      max-height: calc(100vh - 100px);
+      top: 96px;
+      max-height: calc(100vh - 112px);
       overflow: auto;
+      scrollbar-width: thin;
     }
   }
+
+  /* karta oznaczania na podkładce */
   .features {
-    padding: 1.1rem 1.2rem;
+    position: relative;
+    padding: 2rem 1.3rem 1.3rem;
+    background-color: #fbf8ef;
+    background-image: var(--grain);
+    border: 1px solid #d6c9a6;
+    border-top: 14px solid var(--wood-700);
+    box-shadow:
+      0 0 0 6px var(--wood-600),
+      0 0 0 7px var(--wood-900),
+      0 26px 40px -26px rgba(40, 25, 10, 0.8);
+    margin: 7px;
+  }
+  .clip {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    translate: -50% 0;
+    width: 90px;
+    height: 26px;
+    border-radius: 4px 4px 2px 2px;
+    background: linear-gradient(180deg, #e6e6e6, #9a9a9a 60%, #c9c9c9);
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4);
   }
   .fhead,
   .rhead {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     gap: 0.75rem;
     flex-wrap: wrap;
   }
   h2 {
-    font-size: 1.6rem;
+    font-size: 1.9rem;
     margin: 0;
-  }
-  .button.small {
-    font-size: 0.8rem;
-    padding: 0.3em 0.75em;
   }
   fieldset {
     border: 0;
-    border-top: 1px solid var(--rule);
-    margin: 1rem 0 0;
-    padding: 0.8rem 0 0;
+    border-top: 1px dashed var(--rule);
+    margin: 1.1rem 0 0;
+    padding: 0.9rem 0 0;
     min-width: 0;
   }
   legend {
-    font-family: var(--serif-display);
+    font-family: var(--f-display);
     font-weight: 600;
-    font-size: 1.2rem;
-    color: var(--moss-dark);
+    font-size: 1.3rem;
+    color: var(--bottle-800);
     padding: 0;
     float: left;
     width: 100%;
+  }
+  .fn {
+    font-size: 0.75rem;
+    color: var(--stamp-red);
+    vertical-align: middle;
   }
   .help {
     clear: both;
@@ -263,25 +291,43 @@ const data = {
     clear: both;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-    padding-top: 0.3rem;
+    gap: 0.45rem;
+    padding-top: 0.35rem;
   }
+  /* zawieszka z etykietą */
   .chip {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.35rem 0.4rem 0.35rem 0.7rem;
-    border: 1px solid var(--rule-strong);
-    border-radius: 999px;
-    background: var(--paper);
+    gap: 0.5rem;
+    padding: 0.38rem 0.5rem 0.38rem 1.25rem;
+    background: var(--label);
+    border: 1px solid #c9b88c;
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
     cursor: pointer;
-    font-size: 0.9rem;
+    font-family: var(--f-type);
+    font-size: 0.8rem;
     line-height: 1.25;
-    transition: background 0.12s ease, border-color 0.12s ease;
+    transition:
+      background 0.25s var(--ease),
+      color 0.25s var(--ease),
+      translate 0.25s var(--ease);
+  }
+  .chip::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    translate: 0 -50%;
+    border-radius: 50%;
+    background: var(--paper-3);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.35);
   }
   .chip:hover {
-    border-color: var(--moss);
+    translate: 2px 0;
+    background: #f1e5c2;
   }
   .chip input {
     position: absolute;
@@ -289,52 +335,65 @@ const data = {
     pointer-events: none;
   }
   .chip:has(input:focus-visible) {
-    outline: 2px solid var(--ochre);
+    outline: 2px solid var(--brass);
     outline-offset: 2px;
   }
   .chip:has(input:checked) {
-    background: var(--moss);
-    border-color: var(--moss-dark);
-    color: #f7f3e8;
+    background: var(--bottle-700);
+    border-color: var(--bottle-900);
+    color: var(--label);
+    animation: tick 0.35s var(--ease);
+  }
+  @keyframes tick {
+    50% {
+      scale: 1.06;
+    }
   }
   .chip.zero:not(:has(input:checked)) {
-    opacity: 0.45;
+    opacity: 0.4;
   }
   .count {
-    font-size: 0.75rem;
+    font-family: var(--f-mono);
+    font-weight: 700;
+    font-size: 0.72rem;
     min-width: 1.6em;
     text-align: center;
-    padding: 0.05em 0.4em;
-    border-radius: 999px;
+    padding: 0.05em 0.35em;
     background: var(--paper-3);
     color: var(--ink-soft);
-    font-variant-numeric: tabular-nums;
   }
   .count:empty {
     display: none;
   }
   .chip:has(input:checked) .count {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    background: var(--brass);
+    color: var(--wood-900);
   }
 
   .tally {
-    font-family: var(--serif-text);
-    font-size: 0.95rem;
-    font-weight: normal;
-    color: var(--ink-faint);
-    margin-left: 0.4rem;
+    font-family: var(--f-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--wood-600);
+    margin-left: 0.5rem;
+  }
+  #n-match {
+    display: inline-block;
+    min-width: 1.4ch;
+    color: var(--stamp-red);
+    font-size: 1.4rem;
   }
   .showall {
     display: inline-flex;
-    gap: 0.4rem;
+    gap: 0.45rem;
     align-items: center;
-    font-size: 0.9rem;
+    font-family: var(--f-type);
+    font-size: 0.8rem;
     color: var(--ink-soft);
     cursor: pointer;
   }
   .showall input {
-    accent-color: var(--moss);
+    accent-color: var(--bottle-600);
   }
   .results .none {
     margin-top: 1rem;
@@ -342,75 +401,101 @@ const data = {
   .taxa {
     list-style: none;
     padding: 0;
-    margin: 1rem 0 0;
+    margin: 1.2rem 0 0;
     display: grid;
-    gap: 1rem;
+    gap: 1.5rem;
   }
+  /* karta gatunku */
   .taxon {
+    position: relative;
     display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 1rem;
-    background: var(--card);
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--moss);
-    padding: 1rem 1.1rem;
-    transition: opacity 0.15s ease;
+    grid-template-columns: minmax(180px, 240px) 1fr;
+    gap: 1.4rem;
+    background: #fbf8ef;
+    border: 1px solid #d6c9a6;
+    padding: 1.1rem;
+    box-shadow: 0 18px 28px -22px rgba(40, 25, 10, 0.7);
+    transition:
+      opacity 0.4s var(--ease),
+      filter 0.4s var(--ease),
+      box-shadow 0.4s var(--ease);
+  }
+  .taxon::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--bottle-600);
+    transition: background 0.4s;
+  }
+  .taxon:hover {
+    box-shadow: 0 24px 34px -20px rgba(40, 25, 10, 0.7);
   }
   .taxon.out {
-    opacity: 0.55;
-    border-left-color: var(--rule-strong);
+    opacity: 0.5;
+    filter: grayscale(0.85);
+  }
+  .taxon.out::before {
+    background: var(--rule);
   }
   .thumb {
-    color: var(--rust);
+    align-self: start;
+    background: #fff;
+    padding: 5px 5px 0;
+    box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.45);
+    rotate: -1deg;
+    transition: rotate 0.4s var(--ease);
   }
-  .mini {
-    width: 56px;
-    height: 84px;
+  .taxon:nth-child(even) .thumb {
+    rotate: 1deg;
   }
-  .taxon.out .thumb {
-    color: var(--ink-faint);
+  .taxon:hover .thumb {
+    rotate: 0deg;
+  }
+  .taxon:hover .thumb :global(img) {
+    scale: 1.06;
+  }
+  .thumb :global(.credit) {
+    font-size: 0.56rem;
+    padding: 0.35rem 0.1rem 0.4rem;
   }
   h3 {
-    font-size: 1.45rem;
+    font-size: 1.75rem;
     margin: 0;
+    line-height: 1.05;
   }
   .auth {
-    font-family: var(--serif-text);
-    font-size: 0.82rem;
+    font-family: var(--f-type);
+    font-size: 0.72rem;
     font-weight: normal;
     color: var(--ink-faint);
   }
   .vern {
-    margin: 0.1rem 0 0;
+    margin: 0.15rem 0 0;
     color: var(--ink-soft);
   }
   .badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem;
-    margin: 0.5rem 0;
+    gap: 0.8rem;
+    margin: 0.8rem 0 0.8rem 0.2rem;
   }
-  .st-native {
-    color: var(--ok);
-    background: #e6eedc;
-  }
-  .st-synanthropic {
-    color: var(--bad);
-    background: #f3e1da;
-  }
-  .st-introduced {
-    color: var(--soon);
-    background: #e3e7ef;
+  .badges .stamp {
+    font-size: 0.7rem;
   }
   .note {
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.7rem;
     font-size: 0.97rem;
   }
   .facts {
     margin: 0;
     display: grid;
-    gap: 0.2rem;
+    gap: 0.25rem;
     font-size: 0.88rem;
+    border-top: 1px dotted var(--rule);
+    padding-top: 0.5rem;
   }
   .facts div {
     display: grid;
@@ -418,51 +503,56 @@ const data = {
     gap: 0.5rem;
   }
   .facts dt {
-    font-variant: small-caps;
-    letter-spacing: 0.05em;
-    color: var(--ink-faint);
+    font-family: var(--f-caps);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--wood-600);
   }
   .facts dd {
     margin: 0;
     color: var(--ink-soft);
   }
   .why {
-    margin: 0.5rem 0 0;
-    font-size: 0.85rem;
-    color: var(--bad);
-    font-style: italic;
+    margin: 0.6rem 0 0;
+    font-family: var(--f-type);
+    font-size: 0.78rem;
+    color: var(--stamp-red);
   }
   .more {
-    margin: 0.6rem 0 0;
-    font-size: 0.92rem;
+    margin: 0.7rem 0 0;
+    font-family: var(--f-caps);
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
   .jump {
     display: none;
   }
-  @media (max-width: 959px) {
+  @media (max-width: 979px) {
     .jump {
       display: block;
       position: fixed;
       left: 50%;
-      transform: translateX(-50%);
+      translate: -50% 0;
       bottom: 14px;
       z-index: 30;
-      background: var(--moss-dark);
-      color: #f7f3e8;
+      font-family: var(--f-caps);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--wood-900);
+      background: linear-gradient(180deg, #ecd6a2, #c9a463 48%, #b08a4c 52%, #d2b072);
+      border: 1px solid var(--brass-dark);
       text-decoration: none;
-      padding: 0.55rem 1.1rem;
-      border-radius: 999px;
-      box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.45);
-      font-size: 0.95rem;
+      padding: 0.55rem 1.2rem;
+      box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.55);
       white-space: nowrap;
     }
   }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .taxon {
       grid-template-columns: 1fr;
     }
     .thumb {
-      display: none;
+      max-width: 320px;
     }
   }
 </style>

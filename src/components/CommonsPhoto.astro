@@ -1,0 +1,96 @@
+---
+/** Zdjęcie gatunku z Wikimedia Commons z podpisem: autor, licencja, źródło. */
+import { photos, photoSrc, photoPage } from '../data/photos';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  id: string;
+  lang: Lang;
+  alt: string;
+  width?: 330 | 500 | 960 | 1280;
+  class?: string;
+  /** krótki podpis zamiast pełnego (np. na kafelkach) */
+  compact?: boolean;
+  eager?: boolean;
+}
+const { id, lang, alt, width = 960, class: cls, compact = false, eager = false } = Astro.props;
+const p = photos[id];
+const pl = lang === 'pl';
+---
+
+{
+  p ? (
+    <figure class:list={['cphoto', cls]}>
+      <span class="frame">
+        <img src={photoSrc(p, width)} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" referrerpolicy="no-referrer" />
+      </span>
+      <figcaption class="credit">
+        {!compact && p.subject && <span class="subj">{p.subject[lang]}. </span>}
+        {pl ? 'Fot.' : 'Photo:'} {p.author} ·{' '}
+        <a href={p.licenseUrl} target="_blank" rel="noopener license">
+          {p.license}
+        </a>{' '}
+        ·{' '}
+        <a href={photoPage(p)} target="_blank" rel="noopener">
+          Wikimedia Commons
+        </a>
+      </figcaption>
+    </figure>
+  ) : (
+    <figure class:list={['cphoto', 'missing', cls]}>
+      <span class="frame">
+        <span class="nophoto type">{pl ? 'brak zdjęcia na wolnej licencji' : 'no freely licensed photo yet'}</span>
+      </span>
+    </figure>
+  )
+}
+
+<style>
+  .cphoto {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .frame {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--paper-3);
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 0.9s var(--ease);
+  }
+  .nophoto {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    background:
+      repeating-linear-gradient(45deg, transparent 0 10px, rgba(120, 90, 50, 0.07) 10px 11px),
+      var(--paper-2);
+  }
+  .credit {
+    font-family: var(--f-type);
+    font-size: 0.66rem;
+    line-height: 1.4;
+    color: var(--ink-faint);
+    padding-top: 0.4rem;
+  }
+  .credit a {
+    color: inherit;
+  }
+  .credit a:hover {
+    color: var(--wood-600);
+  }
+  .subj {
+    color: var(--ink-soft);
+  }
+</style>

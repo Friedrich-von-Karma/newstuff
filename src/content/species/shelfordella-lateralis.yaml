@@ -31,11 +31,9 @@ development:
 difficulty: 1
 climbs: false
 flies: false
-gallery:
-  - src: /images/placeholder.svg
-    alt:
-      pl: "Para Shelfordella lateralis – zdjęcie przykładowe"
-      en: "Shelfordella lateralis pair – placeholder"
-    caption:
-      pl: "samiec i samica"
-      en: "male and female"
+# Własne zdjęcia: wrzuć do public/images/species/<gatunek>/ i dopisz tutaj, np.
+# gallery:
+#   - src: /images/species/blaptica-dubia/samiec.jpg
+#     alt: { pl: "Samiec", en: "Male" }
+#     caption: { pl: "samiec", en: "male" }
+gallery: []

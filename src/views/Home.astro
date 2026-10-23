@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import Roach from '../components/Roach.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
 import PostList from '../components/PostList.astro';
 import { routes, useTranslations, type Lang, type RouteKey } from '../i18n/ui';
-import { getPosts, getSpecies, getPricelist } from '../lib/content';
-import { taxa } from '../data/key';
+import { getPosts, getSpecies, getPricelist, formatPrice } from '../lib/content';
+import { taxa, characters } from '../data/key';
+import { photos, photoSrc } from '../data/photos';
 
 interface Props {
   lang: Lang;
@@ -12,51 +13,100 @@ interface Props {
 const { lang } = Astro.props;
 const tr = useTranslations(lang);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
 
 const [posts, species, pricelist] = await Promise.all([getPosts(lang), getSpecies(), getPricelist()]);
-const available = pricelist.filter((p) => p.data.status === 'available' || p.data.status === 'low').length;
+const available = pricelist.filter((p) => p.data.status === 'available' || p.data.status === 'low');
 
-const sections: { key: RouteKey; num: string; title: string; desc: string; meta: string }[] = [
-  { key: 'pricelist', num: 'I', title: tr('nav.pricelist'), desc: tr('home.pricelist.desc'), meta: `${available} / ${pricelist.length}` },
-  { key: 'species', num: 'II', title: tr('nav.species'), desc: tr('home.species.desc'), meta: String(species.length) },
-  { key: 'key', num: 'III', title: tr('nav.key'), desc: tr('home.key.desc'), meta: String(taxa.length) },
-  { key: 'blog', num: 'IV', title: tr('nav.blog'), desc: tr('home.blog.desc'), meta: String(posts.length) },
+// odbitki przypięte w gablocie
+const drawer = [
+  { id: 'periplaneta-americana', name: 'Periplaneta americana', x: 4, y: 6, w: 34, rot: -3 },
+  { id: 'gromphadorhina-portentosa', name: 'Gromphadorhina portentosa', x: 40, y: 3, w: 30, rot: 2.5 },
+  { id: 'blattella-germanica', name: 'Blattella germanica', x: 73, y: 9, w: 24, rot: 4 },
+  { id: 'ectobius-sylvestris', name: 'Ectobius sylvestris', x: 7, y: 52, w: 26, rot: 3 },
+  { id: 'blatta-orientalis', name: 'Blatta orientalis', x: 37, y: 50, w: 29, rot: -2 },
+  { id: 'panchlora-nivea', name: 'Panchlora nivea', x: 70, y: 53, w: 27, rot: -4.5 },
 ];
+
+const toc: { key: RouteKey; n: string; title: string; desc: string; meta: string }[] = [
+  { key: 'pricelist', n: 'I', title: tr('nav.pricelist'), desc: tr('home.pricelist.desc'), meta: `${available.length}/${pricelist.length}` },
+  { key: 'species', n: 'II', title: tr('nav.species'), desc: tr('home.species.desc'), meta: String(species.length) },
+  { key: 'key', n: 'III', title: tr('nav.key'), desc: tr('home.key.desc'), meta: String(taxa.length) },
+  { key: 'blog', n: 'IV', title: tr('nav.blog'), desc: tr('home.blog.desc'), meta: String(posts.length) },
+];
+
+const stats = [
+  { n: taxa.length, t: pl ? 'gatunków w kluczu' : 'species in the key' },
+  { n: taxa.filter((t) => t.status === 'native').length, t: pl ? 'rodzimych' : 'native' },
+  { n: taxa.filter((t) => t.status !== 'native').length, t: pl ? 'przy człowieku i zawlekanych' : 'synanthropic & introduced' },
+  { n: characters.length, t: pl ? 'cech do zaznaczenia' : 'features to tick' },
+];
+const collage = ['ectobius-lapponicus', 'periplaneta-australasiae', 'supella-longipalpa', 'ectobius-pallidus', 'shelfordella-lateralis'];
 ---
 
 <Base lang={lang} alt={routes.home[other]} active="home">
-  <section class="hero wrap">
-    <div class="intro">
-      <span class="eyebrow">Insecta · Dictyoptera · Blattodea</span>
-      <h1>Blattodea<span class="tld">.pl</span></h1>
-      <p class="lead">{tr('home.lead')}</p>
-      <p class="cta">
-        <a class="button" href={routes.pricelist[lang]}>{tr('nav.pricelist')}</a>
-        <a class="button ghost" href={routes.key[lang]}>{tr('nav.key')}</a>
-      </p>
+  <!-- ===== GABLOTA ===== -->
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="intro">
+        <p class="kicker type">Insecta · Dictyoptera · <span>Blattodea</span></p>
+        <h1>
+          <span class="l1">{pl ? 'Hodowla' : 'Breeding'}</span>
+          <span class="l2"><em>&amp;</em> {pl ? 'atlas' : 'atlas of'}</span>
+          <span class="l3">{pl ? 'karaczanów' : 'cockroaches'}</span>
+        </h1>
+        <p class="lead">{tr('home.lead')}</p>
+        <p class="cta">
+          <a class="btn" href={routes.pricelist[lang]}>{tr('nav.pricelist')} →</a>
+          <a class="btn dark" href={routes.key[lang]}>{tr('nav.key')}</a>
+        </p>
+      </div>
+
+      <div class="cabinet" data-tilt>
+        <div class="frame">
+          <div class="inner">
+            {
+              drawer.map((d, i) => {
+                const p = photos[d.id];
+                return (
+                  <figure class="print" style={`--x:${d.x}%;--y:${d.y}%;--w:${d.w}%;--rot:${d.rot}deg;--i:${i}`}>
+                    <span class="pin" />
+                    <span class="print-img">{p && <img src={photoSrc(p, 500)} alt={d.name} loading="eager" referrerpolicy="no-referrer" />}</span>
+                    <figcaption class="type">{d.name}</figcaption>
+                  </figure>
+                );
+              })
+            }
+            <span class="drawer-label type">{pl ? 'Szuflada' : 'Drawer'} 01 · Blattodea</span>
+            <span class="glass" />
+          </div>
+        </div>
+        <span class="plaque caps">Collectio Blattodeorum</span>
+        <p class="photo-note type">{pl ? 'Zdjęcia: Wikimedia Commons – autorzy w atlasie i kluczu' : 'Photos: Wikimedia Commons – credited in the atlas and key'}</p>
+      </div>
     </div>
-    <figure class="plate figure">
-      <span class="plate-no smallcaps">{tr('home.plate')}</span>
-      <Roach class="roach" label="Blattodea" />
-      <figcaption>
-        <span class="latin">Blattodea</span> Brunner von Wattenwyl, 1882 — {lang === 'pl' ? 'widok grzbietowy' : 'dorsal view'}
-      </figcaption>
-    </figure>
   </section>
 
+  <!-- ===== SPIS TREŚCI ===== -->
   <section class="wrap">
-    <h2 class="visually-hidden">{tr('home.sections')}</h2>
-    <ol class="sections">
+    <header class="sec-head" data-reveal>
+      <span class="type">{pl ? 'Spis treści' : 'Contents'}</span>
+      <h2>{tr('home.sections')}</h2>
+    </header>
+    <ol class="toc">
       {
-        sections.map((s) => (
-          <li>
-            <a href={routes[s.key][lang]}>
-              <span class="num">{s.num}</span>
-              <span class="body">
-                <span class="title">{s.title}</span>
-                <span class="desc">{s.desc}</span>
+        toc.map((t, i) => (
+          <li data-reveal style={`--d:${i * 120}`}>
+            <a href={routes[t.key][lang]}>
+              <span class="medal caps">{t.n}</span>
+              <span class="toc-body">
+                <span class="toc-line">
+                  <span class="toc-title">{t.title}</span>
+                  <span class="leader" />
+                  <span class="toc-meta mono">{t.meta}</span>
+                </span>
+                <span class="toc-desc">{t.desc}</span>
               </span>
-              <span class="meta">{s.meta}</span>
             </a>
           </li>
         ))
@@ -64,141 +114,703 @@ const sections: { key: RouteKey; num: string; title: string; desc: string; meta:
     </ol>
   </section>
 
+  <!-- ===== KLUCZ ===== -->
+  <section class="key-band">
+    <div class="wrap key-in">
+      <div class="key-text" data-reveal="left">
+        <span class="type kicker2">{pl ? 'Clavis · Polonia' : 'Clavis · Polonia'}</span>
+        <h2>{pl ? 'Znalazłeś karaczana?' : 'Found a cockroach?'}</h2>
+        <p>
+          {
+            pl
+              ? 'W lesie, na łące czy w kuchni – klucz pomoże ustalić, co to za gatunek. Zaznaczasz cechy, które widzisz, a lista gatunków zawęża się na bieżąco.'
+              : 'In a forest, a meadow or a kitchen – the key will help you work out the species. Tick the features you can see and the list narrows down as you go.'
+          }
+        </p>
+        <dl class="stats">
+          {
+            stats.map((s) => (
+              <div>
+                <dt class="mono" data-count={s.n}>
+                  {s.n}
+                </dt>
+                <dd>{s.t}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="btn" href={routes.key[lang]}>{pl ? 'Otwórz klucz' : 'Open the key'} →</a>
+      </div>
+      <div class="collage" data-reveal="zoom">
+        {
+          collage.map((id, i) => {
+            const t = taxa.find((x) => x.id === id);
+            return (
+              <figure class="polaroid" style={`--i:${i}`}>
+                <CommonsPhoto id={id} lang={lang} alt={t?.latin ?? id} width={500} compact />
+                <figcaption>
+                  <i>{t?.latin}</i>
+                </figcaption>
+              </figure>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Z HODOWLI ===== -->
+  {
+    available.length > 0 && (
+      <section class="wrap">
+        <header class="sec-head" data-reveal>
+          <span class="type">{pl ? 'Z hodowli' : 'From the breeding room'}</span>
+          <h2>{pl ? 'Teraz dostępne' : 'Available now'}</h2>
+        </header>
+        <ul class="stock-list">
+          {available.map((p, i) => {
+            const id = p.data.profile ?? p.id;
+            const min = Math.min(...p.data.prices.map((x) => x.price));
+            return (
+              <li data-reveal style={`--d:${i * 140}`}>
+                <div class="stock-card">
+                  <CommonsPhoto id={id} lang={lang} alt={p.data.latin} width={500} compact />
+                  <a class="stock-label label-card" href={p.data.profile ? `${routes.species[lang]}${p.data.profile}/` : routes.pricelist[lang]}>
+                    <i>{p.data.latin}</i>
+                    <span class="from">
+                      {tr('species.fromPrice')} {formatPrice(min, lang)}
+                    </span>
+                  </a>
+                  <span class={`stamp ${p.data.status}`}>{tr(`status.${p.data.status}`)}</span>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+        <p class="more" data-reveal>
+          <a href={routes.pricelist[lang]}>{pl ? 'Pełny cennik' : 'Full price list'} →</a>
+        </p>
+      </section>
+    )
+  }
+
+  <!-- ===== NOTATKI ===== -->
   {
     posts.length > 0 && (
-      <section class="wrap latest">
-        <div class="ornament">❦</div>
-        <div class="head">
+      <section class="wrap">
+        <header class="sec-head" data-reveal>
+          <span class="type">{pl ? 'Notatki' : 'Notes'}</span>
           <h2>{tr('home.latest')}</h2>
-          <a href={routes.blog[lang]}>{tr('home.all')} →</a>
-        </div>
+        </header>
         <PostList posts={posts.slice(0, 3)} lang={lang} />
+        <p class="more" data-reveal>
+          <a href={routes.blog[lang]}>{tr('home.all')} →</a>
+        </p>
       </section>
     )
   }
 </Base>
 
-<style>
-  .hero {
-    display: grid;
-    gap: 2rem;
-    align-items: center;
-    padding-top: 3rem;
-    padding-bottom: 2.5rem;
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // gablota lekko podąża za kursorem
+  const cab = document.querySelector<HTMLElement>('[data-tilt]');
+  if (cab && !reduce && matchMedia('(hover: hover)').matches) {
+    cab.addEventListener('pointermove', (e) => {
+      const r = cab.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cab.style.setProperty('--tx', `${x * 7}deg`);
+      cab.style.setProperty('--ty', `${-y * 7}deg`);
+      cab.style.setProperty('--gx', `${(x + 0.5) * 100}%`);
+    });
+    cab.addEventListener('pointerleave', () => {
+      cab.style.setProperty('--tx', '0deg');
+      cab.style.setProperty('--ty', '0deg');
+    });
   }
-  @media (min-width: 860px) {
-    .hero {
-      grid-template-columns: 1.25fr 1fr;
-      gap: 3.5rem;
-      padding-top: 4.5rem;
+
+  // liczniki odliczają po wejściu w widok
+  const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      const el = e.target as HTMLElement;
+      io.unobserve(el);
+      const end = Number(el.dataset.count);
+      if (reduce) continue;
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / 1200);
+        el.textContent = String(Math.round(end * (1 - Math.pow(1 - k, 3))));
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  });
+  counters.forEach((c) => io.observe(c));
+</script>
+
+<style>
+  /* ===== HERO / GABLOTA ===== */
+  .hero {
+    position: relative;
+    color: var(--label);
+    background-color: var(--bottle-800);
+    background-image:
+      var(--grain),
+      radial-gradient(ellipse 60% 70% at 75% 40%, rgba(184, 148, 90, 0.2), transparent 70%),
+      linear-gradient(180deg, var(--bottle-900), var(--bottle-700) 70%, var(--bottle-800));
+    padding: 3.5rem 0 4.5rem;
+    overflow: hidden;
+    border-bottom: 1px solid var(--brass-dark);
+  }
+  .hero-in {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (min-width: 980px) {
+    .hero-in {
+      grid-template-columns: 1fr 1.15fr;
+      gap: 4rem;
     }
   }
-  h1 {
-    font-size: clamp(3rem, 8vw, 5.2rem);
-    margin-bottom: 0.3em;
+  .kicker {
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    color: var(--sage);
+    margin-bottom: 1.2rem;
   }
-  .tld {
-    color: var(--rust);
+  .kicker span {
+    color: var(--brass-light);
+  }
+  .hero h1 {
+    color: var(--label);
+    font-size: clamp(3rem, 7.5vw, 5.6rem);
+    line-height: 0.95;
+    margin-bottom: 1.4rem;
+  }
+  .hero h1 span {
+    display: block;
+    animation: rise 1s var(--ease) both;
+  }
+  .l2 {
+    animation-delay: 0.12s !important;
+    padding-left: 1.2em;
+    color: var(--brass-light);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .l2 em {
+    color: var(--sage);
+  }
+  .l3 {
+    animation-delay: 0.24s !important;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.4em);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
   }
   .lead {
-    font-size: 1.15rem;
-    color: var(--ink-soft);
-    max-width: 52ch;
+    font-size: 1.12rem;
+    color: #d9d2bd;
+    max-width: 50ch;
+    animation: rise 1s var(--ease) 0.4s both;
   }
   .cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.7rem;
-    margin-top: 1.5rem;
-  }
-  .figure {
-    position: relative;
-    text-align: center;
-  }
-  .plate-no {
-    position: absolute;
-    top: 0.8rem;
-    left: 1rem;
-    color: var(--ink-faint);
-    font-size: 0.85rem;
-  }
-  .roach {
-    width: min(240px, 60%);
-    height: auto;
-    margin: 1rem auto 0.5rem;
-    color: var(--moss-dark);
-  }
-  figcaption {
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-    border-top: 1px solid var(--rule);
-    padding-top: 0.6rem;
+    gap: 0.9rem;
+    margin-top: 2rem;
+    animation: rise 1s var(--ease) 0.55s both;
   }
 
-  .sections {
+  .cabinet {
+    --tx: 0deg;
+    --ty: 0deg;
+    --gx: 30%;
+    position: relative;
+    perspective: 1200px;
+    animation: rise 1.2s var(--ease) 0.2s both;
+  }
+  .frame {
+    position: relative;
+    padding: 18px;
+    background-color: var(--wood-700);
+    background-image: var(--woodgrain), linear-gradient(135deg, var(--wood-500), var(--wood-800) 55%, var(--wood-600));
+    border-radius: 3px;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 220, 170, 0.15),
+      inset 0 0 0 8px rgba(0, 0, 0, 0.12),
+      0 30px 60px -25px rgba(0, 0, 0, 0.9),
+      0 0 0 1px var(--wood-900);
+    transform: rotateY(var(--tx)) rotateX(var(--ty));
+    transition: transform 0.6s var(--ease);
+  }
+  .inner {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background-color: var(--foam);
+    background-image:
+      var(--grain),
+      radial-gradient(ellipse at 50% 30%, #f3ecd8, #ddd1b1 80%);
+    box-shadow:
+      inset 0 6px 16px rgba(0, 0, 0, 0.45),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+  }
+  .print {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--w);
+    margin: 0;
+    padding: 5px 5px 0;
+    background: #fbf8ef;
+    box-shadow:
+      0 1px 0 #cfc29d,
+      3px 8px 12px -4px rgba(40, 25, 10, 0.45);
+    rotate: var(--rot);
+    animation: settle 0.9s var(--ease) both;
+    animation-delay: calc(0.45s + var(--i) * 0.12s);
+    transition:
+      translate 0.4s var(--ease),
+      rotate 0.4s var(--ease),
+      box-shadow 0.4s var(--ease);
+  }
+  .print:hover {
+    translate: 0 -8px;
+    rotate: 0deg;
+    z-index: 3;
+    box-shadow:
+      0 1px 0 #cfc29d,
+      6px 18px 20px -6px rgba(40, 25, 10, 0.45);
+  }
+  .print-img {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--paper-3);
+  }
+  .print-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .print figcaption {
+    font-size: clamp(0.5rem, 1vw, 0.66rem);
+    color: var(--ink);
+    font-style: italic;
+    padding: 0.25rem 0.1rem 0.35rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pin {
+    position: absolute;
+    left: 50%;
+    top: -4px;
+    width: 11px;
+    height: 11px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #f6d6c0, #a3301f 55%, #4a120a);
+    box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.45);
+    z-index: 2;
+  }
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(-24px) scale(1.08);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .drawer-label {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    translate: -50% 0;
+    font-size: 0.68rem;
+    background: var(--label);
+    color: var(--ink);
+    padding: 0.15rem 0.8rem;
+    border: 1px solid #c9b88c;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+  }
+  .glass {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(115deg, transparent 0 calc(var(--gx) - 18%), rgba(255, 255, 255, 0.3) calc(var(--gx) - 4%), transparent calc(var(--gx) + 10%)),
+      linear-gradient(115deg, transparent 0 62%, rgba(255, 255, 255, 0.12) 67%, transparent 72%);
+    mix-blend-mode: screen;
+    animation: shine 8s ease-in-out infinite;
+  }
+  @keyframes shine {
+    0%,
+    100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .plaque {
+    display: block;
+    width: max-content;
+    margin: -10px auto 0;
+    position: relative;
+    z-index: 2;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: var(--wood-900);
+    padding: 0.35rem 1.2rem 0.25rem;
+    background: linear-gradient(180deg, #ecd6a2, #b89458 55%, #d6b678);
+    border: 1px solid var(--brass-dark);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  }
+  .photo-note {
+    text-align: center;
+    font-size: 0.66rem;
+    color: var(--sage);
+    margin: 0.8rem 0 0;
+    opacity: 0.8;
+  }
+  @media (max-width: 560px) {
+    .frame {
+      padding: 10px;
+    }
+    .print {
+      padding: 3px 3px 0;
+    }
+    .print figcaption {
+      display: none;
+    }
+    .print {
+      padding-bottom: 3px;
+    }
+  }
+
+  /* ===== nagłówki sekcji ===== */
+  .sec-head {
+    text-align: center;
+    margin: 5rem 0 2.5rem;
+  }
+  .sec-head .type {
+    display: inline-block;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--wood-500);
+    text-transform: uppercase;
+  }
+  .sec-head .type::before,
+  .sec-head .type::after {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--brass-dark);
+    vertical-align: middle;
+    margin: 0 0.8rem;
+  }
+  .sec-head h2 {
+    margin: 0.3rem 0 0;
+  }
+
+  /* ===== SPIS TREŚCI ===== */
+  .toc {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 900px;
+    border-top: 3px double var(--brass-dark);
+    border-bottom: 3px double var(--brass-dark);
+  }
+  .toc li + li {
+    border-top: 1px solid var(--rule);
+  }
+  .toc a {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.4rem;
+    align-items: center;
+    padding: 1.3rem 0.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    position: relative;
+  }
+  .toc a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(184, 148, 90, 0.2), transparent 80%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease);
+  }
+  .toc a:hover::before {
+    transform: scaleX(1);
+  }
+  .medal {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    justify-self: center;
+    border-radius: 50%;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--wood-900);
+    background: radial-gradient(circle at 35% 30%, #f5e2b4, #c9a463 60%, #9c7a42);
+    box-shadow:
+      0 0 0 2px var(--paper),
+      0 0 0 3px var(--brass-dark),
+      0 6px 12px -6px rgba(0, 0, 0, 0.5);
+    transition: rotate 0.6s var(--ease);
+  }
+  .toc a:hover .medal {
+    rotate: 360deg;
+  }
+  .toc-body {
+    position: relative;
+  }
+  .toc-line {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .toc-title {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    color: var(--bottle-800);
+    line-height: 1.1;
+  }
+  .toc a:hover .toc-title {
+    color: var(--wood-600);
+  }
+  .toc-meta {
+    font-size: 1rem;
+    color: var(--wood-600);
+  }
+  .toc-desc {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+  @media (max-width: 560px) {
+    .toc a {
+      grid-template-columns: 44px 1fr;
+      gap: 0.9rem;
+    }
+    .medal {
+      width: 42px;
+      height: 42px;
+      font-size: 1.05rem;
+    }
+  }
+
+  /* ===== KLUCZ ===== */
+  .key-band {
+    margin-top: 6rem;
+    color: var(--label);
+    background-color: var(--wood-800);
+    background-image: var(--grain), var(--woodgrain), linear-gradient(160deg, var(--wood-700), var(--wood-900));
+    border-top: 1px solid var(--brass-dark);
+    border-bottom: 1px solid var(--brass-dark);
+    box-shadow: inset 0 10px 20px -12px rgba(0, 0, 0, 0.8);
+    padding: 5rem 0;
+    overflow: hidden;
+  }
+  .key-in {
+    display: grid;
+    gap: 3.5rem;
+    align-items: center;
+  }
+  @media (min-width: 940px) {
+    .key-in {
+      grid-template-columns: 1fr 1.1fr;
+    }
+  }
+  .kicker2 {
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    color: var(--brass);
+    text-transform: uppercase;
+  }
+  .key-text h2 {
+    color: var(--label);
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    margin-top: 0.3rem;
+  }
+  .key-text p {
+    color: #e0d6bd;
+    font-size: 1.08rem;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 2rem;
+    margin: 2rem 0 2.2rem;
+  }
+  .stats div {
+    border-top: 1px solid rgba(220, 192, 138, 0.35);
+    padding-top: 0.6rem;
+  }
+  .stats dt {
+    font-size: 2.6rem;
+    line-height: 1;
+    color: var(--brass-light);
+    font-weight: 700;
+  }
+  .stats dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.9rem;
+    color: var(--paper-3);
+  }
+  .collage {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: auto;
+    gap: 1rem;
+  }
+  .polaroid {
+    margin: 0;
+    padding: 8px 8px 6px;
+    background: #fbf8ef;
+    color: var(--ink);
+    box-shadow: 0 18px 30px -16px rgba(0, 0, 0, 0.8);
+    rotate: calc((var(--i) - 2) * 2.2deg);
+    transition:
+      rotate 0.5s var(--ease),
+      scale 0.5s var(--ease);
+  }
+  .polaroid:hover {
+    rotate: 0deg;
+    scale: 1.04;
+    z-index: 2;
+  }
+  .polaroid:nth-child(1) {
+    grid-column: 1 / 4;
+  }
+  .polaroid:nth-child(2) {
+    grid-column: 4 / 7;
+    margin-top: 2rem;
+  }
+  .polaroid:nth-child(3) {
+    grid-column: 1 / 3;
+  }
+  .polaroid:nth-child(4) {
+    grid-column: 3 / 5;
+    margin-top: -1.5rem;
+  }
+  .polaroid:nth-child(5) {
+    grid-column: 5 / 7;
+  }
+  .polaroid > figcaption {
+    font-family: var(--f-display);
+    font-size: 1.05rem;
+    padding-top: 0.15rem;
+    color: var(--bottle-800);
+  }
+  .polaroid :global(.credit) {
+    font-size: 0.55rem;
+  }
+  @media (max-width: 600px) {
+    .collage {
+      grid-template-columns: 1fr 1fr;
+    }
+    .collage .polaroid {
+      grid-column: auto !important;
+      margin-top: 0 !important;
+    }
+    .collage .polaroid:nth-child(5) {
+      display: none;
+    }
+  }
+
+  /* ===== Z HODOWLI ===== */
+  .stock-list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 320px));
+    justify-content: center;
+    gap: 2.5rem;
   }
-  @media (min-width: 720px) {
-    .sections {
-      grid-template-columns: 1fr 1fr;
-    }
+  .stock-card {
+    position: relative;
+    padding: 12px 12px 1.2rem;
+    background: #fbf7ec;
+    box-shadow:
+      0 1px 0 #d9caa3,
+      0 18px 30px -18px rgba(40, 25, 10, 0.6);
+    rotate: -1deg;
+    transition:
+      rotate 0.5s var(--ease),
+      translate 0.5s var(--ease);
   }
-  .sections a {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1rem;
-    align-items: start;
-    height: 100%;
-    padding: 1.2rem 1.3rem;
-    background: var(--card);
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--moss);
+  .stock-list li:nth-child(even) .stock-card {
+    rotate: 1.2deg;
+  }
+  .stock-card:hover {
+    rotate: 0deg !important;
+    translate: 0 -6px;
+  }
+  .stock-card:hover :global(img) {
+    scale: 1.06;
+  }
+  .stock-label {
+    display: block;
+    margin: 0.6rem 0.4rem 0;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+    rotate: 0.8deg;
     text-decoration: none;
-    color: var(--ink);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .sections a:hover {
-    border-color: var(--rule-strong);
-    border-left-color: var(--rust);
-    box-shadow: var(--shadow);
-  }
-  .num {
-    font-family: var(--serif-display);
-    font-size: 1.9rem;
-    line-height: 1;
-    color: var(--rust);
-    min-width: 2.2ch;
-  }
-  .title {
+  .stock-label i {
     display: block;
-    font-family: var(--serif-display);
+    font-family: var(--f-display);
+    font-size: 1.35rem;
     font-weight: 600;
-    font-size: 1.45rem;
-    line-height: 1.15;
-    color: var(--moss-dark);
-    margin-bottom: 0.25rem;
+    color: var(--bottle-800);
   }
-  .desc {
-    display: block;
+  .stock-label:hover i {
+    color: var(--wood-600);
+  }
+  .from {
+    font-size: 0.75rem;
     color: var(--ink-soft);
-    font-size: 0.95rem;
   }
-  .meta {
-    font-size: 0.8rem;
-    color: var(--ink-faint);
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-    padding: 0.1em 0.6em;
+  .stock-card .stamp {
+    position: absolute;
+    top: 22px;
+    right: 18px;
+    background: rgba(251, 247, 236, 0.8);
   }
-  .latest .head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    flex-wrap: wrap;
+  .more {
+    text-align: center;
+    margin-top: 2.2rem;
+    font-family: var(--f-caps);
+    font-size: 1.15rem;
+    letter-spacing: 0.06em;
   }
 </style>

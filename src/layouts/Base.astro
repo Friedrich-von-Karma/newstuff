@@ -1,5 +1,11 @@
 ---
 import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/500-italic.css';
+import '@fontsource/cormorant-sc/600.css';
+import '@fontsource/cormorant-sc/700.css';
+import '@fontsource/special-elite';
+import '@fontsource/courier-prime/400.css';
+import '@fontsource/courier-prime/700.css';
 import '@fontsource/cormorant-garamond/600.css';
 import '@fontsource/cormorant-garamond/600-italic.css';
 import '@fontsource-variable/literata';
@@ -33,6 +39,7 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
 <!doctype html>
 <html lang={lang}>
   <head>
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
@@ -41,7 +48,7 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
     <link rel="alternate" hreflang={lang} href={canonical} />
     <link rel="alternate" hreflang={other} href={altUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#3f5b3b" />
+    <meta name="theme-color" content="#16271c" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
@@ -58,5 +65,25 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
       <slot />
     </main>
     <Footer lang={lang} />
+    <script>
+      // Elementy z atrybutem data-reveal pojawiają się przy przewijaniu.
+      const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('in');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('in'));
+      }
+    </script>
   </body>
 </html>
