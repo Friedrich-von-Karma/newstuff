@@ -1,8 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
-import { getPricelist, getSpecies } from '../lib/content';
-import { photos, photoSrc } from '../data/photos';
+import { formatPrice, getPricelist, getSpecies, minPackPrice } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -13,186 +13,421 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
 
 const [species, pricelist] = await Promise.all([getSpecies(), getPricelist()]);
-const statusOf = new Map(pricelist.filter((p) => p.data.profile).map((p) => [p.data.profile!, p.data.status]));
+const priceOf = new Map(pricelist.filter((p) => p.data.profile).map((p) => [p.data.profile!, p.data]));
 const anySample = species.some((s) => s.data.sample);
+
+const t = pl
+  ? {
+      num: 'Scena II · profile',
+      h1a: 'Profile',
+      h1b: 'hodowlane',
+      open: 'Otwórz profil',
+      cmpLbl: 'porównywarka',
+      cmpH: 'Dwa albo trzy gatunki',
+      cmpHem: 'obok siebie',
+      cmpP: 'Temperatura, wilgotność, pokarm, tempo rozwoju i trudność w jednej tabeli – różnice od razu widać.',
+      cmpBtn: 'Porównaj gatunki',
+      climbs: 'wspina się',
+      flies: 'lata',
+      noPrice: 'poza cennikiem',
+    }
+  : {
+      num: 'Scene II · care sheets',
+      h1a: 'Care',
+      h1b: 'sheets',
+      open: 'Open care sheet',
+      cmpLbl: 'compare',
+      cmpH: 'Two or three species',
+      cmpHem: 'side by side',
+      cmpP: 'Temperature, humidity, diet, development time and difficulty in one table – the differences stand out at once.',
+      cmpBtn: 'Compare species',
+      climbs: 'climbs',
+      flies: 'flies',
+      noPrice: 'not in the price list',
+    };
 ---
 
 <Base lang={lang} title={tr('species.title')} description={tr('species.lead')} alt={routes.species[other]} active="species">
-  <div class="wrap">
-    <header class="titlepage">
-      <span class="kicker">{pl ? 'Gatunki z hodowli' : 'Species I breed'} · II</span>
-      <h1>{tr('species.title')}</h1>
-      <p class="lead">{tr('species.lead')}</p>
-    </header>
+  <section class="scene sp-scene">
+    <div class="glowspot" style="width:640px;height:640px;left:-220px;top:40px;background:radial-gradient(circle,rgba(125,154,87,.15),transparent 65%)"></div>
+    <div class="glowspot" style="width:520px;height:520px;right:-180px;bottom:10%;background:radial-gradient(circle,rgba(232,165,71,.11),transparent 65%);animation-delay:-4s"></div>
+    <div class="wrap">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.num}</div>
+          <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        </div>
+        <div class="rv" style="--d:.15s">
+          <p>{tr('species.lead')}</p>
+          {anySample && <p class="draft"><b>{tr('sample.badge')}</b> {tr('sample.note')}</p>}
+        </div>
+      </div>
 
-    {anySample && <p class="notice">{tr('sample.note')}</p>}
-
-    <div class="drawer">
-      <span class="drawer-tag type">{pl ? 'Szuflada 02 · gatunki hodowlane' : 'Drawer 02 · bred species'}</span>
-      <ul class="cells">
+      <ul class="cards">
         {
           species.map((s, i) => {
-            const own = s.data.gallery[0];
-            const ph = photos[s.id];
-            const src = own?.src ?? (ph ? photoSrc(ph, 500) : undefined);
-            const status = statusOf.get(s.id);
+            const d = s.data;
+            const own = d.gallery[0];
+            const price = priceOf.get(s.id);
+            const href = `${routes.species[lang]}${s.id}/`;
             return (
-              <li data-reveal="zoom" style={`--d:${i * 110}`}>
-                <a href={`${routes.species[lang]}${s.id}/`} class="cell">
-                  <span class="img">
-                    {src ? <img src={src} alt={own?.alt[lang] ?? s.data.latin} loading="lazy" referrerpolicy="no-referrer" /> : <span class="none type">—</span>}
-                    <span class="fig type">
-                      {tr('species.fig')} {i + 1}
+              <li class="card rv" style={`--d:${(i % 3) * 0.1}s`}>
+                <div class="ph">
+                  {own ? (
+                    <figure class="ownph">
+                      <span class="frame">
+                        <img src={own.src} alt={own.alt[lang]} loading="lazy" />
+                      </span>
+                    </figure>
+                  ) : (
+                    <CommonsPhoto id={s.id} lang={lang} alt={d.latin} width={960} compact />
+                  )}
+                  <span class="idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  {price && <span class={`status st-${price.status} chip`}>{tr(`status.${price.status}`)}</span>}
+                </div>
+                <div class="body">
+                  <div>
+                    <h2>
+                      <a href={href} class="latin stretch">
+                        {d.latin}
+                      </a>
+                    </h2>
+                    <div class="sub">
+                      {d.commonName && <b>{d.commonName[lang]}</b>}
+                      {d.author && <span> · {d.author}</span>}
+                      <span> · {d.family}</span>
+                    </div>
+                  </div>
+                  <dl class="mini">
+                    <div>
+                      <dt>{tr('species.temperature')}</dt>
+                      <dd class="big">{d.temperature}</dd>
+                    </div>
+                    <div>
+                      <dt>{tr('species.size')}</dt>
+                      <dd class="big">{d.size[lang]}</dd>
+                    </div>
+                    <div class="wide">
+                      <dt>{tr('species.humidity')}</dt>
+                      <dd>{d.humidity[lang]}</dd>
+                    </div>
+                  </dl>
+                  <div class="flags">
+                    <span>
+                      <span class="diff" aria-hidden="true">
+                        {[1, 2, 3].map((k) => (
+                          <i class:list={{ on: k <= d.difficulty }} />
+                        ))}
+                      </span>
+                      {tr('species.difficulty').toLowerCase()}: <b>{tr(`species.difficulty.${d.difficulty}` as UiKey)}</b>
                     </span>
-                  </span>
-                  <span class="label-card lab">
-                    <span class="latin name">{s.data.latin}</span>
-                    <span class="auth">{s.data.author}</span>
-                    {s.data.commonName && <span class="common">{s.data.commonName[lang]}</span>}
-                    <span class="meta">
-                      {s.data.family} · {tr(`species.difficulty.${s.data.difficulty}` as UiKey)} · {s.data.temperature}
+                    <span>
+                      {t.climbs}: <b>{tr(d.climbs ? 'species.yes' : 'species.no')}</b>
                     </span>
-                  </span>
-                  {status && <span class={`stamp ${status}`}>{tr(`status.${status}`)}</span>}
-                </a>
+                    <span>
+                      {t.flies}: <b>{tr(d.flies ? 'species.yes' : 'species.no')}</b>
+                    </span>
+                  </div>
+                  <div class="foot">
+                    {price ? (
+                      <span class="from">
+                        <small>{tr('species.fromPrice')}</small> {formatPrice(minPackPrice(price.packs), lang)}
+                        <small>/ {tr('pack.pcs')}</small>
+                      </span>
+                    ) : (
+                      <span class="lbl">{t.noPrice}</span>
+                    )}
+                    <span class="go" aria-hidden="true">
+                      {t.open} <span class="arr">→</span>
+                    </span>
+                  </div>
+                </div>
               </li>
             );
           })
         }
       </ul>
+
+      <aside class="cmp panel rv">
+        <div>
+          <div class="lbl">{t.cmpLbl}</div>
+          <h2>
+            {t.cmpH} <em>{t.cmpHem}</em>
+          </h2>
+          <p>{t.cmpP}</p>
+        </div>
+        <a class="btn" href={routes.compare[lang]}>
+          {t.cmpBtn} <span class="arr">→</span>
+        </a>
+      </aside>
     </div>
-    <p class="credits type">
-      {pl ? 'Zdjęcia poglądowe: Wikimedia Commons – autor i licencja na stronie każdego gatunku.' : 'Illustrative photos: Wikimedia Commons – author and licence on each species page.'}
-    </p>
-  </div>
+  </section>
 </Base>
 
 <style>
-  .drawer {
-    position: relative;
-    padding: 2.4rem 1.4rem 1.6rem;
-    background-color: var(--wood-700);
-    background-image: var(--grain), var(--woodgrain), linear-gradient(135deg, var(--wood-500), var(--wood-800) 55%, var(--wood-600));
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 220, 170, 0.15),
-      0 30px 50px -30px rgba(0, 0, 0, 0.8);
+  .sp-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
   }
-  .drawer-tag {
-    position: absolute;
-    top: 0.6rem;
-    left: 50%;
-    translate: -50% 0;
-    background: linear-gradient(180deg, #ecd6a2, #b89458 55%, #d6b678);
-    color: var(--wood-900);
-    font-size: 0.72rem;
-    padding: 0.15rem 1rem;
-    border: 1px solid var(--brass-dark);
-    white-space: nowrap;
+  .scene-head .draft {
+    margin: 18px 0 0;
   }
-  .cells {
+  .cards {
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: clamp(14px, 2vw, 24px);
   }
-  .cell {
+  .card {
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    padding: 1rem 1rem 1.2rem;
-    text-decoration: none;
-    color: var(--ink);
-    background-color: var(--foam);
-    background-image: var(--grain), radial-gradient(ellipse at 50% 20%, #f3ecd8, #dbcfae 90%);
-    box-shadow:
-      inset 0 4px 10px rgba(0, 0, 0, 0.35),
-      inset 0 0 0 1px rgba(0, 0, 0, 0.25);
-  }
-  .img {
-    position: relative;
-    display: block;
-    aspect-ratio: 4 / 3;
+    border: 1px solid var(--line);
+    background: linear-gradient(150deg, rgba(20, 33, 23, 0.85), rgba(11, 18, 13, 0.9));
+    border-radius: 4px;
     overflow: hidden;
-    border: 6px solid #fbf8ef;
-    box-shadow: 0 8px 14px -8px rgba(0, 0, 0, 0.6);
-    background: var(--paper-3);
     transition:
-      translate 0.5s var(--ease),
-      box-shadow 0.5s var(--ease);
+      border-color 0.5s,
+      box-shadow 0.7s,
+      translate 0.7s var(--ease);
   }
-  .cell:hover .img {
-    translate: 0 -5px;
-    box-shadow: 0 16px 20px -10px rgba(0, 0, 0, 0.6);
+  .card:hover {
+    border-color: rgba(232, 165, 71, 0.45);
+    box-shadow: 0 30px 80px -30px rgba(232, 165, 71, 0.25);
+    translate: 0 -4px;
   }
-  .img img {
+  .ph {
+    position: relative;
+  }
+  .ph :global(.frame) {
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+  }
+  .ph :global(.frame)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(110% 90% at 45% 45%, transparent 40%, rgba(11, 18, 13, 0.7) 100%),
+      linear-gradient(180deg, transparent 60%, rgba(11, 18, 13, 0.7));
+  }
+  .ph :global(img) {
+    transition:
+      transform 1.4s var(--ease),
+      filter 0.8s;
+  }
+  .card:hover .ph :global(img) {
+    transform: scale(1.06);
+  }
+  .ph :global(.credit) {
+    position: relative;
+    z-index: 2;
+    padding: 8px 18px 0;
+  }
+  .ownph {
+    margin: 0;
+  }
+  .ownph .frame {
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  .ownph img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: scale 0.9s var(--ease);
+    filter: saturate(0.85) brightness(0.88);
   }
-  .cell:hover .img img {
-    scale: 1.08;
-  }
-  .none {
-    display: grid;
-    place-items: center;
-    height: 100%;
-    color: var(--ink-faint);
-  }
-  .fig {
+  .idx {
     position: absolute;
-    left: 0;
-    bottom: 0;
-    font-size: 0.65rem;
-    background: rgba(251, 248, 239, 0.92);
-    padding: 0.1rem 0.5rem;
+    top: 12px;
+    left: 18px;
+    z-index: 1;
+    font-family: var(--serif);
+    font-size: 64px;
+    line-height: 1;
+    font-weight: 200;
+    color: rgba(255, 210, 138, 0.85);
+    text-shadow: 0 0 40px rgba(232, 165, 71, 0.5);
+    pointer-events: none;
   }
-  .lab {
-    position: relative;
-    margin: -0.8rem 0.6rem 0;
-    rotate: -1deg;
+  .chip {
+    position: absolute;
+    top: 18px;
+    right: 16px;
+    z-index: 1;
+    padding: 6px 10px;
+    background: rgba(11, 18, 13, 0.7);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .body {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
-    padding: 0.6rem 0.8rem;
+    gap: 16px;
+    padding: 18px clamp(18px, 2vw, 26px) 22px;
   }
-  .name {
-    font-family: var(--f-display);
-    font-size: 1.45rem;
-    font-weight: 600;
-    line-height: 1.05;
-    color: var(--bottle-800);
+  .body h2 {
+    font-size: clamp(28px, 2.6vw, 38px);
+    font-weight: 400;
+    line-height: 1.08;
   }
-  .cell:hover .name {
-    color: var(--wood-600);
+  .stretch {
+    text-decoration: none;
+    transition: color 0.3s;
   }
-  .auth {
-    font-size: 0.7rem;
-    color: var(--ink-faint);
-  }
-  .common {
-    font-size: 0.8rem;
-  }
-  .meta {
-    font-size: 0.68rem;
-    color: var(--ink-soft);
-    border-top: 1px dotted #bfae86;
-    margin-top: 0.3rem;
-    padding-top: 0.3rem;
-  }
-  .cell .stamp {
+  .stretch::after {
+    content: '';
     position: absolute;
-    top: 1.6rem;
-    right: 1.6rem;
-    background: rgba(251, 247, 236, 0.85);
+    inset: 0;
+    z-index: 1;
   }
-  .credits {
-    font-size: 0.72rem;
-    color: var(--ink-faint);
-    text-align: center;
-    margin-top: 1.2rem;
+  .card:hover .stretch {
+    color: var(--amber2);
+  }
+  .sub {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 14px;
+  }
+  .sub b {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .mini {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .mini div {
+    padding: 10px 12px 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .mini .wide {
+    grid-column: 1 / -1;
+  }
+  .mini dt {
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 3px;
+  }
+  .mini dd {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .mini dd.big {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--amber2);
+    line-height: 1.1;
+  }
+  .flags {
+    display: flex;
+    gap: 8px 18px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .flags b {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .diff {
+    display: inline-flex;
+    gap: 4px;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  .diff i {
+    width: 16px;
+    height: 4px;
+    background: var(--line2);
+    border-radius: 2px;
+  }
+  .diff i.on {
+    background: var(--fern);
+    box-shadow: 0 0 8px rgba(169, 191, 127, 0.6);
+  }
+  .foot {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+  .from {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--amber2);
+  }
+  .from small {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .go {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber2);
+  }
+  .go .arr {
+    display: inline-block;
+    transition: transform 0.35s;
+  }
+  .card:hover .go .arr {
+    transform: translateX(4px);
+  }
+
+  .cmp {
+    margin-top: clamp(40px, 6vw, 70px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 40px;
+    flex-wrap: wrap;
+    padding: clamp(24px, 3.4vw, 48px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .cmp::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 520px;
+    aspect-ratio: 1;
+    right: -160px;
+    top: -260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 165, 71, 0.18), transparent 62%);
+    animation: breathe 8s ease-in-out infinite;
+  }
+  .cmp h2 {
+    font-size: clamp(30px, 3.6vw, 52px);
+    font-weight: 300;
+    margin: 10px 0 12px;
+  }
+  .cmp h2 em {
+    color: var(--fern);
+  }
+  .cmp p {
+    color: var(--muted);
+    margin: 0;
+    max-width: 56ch;
   }
 </style>
