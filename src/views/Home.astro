@@ -51,9 +51,9 @@ const collage = ['ectobius-lapponicus', 'periplaneta-australasiae', 'supella-lon
       <div class="intro">
         <p class="kicker type">Insecta · Dictyoptera · <span>Blattodea</span></p>
         <h1>
-          <span class="l1">{pl ? 'Polska' : 'Polish'}</span>
-          <span class="l2">{pl ? 'hodowla' : 'cockroach'}</span>
-          <span class="l3">{pl ? 'karaczanów' : 'breeding'}</span>
+          <span class="l1">{pl ? 'Hodowla' : 'Cockroaches'}</span>
+          <span class="l3">{pl ? 'karaczanów' : 'bred with'}</span>
+          <span class="l2">{pl ? 'z Pasji' : 'Passion'}</span>
         </h1>
         <p class="lead">{tr('home.lead')}</p>
         <p class="cta">
@@ -297,7 +297,7 @@ const collage = ['ectobius-lapponicus', 'periplaneta-australasiae', 'supella-lon
     animation: rise 1s var(--ease) both;
   }
   .l2 {
-    animation-delay: 0.12s !important;
+    animation-delay: 0.24s !important;
     padding-left: 1.2em;
     color: var(--brass-light);
     font-style: italic;
@@ -307,7 +307,7 @@ const collage = ['ectobius-lapponicus', 'periplaneta-australasiae', 'supella-lon
     color: var(--sage);
   }
   .l3 {
-    animation-delay: 0.24s !important;
+    animation-delay: 0.12s !important;
   }
   @keyframes rise {
     from {
