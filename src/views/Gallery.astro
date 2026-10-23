@@ -1,0 +1,1092 @@
+---
+/**
+ * GALERIA „Z MOJEJ HODOWLI” – zdjęcia i filmy z hodowli.
+ *
+ * Jak dodać zdjęcie albo film (dla właściciela):
+ *  1. Wrzuć plik (.jpg / .webp / .mp4) do public/images/hodowla/
+ *  2. Dodaj plik YAML w src/content/gallery/, np. 2026-11-02-dubia-nimfy.yaml:
+ *       kind: photo                         # photo albo video
+ *       title: { pl: "…", en: "…" }
+ *       src: /images/hodowla/dubia-nimfy.jpg
+ *       caption: { pl: "…", en: "…" }       # opcjonalnie
+ *       species: blaptica-dubia             # opcjonalnie – nazwa pliku profilu → link do profilu
+ *       date: 2026-11-02
+ *     Film z YouTube: zamiast `src` wpisz `youtube: <identyfikator filmu>` (opcjonalnie `poster:`).
+ *  Albo prościej: panel https://blattodea.pl/admin/ → „Galeria”.
+ *  Wpisy z `sample: true` bez pliku pokazują ramkę „miejsce na Twoje zdjęcie” – usuń je, gdy dodasz własne.
+ */
+import Base from '../layouts/Base.astro';
+import { formatDate, routes, type Lang } from '../i18n/ui';
+import { getGallery, getSpecies } from '../lib/content';
+import { taxa } from '../data/key';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const pl = lang === 'pl';
+const other: Lang = pl ? 'en' : 'pl';
+
+const t = pl
+  ? {
+      title: 'Galeria',
+      num: 'Galeria · z mojej hodowli',
+      h1a: 'Z mojej',
+      h1b: 'hodowli',
+      lead: 'Zdjęcia i krótkie filmy prosto z pojemników: linienia, ooteki, nimfy, karmienie. Kliknij kafel, żeby obejrzeć w powiększeniu.',
+      filter: 'Filtruj galerię',
+      all: 'Wszystko',
+      photos: 'Zdjęcia',
+      videos: 'Filmy',
+      species: 'Gatunek',
+      placeholderPhoto: 'Miejsce na Twoje zdjęcie',
+      placeholderVideo: 'Miejsce na Twój film',
+      sample: 'przykład',
+      video: 'film',
+      photo: 'zdjęcie',
+      profile: 'Zobacz profil hodowlany',
+      close: 'Zamknij',
+      prev: 'Poprzednie',
+      next: 'Następne',
+      empty: 'Brak materiałów w tej kategorii.',
+      none: 'Galeria jest jeszcze pusta.',
+      count: (n: number) => `${n} ${n === 1 ? 'pozycja' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'pozycje' : 'pozycji'}`,
+      of: 'z',
+      play: 'Odtwórz film',
+    }
+  : {
+      title: 'Gallery',
+      num: 'Gallery · from my breeding room',
+      h1a: 'From my',
+      h1b: 'breeding room',
+      lead: 'Photos and short clips straight from the enclosures: moults, oothecae, nymphs, feeding time. Click a tile to see it full size.',
+      filter: 'Filter the gallery',
+      all: 'Everything',
+      photos: 'Photos',
+      videos: 'Videos',
+      species: 'Species',
+      placeholderPhoto: 'A place for your photo',
+      placeholderVideo: 'A place for your video',
+      sample: 'example',
+      video: 'video',
+      photo: 'photo',
+      profile: 'See the care profile',
+      close: 'Close',
+      prev: 'Previous',
+      next: 'Next',
+      empty: 'Nothing in this category yet.',
+      none: 'The gallery is still empty.',
+      count: (n: number) => `${n} ${n === 1 ? 'item' : 'items'}`,
+      of: 'of',
+      play: 'Play video',
+    };
+
+const entries = await getGallery();
+const profiles = await getSpecies();
+const profileIds = new Set(profiles.map((p) => p.id));
+
+/** Nazwa gatunku: z profilu, z klucza albo z identyfikatora. */
+function speciesName(id: string) {
+  const p = profiles.find((s) => s.id === id);
+  if (p) return p.data.latin;
+  const k = taxa.find((x) => x.id === id);
+  if (k) return k.latin;
+  const s = id.replace(/-/g, ' ');
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/** Rozmiary kafli mozaiki – powtarzający się rytm. */
+const rhythm = ['big', 'tall', 'tall', 'std', 'std', 'wide', 'std', 'big', 'tall', 'std', 'std', 'wide'] as const;
+
+const items = entries.map((e, i) => {
+  const d = e.data;
+  const yt = d.youtube?.trim();
+  const thumb = d.kind === 'photo' ? d.src : d.poster || (yt ? `https://i.ytimg.com/vi/${yt}/hqdefault.jpg` : undefined);
+  const placeholder = !d.src && !yt;
+  return {
+    id: e.id,
+    kind: d.kind,
+    title: d.title[lang],
+    caption: d.caption?.[lang] || '',
+    species: d.species,
+    speciesName: d.species ? speciesName(d.species) : '',
+    speciesUrl: d.species && profileIds.has(d.species) ? `${routes.species[lang]}${d.species}/` : '',
+    date: formatDate(d.date, lang),
+    iso: d.date.toISOString().slice(0, 10),
+    src: d.src || '',
+    youtube: yt || '',
+    poster: d.poster || '',
+    thumb: thumb || '',
+    sample: d.sample,
+    placeholder,
+    size: rhythm[i % rhythm.length],
+  };
+});
+
+const speciesChips = [...new Map(items.filter((i) => i.species).map((i) => [i.species!, i.speciesName])).entries()].sort((a, b) =>
+  a[1].localeCompare(b[1]),
+);
+const hasPhotos = items.some((i) => i.kind === 'photo');
+const hasVideos = items.some((i) => i.kind === 'video');
+
+const lightboxData = items.map(({ id, kind, title, caption, speciesName, speciesUrl, date, iso, src, youtube, poster, sample, placeholder }) => ({
+  id,
+  kind,
+  title,
+  caption,
+  speciesName,
+  speciesUrl,
+  date,
+  iso,
+  src,
+  youtube,
+  poster,
+  sample,
+  placeholder,
+}));
+const labels = {
+  profile: t.profile,
+  sample: t.sample,
+  placeholderPhoto: t.placeholderPhoto,
+  placeholderVideo: t.placeholderVideo,
+  of: t.of,
+  ...(pl ? { n_one: 'pozycja', n_few: 'pozycje', n_many: 'pozycji', n_other: 'pozycji' } : { n_one: 'item', n_other: 'items' }),
+};
+---
+
+<Base lang={lang} title={t.title} description={t.lead} alt={routes.gallery[other]} active="gallery">
+  <section class="scene gal-scene">
+    <div class="glowspot g1" aria-hidden="true"></div>
+    <div class="glowspot g2" aria-hidden="true"></div>
+    <div class="wrap">
+      <header class="scene-head">
+        <div class="rv">
+          <div class="num">{t.num}</div>
+          <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        </div>
+        <p class="rv" style="--d:.15s">{t.lead}</p>
+      </header>
+
+      {
+        items.length === 0 ? (
+          <p class="empty rv">{t.none}</p>
+        ) : (
+          <>
+            <div class="gbar glass rv" style="--d:.2s" role="group" aria-label={t.filter}>
+              <div class="chips">
+                <button type="button" class="gchip" data-filter="all" aria-pressed="true">{t.all}</button>
+                {hasPhotos && (
+                  <button type="button" class="gchip" data-filter="photo" aria-pressed="false">
+                    {t.photos}
+                  </button>
+                )}
+                {hasVideos && (
+                  <button type="button" class="gchip" data-filter="video" aria-pressed="false">
+                    {t.videos}
+                  </button>
+                )}
+                {speciesChips.length > 0 && <span class="sep" aria-hidden="true" />}
+                {speciesChips.map(([id, name]) => (
+                  <button type="button" class="gchip sp" data-filter={`sp:${id}`} aria-pressed="false">
+                    <i>{name}</i>
+                  </button>
+                ))}
+              </div>
+              <p class="tally" aria-live="polite">
+                <b data-count>{items.length}</b> <span data-count-label>{t.count(items.length).replace(/^\d+ /, '')}</span>
+              </p>
+            </div>
+
+            <ul class="mosaic" data-mosaic>
+              {items.map((it, i) => (
+                <li class:list={['m', `m-${it.size}`, 'rv']} style={`--d:${Math.min(i, 8) * 0.07}s`} data-kind={it.kind} data-species={it.species ?? ''}>
+                  <button type="button" class="m-btn" data-open={i} aria-haspopup="dialog">
+                    {it.placeholder ? (
+                      <span class="ph">
+                        <span class="ph-in">
+                          <span class="ph-ic" aria-hidden="true">{it.kind === 'video' ? '▶' : '◎'}</span>
+                          <b>{it.kind === 'video' ? t.placeholderVideo : t.placeholderPhoto}</b>
+                        </span>
+                      </span>
+                    ) : it.thumb ? (
+                      <span class="m-img">
+                        <img src={it.thumb} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" />
+                      </span>
+                    ) : (
+                      <span class="m-img">
+                        <video src={`${it.src}#t=0.1`} muted playsinline preload="metadata" tabindex="-1" aria-hidden="true" />
+                      </span>
+                    )}
+                    {it.kind === 'video' && !it.placeholder && (
+                      <span class="play" aria-hidden="true">
+                        <span>▶</span>
+                      </span>
+                    )}
+                    <span class="m-txt">
+                      <span class="m-meta">
+                        <span class="m-kind">{it.kind === 'video' ? t.video : t.photo}</span>
+                        <time datetime={it.iso}>{it.date}</time>
+                      </span>
+                      <span class="m-title">{it.title}</span>
+                      {it.speciesName && <span class="m-sp">{it.speciesName}</span>}
+                    </span>
+                    {it.sample && <span class="smp">{t.sample}</span>}
+                    <span class="vh">{it.kind === 'video' ? t.play : ''}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <p class="empty" data-empty hidden>{t.empty}</p>
+          </>
+        )
+      }
+    </div>
+  </section>
+
+  <dialog class="lb" data-lightbox aria-label={t.title}>
+    <div class="lb-in">
+      <div class="lb-top">
+        <span class="lb-count" data-lb-count></span>
+        <button type="button" class="lb-x" data-lb-close aria-label={t.close}>✕</button>
+      </div>
+      <div class="lb-stage">
+        <button type="button" class="lb-nav prev" data-lb-prev aria-label={t.prev}>←</button>
+        <div class="lb-media" data-lb-media></div>
+        <button type="button" class="lb-nav next" data-lb-next aria-label={t.next}>→</button>
+      </div>
+      <div class="lb-cap">
+        <div class="lb-head">
+          <h2 data-lb-title></h2>
+          <span class="lb-smp" data-lb-sample hidden>{t.sample}</span>
+        </div>
+        <p class="lb-meta"><time data-lb-date></time><span data-lb-species></span></p>
+        <p class="lb-text" data-lb-caption data-glossary></p>
+      </div>
+    </div>
+  </dialog>
+
+  <script is:inline type="application/json" id="gallery-data" set:html={JSON.stringify({ items: lightboxData, labels }).replace(/</g, '\\u003c')} />
+</Base>
+
+<script>
+  type Item = {
+    id: string;
+    kind: 'photo' | 'video';
+    title: string;
+    caption: string;
+    speciesName: string;
+    speciesUrl: string;
+    date: string;
+    iso: string;
+    src: string;
+    youtube: string;
+    poster: string;
+    sample: boolean;
+    placeholder: boolean;
+  };
+  type Data = { items: Item[]; labels: Record<string, string> };
+
+  function init() {
+    const raw = document.getElementById('gallery-data');
+    const mosaic = document.querySelector<HTMLElement>('[data-mosaic]');
+    const dlg = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+    if (!raw || !mosaic || !dlg) return;
+    const { items, labels } = JSON.parse(raw.textContent || '{}') as Data;
+    const tiles = [...mosaic.querySelectorAll<HTMLLIElement>('li.m')];
+    const chips = [...document.querySelectorAll<HTMLButtonElement>('.gchip')];
+    const countEl = document.querySelector('[data-count]');
+    const countLabel = document.querySelector('[data-count-label]');
+    const plural = new Intl.PluralRules(document.documentElement.lang || 'pl');
+    const emptyEl = document.querySelector<HTMLElement>('[data-empty]');
+
+    // ---------- filtr ----------
+    function applyFilter(f: string) {
+      let n = 0;
+      tiles.forEach((li) => {
+        const ok =
+          f === 'all' || (f.startsWith('sp:') ? li.dataset.species === f.slice(3) : li.dataset.kind === f);
+        const was = !li.hidden;
+        li.hidden = !ok;
+        if (ok) {
+          n++;
+          if (!was) {
+            li.classList.remove('pop');
+            void li.offsetWidth;
+            li.classList.add('pop');
+          }
+        }
+      });
+      if (countEl) countEl.textContent = String(n);
+      if (countLabel) countLabel.textContent = labels['n_' + plural.select(n)] || labels.n_other;
+      if (emptyEl) emptyEl.hidden = n > 0;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
+    }
+    chips.forEach((c) => c.addEventListener('click', () => applyFilter(c.dataset.filter || 'all')));
+
+    // ---------- lightbox ----------
+    const media = dlg.querySelector<HTMLElement>('[data-lb-media]')!;
+    const titleEl = dlg.querySelector<HTMLElement>('[data-lb-title]')!;
+    const dateEl = dlg.querySelector<HTMLTimeElement>('[data-lb-date]')!;
+    const spEl = dlg.querySelector<HTMLElement>('[data-lb-species]')!;
+    const capEl = dlg.querySelector<HTMLElement>('[data-lb-caption]')!;
+    const smpEl = dlg.querySelector<HTMLElement>('[data-lb-sample]')!;
+    const cntEl = dlg.querySelector<HTMLElement>('[data-lb-count]')!;
+    let order: number[] = [];
+    let pos = 0;
+    let opener: HTMLElement | null = null;
+
+    const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+    function render() {
+      const it = items[order[pos]];
+      media.classList.remove('show');
+      let html = '';
+      if (it.placeholder) {
+        html = `<div class="lb-ph"><span>${it.kind === 'video' ? '▶' : '◎'}</span><b>${esc(
+          it.kind === 'video' ? labels.placeholderVideo : labels.placeholderPhoto,
+        )}</b><i>${esc(it.title)}</i></div>`;
+      } else if (it.kind === 'photo') {
+        html = `<img src="${esc(it.src)}" alt="${esc(it.title)}" referrerpolicy="no-referrer">`;
+      } else if (it.youtube) {
+        html = `<div class="lb-yt"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(
+          it.youtube,
+        )}?rel=0" title="${esc(it.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+      } else {
+        html = `<video src="${esc(it.src)}" controls playsinline preload="metadata"${it.poster ? ` poster="${esc(it.poster)}"` : ''}></video>`;
+      }
+      media.innerHTML = html;
+      requestAnimationFrame(() => media.classList.add('show'));
+      titleEl.textContent = it.title;
+      dateEl.textContent = it.date;
+      dateEl.dateTime = it.iso;
+      spEl.innerHTML = it.speciesName
+        ? it.speciesUrl
+          ? `<a href="${esc(it.speciesUrl)}"><i>${esc(it.speciesName)}</i> <small>${esc(labels.profile)} →</small></a>`
+          : `<i>${esc(it.speciesName)}</i>`
+        : '';
+      capEl.textContent = it.caption;
+      capEl.hidden = !it.caption;
+      smpEl.hidden = !it.sample;
+      cntEl.innerHTML = `<b>${pos + 1}</b> ${esc(labels.of)} ${order.length}`;
+      const single = order.length < 2;
+      dlg!.querySelectorAll<HTMLButtonElement>('.lb-nav').forEach((b) => (b.hidden = single));
+    }
+
+    function open(i: number, from: HTMLElement) {
+      order = tiles.filter((li) => !li.hidden).map((li) => Number(li.querySelector<HTMLElement>('[data-open]')!.dataset.open));
+      pos = Math.max(0, order.indexOf(i));
+      opener = from;
+      render();
+      dlg!.showModal();
+      document.documentElement.style.overflow = 'hidden';
+    }
+    function step(d: number) {
+      if (order.length < 2) return;
+      pos = (pos + d + order.length) % order.length;
+      render();
+    }
+
+    mosaic.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('[data-open]');
+      if (b) open(Number(b.dataset.open), b);
+    });
+    dlg.querySelector('[data-lb-close]')!.addEventListener('click', () => dlg.close());
+    dlg.querySelector('[data-lb-prev]')!.addEventListener('click', () => step(-1));
+    dlg.querySelector('[data-lb-next]')!.addEventListener('click', () => step(1));
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
+    dlg.addEventListener('keydown', (e) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'VIDEO' || tag === 'IFRAME') return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        step(1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        step(-1);
+      }
+    });
+    // przesunięcie palcem
+    let x0: number | null = null;
+    media.addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
+    media.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+      x0 = null;
+    });
+    dlg.addEventListener('close', () => {
+      media.innerHTML = ''; // zatrzymuje film
+      document.documentElement.style.overflow = '';
+      opener?.focus();
+    });
+  }
+  init();
+</script>
+
+<style>
+  .gal-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+    min-height: 100vh;
+  }
+  .g1 {
+    width: 60vmax;
+    height: 60vmax;
+    right: -18vmax;
+    top: -14vmax;
+    background: radial-gradient(circle, rgba(255, 170, 70, 0.2), rgba(232, 120, 40, 0.06) 40%, transparent 68%);
+  }
+  .g2 {
+    width: 50vmax;
+    height: 50vmax;
+    left: -20vmax;
+    bottom: 0;
+    background: radial-gradient(circle, rgba(125, 154, 87, 0.18), transparent 62%);
+    animation-delay: -4s;
+  }
+  h1 {
+    line-height: 0.95;
+  }
+
+  /* ---------- pasek filtrów ---------- */
+  .gbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 24px;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    margin-bottom: 22px;
+    position: sticky;
+    top: 74px;
+    z-index: 20;
+    background: rgba(15, 25, 18, 0.78);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+  }
+  .sep {
+    width: 1px;
+    height: 22px;
+    background: var(--line2);
+    margin: 0 4px;
+  }
+  .gchip {
+    cursor: pointer;
+    border: 1px solid var(--line2);
+    background: rgba(11, 18, 13, 0.55);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition:
+      color 0.3s,
+      border-color 0.3s,
+      background 0.3s,
+      box-shadow 0.4s;
+  }
+  .gchip.sp {
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-family: var(--serif);
+    font-size: 15px;
+    padding: 5px 14px;
+  }
+  .gchip:hover {
+    border-color: rgba(232, 165, 71, 0.6);
+    color: var(--text);
+  }
+  .gchip[aria-pressed='true'] {
+    background: rgba(232, 165, 71, 0.16);
+    border-color: var(--amber);
+    color: var(--amber2);
+    box-shadow: inset 0 0 20px rgba(232, 165, 71, 0.12);
+  }
+  .tally {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--muted);
+  }
+  .tally b {
+    font-weight: 400;
+    color: var(--amber2);
+    font-size: 26px;
+  }
+
+  /* ---------- mozaika ---------- */
+  .mosaic {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 230px;
+    grid-auto-flow: dense;
+    gap: 14px;
+  }
+  .m-big {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .m-wide {
+    grid-column: span 2;
+  }
+  .m-tall {
+    grid-row: span 2;
+  }
+  .m.pop {
+    animation: pop 0.7s var(--ease);
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      filter: blur(10px);
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      filter: none;
+      transform: none;
+    }
+  }
+  .m-btn {
+    all: unset;
+    box-sizing: border-box;
+    cursor: zoom-in;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid var(--line);
+    background: var(--bg2);
+    border-radius: 4px;
+    transition:
+      border-color 0.5s,
+      box-shadow 0.7s;
+  }
+  .m-btn:hover,
+  .m-btn:focus-visible {
+    border-color: rgba(232, 165, 71, 0.45);
+    box-shadow: 0 30px 80px -30px rgba(232, 165, 71, 0.25);
+  }
+  .m-btn:focus-visible {
+    outline: 2px solid var(--amber2);
+    outline-offset: 3px;
+  }
+  .m-img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(60% 50% at 65% 45%, #3a2a17 0%, transparent 70%),
+      linear-gradient(160deg, #16231a, #0b120d);
+  }
+  .m-img img,
+  .m-img video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.8) brightness(0.75);
+    transition:
+      transform 1.6s var(--ease),
+      filter 1s;
+    pointer-events: none;
+  }
+  .m-btn:hover .m-img img,
+  .m-btn:hover .m-img video {
+    transform: scale(1.06);
+    filter: saturate(0.95) brightness(0.85);
+  }
+  .m-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120% 90% at 50% 30%, transparent 30%, rgba(11, 18, 13, 0.55) 75%),
+      linear-gradient(180deg, transparent 35%, rgba(11, 18, 13, 0.88) 100%);
+  }
+  .m-txt {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: clamp(14px, 1.8vw, 22px);
+  }
+  .m-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .m-kind {
+    color: var(--amber);
+  }
+  .m-title {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.15;
+    color: var(--text);
+  }
+  .m-big .m-title {
+    font-size: clamp(24px, 2.6vw, 36px);
+    font-weight: 300;
+  }
+  .m-sp {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--fern);
+  }
+  .smp {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border: 1px dashed var(--line2);
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: rgba(11, 18, 13, 0.55);
+  }
+
+  /* przycisk ▶ na filmach */
+  .play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .play span {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    padding-left: 4px;
+    font-size: 20px;
+    color: var(--amber2);
+    border: 1px solid rgba(232, 165, 71, 0.7);
+    background: rgba(11, 18, 13, 0.45);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 40px rgba(232, 165, 71, 0.35);
+    transition:
+      transform 0.5s var(--ease),
+      box-shadow 0.5s;
+  }
+  .m-btn:hover .play span {
+    transform: scale(1.1);
+    box-shadow: 0 0 60px rgba(232, 165, 71, 0.55);
+  }
+
+  /* ramka-zaślepka „miejsce na Twoje zdjęcie” */
+  .ph {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(70% 60% at 50% 40%, rgba(232, 165, 71, 0.08), transparent 70%),
+      linear-gradient(160deg, var(--bg3), var(--bg2));
+  }
+  .ph::before {
+    content: '';
+    position: absolute;
+    width: 80%;
+    aspect-ratio: 1;
+    left: 10%;
+    top: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 165, 71, 0.12), transparent 60%);
+    animation: breathe 8s ease-in-out infinite;
+  }
+  .ph-in {
+    position: absolute;
+    inset: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    text-align: center;
+    padding: clamp(22px, 14%, 120px) 16px 16px;
+    border: 1px solid var(--line2);
+    outline: 1px solid var(--line);
+    outline-offset: -7px;
+    background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(235, 229, 211, 0.025) 10px 11px);
+    transition: border-color 0.5s;
+  }
+  .m-std .ph-in,
+  .m-wide .ph-in {
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 22px;
+  }
+  .m-std .ph-ic,
+  .m-wide .ph-ic {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  .m-btn:hover .ph-in {
+    border-color: rgba(232, 165, 71, 0.5);
+  }
+  .ph-ic {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 1px dashed rgba(232, 165, 71, 0.6);
+    color: var(--amber);
+    font-size: 16px;
+  }
+  .ph-in b {
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .ph ~ .m-txt {
+    padding-top: 0;
+  }
+
+  /* ---------- lightbox ---------- */
+  .lb {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    overflow: hidden;
+  }
+  .lb::backdrop {
+    background: rgba(5, 9, 6, 0.88);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .lb[open] {
+    animation: lbIn 0.5s var(--ease);
+  }
+  @keyframes lbIn {
+    from {
+      opacity: 0;
+      filter: blur(10px);
+    }
+  }
+  .lb-in {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 16px var(--gut) 22px;
+    pointer-events: none;
+  }
+  .lb-in > * {
+    pointer-events: auto;
+  }
+  .lb-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lb-count {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--muted);
+  }
+  .lb-count :global(b) {
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--amber2);
+  }
+  .lb-x,
+  .lb-nav {
+    width: 52px;
+    height: 52px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--line2);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    font-size: 18px;
+    display: grid;
+    place-items: center;
+    transition: all 0.35s;
+  }
+  .lb-x:hover,
+  .lb-nav:hover {
+    border-color: var(--amber);
+    color: var(--amber2);
+    box-shadow: 0 0 30px rgba(232, 165, 71, 0.25);
+  }
+  .lb-stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    min-height: 0;
+  }
+  .lb-media {
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transform: scale(0.98);
+    transition:
+      opacity 0.45s var(--ease),
+      transform 0.6s var(--ease);
+  }
+  .lb-media.show {
+    opacity: 1;
+    transform: none;
+  }
+  .lb-media :global(img),
+  .lb-media :global(video) {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.9);
+    background: #050906;
+  }
+  .lb-media :global(.lb-yt) {
+    width: min(100%, calc((100vh - 260px) * 16 / 9));
+    aspect-ratio: 16 / 9;
+  }
+  .lb-media :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #050906;
+  }
+  .lb-media :global(.lb-ph) {
+    width: min(100%, 640px);
+    aspect-ratio: 4 / 3;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    padding: 30px;
+    border: 1px solid var(--line2);
+    outline: 1px solid var(--line);
+    outline-offset: -9px;
+    border-radius: 4px;
+    background:
+      radial-gradient(60% 60% at 50% 40%, rgba(232, 165, 71, 0.1), transparent 70%),
+      repeating-linear-gradient(135deg, transparent 0 10px, rgba(235, 229, 211, 0.025) 10px 11px),
+      var(--bg2);
+  }
+  .lb-media :global(.lb-ph span) {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 1px dashed rgba(232, 165, 71, 0.6);
+    color: var(--amber);
+    font-size: 20px;
+  }
+  .lb-media :global(.lb-ph b) {
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .lb-media :global(.lb-ph i) {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.4vw, 30px);
+    color: var(--muted);
+  }
+  .lb-cap {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+  }
+  .lb-head {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .lb-cap h2 {
+    font-size: clamp(24px, 2.8vw, 38px);
+    font-weight: 300;
+  }
+  .lb-smp {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border: 1px dashed var(--line2);
+    padding: 3px 8px;
+  }
+  .lb-meta {
+    display: flex;
+    justify-content: center;
+    gap: 6px 18px;
+    flex-wrap: wrap;
+    margin: 8px 0 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .lb-meta time {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 11px;
+    align-self: center;
+  }
+  .lb-meta :global(i) {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--fern);
+  }
+  .lb-meta :global(a) {
+    text-decoration: none;
+  }
+  .lb-meta :global(a small) {
+    margin-left: 8px;
+    color: var(--amber2);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--amber);
+  }
+  .lb-meta :global(a:hover small) {
+    color: var(--text);
+  }
+  .lb-text {
+    margin: 0 auto;
+    max-width: 62ch;
+    color: #d3cfbf;
+    font-size: 15px;
+  }
+
+  /* ---------- responsywność ---------- */
+  @media (max-width: 1100px) {
+    .mosaic {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 760px) {
+    .mosaic {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: 190px;
+      gap: 10px;
+    }
+    .m-wide {
+      grid-column: span 2;
+    }
+    .gbar {
+      top: 66px;
+    }
+  }
+  @media (max-width: 560px) {
+    .gbar {
+      position: static;
+      padding: 10px 12px;
+    }
+    .chips {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      width: 100%;
+      padding-bottom: 2px;
+      -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+      mask-image: linear-gradient(90deg, #000 85%, transparent);
+    }
+    .chips::-webkit-scrollbar {
+      display: none;
+    }
+    .gchip {
+      flex: none;
+    }
+    .mosaic {
+      grid-auto-rows: 160px;
+    }
+    .m-big {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .m-tall {
+      grid-row: span 2;
+    }
+    .m-title {
+      font-size: 16px;
+    }
+    .m-meta time {
+      display: none;
+    }
+    .ph-in {
+      flex-direction: column !important;
+      padding-top: 18px !important;
+      gap: 6px;
+    }
+    .ph-in b {
+      font-size: 9px;
+      letter-spacing: 0.16em;
+    }
+    .ph-ic {
+      width: 36px;
+      height: 36px;
+    }
+    .play span {
+      width: 50px;
+      height: 50px;
+    }
+    .lb-stage {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+    .lb-media {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .lb-nav {
+      grid-row: 2;
+      width: 46px;
+      height: 46px;
+    }
+    .lb-nav.prev {
+      justify-self: start;
+      grid-column: 1;
+    }
+    .lb-nav.next {
+      justify-self: end;
+      grid-column: 1;
+    }
+  }
+</style>
