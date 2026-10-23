@@ -1,36 +1,22 @@
-# CENNIK – każda pozycja to jeden gatunek.
+# CENNIK – każda pozycja to jeden gatunek, sprzedawany w paczkach po 10 sztuk.
 #  id:      unikalny identyfikator (najlepiej jak nazwa pliku profilu)
 #  profile: nazwa pliku z src/content/species (bez .yaml) – tylko jeśli gatunek ma profil
 #  status:  available (dostępne) | low (mało) | out (brak) | soon (wkrótce)
-#  prices:  stage = L1 | L1-L2 | L2-L3 | L3-L4 | nymph | subadult | adult | male | female | pair | colony
-#           price = cena w zł, per = za ile sztuk (domyślnie 1)
+#  packs:   cena w zł za 10 szt. – nymph (nimfy), adult (imago), mix (nimfy + imago)
+#           wariant, którego nie ma, po prostu pomiń
 # Datę aktualizacji cennika zmienia się w src/data/site.ts
 - id: blaptica-dubia
   sample: true
   latin: Blaptica dubia
   profile: blaptica-dubia
   status: available
-  prices:
-    - { stage: L1-L2, price: 10, per: 50 }
-    - { stage: L3-L4, price: 15, per: 25 }
-    - { stage: adult, price: 1.5 }
-    - { stage: colony, price: 80 }
+  packs: { nymph: 12, adult: 25, mix: 18 }
 - id: shelfordella-lateralis
   sample: true
   latin: Shelfordella lateralis
   profile: shelfordella-lateralis
   status: low
-  prices:
-    - { stage: L1-L2, price: 10, per: 100 }
-    - { stage: adult, price: 0.8 }
-- id: gromphadorhina-portentosa
-  sample: true
-  latin: Gromphadorhina portentosa
-  profile: gromphadorhina-portentosa
-  status: out
-  prices:
-    - { stage: nymph, price: 5 }
-    - { stage: pair, price: 30 }
+  packs: { nymph: 6, adult: 10, mix: 8 }
 - id: panchlora-nivea
   sample: true
   latin: Panchlora nivea
@@ -38,6 +24,10 @@
   note:
     pl: "lata – potrzebny szczelny pojemnik"
     en: "flies – needs a tight enclosure"
-  prices:
-    - { stage: nymph, price: 8 }
-    - { stage: colony, price: 60 }
+  packs: { nymph: 40, mix: 55 }
+- id: gromphadorhina-portentosa
+  sample: true
+  latin: Gromphadorhina portentosa
+  profile: gromphadorhina-portentosa
+  status: out
+  packs: { nymph: 30, adult: 120 }

@@ -62,3 +62,18 @@ export async function hasTranslation(p: Post, target: Lang) {
   const posts = await getPosts(target);
   return posts.some((o) => postSlug(o) === postSlug(p));
 }
+
+/** Warianty paczek po 10 szt. – w tej kolejności pokazywane na stronie. */
+export const packKinds = ['nymph', 'mix', 'adult'] as const;
+export type PackKind = (typeof packKinds)[number];
+export const PACK_SIZE = 10;
+
+type Packs = Partial<Record<PackKind, number>>;
+
+export function packOptions(packs: Packs) {
+  return packKinds.filter((k) => packs[k] !== undefined).map((k) => ({ kind: k, price: packs[k]! }));
+}
+
+export function minPackPrice(packs: Packs) {
+  return Math.min(...packOptions(packs).map((o) => o.price));
+}

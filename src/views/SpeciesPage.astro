@@ -2,10 +2,10 @@
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
-import { site } from '../data/site';
+import PackPicker from '../components/PackPicker.astro';
 import { photos } from '../data/photos';
 import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
-import { formatPrice, getPriceForProfile, getSpeciesNote } from '../lib/content';
+import { getPriceForProfile, getSpeciesNote } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -32,7 +32,6 @@ const rows: { label: UiKey; value: string }[] = [
   { label: 'species.development', value: d.development[lang] },
 ];
 const difficultyLabel = tr(`species.difficulty.${d.difficulty}` as UiKey);
-const orderWord = pl ? 'Zamówienie' : 'Order';
 const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''} – ${tr('species.card').toLowerCase()}: ${d.temperature}, ${d.humidity[lang]}, ${d.food[lang]}.`;
 const hasPhoto = !!photos[entry.id];
 ---
@@ -148,33 +147,7 @@ const hasPhoto = !!photos[entry.id];
             <section class="buy" data-reveal="right" style="--d:150">
               <h2>{tr('species.inPricelist')}</h2>
               <span class={`stamp ${price.data.status} big`}>{tr(`status.${price.data.status}`)}</span>
-              <dl class="stages">
-                {price.data.prices.map((p) => (
-                  <div>
-                    <dt>{tr(`stage.${p.stage}`)}</dt>
-                    <span class="leader" />
-                    <dd class="mono">
-                      {formatPrice(p.price, lang)}
-                      {p.per > 1 && (
-                        <span class="per">
-                          {' '}
-                          / {p.per} {tr('pricelist.pcs')}
-                        </span>
-                      )}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <p class="actions">
-                {price.data.status !== 'out' && (
-                  <a class="btn" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(`${orderWord}: ${d.latin}`)}`}>
-                    {tr('pricelist.order')}
-                  </a>
-                )}
-                <a class="btn dark" href={routes.pricelist[lang]}>
-                  {tr('nav.pricelist')}
-                </a>
-              </p>
+              <PackPicker item={price} lang={lang} extra={[{ href: routes.pricelist[lang], label: tr('nav.pricelist') }]} />
             </section>
           )
         }
@@ -416,34 +389,6 @@ const hasPhoto = !!photos[entry.id];
     right: 1.2rem;
     font-size: 0.95rem;
   }
-  .stages > div {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.2rem 0;
-  }
-  .stages dt {
-    font-family: var(--f-display);
-    font-weight: 600;
-    font-size: 1.12rem;
-  }
-  .stages dd {
-    margin: 0;
-    white-space: nowrap;
-    font-weight: 700;
-  }
-  .per {
-    color: var(--ink-faint);
-    font-size: 0.85rem;
-    font-weight: normal;
-  }
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
-    margin: 1.2rem 0 0;
-  }
-
   .lightbox {
     border: 8px solid var(--label);
     background: var(--label);

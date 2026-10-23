@@ -62,9 +62,7 @@ const blog = defineCollection({
   }),
 });
 
-const stageKeys = ['L1', 'L1-L2', 'L2-L3', 'L3-L4', 'nymph', 'subadult', 'adult', 'male', 'female', 'pair', 'colony'] as const;
-
-/** Cennik – jeden plik src/data/pricelist.yaml. */
+/** Cennik – jeden plik src/data/pricelist.yaml. Każda pozycja to paczka 10 sztuk. */
 const pricelist = defineCollection({
   loader: file('./src/data/pricelist.yaml'),
   schema: z.object({
@@ -73,17 +71,16 @@ const pricelist = defineCollection({
     profile: z.string().optional(),
     status: z.enum(['available', 'low', 'out', 'soon']),
     note: t.optional(),
-    prices: z.array(
-      z.object({
-        stage: z.enum(stageKeys),
-        price: z.number(),
-        /** Za ile sztuk jest cena (domyślnie 1). */
-        per: z.number().int().positive().default(1),
-      }),
-    ),
+    /** Cena (zł) za paczkę 10 szt. w danym wariancie. Wariant pominięty = niedostępny. */
+    packs: z
+      .object({
+        nymph: z.number().positive().optional(),
+        adult: z.number().positive().optional(),
+        mix: z.number().positive().optional(),
+      })
+      .refine((p) => Object.values(p).some((v) => v !== undefined), 'Podaj cenę co najmniej jednego wariantu'),
     sample: z.boolean().default(false),
   }),
 });
 
 export const collections = { species, speciesNotes, blog, pricelist };
-export type StageKey = (typeof stageKeys)[number];

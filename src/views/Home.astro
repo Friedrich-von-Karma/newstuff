@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import PostList from '../components/PostList.astro';
 import { routes, useTranslations, type Lang, type RouteKey } from '../i18n/ui';
-import { getPosts, getSpecies, getPricelist, formatPrice } from '../lib/content';
+import { getPosts, getSpecies, getPricelist, formatPrice, minPackPrice } from '../lib/content';
 import { taxa, characters } from '../data/key';
 import { photos, photoSrc } from '../data/photos';
 
@@ -170,7 +170,7 @@ const collage = ['ectobius-lapponicus', 'periplaneta-australasiae', 'supella-lon
         <ul class="stock-list">
           {available.map((p, i) => {
             const id = p.data.profile ?? p.id;
-            const min = Math.min(...p.data.prices.map((x) => x.price));
+            const min = minPackPrice(p.data.packs);
             return (
               <li data-reveal style={`--d:${i * 140}`}>
                 <div class="stock-card">
@@ -178,7 +178,7 @@ const collage = ['ectobius-lapponicus', 'periplaneta-australasiae', 'supella-lon
                   <a class="stock-label label-card" href={p.data.profile ? `${routes.species[lang]}${p.data.profile}/` : routes.pricelist[lang]}>
                     <i>{p.data.latin}</i>
                     <span class="from">
-                      {tr('species.fromPrice')} {formatPrice(min, lang)}
+                      {tr('species.fromPrice')} {formatPrice(min, lang)} / {tr('pack.pcs')}
                     </span>
                   </a>
                   <span class={`stamp ${p.data.status}`}>{tr(`status.${p.data.status}`)}</span>

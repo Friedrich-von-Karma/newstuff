@@ -26,7 +26,23 @@ npm run build    # sprawdzenie typów i zbudowanie strony do dist/
 
 Treści przykładowe mają `sample: true` i na stronie są oznaczone jako „Dane przykładowe”. Usuń tę flagę, gdy dane są prawdziwe.
 
-Pozycja w cenniku z polem `profile:` ma link do profilu. Profil gatunku obecnego w cenniku pokazuje ceny i dostępność.
+### Cennik
+
+Każdy gatunek jest sprzedawany w paczkach po 10 sztuk w 3 wariantach: nimfy, mix (nimfy i imago) oraz imago. Przykładowa pozycja w `src/data/pricelist.yaml`:
+
+```yaml
+- id: blaptica-dubia
+  latin: Blaptica dubia
+  profile: blaptica-dubia   # opcjonalnie: link do profilu hodowlanego
+  status: available         # available | low | out | soon
+  packs: { nymph: 12, mix: 18, adult: 25 }   # cena w zł za 10 szt.
+```
+
+Wariant, którego akurat nie masz, po prostu pomiń. Klient wybiera wariant na stronie, a przycisk „Zamów” otwiera e-mail z tematem, np. „Zamówienie: Blaptica dubia – 10 szt., mix”. Profil gatunku, który jest w cenniku, pokazuje ten sam wybór wariantu.
+
+### Zdjęcia z Wikimedia Commons
+
+Zdjęcia gatunków są w `src/data/photos.ts`. Każde ma nazwę pliku na Commons, autora i licencję, a strona podpisuje je automatycznie. Własne zdjęcia z `gallery:` w profilu mają pierwszeństwo przed zdjęciem z Commons.
 
 ## Publikacja (Vercel i domena w OVH)
 

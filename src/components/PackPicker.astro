@@ -1,0 +1,185 @@
+---
+/**
+ * Wybór wariantu paczki (10 szt.: nimfy / mix / imago) i przycisk zamówienia.
+ * Przycisk „Zamów” otwiera e-mail z tematem zawierającym gatunek i wybrany wariant.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { site } from '../data/site';
+import { useTranslations, type Lang, type UiKey } from '../i18n/ui';
+import { formatPrice, packOptions } from '../lib/content';
+
+interface Props {
+  item: CollectionEntry<'pricelist'>;
+  lang: Lang;
+  /** dodatkowe przyciski obok „Zamów” */
+  extra?: { href: string; label: string }[];
+}
+const { item, lang, extra = [] } = Astro.props;
+const tr = useTranslations(lang);
+const d = item.data;
+const options = packOptions(d.packs);
+const canOrder = d.status !== 'out';
+const group = `pack-${item.id}-${Math.random().toString(36).slice(2, 6)}`;
+const subjectFor = (kind: string) =>
+  `${tr('pack.order')}: ${d.latin} – ${tr('pack.pcs')}, ${tr(`pack.${kind}` as UiKey)}`;
+const first = options[0];
+---
+
+<div class="picker" data-picker>
+  <fieldset class="opts" disabled={!canOrder}>
+    <legend class="visually-hidden">{tr('pack.choose')} – {d.latin}</legend>
+    {
+      options.map((o, i) => (
+        <label class="opt">
+          <input
+            type="radio"
+            name={group}
+            value={o.kind}
+            checked={i === 0}
+            data-subject={subjectFor(o.kind)}
+          />
+          <span class="opt-name">
+            {tr(`pack.${o.kind}` as UiKey)}
+            {o.kind === 'mix' && <small>{tr('pack.mixHint')}</small>}
+          </span>
+          <span class="opt-price mono">{formatPrice(o.price, lang)}</span>
+        </label>
+      ))
+    }
+  </fieldset>
+  <p class="per type">{tr('pack.size')}</p>
+  <div class="actions">
+    {
+      canOrder && first && (
+        <a
+          class="btn small order"
+          data-email={site.contact.email}
+          href={`mailto:${site.contact.email}?subject=${encodeURIComponent(subjectFor(first.kind))}`}
+        >
+          {tr('pricelist.order')}
+        </a>
+      )
+    }
+    {
+      extra.map((e) => (
+        <a class="btn dark small" href={e.href}>
+          {e.label}
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  // Zmiana wariantu podmienia temat e-maila w przycisku „Zamów”.
+  document.querySelectorAll<HTMLElement>('[data-picker]').forEach((picker) => {
+    const order = picker.querySelector<HTMLAnchorElement>('a.order');
+    picker.addEventListener('change', (e) => {
+      const input = e.target as HTMLInputElement;
+      if (!order || input.type !== 'radio' || !input.dataset.subject) return;
+      order.href = `mailto:${order.dataset.email}?subject=${encodeURIComponent(input.dataset.subject)}`;
+    });
+  });
+</script>
+
+<style>
+  .picker {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .opts {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+  .opt {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.45rem 0.75rem 0.45rem 2.1rem;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid #d3c49e;
+    cursor: pointer;
+    transition:
+      background 0.25s var(--ease),
+      border-color 0.25s var(--ease),
+      translate 0.25s var(--ease);
+  }
+  .opt:hover {
+    border-color: var(--brass-dark);
+    translate: 2px 0;
+  }
+  .opt input {
+    position: absolute;
+    opacity: 0;
+  }
+  /* kółko jak w formularzu z epoki */
+  .opt::before {
+    content: '';
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    width: 0.85rem;
+    height: 0.85rem;
+    translate: 0 -50%;
+    border-radius: 50%;
+    border: 1.5px solid var(--wood-600);
+    background: #fff;
+    transition: box-shadow 0.25s var(--ease);
+  }
+  .opt:has(input:checked) {
+    background: var(--label);
+    border-color: var(--bottle-600);
+    box-shadow: inset 3px 0 0 var(--bottle-600);
+  }
+  .opt:has(input:checked)::before {
+    box-shadow: inset 0 0 0 3px #fff;
+    background: var(--bottle-600);
+    border-color: var(--bottle-600);
+  }
+  .opt:has(input:focus-visible) {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+  }
+  .opt-name {
+    flex: 1;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.1;
+  }
+  .opt-name small {
+    display: block;
+    font-family: var(--f-type);
+    font-weight: normal;
+    font-size: 0.66rem;
+    color: var(--ink-faint);
+  }
+  .opt-price {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .opts:disabled .opt {
+    cursor: default;
+    opacity: 0.6;
+  }
+  .opts:disabled .opt:hover {
+    translate: none;
+  }
+  .per {
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    text-align: right;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.2rem;
+  }
+</style>

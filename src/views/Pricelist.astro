@@ -2,9 +2,10 @@
 import Base from '../layouts/Base.astro';
 import ContactLinks from '../components/ContactLinks.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
+import PackPicker from '../components/PackPicker.astro';
 import { site } from '../data/site';
 import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
-import { formatPrice, getPricelist, getSpecies } from '../lib/content';
+import { getPricelist, getSpecies } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -18,7 +19,6 @@ const [items, species] = await Promise.all([getPricelist(), getSpecies()]);
 const speciesById = new Map(species.map((s) => [s.id, s]));
 const anySample = items.some((i) => i.data.sample);
 const updated = new Date(site.pricelistUpdated);
-const orderWord = pl ? 'Zamówienie' : 'Order';
 ---
 
 <Base lang={lang} title={tr('pricelist.title')} description={tr('pricelist.lead')} alt={routes.pricelist[other]} active="pricelist">
@@ -74,34 +74,8 @@ const orderWord = pl ? 'Zamówienie' : 'Order';
                     {d.sample && <span class="stamp sample">{tr('sample.badge')}</span>}
                   </p>
                 </div>
-                <dl class="stages">
-                  {d.prices.map((p) => (
-                    <div>
-                      <dt>{tr(`stage.${p.stage}`)}</dt>
-                      <span class="leader" />
-                      <dd class="mono">
-                        {formatPrice(p.price, lang)}
-                        {p.per > 1 && (
-                          <span class="per">
-                            {' '}
-                            / {p.per} {tr('pricelist.pcs')}
-                          </span>
-                        )}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <div class="actions">
-                  {d.status !== 'out' && (
-                    <a class="btn small" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(`${orderWord}: ${d.latin}`)}`}>
-                      {tr('pricelist.order')}
-                    </a>
-                  )}
-                  {profile && (
-                    <a class="btn dark small" href={`${routes.species[lang]}${profile.id}/`}>
-                      {tr('pricelist.profile')}
-                    </a>
-                  )}
+                <div class="buy">
+                  <PackPicker item={item} lang={lang} extra={profile ? [{ href: `${routes.species[lang]}${profile.id}/`, label: tr('pricelist.profile') }] : []} />
                 </div>
               </li>
             );
@@ -241,7 +215,7 @@ const orderWord = pl ? 'Zamówienie' : 'Order';
   }
   .row {
     display: grid;
-    grid-template-columns: 58px 170px minmax(0, 1fr) minmax(250px, 0.9fr) auto;
+    grid-template-columns: 58px 170px minmax(0, 1fr) minmax(280px, 340px);
     gap: 1.4rem;
     align-items: start;
     padding: 1.6rem 0.5rem 1.6rem 0;
@@ -256,7 +230,7 @@ const orderWord = pl ? 'Zamówienie' : 'Order';
     display: none;
   }
   .row.dim .thumb,
-  .row.dim .stages {
+  .row.dim .buy {
     opacity: 0.55;
     filter: grayscale(0.6);
   }
@@ -313,38 +287,10 @@ const orderWord = pl ? 'Zamówienie' : 'Order';
     margin: 1rem 0 0 0.2rem;
     align-items: center;
   }
-  .stages {
-    margin: 0;
-    display: grid;
-    gap: 0.15rem;
-  }
-  .stages div {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    line-height: 32px;
-  }
-  dt {
-    font-family: var(--f-display);
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  dd {
-    margin: 0;
-    white-space: nowrap;
-    font-weight: 700;
-  }
-  .per {
-    color: var(--ink-faint);
-    font-weight: normal;
-    font-size: 0.85rem;
-  }
-  .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    align-items: stretch;
+  .buy {
+    max-width: 380px;
+    width: 100%;
+    justify-self: end;
   }
   .empty {
     padding: 2rem 0 1rem 80px;
@@ -355,12 +301,9 @@ const orderWord = pl ? 'Zamówienie' : 'Order';
     .row {
       grid-template-columns: 58px 150px minmax(0, 1fr);
     }
-    .stages {
+    .buy {
       grid-column: 3 / -1;
-    }
-    .actions {
-      grid-column: 3 / -1;
-      flex-direction: row;
+      justify-self: start;
     }
   }
   @media (max-width: 640px) {
@@ -384,8 +327,7 @@ const orderWord = pl ? 'Zamówienie' : 'Order';
       max-width: 220px;
     }
     .name,
-    .stages,
-    .actions {
+    .buy {
       grid-column: 2;
     }
   }
