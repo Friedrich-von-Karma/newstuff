@@ -1,0 +1,78 @@
+---
+/** Logo Blattodea.pl – ex libris: „Amata Blattodea” (łac. „ukochane karaczany”). */
+interface Props {
+  dark?: boolean;
+  /** wersja do nagłówka: mniejsza, bez dolnej linii na wąskim ekranie */
+  compact?: boolean;
+  class?: string;
+}
+const { dark = false, compact = false, class: cls } = Astro.props;
+---
+
+<span class:list={['exlibris', { dark, compact }, cls]} role="img" aria-label="Amata Blattodea – M. Stachowiak, MMXXVI">
+  <span class="top" aria-hidden="true">Amata</span>
+  <span class="name" aria-hidden="true">Blattodea</span>
+  <span class="rule" aria-hidden="true"></span>
+  <span class="sig" aria-hidden="true">M. Stachowiak · MMXXVI</span>
+</span>
+
+<style>
+  .exlibris {
+    --c: #553823;
+    --ink: #16271c;
+    --bg: var(--label);
+    display: inline-grid;
+    justify-items: center;
+    gap: 0.18em;
+    padding: 0.75em 1.35em 0.7em;
+    border: 3px double var(--c);
+    outline: 1px solid var(--c);
+    outline-offset: 4px;
+    background: var(--bg);
+    color: var(--c);
+    font-size: 16px;
+    line-height: 1;
+  }
+  .dark {
+    --c: #dcc08a;
+    --ink: #f6efdc;
+    --bg: transparent;
+  }
+  .top,
+  .sig {
+    font-family: var(--f-caps);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    font-size: 0.72em;
+    white-space: nowrap;
+  }
+  .top {
+    letter-spacing: 0.32em;
+    padding-left: 0.32em;
+  }
+  .name {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 2.4em;
+    color: var(--ink);
+    margin: 0.05em 0 0.02em;
+  }
+  .rule {
+    width: 62%;
+    height: 1px;
+    background: currentColor;
+  }
+  .compact {
+    font-size: 11px;
+    padding: 0.55em 1.1em 0.55em;
+    outline-offset: 3px;
+  }
+  .compact .name {
+    font-size: 2.2em;
+  }
+  .compact .top,
+  .compact .sig {
+    font-size: 0.78em;
+  }
+</style>

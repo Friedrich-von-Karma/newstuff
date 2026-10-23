@@ -2,6 +2,7 @@
 import { site } from '../data/site';
 import { routes, useTranslations, type Lang } from '../i18n/ui';
 import ContactLinks from './ContactLinks.astro';
+import ExLibris from './ExLibris.astro';
 
 interface Props {
   lang: Lang;
@@ -14,9 +15,8 @@ const year = new Date().getFullYear();
 <footer class="foot">
   <div class="wrap grid">
     <div class="colophon">
-      <p class="name">Blattodea<span>.pl</span></p>
-      <p class="ex type">Ex collectione Blattodea.pl · MMXXVI</p>
-      <p class="small">{tr('site.tagline')}</p>
+      <ExLibris dark />
+      <p class="small">blattodea.pl · {tr('site.tagline')}</p>
     </div>
     <nav aria-label="Footer">
       <p class="h caps">{lang === 'pl' ? 'Spis działów' : 'Contents'}</p>
@@ -60,26 +60,8 @@ const year = new Date().getFullYear();
       grid-template-columns: 1.3fr 1fr 1fr;
     }
   }
-  .name {
-    font-family: var(--f-display);
-    font-size: 2.4rem;
-    font-weight: 600;
-    line-height: 1;
-    color: var(--label);
-    margin: 0 0 0.5rem;
-  }
-  .name span {
-    color: var(--brass-light);
-    font-style: italic;
-  }
-  .ex {
-    display: inline-block;
-    font-size: 0.75rem;
-    color: var(--wood-900);
-    background: var(--label);
-    padding: 0.25rem 0.6rem;
-    rotate: -1.5deg;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  .colophon :global(.exlibris) {
+    margin: 6px 0 1.2rem 6px;
   }
   .small {
     font-size: 0.88rem;

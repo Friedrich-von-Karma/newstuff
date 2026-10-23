@@ -19,7 +19,7 @@ export function getLangFromUrl(url: URL): Lang {
 
 export const ui = {
   pl: {
-    'site.tagline': 'Hodowla karaczanów · atlas · klucz do gatunków Polski',
+    'site.tagline': 'Hodowla karaczanów · profile hodowlane · klucz do gatunków Polski',
     'nav.home': 'Start',
     'nav.pricelist': 'Cennik',
     'nav.species': 'Profile hodowlane',
@@ -32,7 +32,7 @@ export const ui = {
     'sample.badge': 'Dane przykładowe',
     'sample.note': 'To są przykładowe treści, które zostaną zastąpione prawdziwymi.',
 
-    'home.lead': 'Hodowla i atlas karaczanów. Aktualny cennik, profile hodowlane gatunków, notatki z hodowli i terenu oraz klucz do oznaczania karaczanów występujących w Polsce.',
+    'home.lead': 'Aktualny cennik, profile hodowlane gatunków, notatki z hodowli i terenu oraz klucz do oznaczania karaczanów występujących w Polsce.',
     'home.sections': 'Działy',
     'home.pricelist.desc': 'Dostępne gatunki, ceny według stadium i zasady wysyłki.',
     'home.species.desc': 'Karty gatunków: warunki, pokarm, rozmnażanie i zdjęcia.',
@@ -136,7 +136,7 @@ export const ui = {
     '404.back': 'Wróć na stronę główną',
   },
   en: {
-    'site.tagline': 'Cockroach breeding · atlas · key to Polish species',
+    'site.tagline': 'Cockroach breeding · care sheets · key to Polish species',
     'nav.home': 'Home',
     'nav.pricelist': 'Price list',
     'nav.species': 'Care sheets',
@@ -149,7 +149,7 @@ export const ui = {
     'sample.badge': 'Sample data',
     'sample.note': 'This is sample content that will be replaced with real data.',
 
-    'home.lead': 'A cockroach breeding project and atlas. Current price list, care sheets, notes from the breeding room and the field, and an identification key to the cockroaches of Poland.',
+    'home.lead': 'Current price list, care sheets, notes from the breeding room and the field, and an identification key to the cockroaches of Poland.',
     'home.sections': 'Sections',
     'home.pricelist.desc': 'Available species, prices by life stage and shipping terms.',
     'home.species.desc': 'Species sheets: conditions, diet, breeding and photos.',
