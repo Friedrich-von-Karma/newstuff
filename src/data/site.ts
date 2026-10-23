@@ -1,21 +1,16 @@
-/**
- * Ustawienia strony i dane kontaktowe.
- * TODO: podmienić wartości przykładowe na prawdziwe przed publikacją.
- */
+/** Ustawienia strony i dane kontaktowe. */
 export const site = {
   name: 'Blattodea.pl',
   url: 'https://blattodea.pl',
   author: 'Blattodea.pl',
 
   contact: {
-    email: 'kontakt@blattodea.pl',
-    /** Format międzynarodowy, bez spacji – używany w linkach tel: i WhatsApp. */
-    phone: '+48000000000',
-    phoneDisplay: '+48 000 000 000',
-    whatsapp: true,
-    facebook: 'https://www.facebook.com/',
-    messenger: 'https://m.me/',
-    instagram: 'https://www.instagram.com/',
+    email: 'mikolaj.stachowiak@blattodea.pl',
+    facebook: 'https://www.facebook.com/primarchgodot/',
+    facebookName: 'primarchgodot',
+    messenger: 'https://m.me/primarchgodot',
+    instagram: 'https://www.instagram.com/insectastic/',
+    instagramName: '@insectastic',
   },
 
   /** Data ostatniej zmiany cennika (RRRR-MM-DD). */
@@ -27,7 +22,7 @@ export const site = {
       'Wysyłka kurierem z ociepleniem lub chłodzeniem zależnie od pogody, od poniedziałku do środy – paczki nie leżą w sortowni przez weekend.',
       'Przy temperaturach poniżej 0 °C lub powyżej 30 °C wysyłki wstrzymuję albo dodaję ogrzewacz lub wkład chłodzący.',
       'Możliwy odbiór osobisty – po wcześniejszym umówieniu.',
-      'Płatność przelewem lub BLIK na telefon przed wysyłką.',
+      'Płatność przelewem lub BLIK-iem przed wysyłką.',
       'Gwarantuję żywe dotarcie zwierząt. Jeśli coś pójdzie nie tak, prześlij zdjęcie zawartości paczki w dniu odbioru.',
     ],
     en: [

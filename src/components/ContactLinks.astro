@@ -13,12 +13,9 @@ interface Props {
 const { lang, compact = false, dark = false, subject } = Astro.props;
 const tr = useTranslations(lang);
 const c = site.contact;
-const phoneDigits = c.phone.replace(/\D/g, '');
 
 const icons = {
   email: 'M3 6h18v12H3z M3 6l9 7 9-7',
-  phone: 'M6.6 3h3l1.5 4.5-2 1.4a11 11 0 0 0 6 6l1.4-2 4.5 1.5v3a2 2 0 0 1-2 2A17 17 0 0 1 4.6 5a2 2 0 0 1 2-2z',
-  whatsapp: 'M4 20l1.3-4A8 8 0 1 1 8 18.8z M9 9c0 3 3 6 6 6l1.2-1.4-2-1-1 .8a5 5 0 0 1-2.6-2.6l.8-1-1-2z',
   messenger: 'M12 3a9 8.5 0 0 0-5 15.6V21l2.6-1.5A9 8.5 0 1 0 12 3z M7 13.5l3.5-3.7 2.2 2.2 4.3-2.5-3.5 3.7-2.2-2.2z',
   facebook: 'M14 21v-7.5h2.6l.4-3H14V8.7c0-.9.3-1.5 1.6-1.5H17V4.5a19 19 0 0 0-2.3-.1c-2.3 0-3.8 1.4-3.8 3.9v2.2H8.3v3H11V21',
   instagram: 'M4 4h16v16H4z M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6z M16.8 6.8h.01',
@@ -31,13 +28,9 @@ const items = [
     value: c.email,
     href: `mailto:${c.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`,
   },
-  { key: 'phone', label: tr('contact.phone'), value: c.phoneDisplay, href: `tel:${c.phone}` },
-  ...(c.whatsapp
-    ? [{ key: 'whatsapp', label: tr('contact.whatsapp'), value: c.phoneDisplay, href: `https://wa.me/${phoneDigits}` }]
-    : []),
-  { key: 'messenger', label: tr('contact.messenger'), value: 'Messenger', href: c.messenger },
-  { key: 'facebook', label: tr('contact.facebook'), value: 'Facebook', href: c.facebook },
-  { key: 'instagram', label: tr('contact.instagram'), value: 'Instagram', href: c.instagram },
+  { key: 'messenger', label: tr('contact.messenger'), value: c.facebookName, href: c.messenger },
+  { key: 'facebook', label: tr('contact.facebook'), value: c.facebookName, href: c.facebook },
+  { key: 'instagram', label: tr('contact.instagram'), value: c.instagramName, href: c.instagram },
 ] as { key: keyof typeof icons; label: string; value: string; href: string }[];
 ---
 
