@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { getPricelist, getSpecies } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+
+const [species, pricelist] = await Promise.all([getSpecies(), getPricelist()]);
+const statusOf = new Map(pricelist.filter((p) => p.data.profile).map((p) => [p.data.profile!, p.data.status]));
+const anySample = species.some((s) => s.data.sample);
+---
+
+<Base lang={lang} title={tr('species.title')} description={tr('species.lead')} alt={routes.species[other]} active="species">
+  <div class="wrap">
+    <header class="page-head">
+      <span class="eyebrow">II</span>
+      <h1>{tr('species.title')}</h1>
+      <p class="lead">{tr('species.lead')}</p>
+    </header>
+
+    {anySample && <p class="notice">{tr('sample.note')}</p>}
+
+    <ul class="grid">
+      {
+        species.map((s, i) => {
+          const img = s.data.gallery[0];
+          const status = statusOf.get(s.id);
+          return (
+            <li>
+              <a href={`${routes.species[lang]}${s.id}/`} class="card">
+                <figure>
+                  <img src={img?.src ?? '/images/placeholder.svg'} alt={img?.alt[lang] ?? ''} loading="lazy" width="800" height="600" />
+                  <span class="fig smallcaps">
+                    {tr('species.fig')} {i + 1}
+                  </span>
+                </figure>
+                <span class="body">
+                  <span class="latin name">{s.data.latin}</span>
+                  {s.data.commonName && <span class="common">{s.data.commonName[lang]}</span>}
+                  <span class="meta">
+                    <span>{s.data.family}</span>
+                    <span>·</span>
+                    <span>{tr(`species.difficulty.${s.data.difficulty}` as 'species.difficulty.1')}</span>
+                  </span>
+                  {status && <span class={`badge ${status}`}>{tr(`status.${status}`)}</span>}
+                </span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--card);
+    border: 1px solid var(--rule-strong);
+    outline: 1px solid var(--rule);
+    outline-offset: 3px;
+    margin: 4px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+  figure {
+    margin: 0;
+    position: relative;
+    border-bottom: 1px solid var(--rule);
+  }
+  img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+  }
+  .fig {
+    position: absolute;
+    left: 0.6rem;
+    bottom: 0.5rem;
+    font-size: 0.75rem;
+    background: rgba(251, 248, 240, 0.9);
+    padding: 0.1em 0.5em;
+    color: var(--ink-soft);
+  }
+  .body {
+    padding: 1rem 1.1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+  .name {
+    font-family: var(--serif-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--moss-dark);
+  }
+  .card:hover .name {
+    color: var(--rust);
+  }
+  .common {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .meta {
+    display: flex;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    margin-bottom: 0.4rem;
+  }
+</style>

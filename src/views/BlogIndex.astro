@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { getPosts, slugify } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  /** Gdy podany – lista wpisów z tym tagiem. */
+  tag?: string;
+}
+const { lang, tag } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+
+const all = await getPosts(lang);
+const posts = tag ? all.filter((p) => p.data.tags.some((t) => slugify(t) === tag)) : all;
+const tagName = tag ? all.flatMap((p) => p.data.tags).find((t) => slugify(t) === tag) : undefined;
+const tags = [...new Set(all.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b, lang));
+const title = tagName ? `${tr('blog.tag')} #${tagName}` : tr('blog.title');
+---
+
+<Base lang={lang} title={title} description={tr('blog.lead')} alt={routes.blog[other]} active="blog">
+  <div class="wrap">
+    <header class="page-head">
+      <span class="eyebrow">IV</span>
+      <h1>{title}</h1>
+      {tag ? <p><a href={routes.blog[lang]}>← {tr('blog.back')}</a></p> : <p class="lead">{tr('blog.lead')}</p>}
+    </header>
+
+    {
+      tags.length > 0 && (
+        <nav class="tagbar" aria-label={tr('blog.allTags')}>
+          <ul class="tags">
+            {tags.map((t) => (
+              <li>
+                <a href={`${routes.blog[lang]}tag/${slugify(t)}/`} aria-current={slugify(t) === tag ? 'page' : undefined}>
+                  #{t}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+
+    <PostList posts={posts} lang={lang} />
+  </div>
+</Base>
+
+<style>
+  .tagbar {
+    margin-bottom: 1.75rem;
+  }
+  .tagbar a[aria-current='page'] {
+    background: var(--moss);
+    color: #fff;
+    border-color: var(--moss);
+  }
+</style>

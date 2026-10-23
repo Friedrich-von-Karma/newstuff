@@ -1,0 +1,240 @@
+---
+import Roach from './Roach.astro';
+import { routes, useTranslations, type Lang, type RouteKey } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  alt: string;
+  active?: RouteKey;
+}
+const { lang, alt, active } = Astro.props;
+const tr = useTranslations(lang);
+
+const nav: { key: RouteKey; label: string }[] = [
+  { key: 'pricelist', label: tr('nav.pricelist') },
+  { key: 'species', label: tr('nav.species') },
+  { key: 'key', label: tr('nav.keyShort') },
+  { key: 'blog', label: tr('nav.blog') },
+  { key: 'contact', label: tr('nav.contact') },
+];
+---
+
+<header class="masthead">
+  <div class="wrap bar">
+    <a class="brand" href={routes.home[lang]}>
+      <Roach class="brand-mark" />
+      <span>
+        <span class="brand-name">Blattodea<span class="tld">.pl</span></span>
+        <span class="brand-tag">{tr('site.tagline')}</span>
+      </span>
+    </a>
+
+    <div class="menu">
+      <button class="toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="burger" aria-hidden="true"></span>
+        <span>{tr('nav.menu')}</span>
+      </button>
+      <nav id="site-nav" aria-label={tr('nav.menu')}>
+        <ul>
+          {
+            nav.map((n) => (
+              <li>
+                <a href={routes[n.key][lang]} aria-current={active === n.key ? 'page' : undefined}>
+                  {n.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="lang">
+            <a href={alt} hreflang={lang === 'pl' ? 'en' : 'pl'} lang={lang === 'pl' ? 'en' : 'pl'}>
+              {lang === 'pl' ? 'EN' : 'PL'}
+              <span class="visually-hidden"> – {tr('lang.switch')}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Menu rozwijane na telefonie.
+  const btn = document.querySelector<HTMLButtonElement>('.masthead .toggle');
+  const menu = document.querySelector<HTMLElement>('.masthead .menu');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', String(open));
+    menu?.classList.toggle('open', open);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu?.classList.contains('open')) {
+      menu.classList.remove('open');
+      btn?.setAttribute('aria-expanded', 'false');
+      btn?.focus();
+    }
+  });
+</script>
+
+<style>
+  .masthead {
+    border-bottom: 1px solid var(--rule-strong);
+    box-shadow: 0 3px 0 -2px var(--rule);
+    background: rgba(244, 238, 224, 0.92);
+    backdrop-filter: blur(6px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 68px;
+    position: relative;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: var(--moss-dark);
+    min-width: 0;
+  }
+  .brand-mark {
+    width: 30px;
+    height: 46px;
+    color: var(--rust);
+    flex: none;
+  }
+  .brand-name {
+    display: block;
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: 1.6rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+  .tld {
+    color: var(--rust);
+  }
+  .brand-tag {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    margin-top: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 520px) {
+    .brand-tag {
+      display: none;
+    }
+  }
+
+  .toggle {
+    font: inherit;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    color: var(--moss-dark);
+    font-size: 0.95rem;
+  }
+  .burger,
+  .burger::before,
+  .burger::after {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: currentColor;
+    position: relative;
+  }
+  .burger::before,
+  .burger::after {
+    content: '';
+    position: absolute;
+  }
+  .burger::before {
+    top: -6px;
+  }
+  .burger::after {
+    top: 6px;
+  }
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--serif-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  nav a:hover {
+    color: var(--rust);
+  }
+  nav a[aria-current='page'] {
+    color: var(--moss);
+    text-decoration: underline;
+    text-decoration-color: var(--ochre);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+  .lang a {
+    font-family: var(--serif-text);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    padding: 0.2em 0.7em;
+  }
+
+  /* telefon: rozwijany panel */
+  @media (max-width: 859px) {
+    .menu nav {
+      display: none;
+      position: absolute;
+      right: 16px;
+      left: 16px;
+      top: calc(100% + 6px);
+      background: var(--card);
+      border: 1px solid var(--rule-strong);
+      box-shadow: var(--shadow);
+      padding: 0.5rem 1rem 1rem;
+    }
+    nav li {
+      border-bottom: 1px solid var(--rule);
+    }
+    nav li:last-child {
+      border: 0;
+      padding-top: 0.8rem;
+    }
+    .menu.open nav {
+      display: block;
+    }
+    nav li:not(.lang) a {
+      display: block;
+      padding: 0.6rem 0;
+    }
+  }
+  /* komputer: poziomy pasek */
+  @media (min-width: 860px) {
+    .toggle {
+      display: none;
+    }
+    nav ul {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+    }
+  }
+</style>

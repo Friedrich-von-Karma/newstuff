@@ -1,0 +1,347 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import { site } from '../data/site';
+import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+import { formatPrice, getPricelist, getSpecies } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+
+const [items, species] = await Promise.all([getPricelist(), getSpecies()]);
+const speciesById = new Map(species.map((s) => [s.id, s]));
+const anySample = items.some((i) => i.data.sample);
+const updated = new Date(site.pricelistUpdated);
+const orderWord = lang === 'pl' ? 'Zamówienie' : 'Order';
+---
+
+<Base lang={lang} title={tr('pricelist.title')} description={tr('pricelist.lead')} alt={routes.pricelist[other]} active="pricelist">
+  <div class="wrap">
+    <header class="page-head">
+      <span class="eyebrow">I</span>
+      <h1>{tr('pricelist.title')}</h1>
+      <p class="lead">{tr('pricelist.lead')}</p>
+      <p class="muted">
+        {tr('pricelist.updated')}: <time datetime={site.pricelistUpdated}>{formatDate(updated, lang)}</time>
+      </p>
+    </header>
+
+    {anySample && <p class="notice">{tr('sample.note')}</p>}
+
+    <div class="toolbar">
+      <label class="filter">
+        <input type="checkbox" id="only-available" />
+        {tr('pricelist.filterAvailable')}
+      </label>
+      <span class="legend">
+        <span class="badge available">{tr('status.available')}</span>
+        <span class="badge low">{tr('status.low')}</span>
+        <span class="badge soon">{tr('status.soon')}</span>
+        <span class="badge out">{tr('status.out')}</span>
+      </span>
+    </div>
+
+    <div class="plate table-wrap">
+      <table class="prices">
+        <thead>
+          <tr>
+            <th scope="col">{tr('pricelist.species')}</th>
+            <th scope="col">{tr('pricelist.status')}</th>
+            <th scope="col">{tr('pricelist.prices')}</th>
+            <th scope="col"><span class="visually-hidden">{tr('pricelist.order')}</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            items.map((item) => {
+              const d = item.data;
+              const profile = d.profile ? speciesById.get(d.profile) : undefined;
+              const common = profile?.data.commonName?.[lang];
+              return (
+                <tr data-status={d.status} class:list={[{ dim: d.status === 'out' }]}>
+                  <th scope="row">
+                    {profile ? (
+                      <a class="latin sp" href={`${routes.species[lang]}${profile.id}/`}>
+                        {d.latin}
+                      </a>
+                    ) : (
+                      <span class="latin sp">{d.latin}</span>
+                    )}
+                    {common && <span class="common">{common}</span>}
+                    {d.note && <span class="note">{d.note[lang]}</span>}
+                    {d.sample && <span class="badge sample plain">{tr('sample.badge')}</span>}
+                  </th>
+                  <td>
+                    <span class={`badge ${d.status}`}>{tr(`status.${d.status}`)}</span>
+                  </td>
+                  <td>
+                    <dl class="stages">
+                      {d.prices.map((p) => (
+                        <div>
+                          <dt>{tr(`stage.${p.stage}`)}</dt>
+                          <dd>
+                            {formatPrice(p.price, lang)}
+                            {p.per > 1 && (
+                              <span class="per">
+                                {' '}
+                                / {p.per} {tr('pricelist.pcs')}
+                              </span>
+                            )}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </td>
+                  <td class="actions">
+                    {d.status !== 'out' && (
+                      <a class="button" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(`${orderWord}: ${d.latin}`)}`}>
+                        {tr('pricelist.order')}
+                      </a>
+                    )}
+                    {profile && (
+                      <a class="button ghost" href={`${routes.species[lang]}${profile.id}/`}>
+                        {tr('pricelist.profile')}
+                      </a>
+                    )}
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+      <p class="empty muted" hidden>{tr('pricelist.empty')}</p>
+    </div>
+
+    <section class="info">
+      <div>
+        <h2>{tr('pricelist.shipping')}</h2>
+        <ul class="shipping">
+          {site.shipping[lang].map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>{tr('nav.contact')}</h2>
+        <p class="muted">{tr('contact.orderHint')}</p>
+        <ContactLinks lang={lang} compact />
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  const box = document.querySelector<HTMLInputElement>('#only-available');
+  const rows = document.querySelectorAll<HTMLTableRowElement>('.prices tbody tr');
+  const empty = document.querySelector<HTMLElement>('.table-wrap .empty');
+  const KEY = 'pricelist-only-available';
+  try {
+    if (box && localStorage.getItem(KEY) === '1') box.checked = true;
+  } catch {}
+  const apply = () => {
+    const only = !!box?.checked;
+    let visible = 0;
+    rows.forEach((r) => {
+      const show = !only || r.dataset.status === 'available' || r.dataset.status === 'low';
+      r.hidden = !show;
+      if (show) visible++;
+    });
+    if (empty) empty.hidden = visible > 0;
+    try {
+      localStorage.setItem(KEY, only ? '1' : '0');
+    } catch {}
+  };
+  box?.addEventListener('change', apply);
+  apply();
+</script>
+
+<style>
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.8rem 1.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .filter {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    cursor: pointer;
+  }
+  .filter input {
+    accent-color: var(--moss);
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .table-wrap {
+    padding: 0.5rem 1rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    text-align: left;
+    font-family: var(--serif-display);
+    font-variant: small-caps;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    border-bottom: 2px solid var(--rule-strong);
+    padding: 0.6rem 0.75rem;
+  }
+  tbody tr + tr {
+    border-top: 1px solid var(--rule);
+  }
+  tbody th,
+  td {
+    text-align: left;
+    vertical-align: top;
+    padding: 1rem 0.75rem;
+    font-weight: normal;
+  }
+  tr.dim .sp,
+  tr.dim .stages {
+    opacity: 0.6;
+  }
+  .sp {
+    display: block;
+    font-family: var(--serif-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--moss-dark);
+    line-height: 1.15;
+  }
+  a.sp {
+    text-decoration: none;
+  }
+  a.sp:hover {
+    color: var(--rust);
+    text-decoration: underline;
+  }
+  .common {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+  .note {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--rust);
+    margin-top: 0.2rem;
+  }
+  th .badge.sample {
+    margin-top: 0.5rem;
+  }
+  .stages {
+    margin: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .stages div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px dotted var(--rule);
+    padding-bottom: 0.15rem;
+  }
+  dt {
+    color: var(--ink-soft);
+  }
+  dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .per {
+    color: var(--ink-faint);
+    font-weight: normal;
+    font-size: 0.88rem;
+  }
+  .actions {
+    text-align: right;
+    white-space: nowrap;
+  }
+  .actions .button {
+    font-size: 0.85rem;
+    padding: 0.4em 0.85em;
+    margin: 0 0 0.35rem 0.3rem;
+  }
+
+  /* Telefon – wiersze jako karty */
+  @media (max-width: 760px) {
+    .table-wrap {
+      padding: 0.25rem 0.9rem;
+    }
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    tbody tr {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      padding: 0.9rem 0;
+    }
+    tbody tr[hidden] {
+      display: none;
+    }
+    tbody th,
+    td {
+      padding: 0.25rem 0;
+    }
+    td:nth-child(2) {
+      text-align: right;
+    }
+    td:nth-child(3),
+    .actions {
+      grid-column: 1 / -1;
+    }
+    .actions {
+      text-align: left;
+      padding-top: 0.6rem;
+    }
+    .actions .button {
+      margin: 0 0.4rem 0 0;
+    }
+  }
+
+  .info {
+    display: grid;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  @media (min-width: 860px) {
+    .info {
+      grid-template-columns: 1.4fr 1fr;
+      gap: 3rem;
+    }
+  }
+  .info h2 {
+    font-size: 1.7rem;
+  }
+  .shipping {
+    padding-left: 1.2em;
+    margin: 0;
+  }
+  .shipping li {
+    margin-bottom: 0.5rem;
+  }
+  .shipping li::marker {
+    color: var(--rust);
+  }
+</style>

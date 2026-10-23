@@ -1,0 +1,95 @@
+---
+import type { Post } from '../lib/content';
+import { postSlug, slugify } from '../lib/content';
+import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  posts: Post[];
+  lang: Lang;
+}
+const { posts, lang } = Astro.props;
+const tr = useTranslations(lang);
+---
+
+<ul class="posts">
+  {
+    posts.map((p) => (
+      <li>
+        <article>
+          {p.data.cover && <img src={p.data.cover} alt={p.data.coverAlt ?? ''} loading="lazy" />}
+          <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date, lang)}</time>
+          <h3>
+            <a href={`${routes.blog[lang]}${postSlug(p)}/`}>{p.data.title}</a>
+          </h3>
+          <p>{p.data.description}</p>
+          <ul class="tags">
+            {p.data.tags.map((t) => (
+              <li>
+                <a href={`${routes.blog[lang]}tag/${slugify(t)}/`}>#{t}</a>
+              </li>
+            ))}
+            {p.data.sample && (
+              <li>
+                <span class="badge sample plain">{tr('sample.badge')}</span>
+              </li>
+            )}
+          </ul>
+        </article>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .posts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+  @media (min-width: 760px) {
+    .posts {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+  }
+  article {
+    height: 100%;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 1.2rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    width: 100%;
+    margin-bottom: 0.4rem;
+    border: 1px solid var(--rule);
+  }
+  time {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    font-variant: small-caps;
+    letter-spacing: 0.06em;
+  }
+  h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  h3 a {
+    color: var(--moss-dark);
+    text-decoration: none;
+  }
+  h3 a:hover {
+    color: var(--rust);
+  }
+  p {
+    color: var(--ink-soft);
+    font-size: 0.97rem;
+    margin: 0 0 0.4rem;
+    flex: 1;
+  }
+</style>

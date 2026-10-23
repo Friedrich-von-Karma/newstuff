@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+---
+
+<Base lang={lang} title={tr('contact.title')} description={tr('contact.lead')} alt={routes.contact[other]} active="contact">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>{tr('contact.title')}</h1>
+      <p class="lead">{tr('contact.lead')}</p>
+    </header>
+    <ContactLinks lang={lang} />
+    <div class="hints">
+      <div class="plate">
+        <h2>{tr('pricelist.order')}</h2>
+        <p>{tr('contact.orderHint')}</p>
+        <a href={routes.pricelist[lang]}>{tr('nav.pricelist')} →</a>
+      </div>
+      <div class="plate">
+        <h2>{tr('nav.keyShort')}</h2>
+        <p>{tr('contact.idHint')}</p>
+        <a href={routes.key[lang]}>{tr('nav.key')} →</a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .hints {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 760px) {
+    .hints {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  h2 {
+    font-size: 1.6rem;
+  }
+</style>

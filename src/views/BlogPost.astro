@@ -1,0 +1,78 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+import { hasTranslation, postSlug, slugify, type Post } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  post: Post;
+}
+const { lang, post } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const { Content } = await render(post);
+const slug = postSlug(post);
+const alt = (await hasTranslation(post, other)) ? `${routes.blog[other]}${slug}/` : routes.blog[other];
+const d = post.data;
+---
+
+<Base lang={lang} title={d.title} description={d.description} alt={alt} active="blog" image={d.cover}>
+  <article class="wrap post">
+    <p class="crumbs"><a href={routes.blog[lang]}>← {tr('blog.back')}</a></p>
+    <header>
+      <time datetime={d.date.toISOString()}>{formatDate(d.date, lang)}</time>
+      <h1>{d.title}</h1>
+      <p class="lead">{d.description}</p>
+      <ul class="tags">
+        {
+          d.tags.map((t) => (
+            <li>
+              <a href={`${routes.blog[lang]}tag/${slugify(t)}/`}>#{t}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </header>
+    {d.cover && <img class="cover" src={d.cover} alt={d.coverAlt ?? ''} />}
+    <div class="prose">
+      <Content />
+    </div>
+    <div class="ornament">❦</div>
+  </article>
+</Base>
+
+<style>
+  .post {
+    max-width: calc(var(--measure) + 56px);
+  }
+  .crumbs {
+    padding-top: 1.5rem;
+    font-size: 0.92rem;
+  }
+  header {
+    padding: 1rem 0 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--rule-strong);
+    box-shadow: 0 3px 0 -2px var(--rule);
+  }
+  time {
+    font-variant: small-caps;
+    letter-spacing: 0.08em;
+    color: var(--rust);
+  }
+  .lead {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+  }
+  .cover {
+    width: 100%;
+    margin-bottom: 2rem;
+    border: 1px solid var(--rule);
+    padding: 6px;
+    background: var(--card);
+  }
+  .prose {
+    font-size: 1.08rem;
+  }
+</style>

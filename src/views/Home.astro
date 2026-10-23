@@ -1,0 +1,204 @@
+---
+import Base from '../layouts/Base.astro';
+import Roach from '../components/Roach.astro';
+import PostList from '../components/PostList.astro';
+import { routes, useTranslations, type Lang, type RouteKey } from '../i18n/ui';
+import { getPosts, getSpecies, getPricelist } from '../lib/content';
+import { taxa } from '../data/key';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+
+const [posts, species, pricelist] = await Promise.all([getPosts(lang), getSpecies(), getPricelist()]);
+const available = pricelist.filter((p) => p.data.status === 'available' || p.data.status === 'low').length;
+
+const sections: { key: RouteKey; num: string; title: string; desc: string; meta: string }[] = [
+  { key: 'pricelist', num: 'I', title: tr('nav.pricelist'), desc: tr('home.pricelist.desc'), meta: `${available} / ${pricelist.length}` },
+  { key: 'species', num: 'II', title: tr('nav.species'), desc: tr('home.species.desc'), meta: String(species.length) },
+  { key: 'key', num: 'III', title: tr('nav.key'), desc: tr('home.key.desc'), meta: String(taxa.length) },
+  { key: 'blog', num: 'IV', title: tr('nav.blog'), desc: tr('home.blog.desc'), meta: String(posts.length) },
+];
+---
+
+<Base lang={lang} alt={routes.home[other]} active="home">
+  <section class="hero wrap">
+    <div class="intro">
+      <span class="eyebrow">Insecta · Dictyoptera · Blattodea</span>
+      <h1>Blattodea<span class="tld">.pl</span></h1>
+      <p class="lead">{tr('home.lead')}</p>
+      <p class="cta">
+        <a class="button" href={routes.pricelist[lang]}>{tr('nav.pricelist')}</a>
+        <a class="button ghost" href={routes.key[lang]}>{tr('nav.key')}</a>
+      </p>
+    </div>
+    <figure class="plate figure">
+      <span class="plate-no smallcaps">{tr('home.plate')}</span>
+      <Roach class="roach" label="Blattodea" />
+      <figcaption>
+        <span class="latin">Blattodea</span> Brunner von Wattenwyl, 1882 — {lang === 'pl' ? 'widok grzbietowy' : 'dorsal view'}
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap">
+    <h2 class="visually-hidden">{tr('home.sections')}</h2>
+    <ol class="sections">
+      {
+        sections.map((s) => (
+          <li>
+            <a href={routes[s.key][lang]}>
+              <span class="num">{s.num}</span>
+              <span class="body">
+                <span class="title">{s.title}</span>
+                <span class="desc">{s.desc}</span>
+              </span>
+              <span class="meta">{s.meta}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="wrap latest">
+        <div class="ornament">❦</div>
+        <div class="head">
+          <h2>{tr('home.latest')}</h2>
+          <a href={routes.blog[lang]}>{tr('home.all')} →</a>
+        </div>
+        <PostList posts={posts.slice(0, 3)} lang={lang} />
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding-top: 3rem;
+    padding-bottom: 2.5rem;
+  }
+  @media (min-width: 860px) {
+    .hero {
+      grid-template-columns: 1.25fr 1fr;
+      gap: 3.5rem;
+      padding-top: 4.5rem;
+    }
+  }
+  h1 {
+    font-size: clamp(3rem, 8vw, 5.2rem);
+    margin-bottom: 0.3em;
+  }
+  .tld {
+    color: var(--rust);
+  }
+  .lead {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1.5rem;
+  }
+  .figure {
+    position: relative;
+    text-align: center;
+  }
+  .plate-no {
+    position: absolute;
+    top: 0.8rem;
+    left: 1rem;
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+  }
+  .roach {
+    width: min(240px, 60%);
+    height: auto;
+    margin: 1rem auto 0.5rem;
+    color: var(--moss-dark);
+  }
+  figcaption {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--rule);
+    padding-top: 0.6rem;
+  }
+
+  .sections {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 720px) {
+    .sections {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .sections a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    height: 100%;
+    padding: 1.2rem 1.3rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--moss);
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .sections a:hover {
+    border-color: var(--rule-strong);
+    border-left-color: var(--rust);
+    box-shadow: var(--shadow);
+  }
+  .num {
+    font-family: var(--serif-display);
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--rust);
+    min-width: 2.2ch;
+  }
+  .title {
+    display: block;
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: 1.45rem;
+    line-height: 1.15;
+    color: var(--moss-dark);
+    margin-bottom: 0.25rem;
+  }
+  .desc {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .meta {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.1em 0.6em;
+  }
+  .latest .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+</style>

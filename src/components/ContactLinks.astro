@@ -1,0 +1,114 @@
+---
+import { site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  compact?: boolean;
+  /** Temat wiadomości e-mail (np. zamówienie konkretnego gatunku). */
+  subject?: string;
+}
+const { lang, compact = false, subject } = Astro.props;
+const tr = useTranslations(lang);
+const c = site.contact;
+const phoneDigits = c.phone.replace(/\D/g, '');
+
+const icons = {
+  email: 'M3 6h18v12H3z M3 6l9 7 9-7',
+  phone: 'M6.6 3h3l1.5 4.5-2 1.4a11 11 0 0 0 6 6l1.4-2 4.5 1.5v3a2 2 0 0 1-2 2A17 17 0 0 1 4.6 5a2 2 0 0 1 2-2z',
+  whatsapp: 'M4 20l1.3-4A8 8 0 1 1 8 18.8z M9 9c0 3 3 6 6 6l1.2-1.4-2-1-1 .8a5 5 0 0 1-2.6-2.6l.8-1-1-2z',
+  messenger: 'M12 3a9 8.5 0 0 0-5 15.6V21l2.6-1.5A9 8.5 0 1 0 12 3z M7 13.5l3.5-3.7 2.2 2.2 4.3-2.5-3.5 3.7-2.2-2.2z',
+  facebook: 'M14 21v-7.5h2.6l.4-3H14V8.7c0-.9.3-1.5 1.6-1.5H17V4.5a19 19 0 0 0-2.3-.1c-2.3 0-3.8 1.4-3.8 3.9v2.2H8.3v3H11V21',
+  instagram: 'M4 4h16v16H4z M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6z M16.8 6.8h.01',
+};
+
+const items = [
+  {
+    key: 'email',
+    label: tr('contact.email'),
+    value: c.email,
+    href: `mailto:${c.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`,
+  },
+  { key: 'phone', label: tr('contact.phone'), value: c.phoneDisplay, href: `tel:${c.phone}` },
+  ...(c.whatsapp
+    ? [{ key: 'whatsapp', label: tr('contact.whatsapp'), value: c.phoneDisplay, href: `https://wa.me/${phoneDigits}` }]
+    : []),
+  { key: 'messenger', label: tr('contact.messenger'), value: 'Messenger', href: c.messenger },
+  { key: 'facebook', label: tr('contact.facebook'), value: 'Facebook', href: c.facebook },
+  { key: 'instagram', label: tr('contact.instagram'), value: 'Instagram', href: c.instagram },
+] as { key: keyof typeof icons; label: string; value: string; href: string }[];
+---
+
+<ul class:list={['contact', { compact }]}>
+  {
+    items.map((i) => (
+      <li>
+        <a
+          href={i.href}
+          {...(i.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d={icons[i.key]} />
+          </svg>
+          <span>
+            <span class="label">{i.label}</span>
+            {!compact && i.value !== i.label && <span class="value">{i.value}</span>}
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .contact:not(.compact) {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .contact:not(.compact) a {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .contact:not(.compact) a:hover {
+    border-color: var(--moss);
+    transform: translateY(-1px);
+  }
+  a:hover {
+    color: var(--rust);
+  }
+  svg {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    color: var(--moss);
+  }
+  .compact svg {
+    width: 18px;
+    height: 18px;
+  }
+  .label {
+    display: block;
+  }
+  .value {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    overflow-wrap: anywhere;
+  }
+</style>

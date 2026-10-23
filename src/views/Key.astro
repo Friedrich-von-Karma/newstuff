@@ -1,0 +1,468 @@
+---
+import Base from '../layouts/Base.astro';
+import Roach from '../components/Roach.astro';
+import { characters, taxa } from '../data/key';
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+
+const statusLabel = {
+  native: tr('key.native'),
+  synanthropic: tr('key.synanthropic'),
+  introduced: tr('key.introduced'),
+};
+
+const data = {
+  characters: characters.map((c) => ({ id: c.id, name: c.name[lang] })),
+  taxa: taxa.map((t) => ({ id: t.id, traits: t.traits })),
+  i18n: { mismatch: tr('key.mismatch') },
+};
+---
+
+<Base lang={lang} title={tr('key.title')} description={tr('key.lead')} alt={routes.key[other]} active="key">
+  <div class="wrap">
+    <header class="page-head">
+      <span class="eyebrow">III · Clavis Blattodeorum Poloniae</span>
+      <h1>{tr('key.title')}</h1>
+      <p class="lead">{tr('key.lead')}</p>
+    </header>
+    <p class="notice">{tr('key.draft')}</p>
+
+    <div class="key">
+      <form class="features plate" aria-labelledby="features-h">
+        <div class="fhead">
+          <h2 id="features-h">{tr('key.features')}</h2>
+          <button type="reset" class="button ghost small">{tr('key.reset')}</button>
+        </div>
+        {
+          characters.map((c) => (
+            <fieldset>
+              <legend>{c.name[lang]}</legend>
+              {c.help && <p class="help">{c.help[lang]}</p>}
+              <div class="states">
+                {c.states.map((s) => (
+                  <label class="chip">
+                    <input type="checkbox" name={c.id} value={s.id} />
+                    <span class="txt">{s.label[lang]}</span>
+                    <span class="count" data-count={`${c.id}:${s.id}`} />
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ))
+        }
+      </form>
+
+      <section class="results" aria-labelledby="results-h">
+        <div class="rhead">
+          <h2 id="results-h">
+            {tr('key.results')}{' '}
+            <span class="tally" aria-live="polite">
+              <span id="n-match">{taxa.length}</span> {tr('key.of')} {taxa.length}
+            </span>
+          </h2>
+          <label class="showall">
+            <input type="checkbox" id="show-all" />
+            {tr('key.showAll')}
+          </label>
+        </div>
+        <noscript><p class="muted">{tr('key.noJs')}</p></noscript>
+        <p class="none notice" hidden>{tr('key.none')}</p>
+
+        <ol class="taxa">
+          {
+            taxa.map((t) => (
+              <li class="taxon" data-id={t.id}>
+                <div class="thumb" aria-hidden="true">
+                  <Roach class="mini" />
+                </div>
+                <div class="tbody">
+                  <h3>
+                    <span class="latin">{t.latin}</span> <span class="auth">{t.author}</span>
+                  </h3>
+                  {t.name?.[lang] && <p class="vern">{t.name[lang]}</p>}
+                  <p class="badges">
+                    <span class={`badge plain st-${t.status}`}>{statusLabel[t.status]}</span>
+                    {t.verify && <span class="badge plain sample">{tr('key.verify')}</span>}
+                  </p>
+                  <p class="note">{t.note[lang]}</p>
+                  <dl class="facts">
+                    <div>
+                      <dt>{tr('key.lengthLabel')}</dt>
+                      <dd>{t.length}</dd>
+                    </div>
+                    <div>
+                      <dt>{tr('key.habitatLabel')}</dt>
+                      <dd>{t.habitat[lang]}</dd>
+                    </div>
+                  </dl>
+                  <p class="why" hidden />
+                  {t.profile && (
+                    <p class="more">
+                      <a href={`${routes.species[lang]}${t.profile}/`}>{tr('pricelist.profileLink')} →</a>
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+    </div>
+  </div>
+
+  <a class="jump" href="#results-h">
+    {tr('key.results')}: <strong id="n-match-bar">{taxa.length}</strong> ↓
+  </a>
+
+  <script type="application/json" id="key-data" set:html={JSON.stringify(data)} />
+</Base>
+
+<script>
+  type Data = {
+    characters: { id: string; name: string }[];
+    taxa: { id: string; traits: Record<string, string[]> }[];
+    i18n: { mismatch: string };
+  };
+
+  const el = document.getElementById('key-data');
+  if (el) {
+    const data: Data = JSON.parse(el.textContent || '{}');
+    const form = document.querySelector<HTMLFormElement>('form.features')!;
+    const showAll = document.querySelector<HTMLInputElement>('#show-all')!;
+    const nMatch = document.getElementById('n-match')!;
+    const none = document.querySelector<HTMLElement>('.results .none')!;
+    const list = document.querySelector<HTMLOListElement>('ol.taxa')!;
+    const cards = new Map(
+      [...list.querySelectorAll<HTMLLIElement>('li.taxon')].map((li) => [li.dataset.id!, li]),
+    );
+    const names = new Map(data.characters.map((c) => [c.id, c.name]));
+
+    const selected = () => {
+      const sel: Record<string, string[]> = {};
+      form.querySelectorAll<HTMLInputElement>('input[type=checkbox]:checked').forEach((i) => {
+        (sel[i.name] ||= []).push(i.value);
+      });
+      return sel;
+    };
+
+    /** Lista cech, po których gatunek odpada (pusta = pasuje). */
+    const mismatches = (traits: Record<string, string[]>, sel: Record<string, string[]>, skip?: string) =>
+      Object.entries(sel)
+        .filter(([c]) => c !== skip)
+        .filter(([c, states]) => traits[c] && !traits[c].some((s) => states.includes(s)))
+        .map(([c]) => c);
+
+    const update = () => {
+      const sel = selected();
+      const scored = data.taxa.map((t) => ({ t, miss: mismatches(t.traits, sel) }));
+      const matching = scored.filter((s) => s.miss.length === 0);
+
+      nMatch.textContent = String(matching.length);
+      const bar = document.getElementById('n-match-bar');
+      if (bar) bar.textContent = String(matching.length);
+      none.hidden = matching.length > 0;
+
+      // kolejność: pasujące, potem wg liczby niezgodności
+      scored
+        .slice()
+        .sort((a, b) => a.miss.length - b.miss.length)
+        .forEach(({ t, miss }) => {
+          const li = cards.get(t.id)!;
+          const ok = miss.length === 0;
+          li.classList.toggle('out', !ok);
+          li.hidden = !ok && !showAll.checked;
+          const why = li.querySelector<HTMLElement>('.why')!;
+          why.hidden = ok;
+          why.textContent = ok ? '' : `${data.i18n.mismatch}: ${miss.map((m) => names.get(m)).join(', ')}`;
+          list.appendChild(li);
+        });
+
+      // liczniki: ile gatunków zostanie po zaznaczeniu danego stanu
+      form.querySelectorAll<HTMLElement>('[data-count]').forEach((span) => {
+        const [c, s] = span.dataset.count!.split(':');
+        const n = data.taxa.filter(
+          (t) => mismatches(t.traits, sel, c).length === 0 && (!t.traits[c] || t.traits[c].includes(s)),
+        ).length;
+        span.textContent = String(n);
+        span.closest('label')!.classList.toggle('zero', n === 0);
+      });
+    };
+
+    form.addEventListener('change', update);
+    form.addEventListener('reset', () => setTimeout(update));
+    showAll.addEventListener('change', update);
+    update();
+  }
+</script>
+
+<style>
+  .key {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (min-width: 960px) {
+    .key {
+      grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+    }
+    .features {
+      position: sticky;
+      top: 84px;
+      max-height: calc(100vh - 100px);
+      overflow: auto;
+    }
+  }
+  .features {
+    padding: 1.1rem 1.2rem;
+  }
+  .fhead,
+  .rhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  h2 {
+    font-size: 1.6rem;
+    margin: 0;
+  }
+  .button.small {
+    font-size: 0.8rem;
+    padding: 0.3em 0.75em;
+  }
+  fieldset {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 1rem 0 0;
+    padding: 0.8rem 0 0;
+    min-width: 0;
+  }
+  legend {
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--moss-dark);
+    padding: 0;
+    float: left;
+    width: 100%;
+  }
+  .help {
+    clear: both;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    margin: 0.1rem 0 0.4rem;
+  }
+  .states {
+    clear: both;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding-top: 0.3rem;
+  }
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.4rem 0.35rem 0.7rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    background: var(--paper);
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1.25;
+    transition: background 0.12s ease, border-color 0.12s ease;
+  }
+  .chip:hover {
+    border-color: var(--moss);
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .chip:has(input:focus-visible) {
+    outline: 2px solid var(--ochre);
+    outline-offset: 2px;
+  }
+  .chip:has(input:checked) {
+    background: var(--moss);
+    border-color: var(--moss-dark);
+    color: #f7f3e8;
+  }
+  .chip.zero:not(:has(input:checked)) {
+    opacity: 0.45;
+  }
+  .count {
+    font-size: 0.75rem;
+    min-width: 1.6em;
+    text-align: center;
+    padding: 0.05em 0.4em;
+    border-radius: 999px;
+    background: var(--paper-3);
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .count:empty {
+    display: none;
+  }
+  .chip:has(input:checked) .count {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+
+  .tally {
+    font-family: var(--serif-text);
+    font-size: 0.95rem;
+    font-weight: normal;
+    color: var(--ink-faint);
+    margin-left: 0.4rem;
+  }
+  .showall {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .showall input {
+    accent-color: var(--moss);
+  }
+  .results .none {
+    margin-top: 1rem;
+  }
+  .taxa {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .taxon {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 1rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--moss);
+    padding: 1rem 1.1rem;
+    transition: opacity 0.15s ease;
+  }
+  .taxon.out {
+    opacity: 0.55;
+    border-left-color: var(--rule-strong);
+  }
+  .thumb {
+    color: var(--rust);
+  }
+  .mini {
+    width: 56px;
+    height: 84px;
+  }
+  .taxon.out .thumb {
+    color: var(--ink-faint);
+  }
+  h3 {
+    font-size: 1.45rem;
+    margin: 0;
+  }
+  .auth {
+    font-family: var(--serif-text);
+    font-size: 0.82rem;
+    font-weight: normal;
+    color: var(--ink-faint);
+  }
+  .vern {
+    margin: 0.1rem 0 0;
+    color: var(--ink-soft);
+  }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.5rem 0;
+  }
+  .st-native {
+    color: var(--ok);
+    background: #e6eedc;
+  }
+  .st-synanthropic {
+    color: var(--bad);
+    background: #f3e1da;
+  }
+  .st-introduced {
+    color: var(--soon);
+    background: #e3e7ef;
+  }
+  .note {
+    margin: 0 0 0.6rem;
+    font-size: 0.97rem;
+  }
+  .facts {
+    margin: 0;
+    display: grid;
+    gap: 0.2rem;
+    font-size: 0.88rem;
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.5rem;
+  }
+  .facts dt {
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+  }
+  .facts dd {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .why {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    color: var(--bad);
+    font-style: italic;
+  }
+  .more {
+    margin: 0.6rem 0 0;
+    font-size: 0.92rem;
+  }
+  .jump {
+    display: none;
+  }
+  @media (max-width: 959px) {
+    .jump {
+      display: block;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 14px;
+      z-index: 30;
+      background: var(--moss-dark);
+      color: #f7f3e8;
+      text-decoration: none;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.45);
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+  }
+  @media (max-width: 480px) {
+    .taxon {
+      grid-template-columns: 1fr;
+    }
+    .thumb {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Roach from '../components/Roach.astro';
+import { routes, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+---
+
+<Base lang={lang} title={tr('404.title')} alt={lang === 'pl' ? routes.home.en : routes.home.pl}>
+  <div class="wrap nf">
+    <Roach class="r" />
+    <h1>404 · {tr('404.title')}</h1>
+    <p class="lead">{tr('404.text')}</p>
+    <p><a class="button" href={routes.home[lang]}>{tr('404.back')}</a></p>
+  </div>
+</Base>
+
+<style>
+  .nf {
+    text-align: center;
+    padding-top: 4rem;
+  }
+  .r {
+    width: 90px;
+    height: 135px;
+    margin: 0 auto 1rem;
+    color: var(--rust);
+    transform: rotate(160deg);
+  }
+  .lead {
+    color: var(--ink-soft);
+  }
+</style>
