@@ -1,0 +1,644 @@
+---
+import 'leaflet/dist/leaflet.css';
+import Base from '../layouts/Base.astro';
+import SubmitForm from '../components/SubmitForm.astro';
+import { taxa } from '../data/key';
+import { getObservations } from '../lib/content';
+import { routes, formatDate, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
+
+const t = pl
+  ? {
+      title: 'Mapa obserwacji',
+      desc: 'Zweryfikowane obserwacje karaczanów w Polsce – rodzimych gatunków leśnych i tych, które żyją przy człowieku. Zgłoś własne znalezisko ze zdjęciem.',
+      num: 'Mapa · obserwacje',
+      h1a: 'Karaczany',
+      h1b: 'na mapie Polski',
+      lead: 'Punkty to zgłoszenia ze zdjęciami, które zostały sprawdzone i oznaczone. Każde nowe znalezisko – nawet pospolitego karaczana leśnego – pomaga ustalić, gdzie naprawdę występują poszczególne gatunki.',
+      filter: 'Gatunek',
+      all: 'Wszystkie gatunki',
+      shown: 'widocznych punktów',
+      of: 'z',
+      emptyH: 'Pierwsze zweryfikowane zgłoszenia pojawią się tutaj',
+      emptyP: 'Mapa dopiero czeka na punkty. Znalazłeś karaczana w lesie, na łące albo w budynku? Wyślij zdjęcie – po weryfikacji trafi tutaj.',
+      emptyBtn: 'Zgłoś obserwację',
+      wheel: 'Kliknij mapę, by przybliżać kółkiem myszy',
+      observer: 'obserwator',
+      profile: 'profil hodowlany →',
+      howNum: 'Jak to działa',
+      howH1: 'Od zdjęcia',
+      howH2: 'do punktu na mapie',
+      steps: [
+        ['Zgłaszasz', 'Wysyłasz zdjęcia, miejsce i datę przez formularz poniżej albo mailem.'],
+        ['Weryfikacja', 'Zdjęcia są oglądane i porównywane z cechami gatunków; czasem potrzebne jest dodatkowe pytanie.'],
+        ['Punkt na mapie', 'Potwierdzona obserwacja – za Twoją zgodą – pojawia się na mapie z dokładnością do okolicy.'],
+        ['Lepszy klucz', 'Zebrane dane pomagają poprawiać klucz: rozmieszczenie, siedliska i cechy gatunków w Polsce.'],
+      ],
+      formNum: 'Zgłoszenie',
+      formH1: 'Zgłoś',
+      formH2: 'obserwację',
+      formP: 'Najważniejsze są ostre zdjęcia i miejsce. Jeśli nie wiesz, co to za gatunek – wybierz „nie wiem” albo najpierw sprawdź w kluczu.',
+      keyLink: 'Klucz do oznaczania',
+      unknown: 'gatunek nieoznaczony',
+    }
+  : {
+      title: 'Observation map',
+      desc: 'Verified records of cockroaches in Poland – native woodland species and those living alongside people. Report your own find with a photo.',
+      num: 'Map · records',
+      h1a: 'Cockroaches',
+      h1b: 'on the map of Poland',
+      lead: 'Each point is a photo-backed record that has been checked and identified. Every new find – even a common wood cockroach in a forest – helps establish where each species really occurs.',
+      filter: 'Species',
+      all: 'All species',
+      shown: 'points shown',
+      of: 'of',
+      emptyH: 'The first verified records will appear here',
+      emptyP: 'The map is still waiting for its first points. Found a cockroach in a forest, a meadow or a building? Send a photo – once verified, it will show up here.',
+      emptyBtn: 'Report a sighting',
+      wheel: 'Click the map to zoom with the mouse wheel',
+      observer: 'observer',
+      profile: 'care sheet →',
+      howNum: 'How it works',
+      howH1: 'From a photo',
+      howH2: 'to a point on the map',
+      steps: [
+        ['You report', 'Send photos, the place and date using the form below or by e-mail.'],
+        ['Verification', 'The photos are examined and compared with species features; sometimes a follow-up question is needed.'],
+        ['A point on the map', 'A confirmed record – with your consent – appears on the map, accurate to the general area.'],
+        ['A better key', 'The data helps improve the key: distribution, habitats and features of species in Poland.'],
+      ],
+      formNum: 'Report',
+      formH1: 'Report a',
+      formH2: 'sighting',
+      formP: 'Sharp photos and the location matter most. If you don’t know the species, choose “I don’t know” – or check the key first.',
+      keyLink: 'Identification key',
+      unknown: 'unidentified species',
+    };
+
+const obs = await getObservations();
+const byId = new Map(taxa.map((x) => [x.id, x]));
+const points = obs.map((o) => {
+  const tx = byId.get(o.data.species);
+  return {
+    species: o.data.species,
+    latin: tx?.latin ?? o.data.species,
+    name: tx?.name?.[lang] || '',
+    profile: tx?.profile ? `${routes.species[lang]}${tx.profile}/` : '',
+    lat: o.data.lat,
+    lng: o.data.lng,
+    place: o.data.place,
+    date: formatDate(o.data.date, lang),
+    observer: o.data.observer ?? '',
+    note: o.data.note ?? '',
+    photo: o.data.photo ?? '',
+  };
+});
+const counts = new Map<string, number>();
+for (const p of points) counts.set(p.species, (counts.get(p.species) ?? 0) + 1);
+const filterOptions = [...taxa].sort((a, b) => a.latin.localeCompare(b.latin));
+const extraIds = [...counts.keys()].filter((k) => !byId.has(k));
+const mapData = { points, i18n: { observer: t.observer, profile: t.profile } };
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.map[other]} active="map">
+  <section class="page mappage">
+    <div class="glowspot" style="width:640px;height:640px;right:-220px;top:20px;background:radial-gradient(circle,rgba(232,165,71,.12),transparent 65%)"></div>
+    <div class="wrap">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.num}</div>
+          <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        </div>
+        <p class="rv" style="--d:.15s" data-glossary>{t.lead}</p>
+      </div>
+
+      <div class="mapbar rv">
+        <label class="mfilter">
+          <span class="lbl">{t.filter}</span>
+          <select id="map-filter" disabled={points.length === 0}>
+            <option value="">{t.all} ({points.length})</option>
+            {
+              filterOptions.map((x) => (
+                <option value={x.id} disabled={!counts.get(x.id)}>
+                  {x.latin}
+                  {x.name?.[lang] ? ` – ${x.name[lang]}` : ''} ({counts.get(x.id) ?? 0})
+                </option>
+              ))
+            }
+            {extraIds.map((id) => <option value={id}>{id} ({counts.get(id)})</option>)}
+          </select>
+        </label>
+        <div class="tally" aria-live="polite">
+          <b id="map-count">{points.length}</b> {t.of} {points.length} <span>{t.shown}</span>
+        </div>
+      </div>
+
+      <div class="mapframe rv" style="--d:.1s">
+        <div class="map" id="obs-map" role="region" aria-label={t.title}></div>
+        <div class="wheel" id="map-wheel" aria-hidden="true">{t.wheel}</div>
+        {
+          points.length === 0 && (
+            <div class="mempty">
+              <div class="mempty-in">
+                <span class="beacon" aria-hidden="true" />
+                <h2>{t.emptyH}</h2>
+                <p>{t.emptyP}</p>
+                <a class="btn" href="#zglos">
+                  {t.emptyBtn} <span class="arr">↓</span>
+                </a>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="scene how">
+    <div class="glowspot" style="width:600px;height:600px;left:-220px;top:60px;background:radial-gradient(circle,rgba(125,154,87,.14),transparent 65%)"></div>
+    <div class="wrap nopad">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.howNum}</div>
+          <h2 class="h-display">{t.howH1} <em>{t.howH2}</em></h2>
+        </div>
+      </div>
+      <ol class="steps">
+        {
+          t.steps.map(([h, p], i) => (
+            <li class="rv" style={`--d:${i * 0.1}s`}>
+              <span class="sn">{['I', 'II', 'III', 'IV'][i]}</span>
+              <h3>{h}</h3>
+              <p>{p}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="scene formscene" id="zglos">
+    <div class="glowspot" style="width:700px;height:700px;right:-260px;top:120px;background:radial-gradient(circle,rgba(232,140,50,.12),transparent 62%)"></div>
+    <div class="wrap nopad formgrid">
+      <div class="formhead rv">
+        <div class="num">{t.formNum}</div>
+        <h2 class="h-display">{t.formH1} <em>{t.formH2}</em></h2>
+        <p>{t.formP}</p>
+        <a class="link" href={routes.key[lang]}>{t.keyLink} →</a>
+      </div>
+      <div class="rv" style="--d:.1s">
+        <SubmitForm lang={lang} mode="observation" />
+      </div>
+    </div>
+  </section>
+
+  <script type="application/json" id="map-data" set:html={JSON.stringify(mapData)} />
+</Base>
+
+<script>
+  import L from 'leaflet';
+
+  type Pt = {
+    species: string;
+    latin: string;
+    name: string;
+    profile: string;
+    lat: number;
+    lng: number;
+    place: string;
+    date: string;
+    observer: string;
+    note: string;
+    photo: string;
+  };
+  const raw = document.getElementById('map-data')?.textContent;
+  const box = document.getElementById('obs-map');
+  if (raw && box) {
+    const data = JSON.parse(raw) as { points: Pt[]; i18n: { observer: string; profile: string } };
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+
+    const map = L.map(box, { scrollWheelZoom: false, minZoom: 4, zoomSnap: 0.25 });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+    }).addTo(map);
+    const poland = L.latLngBounds([49.0, 14.1], [54.85, 24.15]);
+    map.fitBounds(poland);
+
+    // kółko myszy nie przechwytuje przewijania strony – dopiero po kliknięciu / fokusie
+    const wheel = document.getElementById('map-wheel');
+    let hintT = 0;
+    box.addEventListener(
+      'wheel',
+      () => {
+        if (map.scrollWheelZoom.enabled() || !wheel) return;
+        wheel.classList.add('on');
+        clearTimeout(hintT);
+        hintT = window.setTimeout(() => wheel.classList.remove('on'), 1400);
+      },
+      { passive: true },
+    );
+    map.on('click focus', () => {
+      map.scrollWheelZoom.enable();
+      wheel?.classList.remove('on');
+    });
+    map.on('mouseout blur', () => map.scrollWheelZoom.disable());
+
+    const icon = L.divIcon({ className: 'obs-marker', html: '<span class="halo"></span><span class="dot"></span>', iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12] });
+    const layer = L.layerGroup().addTo(map);
+    const popup = (p: Pt) => {
+      const sp = `<span class="pp-latin">${esc(p.latin)}</span>${p.name ? `<span class="pp-name">${esc(p.name)}</span>` : ''}`;
+      return (
+        `<div class="pp">` +
+        (p.photo ? `<img src="${esc(p.photo)}" alt="${esc(p.latin)}" loading="lazy">` : '') +
+        `<div class="pp-b">` +
+        (p.profile ? `<a class="pp-sp" href="${esc(p.profile)}">${sp}</a>` : `<div class="pp-sp">${sp}</div>`) +
+        `<div class="pp-meta">${esc(p.place)} · ${esc(p.date)}</div>` +
+        (p.observer ? `<div class="pp-obs">${esc(data.i18n.observer)}: ${esc(p.observer)}</div>` : '') +
+        (p.note ? `<p>${esc(p.note)}</p>` : '') +
+        (p.profile ? `<a class="pp-prof" href="${esc(p.profile)}">${esc(data.i18n.profile)}</a>` : '') +
+        `</div></div>`
+      );
+    };
+    const count = document.getElementById('map-count');
+    const draw = (species: string) => {
+      layer.clearLayers();
+      const shown = data.points.filter((p) => !species || p.species === species);
+      shown.forEach((p) => L.marker([p.lat, p.lng], { icon, title: `${p.latin} – ${p.place}` }).bindPopup(popup(p), { maxWidth: 260, className: 'obs-popup' }).addTo(layer));
+      if (count) count.textContent = String(shown.length);
+      if (shown.length && species) {
+        const b = L.latLngBounds(shown.map((p) => [p.lat, p.lng] as [number, number]));
+        map.flyToBounds(b.pad(0.4), { maxZoom: 9, duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.8 });
+      } else if (!species) map.fitBounds(poland);
+    };
+    draw('');
+    document.getElementById('map-filter')?.addEventListener('change', (e) => draw((e.target as HTMLSelectElement).value));
+    if ('ResizeObserver' in window) new ResizeObserver(() => map.invalidateSize()).observe(box);
+  }
+</script>
+
+<style>
+  .mappage {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    padding-bottom: clamp(30px, 5vw, 60px);
+  }
+  .nopad {
+    padding: 0;
+  }
+  .mapbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px 24px;
+    margin-bottom: 14px;
+  }
+  .mfilter {
+    display: grid;
+    gap: 6px;
+    width: min(420px, 100%);
+  }
+  .mfilter select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .tally {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--muted);
+  }
+  .tally b {
+    font-weight: 300;
+    color: var(--amber2);
+    font-size: 34px;
+    margin-right: 2px;
+  }
+  .tally span {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-left: 6px;
+  }
+
+  .mapframe {
+    position: relative;
+    border: 1px solid var(--line2);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px -50px rgba(232, 165, 71, 0.35);
+  }
+  .mapframe::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 401;
+    background: radial-gradient(120% 100% at 50% 45%, transparent 55%, rgba(11, 18, 13, 0.75) 100%);
+  }
+  .map {
+    height: min(72vh, 720px);
+    min-height: 420px;
+    background: #0d1510;
+  }
+  .wheel {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translate(-50%, 8px);
+    z-index: 600;
+    padding: 9px 16px;
+    font-size: 13px;
+    border: 1px solid var(--line2);
+    background: rgba(11, 18, 13, 0.85);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.3s,
+      transform 0.3s;
+    white-space: nowrap;
+  }
+  .wheel.on {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .mempty {
+    position: absolute;
+    inset: 0;
+    z-index: 500;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    pointer-events: none;
+    background: radial-gradient(60% 60% at 50% 50%, rgba(11, 18, 13, 0.55), transparent 80%);
+  }
+  .mempty-in {
+    pointer-events: auto;
+    max-width: 460px;
+    text-align: center;
+    padding: clamp(24px, 3.4vw, 40px);
+    border: 1px solid rgba(232, 165, 71, 0.35);
+    background: rgba(12, 20, 14, 0.78);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .mempty h2 {
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 300;
+    font-style: italic;
+  }
+  .mempty p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .beacon {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 18px var(--amber);
+    margin-bottom: 6px;
+  }
+  .beacon::before,
+  .beacon::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    border: 1px solid rgba(232, 165, 71, 0.6);
+    animation: ripple 2.6s ease-out infinite;
+  }
+  .beacon::after {
+    animation-delay: 1.3s;
+  }
+  @keyframes ripple {
+    from {
+      transform: scale(0.4);
+      opacity: 1;
+    }
+    to {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+
+  /* znaczniki i dymki */
+  :global(.obs-marker) {
+    position: relative;
+  }
+  :global(.obs-marker .dot) {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--amber2);
+    border: 2px solid var(--amber);
+    box-shadow: 0 0 14px 2px rgba(232, 165, 71, 0.8);
+  }
+  :global(.obs-marker .halo) {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 165, 71, 0.55), transparent 70%);
+    animation: breathe 3.2s ease-in-out infinite;
+  }
+  :global(.obs-popup .leaflet-popup-content-wrapper) {
+    background: rgba(12, 20, 14, 0.96);
+    color: var(--text);
+    border: 1px solid rgba(232, 165, 71, 0.4);
+    border-radius: 4px;
+    box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.8);
+    padding: 0;
+    overflow: hidden;
+  }
+  :global(.obs-popup .leaflet-popup-content) {
+    margin: 0;
+    font: 400 13.5px/1.5 var(--sans);
+    width: 240px !important;
+  }
+  :global(.obs-popup .leaflet-popup-tip) {
+    background: rgba(12, 20, 14, 0.96);
+    border: 1px solid rgba(232, 165, 71, 0.4);
+  }
+  :global(.obs-popup a.leaflet-popup-close-button) {
+    color: var(--amber2);
+  }
+  :global(.pp img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  :global(.pp-b) {
+    padding: 12px 14px 14px;
+    display: grid;
+    gap: 4px;
+  }
+  :global(.pp-sp) {
+    text-decoration: none;
+    color: var(--text);
+  }
+  :global(.pp-latin) {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--amber2);
+  }
+  :global(.pp-name) {
+    display: block;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  :global(.pp-meta),
+  :global(.pp-obs) {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  :global(.pp p) {
+    margin: 4px 0 0 !important;
+    font-size: 13px;
+    color: #cbc7b6;
+  }
+  :global(.leaflet-container a.pp-prof) {
+    color: var(--fern);
+    font-size: 12.5px;
+  }
+
+  /* jak to działa */
+  .how {
+    padding-top: clamp(60px, 9vw, 120px);
+  }
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    counter-reset: s;
+  }
+  .steps li {
+    position: relative;
+    padding: 26px 22px 24px;
+    border: 1px solid var(--line);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 4px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .steps li:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -12px;
+    top: 30px;
+    z-index: 2;
+    color: var(--amber);
+    font-size: 16px;
+  }
+  .sn {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 200;
+    font-size: 54px;
+    line-height: 1;
+    color: var(--amber2);
+    text-shadow: 0 0 30px rgba(232, 165, 71, 0.4);
+  }
+  .steps h3 {
+    font-size: 24px;
+    font-style: italic;
+  }
+  .steps p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* formularz */
+  .formscene {
+    border-top: 1px solid var(--line);
+  }
+  .formgrid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: 40px 60px;
+    align-items: start;
+  }
+  .formhead {
+    position: sticky;
+    top: 110px;
+  }
+  .formhead .h-display {
+    font-size: clamp(40px, 5.4vw, 80px);
+  }
+  .formhead p {
+    color: var(--muted);
+    margin: 22px 0 22px;
+    max-width: 44ch;
+  }
+
+  @media (max-width: 1000px) {
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .steps li:nth-child(2)::after {
+      display: none;
+    }
+    .formgrid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .formhead {
+      position: static;
+    }
+  }
+  @media (max-width: 640px) {
+    .map {
+      height: 60vh;
+      min-height: 340px;
+    }
+    .steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .steps li {
+      min-height: 0;
+    }
+    .steps li::after {
+      display: none;
+    }
+    .mempty {
+      align-items: end;
+    }
+    .mempty-in {
+      gap: 10px;
+    }
+    .mempty p {
+      font-size: 13.5px;
+    }
+  }
+</style>

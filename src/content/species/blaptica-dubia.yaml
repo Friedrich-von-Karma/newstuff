@@ -1,0 +1,39 @@
+# PRZYKŁAD – do podmiany na Twoje dane
+sample: true
+latin: Blaptica dubia
+author: (Serville, 1838)
+commonName:
+  pl: "karaczan argentyński"
+  en: "Argentinian wood cockroach"
+family: Blaberidae
+origin:
+  pl: "Ameryka Południowa (Argentyna, Brazylia, Urugwaj)"
+  en: "South America (Argentina, Brazil, Uruguay)"
+size:
+  pl: "40–45 mm"
+  en: "40–45 mm"
+temperature: 26–30 °C
+humidity:
+  pl: "umiarkowana, 50–60%"
+  en: "moderate, 50–60%"
+substrate:
+  pl: "bez podłoża lub cienka warstwa kory; dużo wytłoczek po jajkach"
+  en: "no substrate or a thin layer of bark; plenty of egg crates"
+food:
+  pl: "warzywa, owoce, sucha karma (płatki owsiane, karma dla ryb)"
+  en: "vegetables, fruit, dry food (oats, fish flakes)"
+reproduction:
+  pl: "jajożyworodny, 20–40 nimf w miocie"
+  en: "ovoviviparous, 20–40 nymphs per litter"
+development:
+  pl: "ok. 4–6 miesięcy w 28 °C"
+  en: "approx. 4–6 months at 28 °C"
+difficulty: 1
+climbs: false
+flies: false
+# Własne zdjęcia: wrzuć do public/images/species/<gatunek>/ i dopisz tutaj, np.
+# gallery:
+#   - src: /images/species/blaptica-dubia/samiec.jpg
+#     alt: { pl: "Samiec", en: "Male" }
+#     caption: { pl: "samiec", en: "male" }
+gallery: []

@@ -1,0 +1,334 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+import { getPosts, postSlug, slugify } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  /** Gdy podany – lista wpisów z tym tagiem. */
+  tag?: string;
+}
+const { lang, tag } = Astro.props;
+const tr = useTranslations(lang);
+const pl = lang === 'pl';
+const other: Lang = pl ? 'en' : 'pl';
+
+const t = pl
+  ? {
+      num: 'Blog · notatki z hodowli i terenu',
+      numTag: 'Blog · wpisy z tagiem',
+      h1a: 'Notatki',
+      h1b: 'z hodowli i terenu',
+      dated: 'wpis z dnia',
+      read: 'Czytaj wpis',
+      earlier: 'Wcześniejsze wpisy',
+      sample: 'To przykładowy wpis – do podmiany na prawdziwy tekst.',
+      empty: 'Nie ma jeszcze żadnych wpisów.',
+      count: (n: number) => `${n} ${n === 1 ? 'wpis' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'wpisy' : 'wpisów'}`,
+    }
+  : {
+      num: 'Blog · notes from the breeding room and the field',
+      numTag: 'Blog · posts tagged',
+      h1a: 'Notes',
+      h1b: 'from the breeding room and the field',
+      dated: 'posted on',
+      read: 'Read the post',
+      earlier: 'Earlier posts',
+      sample: 'This is a sample post – to be replaced with a real one.',
+      empty: 'There are no posts yet.',
+      count: (n: number) => `${n} ${n === 1 ? 'post' : 'posts'}`,
+    };
+
+const all = await getPosts(lang);
+const posts = tag ? all.filter((p) => p.data.tags.some((x) => slugify(x) === tag)) : all;
+const tagName = tag ? all.flatMap((p) => p.data.tags).find((x) => slugify(x) === tag) : undefined;
+const tags = [...new Set(all.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b, lang));
+const title = tagName ? `${tr('blog.tag')} #${tagName}` : tr('blog.title');
+const alt = routes.blog[other];
+
+const [lead, ...rest] = posts;
+const day = (d: Date) => String(d.getDate());
+const monthYear = (d: Date) => formatDate(d, lang).replace(/^\d+\.?\s*/, '');
+const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
+---
+
+<Base lang={lang} title={title} description={tr('blog.lead')} alt={alt} active="blog">
+  <section class="scene blog-scene">
+    <div class="glowspot g1" aria-hidden="true"></div>
+    <div class="glowspot g2" aria-hidden="true"></div>
+    <div class="wrap">
+      <header class="scene-head">
+        <div class="rv">
+          <div class="num">{tag ? t.numTag : t.num}</div>
+          {
+            tagName ? (
+              <h1 class="h-display">
+                <span class="hash">#</span>
+                <em>{tagName}</em>
+              </h1>
+            ) : (
+              <h1 class="h-display">
+                {t.h1a} <em>{t.h1b}</em>
+              </h1>
+            )
+          }
+        </div>
+        <div class="rv side" style="--d:.15s">
+          <p>{tag ? t.count(posts.length) : tr('blog.lead')}</p>
+          {
+            tags.length > 0 && (
+              <nav aria-label={tr('blog.allTags')}>
+                <ul class="tags">
+                  {tags.map((x) => (
+                    <li>
+                      <a href={tagUrl(x)} aria-current={slugify(x) === tag ? 'page' : undefined}>
+                        {x}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )
+          }
+          {
+            tag && (
+              <a class="link" href={routes.blog[lang]}>
+                ← {tr('blog.back')}
+              </a>
+            )
+          }
+        </div>
+      </header>
+
+      {
+        !lead ? (
+          <p class="empty rv">{t.empty}</p>
+        ) : (
+          <article class="post glass rv" style="--d:.2s">
+            <a class="post-date" href={`${routes.blog[lang]}${postSlug(lead)}/`} tabindex="-1" aria-hidden="true">
+              {lead.data.cover && (
+                <span class="pd-img">
+                  <img src={lead.data.cover} alt="" loading="lazy" decoding="async" />
+                </span>
+              )}
+              <span class="pd-top">
+                <span class="lbl">{t.dated}</span>
+                <span class="d">{day(lead.data.date)}</span>
+                <span class="m">{monthYear(lead.data.date)}</span>
+              </span>
+            </a>
+            <div class="post-txt">
+              <time class="lbl" datetime={lead.data.date.toISOString()}>
+                {formatDate(lead.data.date, lang)}
+              </time>
+              <h2>
+                <a href={`${routes.blog[lang]}${postSlug(lead)}/`}>{lead.data.title}</a>
+              </h2>
+              <p class="desc" data-glossary>
+                {lead.data.description}
+              </p>
+              {lead.data.sample && <p class="smp">{t.sample}</p>}
+              {lead.data.tags.length > 0 && (
+                <ul class="tags">
+                  {lead.data.tags.map((x) => (
+                    <li>
+                      <a href={tagUrl(x)}>{x}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <a class="btn ghost" href={`${routes.blog[lang]}${postSlug(lead)}/`}>
+                {t.read} <span class="arr">→</span>
+              </a>
+            </div>
+          </article>
+        )
+      }
+
+      {
+        rest.length > 0 && (
+          <section class="earlier">
+            <div class="num rv">{t.earlier}</div>
+            <PostList posts={rest} lang={lang} />
+          </section>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .blog-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+    min-height: 80vh;
+  }
+  .g1 {
+    width: 56vmax;
+    height: 56vmax;
+    right: -20vmax;
+    top: -16vmax;
+    background: radial-gradient(circle, rgba(255, 170, 70, 0.18), rgba(232, 120, 40, 0.05) 40%, transparent 68%);
+  }
+  .g2 {
+    width: 46vmax;
+    height: 46vmax;
+    left: -18vmax;
+    top: 40%;
+    background: radial-gradient(circle, rgba(125, 154, 87, 0.16), transparent 62%);
+    animation-delay: -3s;
+  }
+  h1 {
+    line-height: 0.95;
+    overflow-wrap: anywhere;
+  }
+  .hash {
+    color: var(--amber);
+    font-weight: 200;
+    margin-right: 0.05em;
+  }
+  .side {
+    display: grid;
+    gap: 22px;
+    justify-items: start;
+  }
+  .side p {
+    color: var(--muted);
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  /* ---------- wyróżniony wpis (jak we wzorcu) ---------- */
+  .post {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    overflow: hidden;
+  }
+  .post-date {
+    position: relative;
+    padding: clamp(28px, 4vw, 56px);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+    overflow: hidden;
+    isolation: isolate;
+    text-decoration: none;
+    min-height: 320px;
+  }
+  .post-date::before {
+    content: '';
+    position: absolute;
+    width: 140%;
+    aspect-ratio: 1;
+    left: -60%;
+    bottom: -70%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(125, 154, 87, 0.28), transparent 60%);
+    z-index: -1;
+    animation: breathe 8s ease-in-out infinite;
+  }
+  .pd-img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+  .pd-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.75) brightness(0.55);
+    transition: transform 1.6s var(--ease);
+  }
+  .post:hover .pd-img img {
+    transform: scale(1.05);
+  }
+  .pd-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 40% 40%, transparent 25%, rgba(11, 18, 13, 0.75) 80%);
+  }
+  .pd-top {
+    display: flex;
+    flex-direction: column;
+  }
+  .d {
+    font-family: var(--serif);
+    font-weight: 200;
+    font-size: clamp(90px, 11vw, 170px);
+    line-height: 0.8;
+    color: var(--fern);
+    margin-top: 10px;
+  }
+  .m {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 26px;
+    margin-top: 10px;
+  }
+  .post-txt {
+    padding: clamp(28px, 4vw, 56px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .post-txt h2 {
+    font-size: clamp(32px, 3.6vw, 52px);
+    font-weight: 300;
+    line-height: 1.05;
+  }
+  .post-txt h2 a {
+    text-decoration: none;
+    background: linear-gradient(var(--amber), var(--amber)) 0 100% / 0 1px no-repeat;
+    transition:
+      background-size 0.6s var(--ease),
+      color 0.3s;
+  }
+  .post-txt h2 a:hover {
+    background-size: 100% 1px;
+    color: var(--amber2);
+  }
+  .desc {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--amber2);
+    margin: 0;
+  }
+  .smp {
+    font-size: 12.5px;
+    color: var(--dim);
+    font-style: italic;
+    margin: 0;
+  }
+  .post-txt .btn {
+    margin-top: auto;
+  }
+
+  .earlier {
+    margin-top: clamp(60px, 8vw, 110px);
+  }
+
+  @media (max-width: 860px) {
+    .post {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .post-date {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+      min-height: 0;
+    }
+    .pd-top {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 6px 16px;
+    }
+    .pd-top .lbl {
+      flex-basis: 100%;
+    }
+  }
+</style>

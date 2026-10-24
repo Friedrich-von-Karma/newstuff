@@ -1,0 +1,382 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+import { getPosts, hasTranslation, postSlug, slugify, type Post } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  post: Post;
+}
+const { lang, post } = Astro.props;
+const tr = useTranslations(lang);
+const pl = lang === 'pl';
+const other: Lang = pl ? 'en' : 'pl';
+const { Content } = await render(post);
+const slug = postSlug(post);
+const translated = await hasTranslation(post, other);
+const alt = translated ? `${routes.blog[other]}${slug}/` : routes.blog[other];
+const d = post.data;
+
+const t = pl
+  ? {
+      dated: 'wpis z dnia',
+      sampleB: 'Wpis przykładowy',
+      sample: 'Do podmiany na prawdziwy tekst.',
+      draft: 'Szkic – niewidoczny na opublikowanej stronie.',
+      newer: 'Nowszy wpis',
+      older: 'Starszy wpis',
+      tags: 'Tagi',
+      draftB: 'Szkic',
+      notr: 'Ten wpis nie ma jeszcze wersji angielskiej.',
+    }
+  : {
+      dated: 'posted on',
+      sampleB: 'Sample post',
+      sample: 'To be replaced with a real text.',
+      draft: 'Draft – not visible on the published site.',
+      newer: 'Newer post',
+      older: 'Older post',
+      tags: 'Tags',
+      draftB: 'Draft',
+      notr: 'This post is not available in Polish yet.',
+    };
+
+const all = await getPosts(lang);
+const i = all.findIndex((p) => p.id === post.id);
+const newer = i > 0 ? all[i - 1] : undefined;
+const older = i >= 0 && i < all.length - 1 ? all[i + 1] : undefined;
+const url = (p: Post) => `${routes.blog[lang]}${postSlug(p)}/`;
+const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
+const monthYear = formatDate(d.date, lang).replace(/^\d+\.?\s*/, '');
+---
+
+<Base lang={lang} title={d.title} description={d.description} alt={alt} active="blog" image={d.cover}>
+  <article class="post">
+    <header class:list={['ph', { 'has-cover': d.cover }]}>
+      {
+        d.cover && (
+          <div class="ph-media" aria-hidden="true">
+            <img src={d.cover} alt="" decoding="async" fetchpriority="high" />
+          </div>
+        )
+      }
+      <div class="glowspot g1" aria-hidden="true"></div>
+      <div class="wrap ph-in">
+        <p class="crumbs rv"><a class="link" href={routes.blog[lang]}>← {tr('blog.back')}</a></p>
+        <div class="ph-grid">
+          <div class="bigdate rv" style="--d:.1s">
+            <span class="lbl">{t.dated}</span>
+            <time datetime={d.date.toISOString()}>
+              <span class="dd">{d.date.getDate()}</span>
+              <span class="my">{monthYear}</span>
+            </time>
+          </div>
+          <div class="ph-title">
+            <h1 class="h-display rv" style="--d:.2s">{d.title}</h1>
+            <p class="desc rv" style="--d:.3s">{d.description}</p>
+            {
+              d.tags.length > 0 && (
+                <ul class="tags rv" style="--d:.35s" aria-label={t.tags}>
+                  {d.tags.map((x) => (
+                    <li>
+                      <a href={tagUrl(x)}>{x}</a>
+                    </li>
+                  ))}
+                </ul>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap body">
+      {
+        d.cover && d.coverAlt && (
+          <p class="cover-alt credit">{d.coverAlt}</p>
+        )
+      }
+      {
+        (d.sample || d.draft) && (
+          <p class="draft">
+            <b>{d.draft ? t.draftB : t.sampleB}</b> {d.draft ? t.draft : t.sample}
+          </p>
+        )
+      }
+      {!translated && <p class="notr muted">{t.notr}</p>}
+      <div class="prose rv" data-glossary>
+        <Content />
+      </div>
+
+      <footer class="post-foot">
+        {
+          d.tags.length > 0 && (
+            <ul class="tags">
+              {d.tags.map((x) => (
+                <li>
+                  <a href={tagUrl(x)}>{x}</a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        {(older || newer) && <nav class="pager" aria-label="Blog">
+          {
+            older ? (
+              <a class="pg older" href={url(older)}>
+                <span class="lbl">← {t.older}</span>
+                <span class="pg-t">{older.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            newer ? (
+              <a class="pg newer" href={url(newer)}>
+                <span class="lbl">{t.newer} →</span>
+                <span class="pg-t">{newer.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+        </nav>}
+        <p class="back"><a class="btn quiet" href={routes.blog[lang]}>← {tr('blog.back')}</a></p>
+      </footer>
+    </div>
+  </article>
+</Base>
+
+<style>
+  /* ---------- nagłówek wpisu ---------- */
+  .ph {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(120px, 14vw, 170px) 0 clamp(50px, 7vw, 90px);
+    border-bottom: 1px solid var(--line);
+  }
+  .ph.has-cover {
+    min-height: min(86vh, 820px);
+    display: flex;
+    align-items: flex-end;
+  }
+  .ph-media {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+  }
+  .ph-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.8) contrast(1.05) brightness(0.55);
+    transform: scale(1.04);
+  }
+  .ph.has-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(120% 90% at 60% 40%, transparent 30%, rgba(11, 18, 13, 0.7) 70%, var(--bg) 100%),
+      linear-gradient(180deg, rgba(11, 18, 13, 0.6) 0%, transparent 25%, transparent 50%, var(--bg) 100%);
+  }
+  .g1 {
+    width: 64vmax;
+    height: 64vmax;
+    right: -16vmax;
+    top: -30vmax;
+    background: radial-gradient(circle, rgba(255, 170, 70, 0.22), rgba(232, 120, 40, 0.07) 40%, transparent 68%);
+    mix-blend-mode: screen;
+  }
+  .ph-in {
+    width: 100%;
+  }
+  .crumbs {
+    margin-bottom: clamp(30px, 5vw, 60px);
+  }
+  .ph-grid {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 80px);
+    align-items: end;
+  }
+  .bigdate {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: clamp(20px, 3vw, 50px);
+    border-right: 1px solid var(--line2);
+  }
+  .bigdate time {
+    display: flex;
+    flex-direction: column;
+  }
+  .dd {
+    font-family: var(--serif);
+    font-weight: 200;
+    font-size: clamp(100px, 13vw, 190px);
+    line-height: 0.8;
+    color: var(--fern);
+    text-shadow: 0 0 60px rgba(169, 191, 127, 0.25);
+  }
+  .my {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(20px, 2vw, 26px);
+    margin-top: 12px;
+    white-space: nowrap;
+  }
+  .ph-title {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  h1 {
+    font-size: clamp(38px, 5.6vw, 84px);
+    line-height: 1;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+  .desc {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(18px, 1.6vw, 22px);
+    color: var(--amber2);
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  /* ---------- treść ---------- */
+  .body {
+    max-width: calc(760px + 2 * var(--gut));
+    padding-top: clamp(40px, 6vw, 80px);
+    padding-bottom: clamp(70px, 10vw, 130px);
+  }
+  .body > * {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cover-alt {
+    margin-top: -20px;
+    margin-bottom: 24px;
+  }
+  .draft {
+    display: flex;
+    margin: 0 auto 30px;
+    width: fit-content;
+  }
+  .notr {
+    font-size: 13px;
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+  .prose {
+    font-size: 18px;
+  }
+  .prose :global(> p:first-of-type::first-letter) {
+    float: left;
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 4.6em;
+    line-height: 0.82;
+    padding: 0.08em 0.12em 0 0;
+    color: var(--amber2);
+    text-shadow: 0 0 40px rgba(232, 165, 71, 0.4);
+  }
+  .prose :global(> p:first-child:has(> em:only-child)) {
+    font-size: 13px;
+    color: var(--dim);
+  }
+  .prose :global(> p:first-child:has(> em:only-child)::first-letter) {
+    all: unset;
+  }
+  .prose :global(img),
+  .prose :global(video) {
+    width: 100%;
+    height: auto;
+    margin: 1.6em 0;
+  }
+
+  .post-foot {
+    margin-top: clamp(50px, 7vw, 90px);
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 34px;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
+  }
+  .pg {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 22px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--glass);
+    text-decoration: none;
+    transition:
+      border-color 0.4s,
+      transform 0.5s var(--ease);
+  }
+  .pg:hover {
+    border-color: rgba(232, 165, 71, 0.45);
+    transform: translateY(-3px);
+  }
+  .pg.newer {
+    text-align: right;
+    grid-column: 2;
+  }
+  .pg-t {
+    font-family: var(--serif);
+    font-size: 21px;
+    line-height: 1.2;
+  }
+  .pg:hover .pg-t {
+    color: var(--amber2);
+  }
+  .back {
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .ph-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 26px;
+    }
+    .bigdate {
+      border-right: 0;
+      padding-right: 0;
+    }
+    .bigdate time {
+      flex-direction: row;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+    }
+    .dd {
+      font-size: 96px;
+    }
+    .my {
+      white-space: normal;
+    }
+    .pager {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .pg.newer {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .prose {
+      font-size: 17px;
+    }
+  }
+</style>

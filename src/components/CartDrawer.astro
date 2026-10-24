@@ -1,0 +1,428 @@
+---
+/** Wysuwany koszyk – składa jedno zamówienie e-mailem z listą paczek i sumą. */
+import { site } from '../data/site';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const pl = lang === 'pl';
+const t = pl
+  ? {
+      title: 'Koszyk',
+      empty: 'Koszyk jest pusty. Wybierz wariant w cenniku i kliknij „Do koszyka”.',
+      pack: 'paczka 10 szt.',
+      packs: 'paczek',
+      total: 'Razem',
+      note: 'Koszt wysyłki dopiszę w odpowiedzi – zależy od pogody i miejscowości.',
+      name: 'Imię i nazwisko',
+      town: 'Miejscowość',
+      delivery: 'Odbiór',
+      courier: 'kurier',
+      pickup: 'odbiór osobisty',
+      extra: 'Uwagi (opcjonalnie)',
+      send: 'Wyślij zamówienie e-mailem',
+      copy: 'Kopiuj treść zamówienia',
+      copied: 'Skopiowano – wklej w wiadomość do mnie.',
+      clear: 'Wyczyść koszyk',
+      close: 'Zamknij koszyk',
+      remove: 'Usuń',
+      subject: 'Zamówienie z koszyka',
+      greet: 'Dzień dobry,\nchciałbym/chciałabym zamówić:',
+      sum: 'Suma (bez wysyłki)',
+      sign: 'Pozdrawiam',
+      how: 'Kliknięcie otworzy Twój program pocztowy z gotową wiadomością do',
+    }
+  : {
+      title: 'Cart',
+      empty: 'Your cart is empty. Pick an option in the price list and click “Add to cart”.',
+      pack: 'pack of 10',
+      packs: 'packs',
+      total: 'Total',
+      note: 'I will add the shipping cost in my reply – it depends on the weather and your location.',
+      name: 'Name',
+      town: 'Town / city',
+      delivery: 'Delivery',
+      courier: 'courier',
+      pickup: 'local pickup',
+      extra: 'Notes (optional)',
+      send: 'Send order by e-mail',
+      copy: 'Copy order text',
+      copied: 'Copied – paste it into a message to me.',
+      clear: 'Empty cart',
+      close: 'Close cart',
+      remove: 'Remove',
+      subject: 'Order from the cart',
+      greet: 'Hello,\nI would like to order:',
+      sum: 'Total (excl. shipping)',
+      sign: 'Best regards',
+      how: 'Clicking opens your e-mail app with a ready message to',
+    };
+---
+
+<div class="cart-scrim" data-cart-scrim hidden></div>
+<aside class="cart" data-cart aria-label={t.title} aria-hidden="true" data-email={site.contact.email} data-lang={lang} data-t={JSON.stringify(t)}>
+  <header class="cart-h">
+    <h2>{t.title} <span class="cnt" data-cart-count>0</span></h2>
+    <button type="button" class="x" data-cart-close aria-label={t.close}>×</button>
+  </header>
+  <p class="empty-msg" data-cart-empty>{t.empty}</p>
+  <ul class="lines" data-cart-lines></ul>
+  <div class="foot" data-cart-foot hidden>
+    <p class="total"><span>{t.total}</span><b data-cart-total>0 zł</b></p>
+    <p class="note">{t.note}</p>
+    <div class="form">
+      <label class="field"><span>{t.name}</span><input type="text" data-cart-name autocomplete="name" /></label>
+      <label class="field"><span>{t.town}</span><input type="text" data-cart-town autocomplete="address-level2" /></label>
+      <fieldset class="field deliv">
+        <span>{t.delivery}</span>
+        <label><input type="radio" name="cart-delivery" value={t.courier} checked /> {t.courier}</label>
+        <label><input type="radio" name="cart-delivery" value={t.pickup} /> {t.pickup}</label>
+      </fieldset>
+      <label class="field"><span>{t.extra}</span><textarea data-cart-extra rows="2"></textarea></label>
+    </div>
+    <a class="btn send" data-cart-send href="#">{t.send} <span class="arr">→</span></a>
+    <p class="how">{t.how} {site.contact.email}</p>
+    <div class="row">
+      <button type="button" class="mini" data-cart-copy>{t.copy}</button>
+      <button type="button" class="mini" data-cart-clear>{t.clear}</button>
+    </div>
+    <p class="copied" data-cart-copied hidden>{t.copied}</p>
+  </div>
+</aside>
+
+<script>
+  import { cart } from '../scripts/cart';
+
+  const root = document.querySelector<HTMLElement>('[data-cart]');
+  const scrim = document.querySelector<HTMLElement>('[data-cart-scrim]');
+  if (root && scrim) {
+    const t = JSON.parse(root.dataset.t || '{}');
+    const lang = root.dataset.lang === 'en' ? 'en-GB' : 'pl-PL';
+    const email = root.dataset.email || '';
+    const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const list = $<HTMLUListElement>('[data-cart-lines]');
+    const money = (n: number) =>
+      new Intl.NumberFormat(lang, { style: 'currency', currency: 'PLN', minimumFractionDigits: Number.isInteger(n) ? 0 : 2 }).format(n);
+    let lastFocus: Element | null = null;
+
+    const open = () => {
+      lastFocus = document.activeElement;
+      root.classList.add('open');
+      root.setAttribute('aria-hidden', 'false');
+      scrim.hidden = false;
+      requestAnimationFrame(() => scrim.classList.add('on'));
+      $<HTMLButtonElement>('[data-cart-close]').focus();
+    };
+    const close = () => {
+      root.classList.remove('open');
+      root.setAttribute('aria-hidden', 'true');
+      scrim.classList.remove('on');
+      setTimeout(() => (scrim.hidden = true), 350);
+      if (lastFocus instanceof HTMLElement) lastFocus.focus();
+    };
+
+    const body = () => {
+      const lines = cart.lines();
+      const delivery = root.querySelector<HTMLInputElement>('input[name="cart-delivery"]:checked')?.value ?? '';
+      const name = $<HTMLInputElement>('[data-cart-name]').value.trim();
+      const town = $<HTMLInputElement>('[data-cart-town]').value.trim();
+      const extra = $<HTMLTextAreaElement>('[data-cart-extra]').value.trim();
+      const rows = lines.map((l) => `• ${l.latin} – ${l.kindLabel}: ${l.qty} × ${t.pack} = ${money(l.qty * l.price)}`);
+      return [
+        t.greet,
+        '',
+        ...rows,
+        '',
+        `${t.sum}: ${money(cart.total())}`,
+        '',
+        `${t.name}: ${name}`,
+        `${t.town}: ${town}`,
+        `${t.delivery}: ${delivery}`,
+        extra ? `\n${extra}` : '',
+        '',
+        t.sign,
+      ].join('\n');
+    };
+
+    const render = () => {
+      const lines = cart.lines();
+      const n = cart.count();
+      document.querySelectorAll<HTMLElement>('[data-cart-badge]').forEach((b) => {
+        b.textContent = String(n);
+        b.hidden = n === 0;
+        b.classList.remove('bump');
+        void b.offsetWidth;
+        if (n) b.classList.add('bump');
+      });
+      $('[data-cart-count]').textContent = String(n);
+      $('[data-cart-empty]').hidden = lines.length > 0;
+      $('[data-cart-foot]').hidden = lines.length === 0;
+      $('[data-cart-total]').textContent = money(cart.total());
+      list.innerHTML = '';
+      for (const l of lines) {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div class="ln-name"><i></i><small></small></div>
+          <div class="qty">
+            <button type="button" data-d="-1" aria-label="−">−</button>
+            <output></output>
+            <button type="button" data-d="1" aria-label="+">+</button>
+          </div>
+          <b class="ln-sum"></b>
+          <button type="button" class="rm"></button>`;
+        li.querySelector('i')!.textContent = l.latin;
+        li.querySelector('small')!.textContent = `${l.kindLabel} · ${money(l.price)} / ${t.pack}`;
+        li.querySelector('output')!.textContent = String(l.qty);
+        li.querySelector('.ln-sum')!.textContent = money(l.qty * l.price);
+        const rm = li.querySelector<HTMLButtonElement>('.rm')!;
+        rm.textContent = t.remove;
+        rm.addEventListener('click', () => cart.remove(l.id, l.kind));
+        li.querySelectorAll<HTMLButtonElement>('.qty button').forEach((b) =>
+          b.addEventListener('click', () => cart.setQty(l.id, l.kind, l.qty + Number(b.dataset.d))),
+        );
+        list.appendChild(li);
+      }
+    };
+
+    $('[data-cart-send]').addEventListener('click', (e) => {
+      e.preventDefault();
+      const subject = `${t.subject} – ${cart.count()} × 10 szt.`;
+      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body())}`;
+    });
+    $('[data-cart-copy]').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(body());
+        const c = $('[data-cart-copied]');
+        c.hidden = false;
+        setTimeout(() => (c.hidden = true), 3000);
+      } catch {
+        /* brak dostępu do schowka */
+      }
+    });
+    $('[data-cart-clear]').addEventListener('click', () => cart.clear());
+    $('[data-cart-close]').addEventListener('click', close);
+    scrim.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && root.classList.contains('open')) close();
+    });
+    window.addEventListener('cart:open', open);
+    document.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest('[data-open-cart]');
+      if (b) {
+        e.preventDefault();
+        open();
+      }
+    });
+    cart.onChange(render);
+    render();
+  }
+</script>
+
+<style>
+  .cart-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 84;
+    background: rgba(5, 9, 6, 0.6);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .cart-scrim.on {
+    opacity: 1;
+  }
+  .cart {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 85;
+    width: min(440px, 100vw);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px clamp(16px, 3vw, 28px) 26px;
+    background: linear-gradient(180deg, rgba(20, 33, 23, 0.98), rgba(11, 18, 13, 0.98));
+    border-left: 1px solid rgba(232, 165, 71, 0.35);
+    box-shadow: -30px 0 80px -30px rgba(0, 0, 0, 0.9);
+    transform: translateX(105%);
+    transition: transform 0.55s var(--ease);
+    overflow-y: auto;
+  }
+  .cart.open {
+    transform: none;
+  }
+  .cart-h {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+  }
+  .cart-h h2 {
+    font-size: 34px;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .cnt {
+    font-family: var(--sans);
+    font-style: normal;
+    font-size: 13px;
+    color: #1a1208;
+    background: var(--amber);
+    border-radius: 999px;
+    padding: 2px 9px;
+    vertical-align: middle;
+  }
+  .x {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--line2);
+    background: none;
+    font-size: 22px;
+    cursor: pointer;
+  }
+  .x:hover {
+    border-color: var(--amber);
+    color: var(--amber2);
+  }
+  .empty-msg {
+    color: var(--muted);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+  }
+  .lines {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .lines :global(li) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 6px 14px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .lines :global(.ln-name i) {
+    display: block;
+    font-family: var(--serif);
+    font-size: 19px;
+  }
+  .lines :global(.ln-name small) {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .lines :global(.qty) {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line2);
+    border-radius: 2px;
+  }
+  .lines :global(.qty button) {
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--amber2);
+    font-size: 16px;
+  }
+  .lines :global(.qty output) {
+    min-width: 24px;
+    text-align: center;
+    font-family: var(--serif);
+  }
+  .lines :global(.ln-sum) {
+    font-family: var(--serif);
+    font-weight: 400;
+    color: var(--amber2);
+    font-size: 18px;
+    min-width: 64px;
+    text-align: right;
+  }
+  .lines :global(.rm) {
+    grid-column: 1 / -1;
+    justify-self: start;
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--dim);
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .lines :global(.rm:hover) {
+    color: var(--c-out);
+  }
+  .total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .total b {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 42px;
+    letter-spacing: 0;
+    color: var(--amber2);
+    text-shadow: 0 0 30px rgba(232, 165, 71, 0.35);
+  }
+  .note,
+  .how {
+    font-size: 12.5px;
+    color: var(--dim);
+    margin: 0;
+  }
+  .form {
+    display: grid;
+    gap: 12px;
+    margin: 6px 0;
+  }
+  .deliv {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .deliv label {
+    margin-right: 16px;
+    font-size: 14px;
+  }
+  .send {
+    width: 100%;
+  }
+  .row {
+    display: flex;
+    gap: 16px;
+  }
+  .mini {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--muted);
+    font-size: 12.5px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .mini:hover {
+    color: var(--amber2);
+  }
+  .copied {
+    color: var(--fern);
+    font-size: 13px;
+    margin: 0;
+  }
+</style>

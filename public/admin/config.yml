@@ -1,0 +1,285 @@
+# Panel do edycji treści Blattodea.pl (Decap CMS) – https://blattodea.pl/admin/
+# Zapis w panelu = commit do repozytorium na GitHubie; Vercel sam przebudowuje stronę (ok. 1 min).
+# Logowanie: GitHub OAuth przez src/pages/api/auth.ts i callback.ts (instrukcja w README.md).
+
+locale: pl
+
+backend:
+  name: github
+  repo: Friedrich-von-Karma/newstuff
+  branch: main
+  base_url: https://blattodea.pl
+  auth_endpoint: api/auth
+  commit_messages:
+    create: 'Panel: dodano {{collection}} „{{slug}}”'
+    update: 'Panel: zmieniono {{collection}} „{{slug}}”'
+    delete: 'Panel: usunięto {{collection}} „{{slug}}”'
+    uploadMedia: 'Panel: wgrano plik {{path}}'
+    deleteMedia: 'Panel: usunięto plik {{path}}'
+
+site_url: https://blattodea.pl
+display_url: https://blattodea.pl
+logo_url: /favicon.svg
+
+# Zdjęcia i filmy wgrywane w panelu trafiają tutaj:
+media_folder: public/images/hodowla
+public_folder: /images/hodowla
+
+# Nazwy plików bez polskich znaków i spacji
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+collections:
+  # ------------------------------------------------------------------ CENNIK
+  - name: cennik
+    label: Cennik
+    description: Paczki po 10 sztuk – ceny w zł dla wariantów nimfy, mix, imago. Wariant, którego nie masz, zostaw pusty.
+    editor: { preview: false }
+    files:
+      - name: pricelist
+        label: Cennik
+        file: src/data/pricelist.yaml
+        fields:
+          - { name: updated, label: Data aktualizacji cennika, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+          - name: items
+            label: Gatunki w cenniku
+            label_singular: gatunek
+            widget: list
+            summary: '{{fields.latin}} – {{fields.status}}'
+            fields:
+              - { name: id, label: Identyfikator (bez spacji i polskich znaków, np. blaptica-dubia), widget: string }
+              - { name: latin, label: Nazwa łacińska, widget: string }
+              - { name: profile, label: Profil hodowlany (nazwa pliku z „Profile gatunków”, bez .yaml), widget: string, required: false }
+              - name: status
+                label: Dostępność
+                widget: select
+                default: available
+                options:
+                  - { label: Dostępne, value: available }
+                  - { label: Mało, value: low }
+                  - { label: Brak, value: out }
+                  - { label: Wkrótce, value: soon }
+              - name: note
+                label: Uwaga (opcjonalnie)
+                widget: object
+                required: false
+                collapsed: true
+                fields:
+                  - { name: pl, label: Po polsku, widget: string, required: false }
+                  - { name: en, label: Po angielsku, widget: string, required: false }
+              - name: packs
+                label: Ceny za paczkę 10 szt. (zł)
+                widget: object
+                fields:
+                  - { name: nymph, label: Nimfy, widget: number, value_type: float, min: 0, required: false }
+                  - { name: mix, label: Mix (nimfy + imago), widget: number, value_type: float, min: 0, required: false }
+                  - { name: adult, label: Imago, widget: number, value_type: float, min: 0, required: false }
+              - { name: sample, label: Dane przykładowe (odznacz, gdy prawdziwe), widget: boolean, default: false, required: false }
+
+  # ------------------------------------------------------- PROFILE GATUNKÓW
+  - name: species
+    label: Profile gatunków
+    label_singular: profil gatunku
+    description: Nazwa pliku = adres strony (np. blaptica-dubia → /gatunki/blaptica-dubia/).
+    folder: src/content/species
+    extension: yaml
+    format: yml
+    create: true
+    identifier_field: latin
+    slug: '{{slug}}'
+    summary: '{{latin}}'
+    media_folder: /public/images/species
+    public_folder: /images/species
+    editor: { preview: false }
+    fields:
+      - { name: latin, label: Nazwa łacińska, widget: string }
+      - { name: author, label: Autor i rok opisu, hint: 'np. (Serville, 1838)', widget: string, required: false }
+      - name: commonName
+        label: Nazwa zwyczajowa
+        widget: object
+        required: false
+        fields:
+          - { name: pl, label: Po polsku, widget: string, required: false }
+          - { name: en, label: Po angielsku, widget: string, required: false }
+      - { name: family, label: Rodzina, widget: string }
+      - name: origin
+        label: Pochodzenie
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - name: size
+        label: Wielkość
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - { name: temperature, label: Temperatura, hint: 'np. 26–30 °C', widget: string }
+      - name: humidity
+        label: Wilgotność
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - name: substrate
+        label: Podłoże
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - name: food
+        label: Pokarm
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - name: reproduction
+        label: Rozmnażanie
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - name: development
+        label: Rozwój
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - { name: difficulty, label: 'Trudność hodowli (1 – łatwa, 2 – średnia, 3 – trudna)', widget: number, value_type: int, min: 1, max: 3, default: 1 }
+      - { name: climbs, label: Wspina się po gładkich ściankach, widget: boolean, default: false }
+      - { name: flies, label: Lata, widget: boolean, default: false }
+      - name: gallery
+        label: Własne zdjęcia
+        label_singular: zdjęcie
+        widget: list
+        required: false
+        summary: '{{fields.src}}'
+        fields:
+          - { name: src, label: Zdjęcie, widget: image }
+          - name: alt
+            label: Opis zdjęcia (dla niewidomych i wyszukiwarek)
+            widget: object
+            fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+          - name: caption
+            label: Podpis (opcjonalnie)
+            widget: object
+            required: false
+            fields: [{ name: pl, label: Po polsku, widget: string, required: false }, { name: en, label: Po angielsku, widget: string, required: false }]
+      - { name: sample, label: Dane przykładowe (odznacz, gdy prawdziwe), widget: boolean, default: false, required: false }
+
+  # ----------------------------------------------------- OPISY GATUNKÓW
+  - name: species-notes-pl
+    label: Opisy gatunków (PL)
+    label_singular: opis gatunku (PL)
+    description: Opis własnymi słowami pod profilem. Nazwa pliku musi być taka sama jak w „Profile gatunków” (np. blaptica-dubia).
+    folder: src/content/species-notes/pl
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{fields.file}}'
+    identifier_field: file
+    fields:
+      - { name: file, label: Gatunek (nazwa pliku profilu, np. blaptica-dubia), widget: string }
+      - { name: body, label: Opis, widget: markdown }
+  - name: species-notes-en
+    label: Opisy gatunków (EN)
+    label_singular: opis gatunku (EN)
+    description: Angielska wersja opisu. Nazwa pliku taka sama jak w „Profile gatunków”.
+    folder: src/content/species-notes/en
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{fields.file}}'
+    identifier_field: file
+    fields:
+      - { name: file, label: Gatunek (nazwa pliku profilu, np. blaptica-dubia), widget: string }
+      - { name: body, label: Opis (po angielsku), widget: markdown }
+
+  # ----------------------------------------------------------------- BLOG
+  - name: blog-pl
+    label: Blog (PL)
+    label_singular: wpis
+    description: Tłumaczenie angielskie = wpis w „Blog (EN)” o tej samej nazwie pliku.
+    folder: src/content/blog/pl
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{slug}}'
+    summary: '{{title}} · {{date}}'
+    sortable_fields: [date, title]
+    media_folder: /public/images/blog
+    public_folder: /images/blog
+    fields: &blogfields
+      - { name: title, label: Tytuł, widget: string }
+      - { name: description, label: Krótki opis (na liście wpisów i w wyszukiwarce), widget: text }
+      - { name: date, label: Data, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+      - { name: tags, label: Tagi, hint: 'Oddziel przecinkami, np. hodowla, nowości', widget: list, required: false, default: [] }
+      - { name: cover, label: Zdjęcie okładkowe, widget: image, required: false }
+      - { name: coverAlt, label: Opis zdjęcia okładkowego, widget: string, required: false }
+      - { name: draft, label: Szkic (nie publikuj jeszcze), widget: boolean, default: false, required: false }
+      - { name: sample, label: Wpis przykładowy, widget: boolean, default: false, required: false }
+      - { name: body, label: Treść, widget: markdown }
+  - name: blog-en
+    label: Blog (EN)
+    label_singular: wpis (EN)
+    description: Angielska wersja wpisu – nadaj jej taką samą nazwę pliku jak wersji polskiej.
+    folder: src/content/blog/en
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{slug}}'
+    summary: '{{title}} · {{date}}'
+    sortable_fields: [date, title]
+    media_folder: /public/images/blog
+    public_folder: /images/blog
+    fields: *blogfields
+
+  # -------------------------------------------------------------- GALERIA
+  - name: gallery
+    label: Galeria „Z mojej hodowli”
+    label_singular: zdjęcie lub film
+    description: Jedno zdjęcie albo film na wpis. Pliki trafiają do public/images/hodowla/. Film z YouTube – wpisz tylko identyfikator (to, co jest po „v=” w adresie).
+    folder: src/content/gallery
+    extension: yaml
+    format: yml
+    create: true
+    identifier_field: kind
+    slug: '{{year}}-{{month}}-{{day}}-{{fields.title.pl | lower}}'
+    summary: '{{fields.title.pl}} · {{kind}} · {{date}}'
+    sortable_fields: [date]
+    editor: { preview: false }
+    fields:
+      - name: title
+        label: Tytuł
+        widget: object
+        fields: [{ name: pl, label: Po polsku, widget: string }, { name: en, label: Po angielsku, widget: string }]
+      - name: kind
+        label: Rodzaj
+        widget: select
+        default: photo
+        options: [{ label: Zdjęcie, value: photo }, { label: Film, value: video }]
+      - { name: src, label: Plik zdjęcia lub filmu (.jpg, .webp, .mp4), widget: file, required: false, hint: 'Przy filmie z YouTube zostaw puste.' }
+      - { name: youtube, label: Film z YouTube – identyfikator, hint: 'np. dla youtube.com/watch?v=dQw4w9WgXcQ wpisz dQw4w9WgXcQ', widget: string, required: false }
+      - { name: poster, label: Miniatura filmu (opcjonalnie), widget: image, required: false }
+      - name: caption
+        label: Podpis (opcjonalnie)
+        widget: object
+        required: false
+        fields: [{ name: pl, label: Po polsku, widget: text, required: false }, { name: en, label: Po angielsku, widget: text, required: false }]
+      - { name: species, label: Gatunek (nazwa pliku profilu, np. blaptica-dubia), widget: string, required: false }
+      - { name: date, label: Data, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+      - { name: sample, label: Wpis przykładowy, widget: boolean, default: false, required: false }
+
+  # ---------------------------------------------------- OBSERWACJE NA MAPIE
+  - name: observations
+    label: Obserwacje na mapie
+    description: Tylko zgłoszenia zweryfikowane przez Ciebie. Współrzędne np. z Google Maps (prawy klik na mapie → kliknij liczby).
+    editor: { preview: false }
+    files:
+      - name: observations
+        label: Obserwacje
+        file: src/data/observations.yaml
+        fields:
+          - name: items
+            label: Obserwacje
+            label_singular: obserwacja
+            widget: list
+            required: false
+            summary: '{{fields.species}} – {{fields.place}} ({{fields.date}})'
+            fields:
+              - { name: species, label: Gatunek (id z klucza, np. ectobius-sylvestris), widget: string }
+              - { name: lat, label: Szerokość geograficzna (np. 52.2297), widget: number, value_type: float }
+              - { name: lng, label: Długość geograficzna (np. 21.0122), widget: number, value_type: float }
+              - { name: place, label: Miejsce, widget: string }
+              - { name: date, label: Data, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+              - { name: observer, label: Obserwator (za zgodą), widget: string, required: false }
+              - { name: note, label: Notatka, widget: text, required: false }
+              - { name: photo, label: Zdjęcie, widget: image, required: false, media_folder: /public/images/obserwacje, public_folder: /images/obserwacje }

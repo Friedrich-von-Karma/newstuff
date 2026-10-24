@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
+
+const t = pl
+  ? {
+      title: 'Dziękuję za zgłoszenie',
+      desc: 'Zgłoszenie zostało wysłane.',
+      num: 'Zgłoszenie wysłane',
+      h1a: 'Dziękuję',
+      h1b: 'za zgłoszenie',
+      lead: 'Formularz ze zdjęciami został wysłany i trafi mailem do autora strony.',
+      nextNum: 'Co dalej',
+      steps: [
+        ['Zdjęcia zostaną obejrzane', 'i porównane z cechami gatunków występujących w Polsce.'],
+        ['Odpowiedź przyjdzie mailem', 'na adres podany w formularzu – czasem z dodatkowym pytaniem albo prośbą o kolejne zdjęcie.'],
+        ['Punkt na mapie', 'jeśli to była obserwacja i zgoda na publikację – po weryfikacji pojawi się na mapie obserwacji.'],
+      ],
+      spam: 'Nie widzisz odpowiedzi? Zajrzyj też do folderu ze spamem.',
+      key: 'Klucz do oznaczania',
+      map: 'Mapa obserwacji',
+      home: 'Strona główna',
+      again: 'Wyślij kolejne zgłoszenie',
+    }
+  : {
+      title: 'Thank you for your submission',
+      desc: 'Your submission has been sent.',
+      num: 'Submission sent',
+      h1a: 'Thank you',
+      h1b: 'for your submission',
+      lead: 'The form and your photos have been sent and will reach the site’s author by e-mail.',
+      nextNum: 'What happens next',
+      steps: [
+        ['The photos will be examined', 'and compared with the features of species found in Poland.'],
+        ['You will get a reply by e-mail', 'at the address you gave – sometimes with a follow-up question or a request for another photo.'],
+        ['A point on the map', 'if it was an observation and you agreed to publication – once verified, it will appear on the observation map.'],
+      ],
+      spam: 'No reply yet? Please check your spam folder too.',
+      key: 'Identification key',
+      map: 'Observation map',
+      home: 'Home page',
+      again: 'Send another submission',
+    };
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.thanks[other]} noindex>
+  <section class="page thx">
+    <div class="halo" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="rv">
+        <div class="num">{t.num}</div>
+        <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        <p class="lead">{t.lead}</p>
+      </div>
+
+      <div class="next rv" style="--d:.15s">
+        <div class="lbl">{t.nextNum}</div>
+        <ol>
+          {
+            t.steps.map(([b, s]) => (
+              <li>
+                <b>{b}</b> {s}
+              </li>
+            ))
+          }
+        </ol>
+        <p class="spam">{t.spam}</p>
+      </div>
+
+      <nav class="go rv" style="--d:.3s" aria-label={t.nextNum}>
+        <a href={routes.key[lang]}><small>01</small><b>{t.key}</b></a>
+        <a href={routes.map[lang]}><small>02</small><b>{t.map}</b></a>
+        <a href={routes.home[lang]}><small>03</small><b>{t.home}</b></a>
+      </nav>
+      <p class="again rv" style="--d:.4s"><a class="link" href={routes.identify[lang]}>{t.again} →</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .thx {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 90vh;
+  }
+  .halo {
+    position: absolute;
+    z-index: -1;
+    width: 70vmax;
+    height: 70vmax;
+    right: -25vmax;
+    top: -25vmax;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 170, 70, 0.24), rgba(232, 120, 40, 0.08) 40%, transparent 68%);
+    animation: breathe 7s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  .h-display {
+    font-size: clamp(46px, 8.6vw, 132px);
+    line-height: 0.95;
+    max-width: 12ch;
+  }
+  .h-display em {
+    color: var(--amber2);
+    text-shadow: 0 0 60px rgba(232, 165, 71, 0.45);
+  }
+  .lead {
+    margin-top: 30px;
+  }
+  .next {
+    margin-top: clamp(40px, 6vw, 70px);
+    max-width: 760px;
+    padding: clamp(22px, 3vw, 34px);
+    border: 1px solid var(--line);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 4px;
+  }
+  .next ol {
+    list-style: none;
+    counter-reset: s;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .next li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 8px;
+    color: #d3cfbf;
+    font-size: 15px;
+  }
+  .next li::before {
+    content: counter(s, upper-roman);
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--amber);
+  }
+  .next li b {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .spam {
+    margin: 18px 0 0;
+    font-size: 13px;
+    color: var(--dim);
+  }
+  .go {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--line2);
+    margin-top: clamp(40px, 6vw, 70px);
+    max-width: 1100px;
+  }
+  .go a {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 22px 20px 22px 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line2);
+  }
+  .go a + a {
+    padding-left: 20px;
+    border-left: 1px solid var(--line2);
+  }
+  .go small {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--dim);
+  }
+  .go b {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(22px, 2.3vw, 32px);
+    transition: color 0.3s;
+  }
+  .go a:hover b {
+    color: var(--amber2);
+  }
+  .go a::after {
+    content: '→';
+    position: absolute;
+    right: 16px;
+    top: 22px;
+    color: var(--amber);
+    transition: transform 0.35s;
+  }
+  .go a:hover::after {
+    transform: translateX(4px);
+  }
+  .again {
+    margin-top: 30px;
+  }
+  @media (max-width: 760px) {
+    .go {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .go a + a {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>

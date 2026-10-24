@@ -1,0 +1,11 @@
+# PRZYKŁAD – podmień na własne zdjęcie: wrzuć plik do public/images/hodowla/ i wpisz ścieżkę w src
+sample: true
+kind: photo
+title:
+  pl: "Nimfy Blaptica dubia po linieniu"
+  en: "Blaptica dubia nymphs after moulting"
+caption:
+  pl: "Świeżo wylinkowane nimfy są jasne, prawie białe – ciemnieją w ciągu kilku godzin."
+  en: "Freshly moulted nymphs are pale, almost white – they darken within a few hours."
+species: blaptica-dubia
+date: 2026-10-20

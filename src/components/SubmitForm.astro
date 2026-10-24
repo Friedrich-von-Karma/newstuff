@@ -1,0 +1,810 @@
+---
+/**
+ * Wspólny formularz zgłoszenia ze zdjęciami: „Oznacz mojego karaczana” (mode="identify")
+ * i „Zgłoś obserwację na mapę” (mode="observation").
+ *
+ * Wysyłka przez FormSubmit (https://formsubmit.co) – bez własnego serwera; zgłoszenie
+ * (z załączonymi zdjęciami) przychodzi mailem na adres z src/data/site.ts.
+ * UWAGA: przy pierwszym zgłoszeniu FormSubmit wyśle właścicielowi adresu mail aktywacyjny –
+ * trzeba w nim kliknąć „Activate form”, dopiero potem zgłoszenia zaczną przychodzić.
+ * Po aktywacji można podmienić adres w action na losowy identyfikator z maila od FormSubmit,
+ * żeby nie pokazywać adresu e-mail w kodzie strony.
+ */
+import 'leaflet/dist/leaflet.css';
+import { site } from '../data/site';
+import { taxa } from '../data/key';
+import { routes, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  mode: 'identify' | 'observation';
+  id?: string;
+}
+const { lang, mode, id = `submit-${mode}` } = Astro.props;
+const pl = lang === 'pl';
+const obs = mode === 'observation';
+const email = site.contact.email;
+const next = new URL(routes.thanks[lang], Astro.site).href;
+const MAX_MB = 8;
+
+const t = pl
+  ? {
+      subject: obs ? 'Blattodea.pl – zgłoszenie obserwacji na mapę' : 'Blattodea.pl – prośba o oznaczenie karaczana',
+      photos: 'Zdjęcia',
+      top: 'Zdjęcie z góry',
+      side: 'Zdjęcie z boku',
+      req: 'wymagane',
+      opt: 'opcjonalne',
+      pick: 'Wybierz lub upuść zdjęcie',
+      change: 'Zmień zdjęcie',
+      tooBig: `Zdjęcie jest za duże (maks. ${MAX_MB} MB). Zmniejsz je albo wybierz inne.`,
+      notImage: 'To nie wygląda na plik zdjęcia.',
+      details: 'Szczegóły',
+      length: 'Długość ciała (mm)',
+      lengthHint: 'bez czułków, np. 12',
+      place: 'Miejsce znalezienia',
+      placeHint: 'miejscowość / okolica, np. Puszcza Kampinoska koło Izabelina',
+      date: 'Data',
+      habitat: 'Środowisko',
+      habitatChoose: '– wybierz –',
+      species: 'Jaki to gatunek według Ciebie?',
+      dunno: 'nie wiem',
+      desc: 'Opis',
+      descHint: obs
+        ? 'Co widać, ile osobników, zachowanie, czy była ooteka…'
+        : 'Jak wygląda, gdzie dokładnie siedział, czy lata, ile ich było…',
+      you: 'Ty',
+      email: 'Twój e-mail',
+      emailHint: 'wymagany – żeby można było odpisać',
+      name: 'Imię',
+      nameHint: obs ? 'opcjonalnie – może pojawić się przy punkcie na mapie' : 'opcjonalnie',
+      where: 'Miejsce na mapie',
+      whereHint: 'Kliknij mapę, żeby postawić znacznik (możesz go przeciągnąć).',
+      geo: 'Użyj mojej lokalizacji',
+      geoBusy: 'Szukam…',
+      geoFail: 'Nie udało się pobrać lokalizacji – zaznacz miejsce na mapie ręcznie.',
+      clearPin: 'usuń znacznik',
+      noPin: 'nie zaznaczono',
+      consent: 'Zgadzam się na publikację punktu na mapie obserwacji (z dokładnością do okolicy) wraz z moim imieniem lub inicjałami.',
+      send: obs ? 'Wyślij zgłoszenie' : 'Wyślij do oznaczenia',
+      sending: 'Wysyłanie…',
+      info: 'Dane z formularza i zdjęcia trafiają mailem wyłącznie do autora strony i służą tylko do odpowiedzi na zgłoszenie',
+      infoObs: ' oraz – za Twoją zgodą – do zaznaczenia punktu na mapie',
+      mailAlt: 'Wolisz mailem?',
+      mailAlt2: 'Napisz na',
+      mailAlt3: 'i dołącz zdjęcia.',
+      mailBody: obs
+        ? 'Dzień dobry,\n\nprzesyłam obserwację karaczana.\n\nMiejsce (miejscowość / okolica, ew. współrzędne): \nData: \nŚrodowisko (las / łąka / budynek / szklarnia / inne): \nDługość ciała (mm): \nGatunek według mnie: \nZgoda na publikację punktu na mapie z imieniem/inicjałami: tak / nie\n\nZdjęcia (z góry i z boku) w załączniku.\n'
+        : 'Dzień dobry,\n\nproszę o pomoc w oznaczeniu karaczana.\n\nMiejsce (miejscowość / okolica): \nData: \nŚrodowisko (las / łąka / budynek / szklarnia / inne): \nDługość ciała (mm): \nOpis: \n\nZdjęcia (z góry i z boku) w załączniku.\n',
+      habitats: [
+        ['las', 'las'],
+        ['łąka', 'łąka, murawa, wrzosowisko'],
+        ['budynek', 'budynek – mieszkanie, piwnica, kuchnia'],
+        ['szklarnia', 'szklarnia, palmiarnia, zoo'],
+        ['inne', 'inne'],
+      ],
+    }
+  : {
+      subject: obs ? 'Blattodea.pl – observation report for the map' : 'Blattodea.pl – identification request',
+      photos: 'Photos',
+      top: 'Photo from above',
+      side: 'Photo from the side',
+      req: 'required',
+      opt: 'optional',
+      pick: 'Choose or drop a photo',
+      change: 'Change photo',
+      tooBig: `This photo is too large (max ${MAX_MB} MB). Resize it or pick another one.`,
+      notImage: 'This does not look like an image file.',
+      details: 'Details',
+      length: 'Body length (mm)',
+      lengthHint: 'without antennae, e.g. 12',
+      place: 'Where you found it',
+      placeHint: 'town / area, e.g. Kampinos Forest near Izabelin',
+      date: 'Date',
+      habitat: 'Habitat',
+      habitatChoose: '– choose –',
+      species: 'Which species do you think it is?',
+      dunno: 'I don’t know',
+      desc: 'Description',
+      descHint: obs
+        ? 'What you saw, how many, behaviour, any ootheca…'
+        : 'What it looks like, where exactly it was, whether it flies, how many…',
+      you: 'You',
+      email: 'Your e-mail',
+      emailHint: 'required – so you can get a reply',
+      name: 'Name',
+      nameHint: obs ? 'optional – may be shown next to the map point' : 'optional',
+      where: 'Place on the map',
+      whereHint: 'Click the map to drop a pin (you can drag it).',
+      geo: 'Use my location',
+      geoBusy: 'Locating…',
+      geoFail: 'Could not get your location – please mark the place on the map.',
+      clearPin: 'remove pin',
+      noPin: 'not set',
+      consent: 'I agree to the point being published on the observation map (approximate area) together with my name or initials.',
+      send: obs ? 'Send report' : 'Send for identification',
+      sending: 'Sending…',
+      info: 'The form data and photos are e-mailed only to the site’s author and are used only to reply to your submission',
+      infoObs: ' and – with your consent – to mark the point on the map',
+      mailAlt: 'Prefer e-mail?',
+      mailAlt2: 'Write to',
+      mailAlt3: 'and attach the photos.',
+      mailBody: obs
+        ? 'Hello,\n\nI would like to report a cockroach observation.\n\nPlace (town / area, or coordinates): \nDate: \nHabitat (woodland / grassland / building / glasshouse / other): \nBody length (mm): \nSpecies I think it is: \nI agree to the point being published on the map with my name/initials: yes / no\n\nPhotos (from above and from the side) attached.\n'
+        : 'Hello,\n\nCould you help me identify a cockroach?\n\nPlace (town / area): \nDate: \nHabitat (woodland / grassland / building / glasshouse / other): \nBody length (mm): \nDescription: \n\nPhotos (from above and from the side) attached.\n',
+      habitats: [
+        ['las', 'woodland'],
+        ['łąka', 'grassland, heath'],
+        ['budynek', 'building – home, basement, kitchen'],
+        ['szklarnia', 'glasshouse, palm house, zoo'],
+        ['inne', 'other'],
+      ],
+    };
+
+const mailto = `mailto:${email}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(t.mailBody)}`;
+const today = new Date().toISOString().slice(0, 10);
+const speciesOptions = [...taxa].sort((a, b) => a.latin.localeCompare(b.latin));
+const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.sending, change: t.change, pick: t.pick, geoBusy: t.geoBusy, geo: t.geo, geoFail: t.geoFail, noPin: t.noPin };
+---
+
+<form
+  class="sform"
+  id={id}
+  data-submit-form
+  data-mode={mode}
+  data-cfg={JSON.stringify(cfg)}
+  action={`https://formsubmit.co/${email}`}
+  method="POST"
+  enctype="multipart/form-data"
+>
+  <input type="hidden" name="_subject" value={t.subject} />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
+  <input type="hidden" name="_next" value={next} />
+  <input type="hidden" name="Rodzaj zgłoszenia" value={obs ? 'obserwacja na mapę' : 'prośba o oznaczenie'} />
+  <input type="hidden" name="Język strony" value={lang} />
+  <div class="honey" aria-hidden="true">
+    <label>Leave empty <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <fieldset class="grp">
+    <legend><span class="gn">I</span>{t.photos}</legend>
+    <div class="drops">
+      <div class="drop" data-drop>
+        <input type="file" name="Zdjęcie z góry" accept="image/*" required id={`${id}-top`} aria-describedby={`${id}-top-msg`} />
+        <div class="drop-in">
+          <img alt="" hidden />
+          <span class="drop-t">{t.top}</span>
+          <span class="drop-s" data-label>{t.pick}</span>
+          <span class="drop-req">{t.req}</span>
+        </div>
+        <span class="msg" id={`${id}-top-msg`} role="alert"></span>
+      </div>
+      <div class="drop" data-drop>
+        <input type="file" name="Zdjęcie z boku" accept="image/*" id={`${id}-side`} aria-describedby={`${id}-side-msg`} />
+        <div class="drop-in">
+          <img alt="" hidden />
+          <span class="drop-t">{t.side}</span>
+          <span class="drop-s" data-label>{t.pick}</span>
+          <span class="drop-req opt">{t.opt}</span>
+        </div>
+        <span class="msg" id={`${id}-side-msg`} role="alert"></span>
+      </div>
+    </div>
+  </fieldset>
+
+  {
+    obs && (
+      <fieldset class="grp">
+        <legend>
+          <span class="gn">II</span>
+          {t.where}
+        </legend>
+        <p class="hint">{t.whereHint}</p>
+        <div class="pickmap" data-pickmap />
+        <div class="pickbar">
+          <button type="button" class="btn quiet small" data-geo>
+            <span class="pin" aria-hidden="true" />
+            <span data-geo-txt>{t.geo}</span>
+          </button>
+          <span class="coords" aria-live="polite">
+            <span data-coords>{t.noPin}</span>
+            <button type="button" class="unpin" data-unpin hidden>
+              {t.clearPin}
+            </button>
+          </span>
+        </div>
+        <span class="msg" data-geo-msg role="alert" />
+        <input type="hidden" name="Szerokość (lat)" data-lat />
+        <input type="hidden" name="Długość (lng)" data-lng />
+      </fieldset>
+    )
+  }
+
+  <fieldset class="grp">
+    <legend><span class="gn">{obs ? 'III' : 'II'}</span>{t.details}</legend>
+    <div class="grid">
+      <label class="field wide">
+        <span>{t.place}{obs ? ' *' : ''}</span>
+        <input type="text" name="Miejsce" placeholder={t.placeHint} required={obs} autocomplete="address-level2" />
+      </label>
+      <label class="field">
+        <span>{t.date}</span>
+        <input type="date" name="Data" max={today} />
+      </label>
+      <label class="field">
+        <span>{t.length}</span>
+        <input type="number" name="Długość ciała (mm)" min="1" max="120" step="0.5" inputmode="decimal" placeholder={t.lengthHint} />
+      </label>
+      <label class="field">
+        <span>{t.habitat}</span>
+        <select name="Środowisko">
+          <option value="">{t.habitatChoose}</option>
+          {t.habitats.map(([v, l]) => <option value={v}>{l}</option>)}
+        </select>
+      </label>
+      {
+        obs && (
+          <label class="field">
+            <span>{t.species}</span>
+            <select name="Gatunek według zgłaszającego">
+              <option value="nie wiem">{t.dunno}</option>
+              {speciesOptions.map((x) => (
+                <option value={x.latin}>
+                  {x.latin}
+                  {x.name?.[lang] ? ` – ${x.name[lang]}` : ''}
+                </option>
+              ))}
+            </select>
+          </label>
+        )
+      }
+      <label class="field wide">
+        <span>{t.desc}</span>
+        <textarea name="Opis" rows="4" placeholder={t.descHint}></textarea>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset class="grp">
+    <legend><span class="gn">{obs ? 'IV' : 'III'}</span>{t.you}</legend>
+    <div class="grid">
+      <label class="field">
+        <span>{t.email} *</span>
+        <input type="email" name="email" required autocomplete="email" />
+        <small>{t.emailHint}</small>
+      </label>
+      <label class="field">
+        <span>{t.name}</span>
+        <input type="text" name="Imię" autocomplete="given-name" />
+        <small>{t.nameHint}</small>
+      </label>
+    </div>
+    {
+      obs && (
+        <label class="consent">
+          <input type="checkbox" name="Zgoda na publikację na mapie" value="tak" />
+          <span>{t.consent}</span>
+        </label>
+      )
+    }
+  </fieldset>
+
+  <div class="send">
+    <button class="btn" type="submit" data-send>
+      <span data-send-txt>{t.send}</span> <span class="arr">→</span>
+    </button>
+    <p class="info">{t.info}{obs ? t.infoObs : ''}.</p>
+  </div>
+  <p class="alt">
+    <b>{t.mailAlt}</b>
+    {t.mailAlt2} <a href={mailto}>{email}</a>
+    {t.mailAlt3}
+  </p>
+</form>
+
+<script>
+  import type * as Leaflet from 'leaflet';
+
+  type Cfg = {
+    maxMb: number;
+    tooBig: string;
+    notImage: string;
+    sending: string;
+    change: string;
+    pick: string;
+    geoBusy: string;
+    geo: string;
+    geoFail: string;
+    noPin: string;
+  };
+
+  document.querySelectorAll<HTMLFormElement>('[data-submit-form]').forEach(async (form) => {
+    const cfg: Cfg = JSON.parse(form.dataset.cfg || '{}');
+    const maxBytes = cfg.maxMb * 1024 * 1024;
+
+    // --- zdjęcia: podgląd + walidacja rozmiaru
+    const urls = new WeakMap<HTMLElement, string>();
+    form.querySelectorAll<HTMLElement>('[data-drop]').forEach((drop) => {
+      const input = drop.querySelector<HTMLInputElement>('input[type=file]')!;
+      const img = drop.querySelector<HTMLImageElement>('img')!;
+      const label = drop.querySelector<HTMLElement>('[data-label]')!;
+      const msg = drop.querySelector<HTMLElement>('.msg')!;
+      const check = () => {
+        const f = input.files?.[0];
+        const old = urls.get(drop);
+        if (old) URL.revokeObjectURL(old);
+        msg.textContent = '';
+        input.setCustomValidity('');
+        drop.classList.remove('has', 'bad');
+        img.hidden = true;
+        label.textContent = cfg.pick;
+        if (!f) return;
+        if (f.type && !f.type.startsWith('image/')) {
+          msg.textContent = cfg.notImage;
+        } else if (f.size > maxBytes) {
+          msg.textContent = cfg.tooBig;
+        }
+        if (msg.textContent) {
+          input.setCustomValidity(msg.textContent);
+          drop.classList.add('bad');
+          return;
+        }
+        const u = URL.createObjectURL(f);
+        urls.set(drop, u);
+        img.src = u;
+        img.hidden = false;
+        drop.classList.add('has');
+        label.textContent = `${f.name} · ${(f.size / 1024 / 1024).toFixed(1)} MB — ${cfg.change}`;
+      };
+      input.addEventListener('change', check);
+      input.addEventListener('dragenter', () => drop.classList.add('over'));
+      ['dragleave', 'drop'].forEach((ev) => input.addEventListener(ev, () => drop.classList.remove('over')));
+    });
+
+    // --- wysyłka: stan „wysyłanie…”
+    const btn = form.querySelector<HTMLButtonElement>('[data-send]')!;
+    const btnTxt = form.querySelector<HTMLElement>('[data-send-txt]')!;
+    form.addEventListener('submit', (e) => {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        form.reportValidity();
+        return;
+      }
+      btnTxt.textContent = cfg.sending;
+      btn.classList.add('busy');
+      // wyłączamy po chwili, żeby nie przerwać samej wysyłki
+      setTimeout(() => (btn.disabled = true), 0);
+    });
+    // powrót przyciskiem „wstecz” (bfcache) – przywróć przycisk
+    window.addEventListener('pageshow', () => {
+      btn.disabled = false;
+      btn.classList.remove('busy');
+    });
+
+    // --- mapka wyboru miejsca (tylko tryb „observation”)
+    const box = form.querySelector<HTMLElement>('[data-pickmap]');
+    if (!box) return;
+    // Leaflet ładowany tylko tam, gdzie jest mapka
+    const L: typeof Leaflet = (await import('leaflet')).default;
+    const latIn = form.querySelector<HTMLInputElement>('[data-lat]')!;
+    const lngIn = form.querySelector<HTMLInputElement>('[data-lng]')!;
+    const coords = form.querySelector<HTMLElement>('[data-coords]')!;
+    const unpin = form.querySelector<HTMLButtonElement>('[data-unpin]')!;
+    const geoBtn = form.querySelector<HTMLButtonElement>('[data-geo]')!;
+    const geoTxt = form.querySelector<HTMLElement>('[data-geo-txt]')!;
+    const geoMsg = form.querySelector<HTMLElement>('[data-geo-msg]')!;
+
+    const map = L.map(box, {
+      center: [52.0, 19.3],
+      zoom: 5,
+      minZoom: 4,
+      scrollWheelZoom: false,
+      attributionControl: true,
+    });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+    }).addTo(map);
+    map.fitBounds([
+      [49.0, 14.1],
+      [54.85, 24.15],
+    ]);
+    // kółko myszy przybliża dopiero po kliknięciu w mapę
+    map.on('click focus', () => map.scrollWheelZoom.enable());
+    map.on('mouseout blur', () => map.scrollWheelZoom.disable());
+
+    const icon = L.divIcon({ className: 'obs-pin', html: '<span></span>', iconSize: [22, 22], iconAnchor: [11, 11] });
+    let marker: Leaflet.Marker | null = null;
+    const set = (lat: number, lng: number, fly = false) => {
+      const la = lat.toFixed(5);
+      const ln = lng.toFixed(5);
+      latIn.value = la;
+      lngIn.value = ln;
+      coords.textContent = `${la}, ${ln}`;
+      unpin.hidden = false;
+      if (!marker) {
+        marker = L.marker([lat, lng], { icon, draggable: true, keyboard: true }).addTo(map);
+        marker.on('dragend', () => {
+          const p = marker!.getLatLng();
+          set(p.lat, p.lng);
+        });
+      } else marker.setLatLng([lat, lng]);
+      if (fly) map.setView([lat, lng], Math.max(map.getZoom(), 11));
+    };
+    map.on('click', (e: Leaflet.LeafletMouseEvent) => set(e.latlng.lat, e.latlng.lng));
+    unpin.addEventListener('click', () => {
+      marker?.remove();
+      marker = null;
+      latIn.value = lngIn.value = '';
+      coords.textContent = cfg.noPin;
+      unpin.hidden = true;
+    });
+    if (!('geolocation' in navigator)) geoBtn.hidden = true;
+    geoBtn.addEventListener('click', () => {
+      geoMsg.textContent = '';
+      geoTxt.textContent = cfg.geoBusy;
+      geoBtn.disabled = true;
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          set(pos.coords.latitude, pos.coords.longitude, true);
+          geoTxt.textContent = cfg.geo;
+          geoBtn.disabled = false;
+        },
+        () => {
+          geoMsg.textContent = cfg.geoFail;
+          geoTxt.textContent = cfg.geo;
+          geoBtn.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
+      );
+    });
+    // mapa w ukrytym/animowanym kontenerze – przelicz rozmiar, gdy stanie się widoczna
+    if ('ResizeObserver' in window) new ResizeObserver(() => map.invalidateSize()).observe(box);
+  });
+</script>
+
+<style>
+  .sform {
+    display: grid;
+    gap: 18px;
+  }
+  .honey {
+    position: absolute !important;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .grp {
+    border: 1px solid var(--line);
+    background: linear-gradient(150deg, rgba(20, 33, 23, 0.7), rgba(11, 18, 13, 0.85));
+    border-radius: 4px;
+    margin: 0;
+    padding: clamp(18px, 2.4vw, 30px);
+    min-width: 0;
+  }
+  .grp legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 18px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(24px, 2.4vw, 32px);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .grp legend + * {
+    clear: both;
+  }
+  .gn {
+    font-size: 15px;
+    color: var(--amber);
+    letter-spacing: 0.06em;
+    min-width: 2.2ch;
+  }
+  .hint {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 12px;
+  }
+
+  /* pola na zdjęcia */
+  .drops {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .drop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .drop input[type='file'] {
+    position: absolute;
+    inset: 0 0 auto 0;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .drop-in {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border: 1px dashed var(--line2);
+    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+    padding: 16px;
+    background:
+      radial-gradient(70% 60% at 50% 40%, rgba(232, 165, 71, 0.08), transparent 70%),
+      repeating-linear-gradient(135deg, transparent 0 10px, rgba(235, 229, 211, 0.025) 10px 11px);
+    transition:
+      border-color 0.3s,
+      box-shadow 0.4s;
+  }
+  .drop-in::before {
+    content: '+';
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%, -50%);
+    font-family: var(--serif);
+    font-weight: 200;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--amber);
+    text-shadow: 0 0 30px rgba(232, 165, 71, 0.5);
+    transition: transform 0.5s var(--ease);
+  }
+  .drop:hover .drop-in,
+  .drop.over .drop-in,
+  .drop input:focus-visible + .drop-in {
+    border-color: var(--amber);
+    box-shadow: 0 0 40px -10px rgba(232, 165, 71, 0.4);
+  }
+  .drop input:focus-visible + .drop-in {
+    outline: 2px solid var(--amber2);
+    outline-offset: 3px;
+  }
+  .drop:hover .drop-in::before {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  .drop-in img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: fadein 0.6s var(--ease);
+  }
+  @keyframes fadein {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+    }
+  }
+  .drop.has .drop-in {
+    border-style: solid;
+    border-color: rgba(232, 165, 71, 0.5);
+  }
+  .drop.has .drop-in::before {
+    display: none;
+  }
+  .drop.has .drop-in::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 45%, rgba(11, 18, 13, 0.92));
+  }
+  .drop-t,
+  .drop-s,
+  .drop-req {
+    position: relative;
+    z-index: 1;
+  }
+  .drop-t {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-style: italic;
+  }
+  .drop-s {
+    font-size: 12.5px;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+  .drop-req {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber2);
+  }
+  .drop-req.opt {
+    color: var(--dim);
+  }
+  .drop.bad .drop-in {
+    border-color: var(--c-out);
+  }
+  .msg {
+    font-size: 13px;
+    color: #e3896b;
+  }
+  .msg:empty {
+    display: none;
+  }
+
+  /* mapka wyboru */
+  .pickmap {
+    height: 340px;
+    border: 1px solid var(--line2);
+    border-radius: 3px;
+    background: #0d1510;
+    z-index: 1;
+  }
+  .pickbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    align-items: center;
+    margin-top: 12px;
+  }
+  .pin {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 10px var(--amber);
+  }
+  .coords {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--muted);
+    display: inline-flex;
+    gap: 12px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .unpin {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--dim);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-size: 12.5px;
+  }
+  .unpin:hover {
+    color: var(--amber2);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+  }
+  .grid .wide {
+    grid-column: 1 / -1;
+  }
+  .consent {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 18px;
+    font-size: 14px;
+    color: #d3cfbf;
+    cursor: pointer;
+  }
+  .consent input {
+    margin-top: 4px;
+    width: 17px;
+    height: 17px;
+    flex: none;
+  }
+
+  .send {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 24px;
+    margin-top: 6px;
+  }
+  .send .btn {
+    padding: 15px 24px;
+  }
+  .send .btn.busy {
+    opacity: 1;
+    background: transparent;
+    color: var(--amber2);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    50% {
+      box-shadow: 0 0 34px rgba(232, 165, 71, 0.45);
+    }
+  }
+  .info {
+    flex: 1 1 280px;
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--dim);
+    max-width: 60ch;
+  }
+  .alt {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .alt b {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--text);
+    margin-right: 6px;
+  }
+  .alt a {
+    color: var(--amber2);
+    overflow-wrap: anywhere;
+  }
+
+  /* Leaflet w stylu strony */
+  .sform :global(.leaflet-container) {
+    font-family: var(--sans);
+    background: #0d1510;
+  }
+  :global(.leaflet-bar a),
+  :global(.leaflet-bar a:hover) {
+    background: rgba(15, 25, 18, 0.92);
+    color: var(--amber2);
+    border-color: var(--line2);
+  }
+  :global(.leaflet-bar a:hover) {
+    color: var(--text);
+  }
+  :global(.leaflet-bar) {
+    border: 1px solid var(--line2) !important;
+    box-shadow: none !important;
+  }
+  :global(.leaflet-container .leaflet-control-attribution) {
+    background: rgba(11, 18, 13, 0.75);
+    color: var(--dim);
+    font-size: 10px;
+  }
+  :global(.leaflet-container .leaflet-control-attribution a) {
+    color: var(--muted);
+  }
+  :global(.obs-pin span) {
+    display: block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--amber2) 0 30%, var(--amber) 32% 48%, transparent 50%);
+    box-shadow: 0 0 18px 4px rgba(232, 165, 71, 0.55);
+  }
+
+  @media (max-width: 640px) {
+    .drops,
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .pickmap {
+      height: 300px;
+    }
+  }
+</style>

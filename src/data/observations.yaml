@@ -1,0 +1,6 @@
+# OBSERWACJE NA MAPIE – tylko zgłoszenia zweryfikowane przez Ciebie.
+# Plik edytowalny także w panelu /admin.
+#  species: id gatunku z klucza (np. ectobius-sylvestris, blattella-germanica)
+#  lat, lng: współrzędne (np. z Google Maps: prawy klik → kliknij liczby)
+#  place:  nazwa miejsca, date: RRRR-MM-DD, observer/note/photo – opcjonalnie
+items: []

@@ -1,0 +1,39 @@
+# PRZYKŁAD – do podmiany na Twoje dane
+sample: true
+latin: Gromphadorhina portentosa
+author: (Schaum, 1853)
+commonName:
+  pl: "karaczan madagaskarski"
+  en: "Madagascar hissing cockroach"
+family: Blaberidae
+origin:
+  pl: "Madagaskar"
+  en: "Madagascar"
+size:
+  pl: "50–75 mm"
+  en: "50–75 mm"
+temperature: 24–30 °C
+humidity:
+  pl: "60–70%"
+  en: "60–70%"
+substrate:
+  pl: "kora lub włókno kokosowe z suchymi liśćmi"
+  en: "bark or coco fibre with dry leaves"
+food:
+  pl: "warzywa, owoce, liście, sucha karma"
+  en: "vegetables, fruit, leaves, dry food"
+reproduction:
+  pl: "jajożyworodny, 20–40 nimf w miocie"
+  en: "ovoviviparous, 20–40 nymphs per litter"
+development:
+  pl: "ok. 6–7 miesięcy"
+  en: "approx. 6–7 months"
+difficulty: 1
+climbs: true
+flies: false
+# Własne zdjęcia: wrzuć do public/images/species/<gatunek>/ i dopisz tutaj, np.
+# gallery:
+#   - src: /images/species/blaptica-dubia/samiec.jpg
+#     alt: { pl: "Samiec", en: "Male" }
+#     caption: { pl: "samiec", en: "male" }
+gallery: []

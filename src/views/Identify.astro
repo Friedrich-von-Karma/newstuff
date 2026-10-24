@@ -1,0 +1,445 @@
+---
+import Base from '../layouts/Base.astro';
+import SubmitForm from '../components/SubmitForm.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
+import { routes, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
+
+const t = pl
+  ? {
+      title: 'Oznacz mojego karaczana',
+      desc: 'Znalazłeś karaczana i nie wiesz, co to za gatunek? Wyślij zdjęcia z góry i z boku, długość ciała i miejsce znalezienia.',
+      num: 'Oznaczanie · zgłoszenie',
+      h1a: 'Oznacz mojego',
+      h1b: 'karaczana',
+      lead: 'Znalazłeś karaczana w lesie, w piwnicy albo w kuchni i nie wiesz, co to za gatunek? Wyślij zdjęcia przez formularz – zgłoszenie trafi mailem do autora strony, a odpowiedź przyjdzie na podany adres.',
+      keyFirst: 'Możesz też najpierw spróbować sam w kluczu',
+      keyLink: 'Klucz do karaczanów Polski',
+      photoAlt: 'Ectobius sylvestris – samica z ooteką',
+      tipsNum: 'Zanim zrobisz zdjęcie',
+      tipsH1: 'Jak zrobić',
+      tipsH2: 'dobre zdjęcie',
+      tipsP: 'Dobre zdjęcia to połowa oznaczenia. U drobnych, leśnych gatunków liczą się szczegóły: rysunek przedplecza, długość pokryw, kolor brzegów.',
+      tips: [
+        ['Z góry', 'Całe zwierzę w kadrze, aparat prostopadle do grzbietu. Widać przedplecze, pokrywy i koniec odwłoka.', 'top'],
+        ['Z boku', 'Drugie ujęcie z profilu – pokazuje długość skrzydeł względem odwłoka i ewentualną ootekę.', 'side'],
+        ['Skala', 'Połóż obok linijkę albo monetę (np. 1 zł ma ok. 23 mm). Bez skali trudno ocenić długość ciała.', 'scale'],
+        ['Ostro i w dziennym świetle', 'Bez lampy błyskowej z bliska, najlepiej przy oknie. Lepiej kilka ostrych zdjęć niż jedno rozmazane.', 'light'],
+      ],
+      formNum: 'Zgłoszenie',
+      formH1: 'Wyślij',
+      formH2: 'zdjęcia',
+      formP: 'Wymagane są zdjęcie z góry i Twój e-mail. Wszystko inne – długość, miejsce, data, środowisko – bardzo pomaga w oznaczeniu.',
+      safety: 'Żywego karaczana najłatwiej sfotografować po krótkim schłodzeniu w lodówce (nie zamrażarce) – na kilka minut zwalnia.',
+      mapP: 'Chcesz, żeby znalezisko trafiło na mapę obserwacji?',
+      mapLink: 'Zgłoś obserwację na mapę',
+    }
+  : {
+      title: 'Identify my cockroach',
+      desc: 'Found a cockroach and not sure which species it is? Send photos from above and from the side, the body length and where you found it.',
+      num: 'Identification · request',
+      h1a: 'Identify my',
+      h1b: 'cockroach',
+      lead: 'Found a cockroach in a forest, a basement or a kitchen and not sure what it is? Send photos using the form – your request goes by e-mail to the site’s author, and the reply will come to the address you give.',
+      keyFirst: 'You can also try it yourself with the key first',
+      keyLink: 'Key to the cockroaches of Poland',
+      photoAlt: 'Ectobius sylvestris – female with ootheca',
+      tipsNum: 'Before you take the photo',
+      tipsH1: 'How to take',
+      tipsH2: 'a good photo',
+      tipsP: 'Good photos are half the identification. With small woodland species the details matter: the pronotum pattern, wing length, the colour of the margins.',
+      tips: [
+        ['From above', 'The whole animal in frame, camera square to its back. The pronotum, wings and abdomen tip should be visible.', 'top'],
+        ['From the side', 'A second shot in profile – it shows wing length relative to the abdomen and any ootheca.', 'side'],
+        ['Scale', 'Put a ruler or a coin next to it (a 1 złoty coin is about 23 mm). Without scale, body length is hard to judge.', 'scale'],
+        ['Sharp, in daylight', 'No close-up flash – a spot by a window is best. Several sharp photos beat one blurry one.', 'light'],
+      ],
+      formNum: 'Request',
+      formH1: 'Send the',
+      formH2: 'photos',
+      formP: 'Only the top-view photo and your e-mail are required. Everything else – length, place, date, habitat – helps a lot.',
+      safety: 'A live cockroach is easiest to photograph after a short spell in the fridge (not the freezer) – it slows down for a few minutes.',
+      mapP: 'Want your find to appear on the observation map?',
+      mapLink: 'Report it for the map',
+    };
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.identify[other]} active="identify">
+  <section class="page idpage">
+    <div class="glowspot" style="width:640px;height:640px;right:-200px;top:0;background:radial-gradient(circle,rgba(232,165,71,.14),transparent 65%)"></div>
+    <div class="wrap idhead">
+      <div class="rv">
+        <div class="num">{t.num}</div>
+        <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        <p class="lead" data-glossary>{t.lead}</p>
+        <p class="keyfirst">{t.keyFirst}: <a class="link" href={routes.key[lang]}>{t.keyLink} →</a></p>
+      </div>
+      <div class="idphoto rv" style="--d:.2s">
+        <CommonsPhoto id="ectobius-sylvestris" lang={lang} alt={t.photoAlt} width={960} eager />
+      </div>
+    </div>
+  </section>
+
+  <section class="scene tipsscene">
+    <div class="wrap nopad">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.tipsNum}</div>
+          <h2 class="h-display">{t.tipsH1} <em>{t.tipsH2}</em></h2>
+        </div>
+        <p class="rv" style="--d:.15s" data-glossary>{t.tipsP}</p>
+      </div>
+      <ol class="tips">
+        {
+          t.tips.map(([h, p, kind], i) => (
+            <li class="tip rv" style={`--d:${i * 0.1}s`}>
+              <div class={`vis vis-${kind}`} aria-hidden="true">
+                <span class="c c1" />
+                <span class="c c2" />
+                <span class="c c3" />
+                <span class="c c4" />
+                <span class="mark" />
+              </div>
+              <div class="tip-b">
+                <span class="tn">{['I', 'II', 'III', 'IV'][i]}</span>
+                <h3>{h}</h3>
+                <p data-glossary>{p}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="safety rv">{t.safety}</p>
+    </div>
+  </section>
+
+  <section class="scene formscene" id="formularz">
+    <div class="glowspot" style="width:700px;height:700px;left:-260px;top:120px;background:radial-gradient(circle,rgba(232,140,50,.12),transparent 62%)"></div>
+    <div class="wrap nopad formgrid">
+      <div class="formhead rv">
+        <div class="num">{t.formNum}</div>
+        <h2 class="h-display">{t.formH1} <em>{t.formH2}</em></h2>
+        <p>{t.formP}</p>
+        <a class="link" href={routes.key[lang]}>{t.keyLink} →</a>
+        <p class="mapp">{t.mapP} <a href={routes.map[lang] + '#zglos'}>{t.mapLink} →</a></p>
+      </div>
+      <div class="rv" style="--d:.1s">
+        <SubmitForm lang={lang} mode="identify" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .idpage {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    padding-bottom: 0;
+  }
+  .nopad {
+    padding: 0;
+  }
+  .idhead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 40px 60px;
+    align-items: end;
+  }
+  .idhead .lead {
+    margin-top: 28px;
+  }
+  .keyfirst {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: baseline;
+  }
+  .idphoto {
+    position: relative;
+  }
+  .idphoto :global(.frame) {
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .idphoto :global(.frame)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(110% 90% at 50% 45%, transparent 40%, rgba(11, 18, 13, 0.7) 100%);
+    pointer-events: none;
+  }
+  .idphoto::before {
+    content: '';
+    position: absolute;
+    inset: -12% -18%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 170, 70, 0.22), transparent 62%);
+    animation: breathe 7s ease-in-out infinite;
+  }
+
+  /* kafle z poradami */
+  .tipsscene {
+    padding-top: clamp(80px, 11vw, 150px);
+  }
+  .tips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .tip {
+    border: 1px solid var(--line);
+    background: var(--bg2);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition:
+      border-color 0.5s,
+      box-shadow 0.7s;
+  }
+  .tip:hover {
+    border-color: rgba(232, 165, 71, 0.45);
+    box-shadow: 0 30px 80px -30px rgba(232, 165, 71, 0.25);
+  }
+  .tip-b {
+    padding: 18px 20px 22px;
+    display: grid;
+    gap: 8px;
+  }
+  .tn {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--amber);
+    font-size: 15px;
+  }
+  .tip h3 {
+    font-size: 25px;
+    font-style: italic;
+  }
+  .tip p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* motyw wizjera (bez rysunku owada – tylko ramka kadru) */
+  .vis {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background:
+      radial-gradient(60% 70% at 50% 50%, rgba(232, 165, 71, 0.14), transparent 70%),
+      linear-gradient(160deg, var(--bg3), var(--bg));
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .c {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 0 solid var(--amber2);
+    transition: all 0.6s var(--ease);
+  }
+  .c1 {
+    left: 18%;
+    top: 18%;
+    border-width: 1.5px 0 0 1.5px;
+  }
+  .c2 {
+    right: 18%;
+    top: 18%;
+    border-width: 1.5px 1.5px 0 0;
+  }
+  .c3 {
+    left: 18%;
+    bottom: 18%;
+    border-width: 0 0 1.5px 1.5px;
+  }
+  .c4 {
+    right: 18%;
+    bottom: 18%;
+    border-width: 0 1.5px 1.5px 0;
+  }
+  .tip:hover .c1 {
+    left: 24%;
+    top: 24%;
+  }
+  .tip:hover .c2 {
+    right: 24%;
+    top: 24%;
+  }
+  .tip:hover .c3 {
+    left: 24%;
+    bottom: 24%;
+  }
+  .tip:hover .c4 {
+    right: 24%;
+    bottom: 24%;
+  }
+  .mark {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  /* z góry: celownik */
+  .vis-top .mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 210, 138, 0.6);
+    box-shadow: 0 0 30px rgba(232, 165, 71, 0.35);
+  }
+  .vis-top .mark::before,
+  .vis-top .mark::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 210, 138, 0.6);
+  }
+  .vis-top .mark::before {
+    left: 50%;
+    top: -14px;
+    bottom: -14px;
+    width: 1px;
+  }
+  .vis-top .mark::after {
+    top: 50%;
+    left: -14px;
+    right: -14px;
+    height: 1px;
+  }
+  /* z boku: linia horyzontu */
+  .vis-side .mark {
+    width: 56%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber2), transparent);
+    box-shadow: 0 0 16px rgba(232, 165, 71, 0.6);
+  }
+  .vis-side .mark::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -5px;
+    width: 9px;
+    height: 9px;
+    margin-left: -5px;
+    border-radius: 50%;
+    border: 1px solid var(--amber2);
+  }
+  /* skala: podziałka linijki */
+  .vis-scale .mark {
+    width: 58%;
+    height: 18px;
+    top: auto;
+    bottom: 30%;
+    transform: translateX(-50%);
+    border-bottom: 1px solid var(--amber2);
+    background: repeating-linear-gradient(90deg, rgba(255, 210, 138, 0.75) 0 1px, transparent 1px 10%);
+  }
+  .vis-scale .mark::after {
+    content: '23 mm';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -26px;
+    text-align: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--amber2);
+  }
+  /* światło: oddychająca plama */
+  .vis-light .mark {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 220, 160, 0.9), rgba(232, 165, 71, 0.35) 40%, transparent 70%);
+    animation: breathe 4s ease-in-out infinite;
+  }
+  .safety {
+    margin: 26px 0 0;
+    color: var(--dim);
+    font-size: 13.5px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .safety::before {
+    content: '';
+    flex: 0 0 24px;
+    height: 1px;
+    background: var(--amber);
+  }
+
+  /* formularz */
+  .formscene {
+    border-top: 1px solid var(--line);
+  }
+  .formgrid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: 40px 60px;
+    align-items: start;
+  }
+  .formhead {
+    position: sticky;
+    top: 110px;
+  }
+  .formhead .h-display {
+    font-size: clamp(40px, 5.4vw, 80px);
+  }
+  .formhead p {
+    color: var(--muted);
+    margin: 22px 0;
+    max-width: 44ch;
+  }
+  .formhead .mapp {
+    margin-top: 34px;
+    font-size: 14px;
+  }
+  .mapp a {
+    color: var(--amber2);
+  }
+
+  @media (max-width: 1000px) {
+    .tips {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .formgrid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .formhead {
+      position: static;
+    }
+  }
+  @media (max-width: 860px) {
+    .idhead {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .idphoto {
+      max-width: 520px;
+    }
+    .idphoto :global(.frame) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (max-width: 560px) {
+    .tips {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

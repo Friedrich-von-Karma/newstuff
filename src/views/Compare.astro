@@ -1,0 +1,779 @@
+---
+import Base from '../layouts/Base.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
+import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
+import { formatPrice, getPricelist, getSpecies, minPackPrice } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const pl = lang === 'pl';
+
+const [species, pricelist] = await Promise.all([getSpecies(), getPricelist()]);
+const priceOf = new Map(pricelist.filter((p) => p.data.profile).map((p) => [p.data.profile!, p.data]));
+
+const t = pl
+  ? {
+      num: 'Porównywarka',
+      h1a: 'Porównaj',
+      h1b: 'gatunki',
+      lead: 'Wybierz dwa albo trzy gatunki – parametry hodowlane ustawią się obok siebie. Bursztynowy znacznik pokazuje wiersze, w których gatunki się różnią.',
+      a: 'Gatunek A',
+      b: 'Gatunek B',
+      c: 'Gatunek C (opcjonalnie)',
+      none: '— bez trzeciego —',
+      onlyDiff: 'Pokaż tylko różnice',
+      legend: 'różni się',
+      param: 'Parametr',
+      scroll: 'Przesuń tabelę w bok →',
+      noJs: 'Bez JavaScriptu porównywarka pokazuje dwa pierwsze gatunki.',
+      from: 'od',
+      notIn: 'poza cennikiem',
+      inList: 'Cena i dostępność',
+      sheet: 'Profil',
+      empty: 'Do porównania potrzebne są co najmniej dwa profile hodowlane.',
+      copy: 'Link do tego porównania jest w pasku adresu – możesz go skopiować i wysłać.',
+    }
+  : {
+      num: 'Compare',
+      h1a: 'Compare',
+      h1b: 'species',
+      lead: 'Pick two or three species and their care parameters line up side by side. An amber marker shows the rows where the species differ.',
+      a: 'Species A',
+      b: 'Species B',
+      c: 'Species C (optional)',
+      none: '— no third species —',
+      onlyDiff: 'Show differences only',
+      legend: 'differs',
+      param: 'Parameter',
+      scroll: 'Swipe the table sideways →',
+      noJs: 'Without JavaScript the comparison shows the first two species.',
+      from: 'from',
+      notIn: 'not in the price list',
+      inList: 'Price and availability',
+      sheet: 'Care sheet',
+      empty: 'At least two care sheets are needed for a comparison.',
+      copy: 'The link to this comparison is in the address bar – copy it to share.',
+    };
+
+/** Liczby z tekstu typu „26–30 °C” albo „50–60%”. */
+function range(s: string): [number, number] | null {
+  const nums = (s.match(/\d+(?:[.,]\d+)?/g) ?? []).map((x) => Number(x.replace(',', '.')));
+  if (!nums.length) return null;
+  const lo = nums[0];
+  const hi = nums[1] !== undefined && nums[1] >= lo ? nums[1] : lo;
+  return [lo, hi];
+}
+const T_MIN = 18;
+const T_MAX = 35;
+const pos = (v: number, a: number, b: number) => Math.max(0, Math.min(100, ((v - a) / (b - a)) * 100));
+const bar = (r: [number, number] | null, a: number, b: number) =>
+  r ? `left:${pos(r[0], a, b).toFixed(1)}%;width:${Math.max(2.5, pos(r[1], a, b) - pos(r[0], a, b)).toFixed(1)}%` : '';
+
+const yn = (v: boolean) => tr(v ? 'species.yes' : 'species.no');
+
+type Row = { key: string; label: string; glossary?: boolean };
+const rows: Row[] = [
+  { key: 'family', label: tr('species.family') },
+  { key: 'origin', label: tr('species.origin') },
+  { key: 'size', label: tr('species.size') },
+  { key: 'temperature', label: tr('species.temperature') },
+  { key: 'humidity', label: tr('species.humidity') },
+  { key: 'substrate', label: tr('species.substrate') },
+  { key: 'food', label: tr('species.food') },
+  { key: 'reproduction', label: tr('species.reproduction'), glossary: true },
+  { key: 'development', label: tr('species.development'), glossary: true },
+  { key: 'difficulty', label: tr('species.difficulty') },
+  { key: 'climbs', label: tr('species.climbs') },
+  { key: 'flies', label: tr('species.flies') },
+  { key: 'price', label: t.inList },
+];
+
+/** Wartości do wykrywania różnic (osadzone też jako JSON dla skryptu). */
+const values: Record<string, Record<string, string>> = {};
+for (const s of species) {
+  const d = s.data;
+  const p = priceOf.get(s.id);
+  values[s.id] = {
+    family: d.family,
+    origin: d.origin[lang],
+    size: d.size[lang],
+    temperature: d.temperature,
+    humidity: d.humidity[lang],
+    substrate: d.substrate[lang],
+    food: d.food[lang],
+    reproduction: d.reproduction[lang],
+    development: d.development[lang],
+    difficulty: String(d.difficulty),
+    climbs: String(d.climbs),
+    flies: String(d.flies),
+    price: p ? `${minPackPrice(p.packs)}|${p.status}` : '',
+  };
+}
+const ids = species.map((s) => s.id);
+const initial = ids.slice(0, 2);
+const differs = (key: string, sel: string[]) => new Set(sel.map((id) => values[id]?.[key])).size > 1;
+const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id, s.data.latin])) };
+---
+
+<Base lang={lang} title={tr('nav.compare')} description={t.lead} alt={routes.compare[other]} active="compare">
+  <section class="scene cmp-scene">
+    <div class="glowspot" style="width:620px;height:620px;right:-200px;top:30px;background:radial-gradient(circle,rgba(232,165,71,.13),transparent 65%)"></div>
+    <div class="glowspot" style="width:560px;height:560px;left:-220px;top:50%;background:radial-gradient(circle,rgba(125,154,87,.13),transparent 65%);animation-delay:-3s"></div>
+    <div class="wrap">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.num}</div>
+          <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        </div>
+        <p class="rv" style="--d:.15s">{t.lead}</p>
+      </div>
+
+      {
+        species.length < 2 ? (
+          <p class="empty">{t.empty}</p>
+        ) : (
+          <>
+            <form class="pick glass rv" id="cmp-form" style="--d:.2s" action={routes.compare[lang]} method="get">
+              {(['a', 'b', 'c'] as const).map((k, i) =>
+                k === 'c' && species.length < 3 ? null : (
+                  <label class="field">
+                    <span>
+                      <i class={`sw sw-${k}`} aria-hidden="true" />
+                      {t[k]}
+                    </span>
+                    <select name={k} id={`sel-${k}`}>
+                      {k === 'c' && (
+                        <option value="" selected>
+                          {t.none}
+                        </option>
+                      )}
+                      {species.map((s, j) => (
+                        <option value={s.id} selected={k !== 'c' && j === i}>
+                          {s.data.latin}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ),
+              )}
+              <div class="opts">
+                <label class="chk">
+                  <input type="checkbox" id="only-diff" />
+                  <span>{t.onlyDiff}</span>
+                </label>
+                <span class="legend">
+                  <i class="mk" aria-hidden="true" /> {t.legend}
+                </span>
+              </div>
+            </form>
+            <noscript>
+              <p class="draft">{t.noJs}</p>
+            </noscript>
+
+            <p class="hint">{t.scroll}</p>
+            <div class="tw rv" style="--d:.25s" tabindex="0" role="region" aria-label={tr('nav.compare')}>
+              <table class="cmp" id="cmp-table" data-n={initial.length}>
+                <thead>
+                  <tr>
+                    <th scope="col" class="lab corner">
+                      <span class="lbl">{t.param}</span>
+                    </th>
+                    {species.map((s) => {
+                      const own = s.data.gallery[0];
+                      return (
+                        <th scope="col" class="sp" data-sp={s.id} hidden={!initial.includes(s.id)}>
+                          <div class="ph">
+                            {own ? (
+                              <span class="frame ownf">
+                                <img src={own.src} alt={own.alt[lang]} loading="lazy" />
+                              </span>
+                            ) : (
+                              <CommonsPhoto id={s.id} lang={lang} alt={s.data.latin} width={500} compact />
+                            )}
+                          </div>
+                          <a class="nm" href={`${routes.species[lang]}${s.id}/`}>
+                            <span class="latin">{s.data.latin}</span>
+                            {s.data.commonName && <small>{s.data.commonName[lang]}</small>}
+                          </a>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr data-row={r.key} class:list={{ diff: differs(r.key, initial) }}>
+                      <th scope="row" class="lab">
+                        <i class="mk" aria-hidden="true" />
+                        {r.label}
+                      </th>
+                      {species.map((s) => {
+                        const d = s.data;
+                        const p = priceOf.get(s.id);
+                        const hide = !initial.includes(s.id);
+                        if (r.key === 'temperature') {
+                          const rg = range(d.temperature);
+                          return (
+                            <td data-sp={s.id} hidden={hide}>
+                              <span class="big">{d.temperature}</span>
+                              {rg && (
+                                <span class="scale" aria-hidden="true">
+                                  <span class="rail">
+                                    <span class="rng" style={bar(rg, T_MIN, T_MAX)} />
+                                    {[20, 25, 30].map((v) => (
+                                      <span class="tick" style={`left:${pos(v, T_MIN, T_MAX)}%`} />
+                                    ))}
+                                  </span>
+                                  <span class="ends">
+                                    <span>{T_MIN} °C</span>
+                                    <span>{T_MAX} °C</span>
+                                  </span>
+                                </span>
+                              )}
+                            </td>
+                          );
+                        }
+                        if (r.key === 'humidity') {
+                          const rg = range(d.humidity[lang]);
+                          return (
+                            <td data-sp={s.id} hidden={hide}>
+                              {d.humidity[lang]}
+                              {rg && rg[1] <= 100 && (
+                                <span class="scale hum" aria-hidden="true">
+                                  <span class="rail">
+                                    <span class="rng" style={bar(rg, 0, 100)} />
+                                    {[25, 50, 75].map((v) => (
+                                      <span class="tick" style={`left:${v}%`} />
+                                    ))}
+                                  </span>
+                                  <span class="ends">
+                                    <span>0%</span>
+                                    <span>100%</span>
+                                  </span>
+                                </span>
+                              )}
+                            </td>
+                          );
+                        }
+                        if (r.key === 'difficulty')
+                          return (
+                            <td data-sp={s.id} hidden={hide}>
+                              <span class="diffbar" aria-hidden="true">
+                                {[1, 2, 3].map((k) => (
+                                  <i class:list={{ on: k <= d.difficulty }} />
+                                ))}
+                              </span>
+                              {tr(`species.difficulty.${d.difficulty}` as UiKey)}
+                            </td>
+                          );
+                        if (r.key === 'climbs' || r.key === 'flies') {
+                          const v = r.key === 'climbs' ? d.climbs : d.flies;
+                          return (
+                            <td data-sp={s.id} hidden={hide}>
+                              <span class:list={['yn', { yes: v }]}>{yn(v)}</span>
+                            </td>
+                          );
+                        }
+                        if (r.key === 'price')
+                          return (
+                            <td data-sp={s.id} hidden={hide}>
+                              {p ? (
+                                <span class="pr">
+                                  <span class="from">
+                                    <small>{t.from}</small> {formatPrice(minPackPrice(p.packs), lang)} <small>/ {tr('pack.pcs')}</small>
+                                  </span>
+                                  <span class={`status st-${p.status}`}>{tr(`status.${p.status}`)}</span>
+                                </span>
+                              ) : (
+                                <span class="lbl">{t.notIn}</span>
+                              )}
+                            </td>
+                          );
+                        const txt =
+                          r.key === 'family'
+                            ? d.family
+                            : r.key === 'size'
+                              ? d.size[lang]
+                              : (d[r.key as 'origin' | 'substrate' | 'food' | 'reproduction' | 'development'] as { pl: string; en: string })[lang];
+                        return (
+                          <td data-sp={s.id} hidden={hide} data-glossary={r.glossary ? '' : undefined} class:list={{ big: r.key === 'size' }}>
+                            {txt}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p class="share rv">{t.copy}</p>
+            <div class="cta rv">
+              <a class="btn quiet" href={routes.species[lang]}>
+                {tr('nav.species')} <span class="arr">→</span>
+              </a>
+              <a class="link" href={routes.pricelist[lang]}>
+                {tr('nav.pricelist')}
+              </a>
+            </div>
+          </>
+        )
+      }
+    </div>
+  </section>
+  <script type="application/json" id="cmp-data" set:html={JSON.stringify(data)} />
+</Base>
+
+<script>
+  type Data = { ids: string[]; values: Record<string, Record<string, string>>; labels: Record<string, string> };
+  const raw = document.getElementById('cmp-data')?.textContent;
+  const table = document.getElementById('cmp-table') as HTMLTableElement | null;
+  const form = document.getElementById('cmp-form') as HTMLFormElement | null;
+  if (raw && table && form) {
+    const data = JSON.parse(raw) as Data;
+    const sels = (['a', 'b', 'c'] as const)
+      .map((k) => document.getElementById(`sel-${k}`) as HTMLSelectElement | null)
+      .filter((x): x is HTMLSelectElement => !!x);
+    const onlyDiff = document.getElementById('only-diff') as HTMLInputElement | null;
+    const valid = (id: string | null) => !!id && data.ids.includes(id);
+
+    // stan startowy z adresu ?a=&b=&c=
+    const q = new URLSearchParams(location.search);
+    const chosen: string[] = [];
+    for (const k of ['a', 'b', 'c']) {
+      const v = q.get(k);
+      if (valid(v) && !chosen.includes(v!)) chosen.push(v!);
+    }
+    for (const id of data.ids) if (chosen.length < 2 && !chosen.includes(id)) chosen.push(id);
+    sels.forEach((s, i) => (s.value = chosen[i] ?? ''));
+
+    form.addEventListener('submit', (e) => e.preventDefault());
+
+    const update = (push: boolean) => {
+      const sel = sels.map((s) => s.value).filter((v, i, arr) => valid(v) && arr.indexOf(v) === i);
+      // nie pozwalaj wybrać dwa razy tego samego gatunku
+      sels.forEach((s) => {
+        [...s.options].forEach((o) => {
+          o.disabled = !!o.value && o.value !== s.value && sel.includes(o.value);
+        });
+      });
+      table.dataset.n = String(sel.length);
+      table.querySelectorAll('tr').forEach((tr) => {
+        const cells = tr.querySelectorAll<HTMLElement>('[data-sp]');
+        cells.forEach((c) => (c.hidden = true));
+        for (const id of sel) {
+          const c = tr.querySelector<HTMLElement>(`[data-sp="${id}"]`);
+          if (c) {
+            c.hidden = false;
+            tr.appendChild(c);
+          }
+        }
+        const key = tr.dataset.row;
+        if (key) {
+          const diff = new Set(sel.map((id) => data.values[id]?.[key])).size > 1;
+          tr.classList.toggle('diff', diff);
+          tr.hidden = !!onlyDiff?.checked && !diff;
+        }
+      });
+      if (push) {
+        const p = new URLSearchParams();
+        ['a', 'b', 'c'].forEach((k, i) => sel[i] && p.set(k, sel[i]));
+        history.replaceState(null, '', `${location.pathname}?${p.toString()}`);
+      }
+      table.classList.remove('swap');
+      void table.offsetWidth;
+      table.classList.add('swap');
+    };
+    sels.forEach((s) => s.addEventListener('change', () => update(true)));
+    onlyDiff?.addEventListener('change', () => update(false));
+    update(location.search.length > 0);
+  }
+</script>
+
+<style>
+  .cmp-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+  }
+  .pick {
+    display: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px 18px;
+    padding: 18px;
+    margin-bottom: 22px;
+    position: relative;
+    z-index: 2;
+  }
+  :global(.js) .pick {
+    display: grid;
+  }
+  .sw {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background: var(--amber);
+    box-shadow: 0 0 10px var(--amber);
+    vertical-align: middle;
+  }
+  .sw-b {
+    background: var(--fern);
+    box-shadow: 0 0 10px var(--fern);
+  }
+  .sw-c {
+    background: var(--c-soon);
+    box-shadow: 0 0 10px var(--c-soon);
+  }
+  .opts {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px 24px;
+    flex-wrap: wrap;
+    align-items: center;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+  .chk {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .chk input {
+    width: 16px;
+    height: 16px;
+  }
+  .legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .mk {
+    display: inline-block;
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow:
+      0 0 0 3px rgba(232, 165, 71, 0.2),
+      0 0 12px var(--amber);
+  }
+  noscript .draft,
+  :global(noscript) .draft {
+    margin: 0 0 18px;
+  }
+  .hint {
+    display: none;
+    margin: 0 0 10px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  /* tabela */
+  .tw {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: linear-gradient(150deg, rgba(20, 33, 23, 0.85), rgba(11, 18, 13, 0.92));
+    scrollbar-width: thin;
+    scrollbar-color: var(--moss) transparent;
+    overscroll-behavior-x: contain;
+  }
+  .cmp {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    min-width: 640px;
+  }
+  .cmp[data-n='3'] {
+    min-width: 820px;
+  }
+  .cmp :global(th),
+  .cmp :global(td) {
+    text-align: left;
+    vertical-align: top;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .cmp td + td,
+  .cmp th.sp + th.sp,
+  .cmp td,
+  .cmp th.sp {
+    border-left: 1px solid var(--line);
+  }
+  .lab {
+    width: 200px;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: #0f1912;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 11px !important;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  thead .lab {
+    vertical-align: bottom;
+  }
+  tbody .lab .mk {
+    margin-right: 10px;
+    vertical-align: middle;
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity 0.4s,
+      transform 0.4s var(--ease);
+  }
+  tbody tr {
+    transition: background 0.4s;
+  }
+  tbody tr.diff {
+    background: linear-gradient(90deg, rgba(232, 165, 71, 0.07), transparent 70%);
+  }
+  tbody tr.diff .lab {
+    color: var(--amber2);
+    background: linear-gradient(90deg, #1e2214, #121c14);
+    box-shadow: inset 2px 0 0 var(--amber);
+  }
+  tbody tr.diff .mk {
+    opacity: 1;
+    transform: none;
+  }
+  tbody tr:hover td {
+    background: rgba(235, 229, 211, 0.025);
+  }
+  tbody tr:last-child :global(th),
+  tbody tr:last-child :global(td) {
+    border-bottom: 0;
+  }
+  th.sp {
+    padding: 14px;
+    font-weight: 400;
+  }
+  .ph :global(.frame) {
+    aspect-ratio: 4 / 3;
+  }
+  .ph :global(.credit) {
+    font-size: 10px;
+  }
+  .ownf {
+    display: block;
+    overflow: hidden;
+    border-radius: 3px;
+  }
+  .ownf img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .nm {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 12px;
+    text-decoration: none;
+  }
+  .nm .latin {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.05;
+    transition: color 0.3s;
+  }
+  .nm small {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .nm:hover .latin {
+    color: var(--amber2);
+  }
+  .cmp :global(.big),
+  .cmp td.big {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--amber2);
+    line-height: 1.15;
+  }
+  .scale {
+    display: block;
+    margin-top: 12px;
+  }
+  .rail {
+    position: relative;
+    display: block;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, rgba(120, 160, 200, 0.18), rgba(235, 229, 211, 0.1) 45%, rgba(200, 105, 44, 0.25));
+  }
+  .hum .rail {
+    background: linear-gradient(90deg, rgba(200, 160, 90, 0.15), rgba(120, 170, 160, 0.25));
+  }
+  .rng {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--amber), var(--amber2));
+    box-shadow: 0 0 14px rgba(232, 165, 71, 0.7);
+    transform-origin: left;
+  }
+  .hum .rng {
+    background: linear-gradient(90deg, var(--moss2), var(--fern));
+    box-shadow: 0 0 12px rgba(169, 191, 127, 0.6);
+  }
+  .tick {
+    position: absolute;
+    top: 8px;
+    width: 1px;
+    height: 5px;
+    background: var(--line2);
+  }
+  .ends {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+  }
+  .cmp.swap .rng {
+    animation: grow 0.8s var(--ease);
+  }
+  .cmp.swap td:not([hidden]),
+  .cmp.swap th.sp:not([hidden]) {
+    animation: fadein 0.6s var(--ease);
+  }
+  @keyframes grow {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes fadein {
+    from {
+      opacity: 0;
+      filter: blur(6px);
+    }
+  }
+  .diffbar {
+    display: inline-flex;
+    gap: 4px;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  .diffbar i {
+    width: 18px;
+    height: 4px;
+    background: var(--line2);
+    border-radius: 2px;
+  }
+  .diffbar i.on {
+    background: var(--fern);
+    box-shadow: 0 0 8px rgba(169, 191, 127, 0.6);
+  }
+  .yn::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--line2);
+    vertical-align: middle;
+  }
+  .yn.yes::before {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+  }
+  .pr {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .from {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 26px;
+    color: var(--amber2);
+    line-height: 1;
+  }
+  .from small {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .share {
+    margin: 14px 0 0;
+    font-size: 13px;
+    color: var(--dim);
+  }
+  :global(html:not(.js)) .share {
+    display: none;
+  }
+  .cta {
+    display: flex;
+    gap: 14px 22px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  @media (max-width: 860px) {
+    .pick {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .hint {
+      display: block;
+    }
+    .lab {
+      width: 118px;
+      padding-left: 12px !important;
+      padding-right: 10px !important;
+      letter-spacing: 0.12em;
+      font-size: 10px !important;
+    }
+    .cmp {
+      min-width: 0;
+      width: calc(118px + 210px * var(--cols, 2));
+    }
+    .cmp[data-n='2'] {
+      --cols: 2;
+    }
+    .cmp[data-n='3'] {
+      --cols: 3;
+      min-width: 0;
+    }
+    .cmp :global(th),
+    .cmp :global(td) {
+      padding: 12px 14px;
+      font-size: 13.5px;
+    }
+  }
+  @media (max-width: 480px) {
+    .cmp {
+      width: calc(108px + 200px * var(--cols, 2));
+    }
+    .lab {
+      width: 108px;
+    }
+  }
+</style>

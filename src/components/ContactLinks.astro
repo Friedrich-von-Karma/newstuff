@@ -1,0 +1,137 @@
+---
+import { site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  compact?: boolean;
+  /** jasny tekst na ciemnym tle */
+  dark?: boolean;
+  /** Temat wiadomości e-mail (np. zamówienie konkretnego gatunku). */
+  subject?: string;
+}
+const { lang, compact = false, dark = false, subject } = Astro.props;
+const tr = useTranslations(lang);
+const c = site.contact;
+
+const icons = {
+  email: 'M3 6h18v12H3z M3 6l9 7 9-7',
+  messenger: 'M12 3a9 8.5 0 0 0-5 15.6V21l2.6-1.5A9 8.5 0 1 0 12 3z M7 13.5l3.5-3.7 2.2 2.2 4.3-2.5-3.5 3.7-2.2-2.2z',
+  facebook: 'M14 21v-7.5h2.6l.4-3H14V8.7c0-.9.3-1.5 1.6-1.5H17V4.5a19 19 0 0 0-2.3-.1c-2.3 0-3.8 1.4-3.8 3.9v2.2H8.3v3H11V21',
+  instagram: 'M4 4h16v16H4z M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6z M16.8 6.8h.01',
+};
+
+const items = [
+  {
+    key: 'email',
+    label: tr('contact.email'),
+    value: c.email,
+    href: `mailto:${c.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`,
+  },
+  { key: 'messenger', label: tr('contact.messenger'), value: c.facebookName, href: c.messenger },
+  { key: 'facebook', label: tr('contact.facebook'), value: c.facebookName, href: c.facebook },
+  { key: 'instagram', label: tr('contact.instagram'), value: c.instagramName, href: c.instagram },
+] as { key: keyof typeof icons; label: string; value: string; href: string }[];
+---
+
+<ul class:list={['contact', { compact, dark }]}>
+  {
+    items.map((i) => (
+      <li>
+        <a
+          href={i.href}
+          {...(i.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d={icons[i.key]} />
+          </svg>
+          <span>
+            <span class="label">{i.label}</span>
+            {!compact && i.value !== i.label && <span class="value">{i.value}</span>}
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .contact:not(.compact) {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1rem;
+  }
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .dark a {
+    color: var(--paper-2);
+  }
+  .dark a:hover {
+    color: var(--brass-light);
+  }
+  .contact:not(.compact) a {
+    position: relative;
+    background: var(--label);
+    border: 1px solid #cbbd98;
+    padding: 0.95rem 1.1rem;
+    box-shadow: 0 2px 0 #d8c89f, 0 8px 16px -10px rgba(40, 25, 10, 0.5);
+    transition:
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  .contact:not(.compact) li:nth-child(odd) a {
+    rotate: -0.6deg;
+  }
+  .contact:not(.compact) li:nth-child(even) a {
+    rotate: 0.5deg;
+  }
+  .contact:not(.compact) a:hover {
+    transform: translateY(-3px) rotate(0deg);
+    box-shadow: 0 2px 0 #d8c89f, 0 14px 22px -10px rgba(40, 25, 10, 0.5);
+  }
+  a:hover {
+    color: var(--wood-600);
+  }
+  svg {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    color: var(--bottle-600);
+  }
+  .dark svg {
+    color: var(--brass);
+  }
+  .compact svg {
+    width: 18px;
+    height: 18px;
+  }
+  .label {
+    display: block;
+    font-family: var(--f-caps);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .compact .label {
+    font-family: var(--f-text);
+    font-weight: normal;
+    letter-spacing: 0;
+  }
+  .value {
+    display: block;
+    font-family: var(--f-type);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    overflow-wrap: anywhere;
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+/** Logo Blattodea.pl – ex libris „Amata Blattodea” (łac. „ukochane karaczany”), bursztynowa wersja nocna. */
+interface Props {
+  big?: boolean;
+  class?: string;
+}
+const { big = false, class: cls } = Astro.props;
+---
+
+<span class:list={['exl', { big }, cls]} role="img" aria-label="Amata Blattodea – M. Stachowiak, MMXXVI">
+  <span class="exl-in" aria-hidden="true">
+    <span class="l1">Amata</span>
+    <span class="l2">Blattodea</span>
+    <span class="rule"></span>
+    <span class="l3">M. Stachowiak · MMXXVI</span>
+  </span>
+</span>
+
+<style>
+  .exl {
+    display: inline-flex;
+    color: var(--amber2);
+    padding: 3px;
+    border: 1px solid rgba(232, 165, 71, 0.55);
+    border-radius: 2px;
+    flex: none;
+  }
+  .exl-in {
+    border: 3px double rgba(232, 165, 71, 0.75);
+    padding: 5px 12px 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    background: rgba(11, 18, 13, 0.35);
+  }
+  .l1,
+  .l3 {
+    font-family: var(--serif);
+    font-variant: small-caps;
+    text-transform: lowercase;
+    letter-spacing: 0.32em;
+    font-size: 10px;
+    line-height: 1.2;
+    color: var(--muted);
+    padding-left: 0.32em;
+    white-space: nowrap;
+  }
+  .l2 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: var(--amber2);
+  }
+  .rule {
+    width: 70%;
+    height: 1px;
+    background: rgba(232, 165, 71, 0.6);
+    margin: 3px 0 2px;
+  }
+  .l3 {
+    font-size: 8.5px;
+    letter-spacing: 0.22em;
+  }
+  .big {
+    padding: 5px;
+  }
+  .big .exl-in {
+    padding: 12px 30px 13px;
+    border-width: 4px;
+  }
+  .big .l1 {
+    font-size: 14px;
+  }
+  .big .l2 {
+    font-size: 46px;
+  }
+  .big .l3 {
+    font-size: 12px;
+  }
+  .big .rule {
+    margin: 7px 0 5px;
+  }
+  @media (max-width: 560px) {
+    .l2 {
+      font-size: 20px;
+    }
+    .big .l2 {
+      font-size: 38px;
+    }
+    .big .exl-in {
+      padding: 10px 20px;
+    }
+  }
+</style>
