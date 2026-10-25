@@ -1,0 +1,1814 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opłacalność hodowli gadów</title>
+<meta name="description" content="Porównawcza analiza opłacalności i trudności hodowli 23 gatunków gadów – od popularnych po rzadkie. Rynek polski i UE, 2026.">
+<style>
+:root{
+  --bg:#f6f4ee; --surface:#ffffff; --surface2:#efece3; --ink:#1d2320; --muted:#5d6661; --line:#dcd7ca;
+  --accent:#2f6b4f; --accent2:#a3672b; --pos:#1f7a4a; --neg:#b3392f; --neu:#8a6d1c;
+  --easy:#3d9a63; --mid:#d39b2a; --hard:#c4513f;
+  --c1:#3f7fb5; --c2:#3d9a63; --c3:#c27a2c; --c4:#9b4bb0;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --surface:#1a201d; --surface2:#222a26; --ink:#e7ebe8; --muted:#9aa6a0; --line:#2f3934;
+    --accent:#6fc298; --accent2:#e0a35f; --pos:#5fd193; --neg:#ff8277; --neu:#e7c35a;
+    --easy:#5fc086; --mid:#e8b54a; --hard:#f07763;
+    --c1:#6aa8dd; --c2:#5fc086; --c3:#e59d50; --c4:#c381d6;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --surface:#1a201d; --surface2:#222a26; --ink:#e7ebe8; --muted:#9aa6a0; --line:#2f3934;
+  --accent:#6fc298; --accent2:#e0a35f; --pos:#5fd193; --neg:#ff8277; --neu:#e7c35a;
+  --easy:#5fc086; --mid:#e8b54a; --hard:#f07763;
+  --c1:#6aa8dd; --c2:#5fc086; --c3:#e59d50; --c4:#c381d6;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{padding:48px 0 28px;border-bottom:1px solid var(--line)}
+.kicker{color:var(--accent2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+h1{font-size:clamp(1.8rem,4.5vw,2.8rem);line-height:1.15;margin:.3em 0 .4em}
+h2{font-size:1.55rem;margin:2.4em 0 .6em;padding-top:.4em}
+h3{margin:.1em 0}
+h4{margin:.2em 0 .5em;font-size:1rem}
+.lead{font-size:1.1rem;color:var(--muted);max-width:820px}
+.meta{font-size:.85rem;color:var(--muted)}
+nav.toc{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap}
+nav.toc a{display:inline-block;padding:10px 12px;font-size:.88rem;text-decoration:none;color:var(--muted)}
+nav.toc a:hover{color:var(--ink)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.tldr{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:24px}
+.tldr .panel h3{font-size:1rem;color:var(--accent)}
+.tldr ol,.tldr ul{margin:.3em 0;padding-left:1.2em}
+.note{border-left:4px solid var(--accent2);background:var(--surface2);padding:12px 16px;border-radius:0 10px 10px 0;font-size:.93rem}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--surface2);font-weight:600;white-space:nowrap;position:sticky;top:0}
+table.sortable th{cursor:pointer;user-select:none}
+table.sortable th:after{content:" ↕";color:var(--muted);font-size:.8em}
+tbody tr:hover{background:var(--surface2)}
+td{white-space:nowrap}
+td:nth-child(2){white-space:normal;min-width:170px}
+.lat{color:var(--muted);font-size:.85em}
+.pos{color:var(--pos)} .neg{color:var(--neg)} .neu{color:var(--neu)}
+.badge{display:inline-block;padding:1px 8px;border-radius:99px;font-size:.78rem;font-weight:600;color:#fff}
+.badge.easy{background:var(--easy)} .badge.mid{background:var(--mid);color:#1d1d1d} .badge.hard{background:var(--hard)}
+.cat{display:inline-block;padding:1px 8px;border-radius:6px;font-size:.76rem;font-weight:600;border:1px solid currentColor}
+.c-pop{color:var(--c1)} .c-śre{color:var(--c2)} .c-rza{color:var(--c3)} .c-bar{color:var(--c4)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block}
+.dots i.on{background:var(--accent)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}
+.filters button{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:99px;cursor:pointer;font:inherit;font-size:.85rem}
+.filters button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+/* wykres słupkowy */
+.bars{display:flex;flex-direction:column;gap:6px}
+.brow{display:grid;grid-template-columns:200px 1fr 110px;gap:10px;align-items:center;font-size:.86rem}
+.btrack{position:relative;height:18px;background:var(--surface2);border-radius:4px}
+.bzero{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--muted)}
+.brange{position:absolute;top:7px;height:4px;background:var(--line);border-radius:2px}
+.bbar{position:absolute;top:3px;height:12px;background:var(--accent);border-radius:3px;opacity:.9}
+.bbar.neg{background:var(--neg)}
+.bval{text-align:right;font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.82rem;color:var(--muted);margin-top:10px}
+.legend span:before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--k)}
+/* scatter */
+.chart svg{width:100%;height:auto;display:block}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .grid.zero{stroke:var(--muted);stroke-width:1.5}
+.chart .ax{fill:var(--muted);font-size:12px}
+.chart .ax.t{font-size:13px;font-weight:600}
+.chart .zone{fill:var(--accent);opacity:.07}
+.chart .zl{fill:var(--accent);font-size:12px;font-weight:600}
+.chart circle{stroke:var(--surface);stroke-width:1.5;opacity:.85}
+.chart .c1{fill:var(--c1)} .chart .c2{fill:var(--c2)} .chart .c3{fill:var(--c3)} .chart .c4{fill:var(--c4)}
+.chart .pn{fill:#fff;font-size:11px;font-weight:700;pointer-events:none}
+.chart .zl2{fill:var(--muted);font-size:11px}
+.sckey{columns:3 220px;font-size:.84rem;padding-left:0;list-style:none;margin:12px 0 0}
+.sckey li{break-inside:avoid;margin:2px 0}
+.sckey b{display:inline-block;min-width:22px;color:var(--accent)}
+/* karty */
+.cards{display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);scroll-margin-top:60px}
+.card header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.card h3{font-size:1.3rem;display:inline}
+.rank{display:inline-block;background:var(--accent);color:#fff;border-radius:8px;padding:0 8px;margin-right:8px;font-weight:700;font-size:.9rem;vertical-align:3px}
+.score{text-align:center;background:var(--surface2);border-radius:12px;padding:6px 12px;min-width:72px}
+.score b{font-size:1.6rem;color:var(--accent);display:block;line-height:1.1}
+.score small{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{font-size:.78rem;background:var(--surface2);border-radius:6px;padding:1px 8px}
+.bio{color:var(--muted);font-size:.93rem}
+.cgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px}
+table.mini{font-size:.86rem}
+table.mini td{padding:4px 6px;white-space:normal}
+table.mini td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.mini tr.sum td{font-weight:700;border-top:2px solid var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.kpis div{background:var(--surface2);border-radius:10px;padding:8px;text-align:center}
+.kpis small{display:block;color:var(--muted);font-size:.74rem}
+.kpis b{font-size:.92rem}
+.dl{display:grid;grid-template-columns:130px 1fr auto;gap:8px;align-items:center;font-size:.85rem;margin:6px 0}
+.dtrack{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.dtrack span{display:block;height:100%}
+.dtrack .easy{background:var(--easy)} .dtrack .mid{background:var(--mid)} .dtrack .hard{background:var(--hard)}
+.legal{margin-top:12px;font-size:.85rem;background:var(--surface2);padding:8px 10px;border-radius:8px}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}
+.pc ul{margin:0;padding-left:0;list-style:none;font-size:.9rem}
+.pc li{padding-left:22px;position:relative;margin:4px 0}
+ul.plus li:before{content:"+";position:absolute;left:4px;color:var(--pos);font-weight:800}
+ul.minus li:before{content:"–";position:absolute;left:4px;color:var(--neg);font-weight:800}
+.tip{background:color-mix(in srgb,var(--accent) 10%,transparent);border-radius:10px;padding:10px 14px;font-size:.92rem}
+.scen{font-size:.85rem;color:var(--muted);margin-bottom:0}
+.grid2>*,.grid3>*,.cgrid>*,.pc>*,.tldr>*{min-width:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.panel ul{padding-left:1.2em}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;background:var(--surface2);padding:12px;border-radius:10px;overflow-x:auto;white-space:pre}
+footer{margin:60px 0 40px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+.themebtn{position:fixed;right:14px;bottom:14px;z-index:9;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 12px;cursor:pointer;box-shadow:var(--shadow);font:inherit;font-size:.85rem}
+@media (max-width:820px){
+  .cgrid,.pc,.grid2,.grid3{grid-template-columns:1fr}
+  .brow{grid-template-columns:110px 1fr 84px;font-size:.78rem}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media print{nav.toc,.themebtn,.filters{display:none} .card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<div class="kicker">Terrarystyka · analiza ekonomiczna · 2026</div>
+<h1>Opłacalność hodowli gadów: 23 gatunków od popularnych po rzadkie</h1>
+<p class="lead">Porównanie zarobków, kosztów, trudności i ryzyka dla małej, domowej hodowli w Polsce. Każdy gatunek policzony tym samym modelem: grupa hodowlana, przychód ze sprzedaży młodych, koszty odchowu, prądu, pokarmu, weterynarza, sprzedaży i amortyzacji.</p>
+<p class="meta">Waluta: PLN · Ceny: szacunki rynku PL/UE 2025–2026 (giełdy, grupy hodowców, sklepy, MorphMarket EU) · Prąd: 1,00 zł/kWh · Wszystkie kwoty to wartości roczne dla jednej grupy hodowlanej, chyba że napisano inaczej.</p>
+</div></header>
+
+<nav class="toc"><div class="wrap">
+<a href="#tldr">Wnioski</a><a href="#metoda">Metodologia</a><a href="#ranking">Ranking</a><a href="#wykresy">Wykresy</a><a href="#scenariusze">Scenariusze</a><a href="#gatunki">Gatunki</a><a href="#koszty">Koszty</a><a href="#rynek">Rynek</a><a href="#prawo">Prawo</a><a href="#strategie">Strategie</a><a href="#bledy">Błędy</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="tldr">
+<h2>1. Najważniejsze wnioski</h2>
+<div class="tldr">
+<div class="panel"><h3>Top 5 w rankingu łącznym</h3><ol><li><a href="#nephrurus"><b>Gekon gałkoogonowy</b></a> – wynik 72/100, zysk 7 316 zł/rok, start 10 500 zł, trudność 4,7</li><li><a href="#heterodon"><b>Wąż świnionosy (hognose)</b></a> – wynik 71/100, zysk 4 671 zł/rok, start 7 000 zł, trudność 4,7</li><li><a href="#acanthurus"><b>Waran kolczastoogonowy</b></a> – wynik 68/100, zysk 11 568 zł/rok, start 13 500 zł, trudność 5,7</li><li><a href="#correlophus"><b>Gekon orzęsiony</b></a> – wynik 67/100, zysk 3 205 zł/rok, start 4 900 zł, trudność 2,3</li><li><a href="#tiliqua"><b>Scynk niebieskojęzyczny</b></a> – wynik 63/100, zysk 4 677 zł/rok, start 9 600 zł, trudność 4,0</li></ol></div>
+<div class="panel"><h3>Kto zarabia najwięcej?</h3>
+<ul>
+<li><b>Najwyższy zysk roczny:</b> <a href="#abronia">Abronia (zielona)</a>, <a href="#acanthurus">Waran kolczastoogonowy</a>, <a href="#nephrurus">Gekon gałkoogonowy</a></li>
+<li><b>Najwyższy zwrot z kapitału (ROI):</b> <a href="#acanthurus">Waran kolczastoogonowy</a>, <a href="#pardalis">Kameleon lamparci</a>, <a href="#nephrurus">Gekon gałkoogonowy</a></li>
+<li><b>Najlepsza stawka za godzinę pracy:</b> <a href="#abronia">Abronia (zielona)</a>, <a href="#nephrurus">Gekon gałkoogonowy</a>, <a href="#leachianus">Gekon olbrzymi (leachianus)</a></li>
+<li><b>Zysk dodatni nawet w scenariuszu pesymistycznym (10):</b> <a href="#abronia">Abronia (zielona)</a>, <a href="#nephrurus">Gekon gałkoogonowy</a>, <a href="#acanthurus">Waran kolczastoogonowy</a>, <a href="#leachianus">Gekon olbrzymi (leachianus)</a>, <a href="#viridis">Pyton zielony</a>, <a href="#heterodon">Wąż świnionosy (hognose)</a>, <a href="#tiliqua">Scynk niebieskojęzyczny</a>, <a href="#goniurosaurus">Gekon jaskiniowy</a>, <a href="#correlophus">Gekon orzęsiony</a>, <a href="#testudo">Żółw grecki (Hermanna)</a></li>
+</ul></div>
+<div class="panel"><h3>Gatunki na granicy opłacalności lub stratne</h3>
+<p style="margin:.3em 0"><a href="#calyptratus">Kameleon jemeński</a>, <a href="#pogona">Agama brodata</a>, <a href="#phelsuma">Felsuma madagaskarska</a>, <a href="#guttatus">Wąż zbożowy</a>, <a href="#boa">Boa cesarski</a>, <a href="#lampropeltis">Wąż królewski</a>, <a href="#regius">Pyton królewski</a>, <a href="#uromastyx">Szczeciniak (np. ozdobny)</a>, <a href="#tribolonotus">Scynk krokodylowy</a>, <a href="#hemitheconyx">Gekon grubogonowy</a>, <a href="#eublepharis">Gekon lamparci</a></p>
+<p class="meta">Przy standardowych odmianach i małej skali te gatunki rzadko zarabiają. Wyjątkiem są topowe morfy i rozpoznawalna marka hodowcy.</p></div>
+</div>
+<div class="panel" style="margin-top:14px">
+<h3>Sedno w 6 punktach</h3>
+<ol>
+<li><b>Popularność zabija marżę.</b> Gatunki „dla początkujących” (agama brodata, kameleon jemeński, wąż zbożowy, pyton królewski w normalnej odmianie) mają przesycony rynek. Zarabia się na nich tylko na morfach i projektach genetycznych, nie na liczbie młodych.</li>
+<li><b>Najlepszy kompromis to średnia półka.</b> Gekon gałkoogonowy, hognose, scynk niebieskojęzyczny, gekon orzęsiony z dobrych linii i waran kolczastoogonowy łączą realny popyt z ceną, która pokrywa koszty odchowu.</li>
+<li><b>Rzadkie znaczy drogie i ryzykowne.</b> Abronia, leachianus czy Uroplatus dają wysokie kwoty na papierze, ale start kosztuje 7–40 tys. zł, rynek jest wąski, a strata jednego zwierzęcia zjada roczny zysk.</li>
+<li><b>Prąd i owady to cichy zabójca rentowności.</b> Gatunki pustynne z lampami (agamy, warany, szczeciniaki) płacą 1–2 tys. zł rocznie za energię na grupę. Gatunki w temperaturze pokojowej (orzęsiony, leachianus, Goniurosaurus) mają przewagę kosztową.</li>
+<li><b>Czas jest kosztem.</b> Przy stawce poniżej 15 zł/h hodowla to hobby, które się samofinansuje, a nie biznes. Większość popularnych gatunków mieści się w tym przedziale.</li>
+<li><b>Papiery mają znaczenie.</b> Gatunki z Aneksu A/B UE (CITES) wymagają rejestracji i dokumentów pochodzenia. Bez nich potomstwa nie da się legalnie sprzedać, co zeruje wartość hodowli.</li>
+</ol>
+</div>
+</section>
+
+<section id="metoda">
+<h2>2. Metodologia i założenia</h2>
+<div class="grid2">
+<div class="panel">
+<h3>Model rocznego wyniku grupy</h3>
+<div class="formula">Młode       = samice × jaja/młode na samicę × przeżywalność
+Przychód    = sprzedane × cena średnia
+            + niesprzedane × 30% ceny (wyprzedaż do sklepów)
+Koszty      = odchów młodych (+50% dla niesprzedanych)
+            + koszty stałe (prąd, pokarm dorosłych, weterynarz)
+            + sprzedaż (10% przychodu + 600 zł: giełdy, wysyłka)
+            + amortyzacja (sprzęt / 5 lat + zwierzęta / lata rozrodu)
+Zysk        = Przychód − Koszty
+ROI         = Zysk / kapitał startowy
+Zwrot       = lata do pierwszego miotu + start / zysk
+Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
+</div>
+<div class="panel">
+<h3>Kluczowe założenia</h3>
+<ul>
+<li><b>Ceny średnie, nie topowe.</b> Liczę realny miks odmian w grupie, a nie najdroższy morf z ogłoszenia.</li>
+<li><b>Efektywna płodność.</b> Uwzględnia samice, które nie przystępują do rozrodu, i celowe ograniczanie zniesień (np. u agam i kameleonów).</li>
+<li><b>Sprzedawalność (sell-through)</b> to odsetek młodych sprzedanych w normalnej cenie w sezonie. Reszta idzie do sklepów za ok. 30% ceny.</li>
+<li><b>Praca nie jest wliczona w koszty.</b> Pokazuję ją osobno jako stawkę godzinową.</li>
+<li><b>Nie wliczam</b> czynszu, adaptacji pomieszczenia, podatków ani klimatyzacji całego pokoju (poza gatunkami, gdzie jest konieczna – wtedy jest w kosztach stałych).</li>
+<li><b>Grupa hodowlana</b> to typowy start: najczęściej 1.2–1.4 (1 samiec, 2–4 samice). U drogich gatunków jedna para (1.1).</li>
+</ul>
+</div>
+</div>
+<div class="panel" style="margin-top:14px">
+<h3>Wynik łączny (0–100)</h3>
+<p>Ranking łączy pieniądze i praktykę. Wskaźniki finansowe są liczone jako pozycja w rankingu (percentyl), żeby jeden bardzo drogi gatunek nie spłaszczał skali.</p>
+<div class="tablewrap"><table>
+<tr><th>Składnik</th><th>Waga</th><th>Dlaczego</th></tr>
+<tr><td>Zysk roczny (bazowy)</td><td>20%</td><td>Ile realnie zostaje w kieszeni</td></tr>
+<tr><td>ROI (zysk / kapitał)</td><td>15%</td><td>Jak szybko pracuje zainwestowany kapitał</td></tr>
+<tr><td>Ryzyko (śmiertelność, prawo, wartość sztuki)</td><td>15%</td><td>Jedno zdarzenie może zniszczyć roczny wynik</td></tr>
+<tr><td>Płynność rynku</td><td>13%</td><td>Czy młode faktycznie da się sprzedać</td></tr>
+<tr><td>Trudność (odwrotność)</td><td>12%</td><td>Łatwiejsze gatunki = mniej strat i stresu</td></tr>
+<tr><td>Stawka za godzinę</td><td>10%</td><td>Opłacalność Twojego czasu</td></tr>
+<tr><td>Zysk w scenariuszu pesymistycznym</td><td>10%</td><td>Odporność na spadek cen</td></tr>
+</table></div>
+</div>
+<p class="note"><b>Zastrzeżenie:</b> to model szacunkowy. Ceny zwierząt zmieniają się szybko (moda na morfy, nowe linie, sezon), a wyniki konkretnej hodowli zależą od jakości zwierząt, marki hodowcy i kanałów sprzedaży. Traktuj liczby jako punkt wyjścia do własnego arkusza. Przed zakupem sprawdź aktualne ceny na 2–3 giełdach i w grupach hodowców.</p>
+</section>
+
+<section id="ranking">
+<h2>3. Ranking zbiorczy</h2>
+<p>Kliknij nagłówek, aby posortować. Kliknij nazwę gatunku, aby przejść do szczegółowej karty.</p>
+<div class="filters" id="filters">
+<button class="on" data-f="all">Wszystkie</button>
+<button data-f="Popularny">Popularne</button>
+<button data-f="Średnio popularny">Średnio popularne</button>
+<button data-f="Rzadki">Rzadkie</button>
+<button data-f="Bardzo rzadki">Bardzo rzadkie</button>
+</div>
+<div class="tablewrap"><table class="sortable" id="tbl">
+<thead><tr><th>#</th><th>Gatunek</th><th>Kategoria</th><th>Cena śr.</th><th>Młode/rok</th><th>Przychód</th><th>Koszty</th><th>Zysk/rok</th><th>Start</th><th>ROI</th><th>Zwrot</th><th>Stawka</th><th>Trudność</th><th>Płynność</th><th>Wynik</th></tr></thead>
+<tbody>
+<tr data-cat="Rzadki">
+<td data-v="1">1</td>
+<td data-v="Gekon gałkoogonowy"><a href="#nephrurus"><b>Gekon gałkoogonowy</b></a><br><i class="lat">Nephrurus levis / N. amyae</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="1300">1 300 zł</td>
+<td data-v="13.6">14</td>
+<td data-v="12730">12 730 zł</td>
+<td data-v="5414">5 414 zł</td>
+<td data-v="7316" class="pos"><b>7 316 zł</b></td>
+<td data-v="10500">10 500 zł</td>
+<td data-v="0.697" class="pos">70%</td>
+<td data-v="2.9352811237294345">2,9 l.</td>
+<td data-v="46.9">47 zł/h</td>
+<td data-v="4.7"><span class="badge mid">4,7 · średni</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="72"><b>72</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="2">2</td>
+<td data-v="Wąż świnionosy (hognose)"><a href="#heterodon"><b>Wąż świnionosy (hognose)</b></a><br><i class="lat">Heterodon nasicus</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="480">480 zł</td>
+<td data-v="29.5">30</td>
+<td data-v="10698">10 698 zł</td>
+<td data-v="6028">6 028 zł</td>
+<td data-v="4671" class="pos"><b>4 671 zł</b></td>
+<td data-v="7000">7 000 zł</td>
+<td data-v="0.667" class="pos">67%</td>
+<td data-v="3.4987646325461625">3,5 l.</td>
+<td data-v="15.0">15 zł/h</td>
+<td data-v="4.7"><span class="badge mid">4,7 · średni</span></td>
+<td data-v="4"><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td>
+<td data-v="71"><b>71</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="3">3</td>
+<td data-v="Waran kolczastoogonowy"><a href="#acanthurus"><b>Waran kolczastoogonowy</b></a><br><i class="lat">Varanus acanthurus</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="1900">1 900 zł</td>
+<td data-v="21.0">21</td>
+<td data-v="24539">24 539 zł</td>
+<td data-v="12970">12 970 zł</td>
+<td data-v="11568" class="pos"><b>11 568 zł</b></td>
+<td data-v="13500">13 500 zł</td>
+<td data-v="0.857" class="pos">86%</td>
+<td data-v="2.666972096400539">2,7 l.</td>
+<td data-v="27.8">28 zł/h</td>
+<td data-v="5.7"><span class="badge mid">5,7 · średni</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="68"><b>68</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="4">4</td>
+<td data-v="Gekon orzęsiony"><a href="#correlophus"><b>Gekon orzęsiony</b></a><br><i class="lat">Correlophus ciliatus</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="240">240 zł</td>
+<td data-v="47.6">48</td>
+<td data-v="8385">8 385 zł</td>
+<td data-v="5181">5 181 zł</td>
+<td data-v="3205" class="pos"><b>3 205 zł</b></td>
+<td data-v="4900">4 900 zł</td>
+<td data-v="0.654" class="pos">65%</td>
+<td data-v="3.0290914689499386">3,0 l.</td>
+<td data-v="10.3">10 zł/h</td>
+<td data-v="2.3"><span class="badge easy">2,3 · łatwy</span></td>
+<td data-v="4"><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td>
+<td data-v="67"><b>67</b></td>
+</tr>
+<tr data-cat="Średnio popularny">
+<td data-v="5">5</td>
+<td data-v="Scynk niebieskojęzyczny"><a href="#tiliqua"><b>Scynk niebieskojęzyczny</b></a><br><i class="lat">Tiliqua scincoides / T. gigas</i></td>
+<td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
+<td data-v="1100">1 100 zł</td>
+<td data-v="14.9">15</td>
+<td data-v="11212">11 212 zł</td>
+<td data-v="6535">6 535 zł</td>
+<td data-v="4677" class="pos"><b>4 677 zł</b></td>
+<td data-v="9600">9 600 zł</td>
+<td data-v="0.487" class="pos">49%</td>
+<td data-v="4.052513559417701">4,1 l.</td>
+<td data-v="18.0">18 zł/h</td>
+<td data-v="4.0"><span class="badge mid">4,0 · średni</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="63"><b>63</b></td>
+</tr>
+<tr data-cat="Bardzo rzadki">
+<td data-v="6">6</td>
+<td data-v="Abronia (zielona)"><a href="#abronia"><b>Abronia (zielona)</b></a><br><i class="lat">Abronia graminea</i></td>
+<td data-v="Bardzo rzadki"><span class="cat c-bar">Bardzo rzadki</span></td>
+<td data-v="6500">6 500 zł</td>
+<td data-v="10.2">10</td>
+<td data-v="40774">40 774 zł</td>
+<td data-v="14878">14 878 zł</td>
+<td data-v="25896" class="pos"><b>25 896 zł</b></td>
+<td data-v="39000">39 000 zł</td>
+<td data-v="0.664" class="pos">66%</td>
+<td data-v="4.006021188559645">4,0 l.</td>
+<td data-v="124.5">125 zł/h</td>
+<td data-v="6.0"><span class="badge hard">6,0 · trudny</span></td>
+<td data-v="1"><span class="dots" aria-label="1/5"><i class="on"></i><i></i><i></i><i></i><i></i></span></td>
+<td data-v="58"><b>58</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="7">7</td>
+<td data-v="Gekon olbrzymi (leachianus)"><a href="#leachianus"><b>Gekon olbrzymi (leachianus)</b></a><br><i class="lat">Rhacodactylus leachianus</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="2800">2 800 zł</td>
+<td data-v="6.0">6</td>
+<td data-v="12096">12 096 zł</td>
+<td data-v="6050">6 050 zł</td>
+<td data-v="6046" class="pos"><b>6 046 zł</b></td>
+<td data-v="20000">20 000 zł</td>
+<td data-v="0.302" class="pos">30%</td>
+<td data-v="6.307753373908442">6,3 l.</td>
+<td data-v="38.8">39 zł/h</td>
+<td data-v="4.7"><span class="badge mid">4,7 · średni</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="56"><b>56</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="8">8</td>
+<td data-v="Gekon jaskiniowy"><a href="#goniurosaurus"><b>Gekon jaskiniowy</b></a><br><i class="lat">Goniurosaurus hainanensis / lichtenfelderi / araneus</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="700">700 zł</td>
+<td data-v="12.8">13</td>
+<td data-v="6138">6 138 zł</td>
+<td data-v="3401">3 401 zł</td>
+<td data-v="2737" class="pos"><b>2 737 zł</b></td>
+<td data-v="4600">4 600 zł</td>
+<td data-v="0.595" class="pos">59%</td>
+<td data-v="3.180893358278765">3,2 l.</td>
+<td data-v="17.5">18 zł/h</td>
+<td data-v="4.3"><span class="badge mid">4,3 · średni</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="55"><b>55</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="9">9</td>
+<td data-v="Gekon lamparci"><a href="#eublepharis"><b>Gekon lamparci</b></a><br><i class="lat">Eublepharis macularius</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="170">170 zł</td>
+<td data-v="45.9">46</td>
+<td data-v="6167">6 167 zł</td>
+<td data-v="5308">5 308 zł</td>
+<td data-v="859" class="neu"><b>859 zł</b></td>
+<td data-v="4000">4 000 zł</td>
+<td data-v="0.215" class="neu">21%</td>
+<td data-v="5.65800319476913">5,7 l.</td>
+<td data-v="4.1">4 zł/h</td>
+<td data-v="2.7"><span class="badge easy">2,7 · łatwy</span></td>
+<td data-v="4"><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td>
+<td data-v="54"><b>54</b></td>
+</tr>
+<tr data-cat="Średnio popularny">
+<td data-v="10">10</td>
+<td data-v="Żółw grecki (Hermanna)"><a href="#testudo"><b>Żółw grecki (Hermanna)</b></a><br><i class="lat">Testudo hermanni</i></td>
+<td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
+<td data-v="320">320 zł</td>
+<td data-v="28.8">29</td>
+<td data-v="6636">6 636 zł</td>
+<td data-v="4144">4 144 zł</td>
+<td data-v="2491" class="pos"><b>2 491 zł</b></td>
+<td data-v="7000">7 000 zł</td>
+<td data-v="0.356" class="pos">36%</td>
+<td data-v="3.8097765237551884">3,8 l.</td>
+<td data-v="12.0">12 zł/h</td>
+<td data-v="3.7"><span class="badge easy">3,7 · łatwy</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="53"><b>53</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="11">11</td>
+<td data-v="Kameleon lamparci"><a href="#pardalis"><b>Kameleon lamparci</b></a><br><i class="lat">Furcifer pardalis</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="780">780 zł</td>
+<td data-v="34.0">34</td>
+<td data-v="17238">17 238 zł</td>
+<td data-v="11124">11 124 zł</td>
+<td data-v="6114" class="pos"><b>6 114 zł</b></td>
+<td data-v="8500">8 500 zł</td>
+<td data-v="0.719" class="pos">72%</td>
+<td data-v="2.3902064047626834">2,4 l.</td>
+<td data-v="11.8">12 zł/h</td>
+<td data-v="6.7"><span class="badge hard">6,7 · trudny</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="53"><b>53</b></td>
+</tr>
+<tr data-cat="Średnio popularny">
+<td data-v="12">12</td>
+<td data-v="Gekon grubogonowy"><a href="#hemitheconyx"><b>Gekon grubogonowy</b></a><br><i class="lat">Hemitheconyx caudicinctus</i></td>
+<td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
+<td data-v="280">280 zł</td>
+<td data-v="24.0">24</td>
+<td data-v="4603">4 603 zł</td>
+<td data-v="3792">3 792 zł</td>
+<td data-v="811" class="neu"><b>811 zł</b></td>
+<td data-v="4000">4 000 zł</td>
+<td data-v="0.203" class="neu">20%</td>
+<td data-v="6.432912391475924">6,4 l.</td>
+<td data-v="3.9">4 zł/h</td>
+<td data-v="3.3"><span class="badge easy">3,3 · łatwy</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="49"><b>49</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="13">13</td>
+<td data-v="Pyton zielony"><a href="#viridis"><b>Pyton zielony</b></a><br><i class="lat">Morelia viridis</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="1900">1 900 zł</td>
+<td data-v="7.2">7</td>
+<td data-v="9850">9 850 zł</td>
+<td data-v="5188">5 188 zł</td>
+<td data-v="4661" class="pos"><b>4 661 zł</b></td>
+<td data-v="10000">10 000 zł</td>
+<td data-v="0.466" class="pos">47%</td>
+<td data-v="4.645382564618924">4,6 l.</td>
+<td data-v="14.9">15 zł/h</td>
+<td data-v="7.0"><span class="badge hard">7,0 · trudny</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="49"><b>49</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="14">14</td>
+<td data-v="Scynk krokodylowy"><a href="#tribolonotus"><b>Scynk krokodylowy</b></a><br><i class="lat">Tribolonotus gracilis</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="650">650 zł</td>
+<td data-v="8.4">8</td>
+<td data-v="4122">4 122 zł</td>
+<td data-v="3406">3 406 zł</td>
+<td data-v="717" class="neu"><b>717 zł</b></td>
+<td data-v="3900">3 900 zł</td>
+<td data-v="0.184" class="neu">18%</td>
+<td data-v="6.94259458252509">6,9 l.</td>
+<td data-v="4.6">5 zł/h</td>
+<td data-v="5.7"><span class="badge mid">5,7 · średni</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="42"><b>42</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="15">15</td>
+<td data-v="Płaskogon (Uroplatus)"><a href="#uroplatus"><b>Płaskogon (Uroplatus)</b></a><br><i class="lat">Uroplatus sikorae / henkeli / phantasticus</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="1500">1 500 zł</td>
+<td data-v="9.0">9</td>
+<td data-v="9720">9 720 zł</td>
+<td data-v="6616">6 616 zł</td>
+<td data-v="3104" class="pos"><b>3 104 zł</b></td>
+<td data-v="7400">7 400 zł</td>
+<td data-v="0.419" class="pos">42%</td>
+<td data-v="3.884020618556701">3,9 l.</td>
+<td data-v="11.9">12 zł/h</td>
+<td data-v="7.7"><span class="badge hard">7,7 · trudny</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="38"><b>38</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="16">16</td>
+<td data-v="Pyton królewski"><a href="#regius"><b>Pyton królewski</b></a><br><i class="lat">Python regius</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="480">480 zł</td>
+<td data-v="11.5">11</td>
+<td data-v="4159">4 159 zł</td>
+<td data-v="4663">4 663 zł</td>
+<td data-v="-504" class="neg"><b>−504 zł</b></td>
+<td data-v="9600">9 600 zł</td>
+<td data-v="-0.053" class="neg">-5%</td>
+<td data-v="999">brak</td>
+<td data-v="-2.4">−2 zł/h</td>
+<td data-v="4.0"><span class="badge mid">4,0 · średni</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="36"><b>36</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="17">17</td>
+<td data-v="Wąż królewski"><a href="#lampropeltis"><b>Wąż królewski</b></a><br><i class="lat">Lampropeltis californiae / L. triangulum ssp.</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="220">220 zł</td>
+<td data-v="25.5">26</td>
+<td data-v="3646">3 646 zł</td>
+<td data-v="4180">4 180 zł</td>
+<td data-v="-534" class="neg"><b>−534 zł</b></td>
+<td data-v="4900">4 900 zł</td>
+<td data-v="-0.109" class="neg">-11%</td>
+<td data-v="999">brak</td>
+<td data-v="-2.1">−2 zł/h</td>
+<td data-v="3.3"><span class="badge easy">3,3 · łatwy</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="36"><b>36</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="18">18</td>
+<td data-v="Wąż zbożowy"><a href="#guttatus"><b>Wąż zbożowy</b></a><br><i class="lat">Pantherophis guttatus</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="130">130 zł</td>
+<td data-v="40.8">41</td>
+<td data-v="3633">3 633 zł</td>
+<td data-v="4543">4 543 zł</td>
+<td data-v="-909" class="neg"><b>−909 zł</b></td>
+<td data-v="4300">4 300 zł</td>
+<td data-v="-0.212" class="neg">-21%</td>
+<td data-v="999">brak</td>
+<td data-v="-3.5">−3 zł/h</td>
+<td data-v="3.0"><span class="badge easy">3,0 · łatwy</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="35"><b>35</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="19">19</td>
+<td data-v="Boa cesarski"><a href="#boa"><b>Boa cesarski</b></a><br><i class="lat">Boa imperator</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="380">380 zł</td>
+<td data-v="27.0">27</td>
+<td data-v="6669">6 669 zł</td>
+<td data-v="7325">7 325 zł</td>
+<td data-v="-656" class="neg"><b>−656 zł</b></td>
+<td data-v="9000">9 000 zł</td>
+<td data-v="-0.073" class="neg">-7%</td>
+<td data-v="999">brak</td>
+<td data-v="-2.1">−2 zł/h</td>
+<td data-v="4.0"><span class="badge mid">4,0 · średni</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="29"><b>29</b></td>
+</tr>
+<tr data-cat="Rzadki">
+<td data-v="20">20</td>
+<td data-v="Szczeciniak (np. ozdobny)"><a href="#uromastyx"><b>Szczeciniak (np. ozdobny)</b></a><br><i class="lat">Uromastyx ornata / U. geyri</i></td>
+<td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
+<td data-v="1100">1 100 zł</td>
+<td data-v="7.0">7</td>
+<td data-v="5275">5 275 zł</td>
+<td data-v="4759">4 759 zł</td>
+<td data-v="516" class="neu"><b>516 zł</b></td>
+<td data-v="6500">6 500 zł</td>
+<td data-v="0.079" class="neu">8%</td>
+<td data-v="14.59974800503988">14,6 l.</td>
+<td data-v="2.5">2 zł/h</td>
+<td data-v="6.3"><span class="badge hard">6,3 · trudny</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="29"><b>29</b></td>
+</tr>
+<tr data-cat="Średnio popularny">
+<td data-v="21">21</td>
+<td data-v="Felsuma madagaskarska"><a href="#phelsuma"><b>Felsuma madagaskarska</b></a><br><i class="lat">Phelsuma grandis</i></td>
+<td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
+<td data-v="220">220 zł</td>
+<td data-v="19.2">19</td>
+<td data-v="2746">2 746 zł</td>
+<td data-v="3765">3 765 zł</td>
+<td data-v="-1019" class="neg"><b>−1 019 zł</b></td>
+<td data-v="2900">2 900 zł</td>
+<td data-v="-0.351" class="neg">-35%</td>
+<td data-v="999">brak</td>
+<td data-v="-4.9">−5 zł/h</td>
+<td data-v="3.7"><span class="badge easy">3,7 · łatwy</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="28"><b>28</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="22">22</td>
+<td data-v="Agama brodata"><a href="#pogona"><b>Agama brodata</b></a><br><i class="lat">Pogona vitticeps</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="220">220 zł</td>
+<td data-v="48.0">48</td>
+<td data-v="7234">7 234 zł</td>
+<td data-v="9065">9 065 zł</td>
+<td data-v="-1832" class="neg"><b>−1 832 zł</b></td>
+<td data-v="5100">5 100 zł</td>
+<td data-v="-0.359" class="neg">-36%</td>
+<td data-v="999">brak</td>
+<td data-v="-4.4">−4 zł/h</td>
+<td data-v="4.3"><span class="badge mid">4,3 · średni</span></td>
+<td data-v="3"><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></td>
+<td data-v="25"><b>25</b></td>
+</tr>
+<tr data-cat="Popularny">
+<td data-v="23">23</td>
+<td data-v="Kameleon jemeński"><a href="#calyptratus"><b>Kameleon jemeński</b></a><br><i class="lat">Chamaeleo calyptratus</i></td>
+<td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
+<td data-v="160">160 zł</td>
+<td data-v="57.6">58</td>
+<td data-v="5023">5 023 zł</td>
+<td data-v="8960">8 960 zł</td>
+<td data-v="-3937" class="neg"><b>−3 937 zł</b></td>
+<td data-v="4400">4 400 zł</td>
+<td data-v="-0.895" class="neg">-89%</td>
+<td data-v="999">brak</td>
+<td data-v="-8.4">−8 zł/h</td>
+<td data-v="6.0"><span class="badge hard">6,0 · trudny</span></td>
+<td data-v="2"><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></td>
+<td data-v="12"><b>12</b></td>
+</tr>
+</tbody></table></div>
+</section>
+
+<section id="wykresy">
+<h2>4. Wykresy</h2>
+<div class="panel">
+<h3>Zysk roczny grupy hodowlanej</h3>
+<p class="meta">Słupek to scenariusz bazowy. Cienka linia w tle pokazuje rozpiętość od scenariusza pesymistycznego do optymistycznego.</p>
+<div class="bars">
+<div class="brow"><div class="blab">Abronia (zielona)</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:33.94%;width:66.06%" title="pesymistyczny 10 348 zł – optymistyczny 42 437 zł"></span>
+<span class="bbar " style="left:12.64%;width:53.31%"></span>
+</div><div class="bval pos">25 896 zł</div></div>
+<div class="brow"><div class="blab">Waran kolczastoogonowy</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:16.90%;width:40.25%" title="pesymistyczny 2 067 zł – optymistyczny 21 619 zł"></span>
+<span class="bbar " style="left:12.64%;width:23.81%"></span>
+</div><div class="bval pos">11 568 zł</div></div>
+<div class="brow"><div class="blab">Gekon gałkoogonowy</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:18.11%;width:19.71%" title="pesymistyczny 2 658 zł – optymistyczny 12 235 zł"></span>
+<span class="bbar " style="left:12.64%;width:15.06%"></span>
+</div><div class="bval pos">7 316 zł</div></div>
+<div class="brow"><div class="blab">Kameleon lamparci</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:11.61%;width:27.94%" title="pesymistyczny −498 zł – optymistyczny 13 076 zł"></span>
+<span class="bbar " style="left:12.64%;width:12.59%"></span>
+</div><div class="bval pos">6 114 zł</div></div>
+<div class="brow"><div class="blab">Gekon olbrzymi (leachianus)</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:15.89%;width:18.88%" title="pesymistyczny 1 579 zł – optymistyczny 10 748 zł"></span>
+<span class="bbar " style="left:12.64%;width:12.45%"></span>
+</div><div class="bval pos">6 046 zł</div></div>
+<div class="brow"><div class="blab">Scynk niebieskojęzyczny</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:13.67%;width:17.68%" title="pesymistyczny 500 zł – optymistyczny 9 090 zł"></span>
+<span class="bbar " style="left:12.64%;width:9.63%"></span>
+</div><div class="bval pos">4 677 zł</div></div>
+<div class="brow"><div class="blab">Wąż świnionosy (hognose)</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:14.13%;width:16.63%" title="pesymistyczny 723 zł – optymistyczny 8 801 zł"></span>
+<span class="bbar " style="left:12.64%;width:9.61%"></span>
+</div><div class="bval pos">4 671 zł</div></div>
+<div class="brow"><div class="blab">Pyton zielony</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:14.77%;width:15.34%" title="pesymistyczny 1 032 zł – optymistyczny 8 484 zł"></span>
+<span class="bbar " style="left:12.64%;width:9.60%"></span>
+</div><div class="bval pos">4 661 zł</div></div>
+<div class="brow"><div class="blab">Gekon orzęsiony</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:12.80%;width:13.17%" title="pesymistyczny 78 zł – optymistyczny 6 476 zł"></span>
+<span class="bbar " style="left:12.64%;width:6.60%"></span>
+</div><div class="bval pos">3 205 zł</div></div>
+<div class="brow"><div class="blab">Płaskogon (Uroplatus)</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:11.68%;width:15.10%" title="pesymistyczny −467 zł – optymistyczny 6 870 zł"></span>
+<span class="bbar " style="left:12.64%;width:6.39%"></span>
+</div><div class="bval pos">3 104 zł</div></div>
+<div class="brow"><div class="blab">Gekon jaskiniowy</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:13.56%;width:9.69%" title="pesymistyczny 448 zł – optymistyczny 5 153 zł"></span>
+<span class="bbar " style="left:12.64%;width:5.63%"></span>
+</div><div class="bval pos">2 737 zł</div></div>
+<div class="brow"><div class="blab">Żółw grecki (Hermanna)</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:12.71%;width:10.37%" title="pesymistyczny 36 zł – optymistyczny 5 074 zł"></span>
+<span class="bbar " style="left:12.64%;width:5.13%"></span>
+</div><div class="bval pos">2 491 zł</div></div>
+<div class="brow"><div class="blab">Gekon lamparci</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:9.67%;width:9.65%" title="pesymistyczny −1 443 zł – optymistyczny 3 244 zł"></span>
+<span class="bbar " style="left:12.64%;width:1.77%"></span>
+</div><div class="bval neu">859 zł</div></div>
+<div class="brow"><div class="blab">Gekon grubogonowy</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:10.73%;width:7.35%" title="pesymistyczny −931 zł – optymistyczny 2 640 zł"></span>
+<span class="bbar " style="left:12.64%;width:1.67%"></span>
+</div><div class="bval neu">811 zł</div></div>
+<div class="brow"><div class="blab">Scynk krokodylowy</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:11.02%;width:6.35%" title="pesymistyczny −789 zł – optymistyczny 2 298 zł"></span>
+<span class="bbar " style="left:12.64%;width:1.48%"></span>
+</div><div class="bval neu">717 zł</div></div>
+<div class="brow"><div class="blab">Szczeciniak (np. ozdobny)</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:9.66%;width:8.32%" title="pesymistyczny −1 449 zł – optymistyczny 2 592 zł"></span>
+<span class="bbar " style="left:12.64%;width:1.06%"></span>
+</div><div class="bval neu">516 zł</div></div>
+<div class="brow"><div class="blab">Pyton królewski</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:8.46%;width:6.43%" title="pesymistyczny −2 030 zł – optymistyczny 1 096 zł"></span>
+<span class="bbar neg" style="left:11.60%;width:1.04%"></span>
+</div><div class="bval neg">−504 zł</div></div>
+<div class="brow"><div class="blab">Wąż królewski</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:8.61%;width:5.99%" title="pesymistyczny −1 956 zł – optymistyczny 955 zł"></span>
+<span class="bbar neg" style="left:11.54%;width:1.10%"></span>
+</div><div class="bval neg">−534 zł</div></div>
+<div class="brow"><div class="blab">Boa cesarski</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:5.94%;width:10.96%" title="pesymistyczny −3 257 zł – optymistyczny 2 066 zł"></span>
+<span class="bbar neg" style="left:11.29%;width:1.35%"></span>
+</div><div class="bval neg">−656 zł</div></div>
+<div class="brow"><div class="blab">Wąż zbożowy</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:7.84%;width:5.97%" title="pesymistyczny −2 333 zł – optymistyczny 567 zł"></span>
+<span class="bbar neg" style="left:10.77%;width:1.87%"></span>
+</div><div class="bval neg">−909 zł</div></div>
+<div class="brow"><div class="blab">Felsuma madagaskarska</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:8.34%;width:4.51%" title="pesymistyczny −2 090 zł – optymistyczny 102 zł"></span>
+<span class="bbar neg" style="left:10.54%;width:2.10%"></span>
+</div><div class="bval neg">−1 019 zł</div></div>
+<div class="brow"><div class="blab">Agama brodata</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:2.93%;width:12.06%" title="pesymistyczny −4 717 zł – optymistyczny 1 142 zł"></span>
+<span class="bbar neg" style="left:8.87%;width:3.77%"></span>
+</div><div class="bval neg">−1 832 zł</div></div>
+<div class="brow"><div class="blab">Kameleon jemeński</div><div class="btrack">
+<span class="bzero" style="left:12.64%"></span>
+<span class="brange" style="left:0.00%;width:9.21%" title="pesymistyczny −6 141 zł – optymistyczny −1 668 zł"></span>
+<span class="bbar neg" style="left:4.54%;width:8.10%"></span>
+</div><div class="bval neg">−3 937 zł</div></div>
+</div>
+<div class="legend"><span style="--k:var(--accent)">zysk (bazowy)</span><span style="--k:var(--neg)">strata (bazowy)</span><span style="--k:var(--line)">zakres pesymistyczny – optymistyczny</span></div>
+</div>
+<div class="panel chart" style="margin-top:16px">
+<h3>Zysk a trudność</h3>
+<p class="meta">Im wyżej i bardziej w lewo, tym lepiej. Wielkość kółka oznacza kapitał startowy, numer to pozycja w rankingu łącznym.</p>
+<svg viewBox="0 0 760 440" role="img" aria-label="Zysk roczny a trudność hodowli">
+<line x1="70" x2="740" y1="390.0" y2="390.0" class="grid"/>
+<text x="62" y="394.0" class="ax" text-anchor="end">-5 tys.</text>
+<line x1="70" x2="740" y1="337.1" y2="337.1" class="grid zero"/>
+<text x="62" y="341.1" class="ax" text-anchor="end">0 tys.</text>
+<line x1="70" x2="740" y1="284.3" y2="284.3" class="grid"/>
+<text x="62" y="288.3" class="ax" text-anchor="end">5 tys.</text>
+<line x1="70" x2="740" y1="231.4" y2="231.4" class="grid"/>
+<text x="62" y="235.4" class="ax" text-anchor="end">10 tys.</text>
+<line x1="70" x2="740" y1="178.6" y2="178.6" class="grid"/>
+<text x="62" y="182.6" class="ax" text-anchor="end">15 tys.</text>
+<line x1="70" x2="740" y1="125.7" y2="125.7" class="grid"/>
+<text x="62" y="129.7" class="ax" text-anchor="end">20 tys.</text>
+<line x1="70" x2="740" y1="72.9" y2="72.9" class="grid"/>
+<text x="62" y="76.9" class="ax" text-anchor="end">25 tys.</text>
+<line x1="70" x2="740" y1="20.0" y2="20.0" class="grid"/>
+<text x="62" y="24.0" class="ax" text-anchor="end">30 tys.</text>
+<line x1="121.5" x2="121.5" y1="20" y2="390" class="grid"/>
+<text x="121.5" y="408" class="ax" text-anchor="middle">2</text>
+<line x1="224.6" x2="224.6" y1="20" y2="390" class="grid"/>
+<text x="224.6" y="408" class="ax" text-anchor="middle">3</text>
+<line x1="327.7" x2="327.7" y1="20" y2="390" class="grid"/>
+<text x="327.7" y="408" class="ax" text-anchor="middle">4</text>
+<line x1="430.8" x2="430.8" y1="20" y2="390" class="grid"/>
+<text x="430.8" y="408" class="ax" text-anchor="middle">5</text>
+<line x1="533.8" x2="533.8" y1="20" y2="390" class="grid"/>
+<text x="533.8" y="408" class="ax" text-anchor="middle">6</text>
+<line x1="636.9" x2="636.9" y1="20" y2="390" class="grid"/>
+<text x="636.9" y="408" class="ax" text-anchor="middle">7</text>
+<line x1="740.0" x2="740.0" y1="20" y2="390" class="grid"/>
+<text x="740.0" y="408" class="ax" text-anchor="middle">8</text>
+<text x="415.0" y="432" class="ax t" text-anchor="middle">Trudność (średnia 1–10) →</text>
+<text x="16" y="195.0" class="ax t" text-anchor="middle" transform="rotate(-90 16 195.0)">Zysk roczny grupy (zł) →</text>
+<rect x="70" y="20" width="309.2" height="264.3" class="zone"/>
+<text x="78" y="36" class="zl">strefa marzeń: łatwo i ponad 5 tys. zł/rok</text>
+<text x="78" y="52" class="zl2">(pusta – żaden gatunek tu nie trafia)</text>
+<g class="pt"><circle cx="193.7" cy="328.1" r="10.0" class="c1"><title>Gekon lamparci: zysk 859 zł, trudność 2,7, start 4 000 zł</title></circle><text x="193.7" y="332.1" class="pn" text-anchor="middle">9</text></g>
+<g class="pt"><circle cx="358.6" cy="356.5" r="10.3" class="c1"><title>Agama brodata: zysk −1 832 zł, trudność 4,3, start 5 100 zł</title></circle><text x="358.6" y="360.5" class="pn" text-anchor="middle">22</text></g>
+<g class="pt"><circle cx="533.8" cy="378.8" r="10.1" class="c1"><title>Kameleon jemeński: zysk −3 937 zł, trudność 6,0, start 4 400 zł</title></circle><text x="533.8" y="382.8" class="pn" text-anchor="middle">23</text></g>
+<g class="pt"><circle cx="327.7" cy="342.5" r="11.4" class="c1"><title>Pyton królewski: zysk −504 zł, trudność 4,0, start 9 600 zł</title></circle><text x="327.7" y="346.5" class="pn" text-anchor="middle">16</text></g>
+<g class="pt"><circle cx="224.6" cy="346.8" r="10.1" class="c1"><title>Wąż zbożowy: zysk −909 zł, trudność 3,0, start 4 300 zł</title></circle><text x="224.6" y="350.8" class="pn" text-anchor="middle">18</text></g>
+<g class="pt"><circle cx="152.5" cy="303.3" r="10.2" class="c1"><title>Gekon orzęsiony: zysk 3 205 zł, trudność 2,3, start 4 900 zł</title></circle><text x="152.5" y="307.3" class="pn" text-anchor="middle">4</text></g>
+<g class="pt"><circle cx="399.8" cy="287.8" r="10.8" class="c1"><title>Wąż świnionosy (hognose): zysk 4 671 zł, trudność 4,7, start 7 000 zł</title></circle><text x="399.8" y="291.8" class="pn" text-anchor="middle">2</text></g>
+<g class="pt"><circle cx="255.5" cy="342.8" r="10.2" class="c1"><title>Wąż królewski: zysk −534 zł, trudność 3,3, start 4 900 zł</title></circle><text x="255.5" y="346.8" class="pn" text-anchor="middle">17</text></g>
+<g class="pt"><circle cx="327.7" cy="344.1" r="11.2" class="c1"><title>Boa cesarski: zysk −656 zł, trudność 4,0, start 9 000 zł</title></circle><text x="327.7" y="348.1" class="pn" text-anchor="middle">19</text></g>
+<g class="pt"><circle cx="255.5" cy="328.6" r="10.0" class="c2"><title>Gekon grubogonowy: zysk 811 zł, trudność 3,3, start 4 000 zł</title></circle><text x="255.5" y="332.6" class="pn" text-anchor="middle">12</text></g>
+<g class="pt"><circle cx="296.8" cy="347.9" r="9.7" class="c2"><title>Felsuma madagaskarska: zysk −1 019 zł, trudność 3,7, start 2 900 zł</title></circle><text x="296.8" y="351.9" class="pn" text-anchor="middle">21</text></g>
+<g class="pt"><circle cx="296.8" cy="310.8" r="10.8" class="c2"><title>Żółw grecki (Hermanna): zysk 2 491 zł, trudność 3,7, start 7 000 zł</title></circle><text x="296.8" y="314.8" class="pn" text-anchor="middle">10</text></g>
+<g class="pt"><circle cx="327.7" cy="287.7" r="11.4" class="c2"><title>Scynk niebieskojęzyczny: zysk 4 677 zł, trudność 4,0, start 9 600 zł</title></circle><text x="327.7" y="291.7" class="pn" text-anchor="middle">5</text></g>
+<g class="pt"><circle cx="564.8" cy="331.7" r="10.6" class="c3"><title>Szczeciniak (np. ozdobny): zysk 516 zł, trudność 6,3, start 6 500 zł</title></circle><text x="564.8" y="335.7" class="pn" text-anchor="middle">20</text></g>
+<g class="pt"><circle cx="636.9" cy="287.9" r="11.5" class="c3"><title>Pyton zielony: zysk 4 661 zł, trudność 7,0, start 10 000 zł</title></circle><text x="636.9" y="291.9" class="pn" text-anchor="middle">13</text></g>
+<g class="pt"><circle cx="502.9" cy="214.8" r="12.4" class="c3"><title>Waran kolczastoogonowy: zysk 11 568 zł, trudność 5,7, start 13 500 zł</title></circle><text x="502.9" y="218.8" class="pn" text-anchor="middle">3</text></g>
+<g class="pt"><circle cx="606.0" cy="272.5" r="11.1" class="c3"><title>Kameleon lamparci: zysk 6 114 zł, trudność 6,7, start 8 500 zł</title></circle><text x="606.0" y="276.5" class="pn" text-anchor="middle">11</text></g>
+<g class="pt"><circle cx="399.8" cy="273.2" r="14.0" class="c3"><title>Gekon olbrzymi (leachianus): zysk 6 046 zł, trudność 4,7, start 20 000 zł</title></circle><text x="399.8" y="277.2" class="pn" text-anchor="middle">7</text></g>
+<g class="pt"><circle cx="399.8" cy="259.8" r="11.6" class="c3"><title>Gekon gałkoogonowy: zysk 7 316 zł, trudność 4,7, start 10 500 zł</title></circle><text x="399.8" y="263.8" class="pn" text-anchor="middle">1</text></g>
+<g class="pt"><circle cx="358.6" cy="308.2" r="10.2" class="c3"><title>Gekon jaskiniowy: zysk 2 737 zł, trudność 4,3, start 4 600 zł</title></circle><text x="358.6" y="312.2" class="pn" text-anchor="middle">8</text></g>
+<g class="pt"><circle cx="709.1" cy="304.3" r="10.8" class="c3"><title>Płaskogon (Uroplatus): zysk 3 104 zł, trudność 7,7, start 7 400 zł</title></circle><text x="709.1" y="308.3" class="pn" text-anchor="middle">15</text></g>
+<g class="pt"><circle cx="502.9" cy="329.6" r="10.0" class="c3"><title>Scynk krokodylowy: zysk 717 zł, trudność 5,7, start 3 900 zł</title></circle><text x="502.9" y="333.6" class="pn" text-anchor="middle">14</text></g>
+<g class="pt"><circle cx="533.8" cy="63.4" r="18.8" class="c4"><title>Abronia (zielona): zysk 25 896 zł, trudność 6,0, start 39 000 zł</title></circle><text x="533.8" y="67.4" class="pn" text-anchor="middle">6</text></g>
+</svg>
+<ul class="sckey"><li><b>1</b> <a href="#nephrurus">Gekon gałkoogonowy</a></li><li><b>2</b> <a href="#heterodon">Wąż świnionosy (hognose)</a></li><li><b>3</b> <a href="#acanthurus">Waran kolczastoogonowy</a></li><li><b>4</b> <a href="#correlophus">Gekon orzęsiony</a></li><li><b>5</b> <a href="#tiliqua">Scynk niebieskojęzyczny</a></li><li><b>6</b> <a href="#abronia">Abronia (zielona)</a></li><li><b>7</b> <a href="#leachianus">Gekon olbrzymi (leachianus)</a></li><li><b>8</b> <a href="#goniurosaurus">Gekon jaskiniowy</a></li><li><b>9</b> <a href="#eublepharis">Gekon lamparci</a></li><li><b>10</b> <a href="#testudo">Żółw grecki (Hermanna)</a></li><li><b>11</b> <a href="#pardalis">Kameleon lamparci</a></li><li><b>12</b> <a href="#hemitheconyx">Gekon grubogonowy</a></li><li><b>13</b> <a href="#viridis">Pyton zielony</a></li><li><b>14</b> <a href="#tribolonotus">Scynk krokodylowy</a></li><li><b>15</b> <a href="#uroplatus">Płaskogon (Uroplatus)</a></li><li><b>16</b> <a href="#regius">Pyton królewski</a></li><li><b>17</b> <a href="#lampropeltis">Wąż królewski</a></li><li><b>18</b> <a href="#guttatus">Wąż zbożowy</a></li><li><b>19</b> <a href="#boa">Boa cesarski</a></li><li><b>20</b> <a href="#uromastyx">Szczeciniak (np. ozdobny)</a></li><li><b>21</b> <a href="#phelsuma">Felsuma madagaskarska</a></li><li><b>22</b> <a href="#pogona">Agama brodata</a></li><li><b>23</b> <a href="#calyptratus">Kameleon jemeński</a></li></ul>
+<div class="legend"><span style="--k:var(--c1)">popularne</span><span style="--k:var(--c2)">średnio popularne</span><span style="--k:var(--c3)">rzadkie</span><span style="--k:var(--c4)">bardzo rzadkie</span></div>
+</div>
+</section>
+
+<section id="scenariusze">
+<h2>5. Scenariusze i wrażliwość</h2>
+<p><b>Pesymistyczny:</b> ceny −30%, sprzedawalność −15 pkt proc. (np. nasycenie rynku, recesja, moda się kończy). <b>Optymistyczny:</b> ceny +30%, sprzedawalność +10 pkt proc. (np. dobra marka, eksport, modne morfy).</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Gatunek</th><th>Pesymistyczny</th><th>Bazowy</th><th>Optymistyczny</th><th>Odporny?</th><th>Koszt wyprodukowania 1 młodego</th><th>Średnia cena</th></tr></thead>
+<tbody>
+<tr><td><b>Abronia (zielona)</b></td><td class='pos'>10 348 zł</td><td class='pos'><b>25 896 zł</b></td><td class='pos'>42 437 zł</td><td>tak ✔</td><td>1 459 zł</td><td>6 500 zł</td></tr>
+<tr><td><b>Waran kolczastoogonowy</b></td><td class='pos'>2 067 zł</td><td class='pos'><b>11 568 zł</b></td><td class='pos'>21 619 zł</td><td>tak ✔</td><td>618 zł</td><td>1 900 zł</td></tr>
+<tr><td><b>Gekon gałkoogonowy</b></td><td class='pos'>2 658 zł</td><td class='pos'><b>7 316 zł</b></td><td class='pos'>12 235 zł</td><td>tak ✔</td><td>398 zł</td><td>1 300 zł</td></tr>
+<tr><td><b>Kameleon lamparci</b></td><td class='neg'>−498 zł</td><td class='pos'><b>6 114 zł</b></td><td class='pos'>13 076 zł</td><td><span class=neg>nie ✘</span></td><td>327 zł</td><td>780 zł</td></tr>
+<tr><td><b>Gekon olbrzymi (leachianus)</b></td><td class='pos'>1 579 zł</td><td class='pos'><b>6 046 zł</b></td><td class='pos'>10 748 zł</td><td>tak ✔</td><td>1 008 zł</td><td>2 800 zł</td></tr>
+<tr><td><b>Scynk niebieskojęzyczny</b></td><td class='neu'>500 zł</td><td class='pos'><b>4 677 zł</b></td><td class='pos'>9 090 zł</td><td>tak ✔</td><td>439 zł</td><td>1 100 zł</td></tr>
+<tr><td><b>Wąż świnionosy (hognose)</b></td><td class='neu'>723 zł</td><td class='pos'><b>4 671 zł</b></td><td class='pos'>8 801 zł</td><td>tak ✔</td><td>204 zł</td><td>480 zł</td></tr>
+<tr><td><b>Pyton zielony</b></td><td class='pos'>1 032 zł</td><td class='pos'><b>4 661 zł</b></td><td class='pos'>8 484 zł</td><td>tak ✔</td><td>721 zł</td><td>1 900 zł</td></tr>
+<tr><td><b>Gekon orzęsiony</b></td><td class='neu'>78 zł</td><td class='pos'><b>3 205 zł</b></td><td class='pos'>6 476 zł</td><td>tak ✔</td><td>109 zł</td><td>240 zł</td></tr>
+<tr><td><b>Płaskogon (Uroplatus)</b></td><td class='neg'>−467 zł</td><td class='pos'><b>3 104 zł</b></td><td class='pos'>6 870 zł</td><td><span class=neg>nie ✘</span></td><td>735 zł</td><td>1 500 zł</td></tr>
+<tr><td><b>Gekon jaskiniowy</b></td><td class='neu'>448 zł</td><td class='pos'><b>2 737 zł</b></td><td class='pos'>5 153 zł</td><td>tak ✔</td><td>266 zł</td><td>700 zł</td></tr>
+<tr><td><b>Żółw grecki (Hermanna)</b></td><td class='neu'>36 zł</td><td class='pos'><b>2 491 zł</b></td><td class='pos'>5 074 zł</td><td>tak ✔</td><td>144 zł</td><td>320 zł</td></tr>
+<tr><td><b>Gekon lamparci</b></td><td class='neg'>−1 443 zł</td><td class='neu'><b>859 zł</b></td><td class='pos'>3 244 zł</td><td><span class=neg>nie ✘</span></td><td>116 zł</td><td>170 zł</td></tr>
+<tr><td><b>Gekon grubogonowy</b></td><td class='neg'>−931 zł</td><td class='neu'><b>811 zł</b></td><td class='pos'>2 640 zł</td><td><span class=neg>nie ✘</span></td><td>158 zł</td><td>280 zł</td></tr>
+<tr><td><b>Scynk krokodylowy</b></td><td class='neg'>−789 zł</td><td class='neu'><b>717 zł</b></td><td class='pos'>2 298 zł</td><td><span class=neg>nie ✘</span></td><td>405 zł</td><td>650 zł</td></tr>
+<tr><td><b>Szczeciniak (np. ozdobny)</b></td><td class='neg'>−1 449 zł</td><td class='neu'><b>516 zł</b></td><td class='pos'>2 592 zł</td><td><span class=neg>nie ✘</span></td><td>680 zł</td><td>1 100 zł</td></tr>
+<tr><td><b>Pyton królewski</b></td><td class='neg'>−2 030 zł</td><td class='neg'><b>−504 zł</b></td><td class='pos'>1 096 zł</td><td><span class=neg>nie ✘</span></td><td>406 zł</td><td>480 zł</td></tr>
+<tr><td><b>Wąż królewski</b></td><td class='neg'>−1 956 zł</td><td class='neg'><b>−534 zł</b></td><td class='neu'>955 zł</td><td><span class=neg>nie ✘</span></td><td>164 zł</td><td>220 zł</td></tr>
+<tr><td><b>Boa cesarski</b></td><td class='neg'>−3 257 zł</td><td class='neg'><b>−656 zł</b></td><td class='pos'>2 066 zł</td><td><span class=neg>nie ✘</span></td><td>271 zł</td><td>380 zł</td></tr>
+<tr><td><b>Wąż zbożowy</b></td><td class='neg'>−2 333 zł</td><td class='neg'><b>−909 zł</b></td><td class='neu'>567 zł</td><td><span class=neg>nie ✘</span></td><td>111 zł</td><td>130 zł</td></tr>
+<tr><td><b>Felsuma madagaskarska</b></td><td class='neg'>−2 090 zł</td><td class='neg'><b>−1 019 zł</b></td><td class='neu'>102 zł</td><td><span class=neg>nie ✘</span></td><td>196 zł</td><td>220 zł</td></tr>
+<tr><td><b>Agama brodata</b></td><td class='neg'>−4 717 zł</td><td class='neg'><b>−1 832 zł</b></td><td class='pos'>1 142 zł</td><td><span class=neg>nie ✘</span></td><td>189 zł</td><td>220 zł</td></tr>
+<tr><td><b>Kameleon jemeński</b></td><td class='neg'>−6 141 zł</td><td class='neg'><b>−3 937 zł</b></td><td class='neg'>−1 668 zł</td><td><span class=neg>nie ✘</span></td><td>156 zł</td><td>160 zł</td></tr>
+</tbody></table></div>
+<p class="note"><b>Jak to czytać:</b> jeśli koszt wyprodukowania młodego zbliża się do ceny średniej, każdy spadek cen oznacza stratę. Najbezpieczniejsze są gatunki, gdzie cena jest kilka razy wyższa od kosztu wyprodukowania, a rynek nie jest przesycony.</p>
+</section>
+
+<section id="gatunki">
+<h2>6. Szczegółowe karty gatunków</h2>
+<p>Karty są ułożone według wyniku łącznego. Każda zawiera biologię rozrodu, rozpisaną ekonomikę, trudność w trzech wymiarach, status prawny, plusy, minusy i praktyczną wskazówkę.</p>
+<div class="cards">
+<article class="card" id="nephrurus">
+<header><div><span class="rank">#1</span><h3>Gekon gałkoogonowy</h3><br><i class="lat">Nephrurus levis / N. amyae</i></div>
+<div class="score"><b>72</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 600–4 000 (N. levis 600–1 200; N. amyae 1 500–4 000; morfy patternless, hypo)</span></div>
+<p class="bio">2 jaja, 3–6 zniesień w sezonie. Wymaga chłodnego okresu zimowego. Inkubacja 60–80 dni.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>13,6 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (60% × 1 300 zł)</td><td>10 608 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>2 122 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>12 730 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−816 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 300 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 873 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 425 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">7 316 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>10 500 zł</b></div><div><small>ROI/rok</small><b class="pos">70%</b></div><div><small>Zwrot</small><b>2,9 roku</b></div><div><small>Stawka</small><b>47 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak CITES (Australia nie eksportuje – wyłącznie hodowle w UE).</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Wysoka cena przy małych zwierzętach</li><li>Tani regałowy system, mało pokarmu</li><li>Rosnąca popularność w UE</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Wrażliwe na odwodnienie i błędy w temperaturze</li><li>Wymagany okres chłodzenia</li><li>Drogie zwierzęta startowe</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Doskonały gatunek dla właściciela regałów z gekonami lamparcimi chcącego „wejść wyżej”. N. amyae daje najlepszy stosunek ceny do kosztów.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="pos">2 658 zł</b> · bazowy <b class="pos">7 316 zł</b> · optymistyczny <b class="pos">12 235 zł</b></p>
+</article>
+<article class="card" id="heterodon">
+<header><div><span class="rank">#2</span><h3>Wąż świnionosy (hognose)</h3><br><i class="lat">Heterodon nasicus</i></div>
+<div class="score"><b>71</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 250–4 000 (normal 250–350; Albino, Anaconda/Superconda, Arctic, Toffeebelly, Lavender 500–4 000)</span></div>
+<p class="bio">8–20 jaj, zwykle 1 zniesienie (czasem 2). Wymaga brumacji 2–3 mies. Inkubacja 50–60 dni. Dojrzałość samicy 2–3 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.3 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>29,5 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (65% × 480 zł)</td><td>9 210 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 488 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>10 698 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 908 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 500 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 670 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−950 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">4 671 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>7 000 zł</b></div><div><small>ROI/rok</small><b class="pos">67%</b></div><div><small>Zwrot</small><b>3,5 roku</b></div><div><small>Stawka</small><b>15 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak CITES. Gatunek tylnobruzdowy o łagodnym jadzie – sprawdź, czy aktualna lista zwierząt niebezpiecznych go nie obejmuje.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Ciągle rosnący popyt, mały rozmiar, „uśmiechnięta” twarz – świetny w social media</li><li>Bogata genetyka, wysokie ceny morfów</li><li>Tani regał, mało miejsca</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Młode często odmawiają myszy – rozkarmianie (scentowanie) zabiera mnóstwo czasu</li><li>Brumacja konieczna do rozrodu</li><li>Rynek zaczyna się nasycać prostymi morfami</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Obecnie jeden z najbardziej opłacalnych popularnych węży. Klucz: linie, które same jedzą myszy, i morfy łączone (np. Albino Anaconda, Toffeeconda).</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neu">723 zł</b> · bazowy <b class="pos">4 671 zł</b> · optymistyczny <b class="pos">8 801 zł</b></p>
+</article>
+<article class="card" id="acanthurus">
+<header><div><span class="rank">#3</span><h3>Waran kolczastoogonowy</h3><br><i class="lat">Varanus acanthurus</i></div>
+<div class="score"><b>68</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">5,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 1 300–5 000 (red, yellow, odmiany „Kimberley”)</span></div>
+<p class="bio">5–18 jaj, 2–3 zniesienia rocznie. Inkubacja 70–120 dni. Dojrzałość 1,5–2 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>21,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (45% × 1 900 zł)</td><td>17 955 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>6 583 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>24 539 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−4 016 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−4 100 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−3 054 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 800 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">11 568 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>13 500 zł</b></div><div><small>ROI/rok</small><b class="pos">86%</b></div><div><small>Zwrot</small><b>2,7 roku</b></div><div><small>Stawka</small><b>28 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja w starostwie.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Wysoka cena, duży prestiż</li><li>Szybka dojrzałość jak na warana</li><li>Kilka zniesień w roku</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Bardzo drogie w prądzie i owadach (wysokie temperatury, duży apetyt)</li><li>Duże terraria z głębokim podłożem</li><li>Popyt ograniczony – trzeba sprzedawać też za granicę</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Opłaca się przy własnej hodowli owadów (karaczany!), co obniża koszt odchowu nawet o połowę.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="pos">2 067 zł</b> · bazowy <b class="pos">11 568 zł</b> · optymistyczny <b class="pos">21 619 zł</b></p>
+</article>
+<article class="card" id="correlophus">
+<header><div><span class="rank">#4</span><h3>Gekon orzęsiony</h3><br><i class="lat">Correlophus ciliatus</i></div>
+<div class="score"><b>67</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">2,3 · łatwy</span><span class="chip">Grupa 1.4</span><span class="chip">Ceny młodych (zł): 120–3 000 (normal/flame 120–250; harlequin/extreme 300–900; Lilly White, Cappuccino, Sable 1 000+)</span></div>
+<p class="bio">2 jaja co ~30 dni, 8–10 zniesień w sezonie (zalecana przerwa zimowa). Inkubacja 60–90 dni w temp. pokojowej. Dojrzałość ~18 mies. (samica ≥ 35 g).</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.4 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>47,6 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (62% × 240 zł)</td><td>7 083 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 302 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>8 385 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 699 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 200 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 439 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−843 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">3 205 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>4 900 zł</b></div><div><small>ROI/rok</small><b class="pos">65%</b></div><div><small>Zwrot</small><b>3,0 roku</b></div><div><small>Stawka</small><b>10 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:20%" class="easy"></span></span><b>2/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:20%" class="easy"></span></span><b>2/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak wymogów CITES i rejestracji.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Temperatura pokojowa = minimalne koszty prądu</li><li>Gotowe karmy (CGD) – tani i prosty odchów</li><li>Duże zainteresowanie morfami Lilly White, Cappuccino, Frappuccino, Sable</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Normalne odmiany przesycone</li><li>Każdy młody w osobnym pojemniku – dużo miejsca i pracy</li><li>Cena zależy od zdjęć i jakości linii, nie tylko genetyki</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Jeden z najlepszych stosunków zysku do kosztów, jeśli inwestujesz w topowe linie i dobre zdjęcia. Unikaj Lilly White × Lilly White (letalny super-forma).</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neu">78 zł</b> · bazowy <b class="pos">3 205 zł</b> · optymistyczny <b class="pos">6 476 zł</b></p>
+</article>
+<article class="card" id="tiliqua">
+<header><div><span class="rank">#5</span><h3>Scynk niebieskojęzyczny</h3><br><i class="lat">Tiliqua scincoides / T. gigas</i></div>
+<div class="score"><b>63</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 600–4 000 (Merauke, Kei, T. s. intermedia, T. gigas evanescens; morfy hypo, albino)</span></div>
+<p class="bio">Żyworodny, 8–20 młodych co 1–2 lata. Dojrzałość 2–3 lata. Życie 15–20 lat.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>14,9 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (55% × 1 100 zł)</td><td>9 002 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>2 210 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>11 212 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 094 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 500 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 721 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 220 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">4 677 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>9 600 zł</b></div><div><small>ROI/rok</small><b class="pos">49%</b></div><div><small>Zwrot</small><b>4,1 roku</b></div><div><small>Stawka</small><b>18 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak CITES dla popularnych form. Australijskie formy wyłącznie z hodowli w UE.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Brak inkubacji, bardzo wysoka przeżywalność młodych</li><li>Tani pokarm (wszystkożerca)</li><li>Wysokie ceny form australijskich i morfów</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Agresja – łączenie par tylko pod nadzorem, ryzyko pogryzień</li><li>Nieregularny rozród (niektóre samice co 2 lata)</li><li>Wymaga dużych terrariów i UVB</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Jeden z najlepszych gatunków „średniej półki”: niska praca, wysoka cena. Inwestuj w australijskie podgatunki lub morfy z udokumentowaną linią.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neu">500 zł</b> · bazowy <b class="pos">4 677 zł</b> · optymistyczny <b class="pos">9 090 zł</b></p>
+</article>
+<article class="card" id="abronia">
+<header><div><span class="rank">#6</span><h3>Abronia (zielona)</h3><br><i class="lat">Abronia graminea</i></div>
+<div class="score"><b>58</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-bar">Bardzo rzadki</span><span class="badge hard">6,0 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 4 500–12 000 (CB z dokumentami)</span></div>
+<p class="bio">Żyworodna, 5–12 młodych raz w roku. Wymaga chłodnych nocy (15–18°C) i chłodzenia latem. Dojrzałość 2–3 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>10,2 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (45% × 6 500 zł)</td><td>29 835 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>10 939 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>40 774 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−2 601 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−3 400 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−4 677 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−4 200 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">25 896 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>39 000 zł</b></div><div><small>ROI/rok</small><b class="pos">66%</b></div><div><small>Zwrot</small><b>4,0 roku</b></div><div><small>Stawka</small><b>125 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="1/5"><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="1/5"><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja, dokumenty legalnego pochodzenia (gatunek zagrożony).</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Najwyższa wartość jednostkowa w zestawieniu</li><li>Bardzo mała konkurencja</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Koszt startu &gt; 35 000 zł</li><li>Strata jednego zwierzęcia = kilka tysięcy zł</li><li>Bardzo wąski rynek, sprzedaż głównie za granicę</li><li>Wymaga klimatyzacji</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Projekt inwestycyjny dla zaawansowanych z kontaktami w UE. Bez stałych odbiorców nie wchodź.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="pos">10 348 zł</b> · bazowy <b class="pos">25 896 zł</b> · optymistyczny <b class="pos">42 437 zł</b></p>
+</article>
+<article class="card" id="leachianus">
+<header><div><span class="rank">#7</span><h3>Gekon olbrzymi (leachianus)</h3><br><i class="lat">Rhacodactylus leachianus</i></div>
+<div class="score"><b>56</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 1 800–15 000+ (lokalizacje: Nuu Ana, GT, Pine Island, Nuu Bo, Moro; pełne pochodzenie)</span></div>
+<p class="bio">2 jaja w zniesieniu, 4–8 zniesień rocznie. Dojrzałość 3–5 lat. Życie 20+ lat. Pary często nie kopulują latami.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.1 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>6,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (60% × 2 800 zł)</td><td>10 080 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>2 016 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>12 096 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 440 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 200 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 810 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 600 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">6 046 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>20 000 zł</b></div><div><small>ROI/rok</small><b class="pos">30%</b></div><div><small>Zwrot</small><b>6,3 roku</b></div><div><small>Stawka</small><b>39 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:70%" class="hard"></span></span><b>7/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="1/5"><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak CITES (Nowa Kaledonia nie eksportuje – wszystkie zwierzęta z hodowli).</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Bardzo wysokie ceny, mała podaż</li><li>Niskie koszty utrzymania (temp. pokojowa, CGD/owoce)</li><li>Mało pracy na sztukę</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Gigantyczny koszt startu i długie czekanie</li><li>Dobór par to loteria – sprawdzona para jest warta kilka razy więcej</li><li>Mały, bardzo wymagający rynek (dokumentacja lokalizacji)</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Kupuj sprawdzone, produkujące pary albo subadulty z pełnym pochodzeniem. To inwestycja na 5–10 lat, nie szybki zysk.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="pos">1 579 zł</b> · bazowy <b class="pos">6 046 zł</b> · optymistyczny <b class="pos">10 748 zł</b></p>
+</article>
+<article class="card" id="goniurosaurus">
+<header><div><span class="rank">#8</span><h3>Gekon jaskiniowy</h3><br><i class="lat">Goniurosaurus hainanensis / lichtenfelderi / araneus</i></div>
+<div class="score"><b>55</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,3 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 400–2 500</span></div>
+<p class="bio">2 jaja, 3–5 zniesień. Niska temperatura (20–25°C), wysoka wilgotność. Dojrzałość 1,5–2 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>12,8 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (55% × 700 zł)</td><td>4 928 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 210 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>6 138 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−627 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 000 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 214 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−560 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">2 737 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>4 600 zł</b></div><div><small>ROI/rok</small><b class="pos">59%</b></div><div><small>Zwrot</small><b>3,2 roku</b></div><div><small>Stawka</small><b>18 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Część gatunków (Chiny, Wietnam) w CITES II od 2019 r. – Aneks B, rejestracja. Sprawdź status konkretnego gatunku.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Brak potrzeby grzania = niski koszt prądu</li><li>Mała podaż CB zwierząt</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Wrażliwe na przegrzanie latem (może być potrzebna klimatyzacja)</li><li>Niszowy rynek</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Dobry gatunek do chłodnych pomieszczeń. Latem zadbaj o temperaturę poniżej 27°C.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neu">448 zł</b> · bazowy <b class="pos">2 737 zł</b> · optymistyczny <b class="pos">5 153 zł</b></p>
+</article>
+<article class="card" id="eublepharis">
+<header><div><span class="rank">#9</span><h3>Gekon lamparci</h3><br><i class="lat">Eublepharis macularius</i></div>
+<div class="score"><b>54</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">2,7 · łatwy</span><span class="chip">Grupa 1.4</span><span class="chip">Ceny młodych (zł): 80–1 500 (normal 80–150; morfy 250–1 500)</span></div>
+<p class="bio">2 jaja co 2–4 tyg., 5–8 zniesień w sezonie. Płeć zależna od temperatury inkubacji (TSD). Dojrzałość 10–12 mies. (samica ≥ 45–50 g). Życie 15–20 lat.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.4 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>45,9 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (70% × 170 zł)</td><td>5 464 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>703 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>6 167 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 848 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 500 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 217 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−743 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neu">859 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>4 000 zł</b></div><div><small>ROI/rok</small><b class="neu">21%</b></div><div><small>Zwrot</small><b>5,7 roku</b></div><div><small>Stawka</small><b>4 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:20%" class="easy"></span></span><b>2/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak wymogów CITES i rejestracji.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Najniższy próg wejścia, tani sprzęt (regały, pojemniki)</li><li>Prosta inkubacja i odchów, niski koszt pokarmu</li><li>Ogromny wybór morfów i genetyki recesywnej</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Rynek mocno przesycony – normalne odmiany trudno sprzedać powyżej 100 zł</li><li>Marża robiona wyłącznie na morfach i projektach genetycznych</li><li>Duża konkurencja cenowa na giełdach i w grupach FB</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Opłaca się tylko z przemyślanym projektem genetycznym (np. linie Tremper/Bell + Eclipse, Black Night, Lemon Frost – z uwagą na problemy zdrowotne tej ostatniej). Normal × normal to strata czasu.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−1 443 zł</b> · bazowy <b class="neu">859 zł</b> · optymistyczny <b class="pos">3 244 zł</b></p>
+</article>
+<article class="card" id="testudo">
+<header><div><span class="rank">#10</span><h3>Żółw grecki (Hermanna)</h3><br><i class="lat">Testudo hermanni</i></div>
+<div class="score"><b>53</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 250–600 (z dokumentami)</span></div>
+<p class="bio">3–8 jaj, 2–3 zniesienia. Inkubacja 55–70 dni. Dojrzałość 8–12 lat (dlatego kupuje się dorosłe). Życie 50+ lat. Hibernacja konieczna.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.3 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>28,8 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (60% × 320 zł)</td><td>5 530 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 106 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>6 636 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−864 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 200 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 264 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−817 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">2 491 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>7 000 zł</b></div><div><small>ROI/rok</small><b class="pos">36%</b></div><div><small>Zwrot</small><b>3,8 roku</b></div><div><small>Stawka</small><b>12 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Aneks A UE – rejestracja + świadectwo UE (art. 10 rozp. 338/97) dla KAŻDEGO sprzedawanego osobnika, znakowanie.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Niskie koszty prądu (wybieg zewnętrzny latem)</li><li>Bardzo stabilny popyt – żółw „na całe życie”</li><li>Bardzo długi okres produkcji samic</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Biurokracja: świadectwa dla każdej sztuki, opłaty, czas oczekiwania</li><li>Dorosłe samice z dokumentami są drogie</li><li>Hibernacja = ryzyko utraty dorosłych</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Opłacalne dla osób z ogrodem i cierpliwością do papierów. Nie kupuj zwierząt bez kompletu dokumentów – nie sprzedasz legalnie potomstwa.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neu">36 zł</b> · bazowy <b class="pos">2 491 zł</b> · optymistyczny <b class="pos">5 074 zł</b></p>
+</article>
+<article class="card" id="pardalis">
+<header><div><span class="rank">#11</span><h3>Kameleon lamparci</h3><br><i class="lat">Furcifer pardalis</i></div>
+<div class="score"><b>53</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">6,7 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 500–2 500 (lokalizacje: Ambilobe, Nosy Be, Ambanja, Nosy Faly, Sambava)</span></div>
+<p class="bio">15–40 jaj, inkubacja 6–12 mies. (z diapauzą). Samice żyją 2–4 lata. Dojrzałość 7–9 mies.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>34,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (50% × 780 zł)</td><td>13 260 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>3 978 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>17 238 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−3 400 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 800 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−2 324 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−2 600 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">6 114 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>8 500 zł</b></div><div><small>ROI/rok</small><b class="pos">72%</b></div><div><small>Zwrot</small><b>2,4 roku</b></div><div><small>Stawka</small><b>12 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:80%" class="hard"></span></span><b>8/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja w starostwie.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Wysokie ceny czystych lokalizacji</li><li>Popyt w całej UE (wysyłka, giełdy w Hamm)</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Bardzo długa i wrażliwa inkubacja</li><li>Odchów pracochłonny – rozdzielanie, zraszanie, owady</li><li>Krótkie życie samic, problemy z zatrzymaniem jaj</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Kluczowa jest dokumentacja linii (lokalizacja, rodzice). Mieszańce lokalizacji tracą 50–70% wartości.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−498 zł</b> · bazowy <b class="pos">6 114 zł</b> · optymistyczny <b class="pos">13 076 zł</b></p>
+</article>
+<article class="card" id="hemitheconyx">
+<header><div><span class="rank">#12</span><h3>Gekon grubogonowy</h3><br><i class="lat">Hemitheconyx caudicinctus</i></div>
+<div class="score"><b>49</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,3 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 200–1 200 (morfy: amel, oreo, ghost, whiteout, zero)</span></div>
+<p class="bio">2 jaja co 3–5 tyg., 4–6 zniesień. Inkubacja 50–70 dni (TSD). Dojrzałość 1,5–2 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.3 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>24,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (55% × 280 zł)</td><td>3 696 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>907 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>4 603 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−882 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 200 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 060 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−650 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neu">811 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>4 000 zł</b></div><div><small>ROI/rok</small><b class="neu">20%</b></div><div><small>Zwrot</small><b>6,4 roku</b></div><div><small>Stawka</small><b>4 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak wymogów CITES i rejestracji.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Spokojny, „alternatywa dla lamparciego”</li><li>Mniejsza konkurencja niż u E. macularius</li><li>Tani regałowy system</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Mniejsza płodność niż lamparci</li><li>Węższa grupa klientów</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Dobra nisza dla hodowców lamparcich: ten sam sprzęt, mniejsza konkurencja, wyższe ceny morfów.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−931 zł</b> · bazowy <b class="neu">811 zł</b> · optymistyczny <b class="pos">2 640 zł</b></p>
+</article>
+<article class="card" id="viridis">
+<header><div><span class="rank">#13</span><h3>Pyton zielony</h3><br><i class="lat">Morelia viridis</i></div>
+<div class="score"><b>49</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">7,0 · trudny</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 1 200–6 000 (lokalizacje: Biak, Aru, Sorong, Jayapura; high-yellow, blue line)</span></div>
+<p class="bio">10–25 jaj co 1–2 lata. Inkubacja 45–55 dni, bardzo wrażliwa na wilgotność. Młode często wymagają karmienia wspomaganego. Dojrzałość 3–4 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.1 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>7,2 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (60% × 1 900 zł)</td><td>8 208 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 642 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>9 850 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 037 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 500 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 585 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 067 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">4 661 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>10 000 zł</b></div><div><small>ROI/rok</small><b class="pos">47%</b></div><div><small>Zwrot</small><b>4,6 roku</b></div><div><small>Stawka</small><b>15 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:70%" class="hard"></span></span><b>7/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:80%" class="hard"></span></span><b>8/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja w starostwie.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Wysoka wartość jednostkowa</li><li>Duży mit „trudnego węża” = prestiż hodowcy</li><li>Zmiana koloru młodych to atut marketingowy</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Trudna inkubacja i odchów młodych</li><li>Choroby układu oddechowego, wrażliwość na stres</li><li>Wąska grupa doświadczonych klientów</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Dla doświadczonych. Liczy się udokumentowana lokalizacja – mieszańce lokalizacji mają znacznie niższą wartość.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="pos">1 032 zł</b> · bazowy <b class="pos">4 661 zł</b> · optymistyczny <b class="pos">8 484 zł</b></p>
+</article>
+<article class="card" id="tribolonotus">
+<header><div><span class="rank">#14</span><h3>Scynk krokodylowy</h3><br><i class="lat">Tribolonotus gracilis</i></div>
+<div class="score"><b>42</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">5,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 450–1 000</span></div>
+<p class="bio">1 jajo co 4–8 tyg. Wysoka wilgotność, umiarkowane temp. Dojrzałość ~1,5 roku.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>8,4 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (65% × 650 zł)</td><td>3 549 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>573 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>4 122 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−493 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 200 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 012 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−700 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neu">717 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>3 900 zł</b></div><div><small>ROI/rok</small><b class="neu">18%</b></div><div><small>Zwrot</small><b>6,9 roku</b></div><div><small>Stawka</small><b>5 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="1/5"><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak CITES.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Duży popyt, bardzo mała podaż CB</li><li>Niskie koszty utrzymania</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Bardzo niska płodność (1 jajo)</li><li>Większość zwierząt na rynku to odłowy z pasożytami</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Ceny CB są stabilne, bo prawie nikt nie produkuje ich w skali. Dobry „dodatek” do kolekcji, nie główne źródło dochodu.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−789 zł</b> · bazowy <b class="neu">717 zł</b> · optymistyczny <b class="pos">2 298 zł</b></p>
+</article>
+<article class="card" id="uroplatus">
+<header><div><span class="rank">#15</span><h3>Płaskogon (Uroplatus)</h3><br><i class="lat">Uroplatus sikorae / henkeli / phantasticus</i></div>
+<div class="score"><b>38</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">7,7 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 900–3 500</span></div>
+<p class="bio">2 jaja co 30–45 dni. Wymaga temperatur 18–26°C i bardzo wysokiej wilgotności. Jaja i młode bardzo wrażliwe.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>9,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (60% × 1 500 zł)</td><td>8 100 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 620 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>9 720 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−864 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 700 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 572 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 480 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="pos">3 104 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>7 400 zł</b></div><div><small>ROI/rok</small><b class="pos">42%</b></div><div><small>Zwrot</small><b>3,9 roku</b></div><div><small>Stawka</small><b>12 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:80%" class="hard"></span></span><b>8/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:70%" class="hard"></span></span><b>7/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:80%" class="hard"></span></span><b>8/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="1/5"><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja w starostwie.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Bardzo mała podaż CB – wysoka cena</li><li>Prestiż, ogromne zainteresowanie zdjęciami</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Jeden z najtrudniejszych gatunków – wysoka śmiertelność</li><li>Upał latem zabija – klimatyzacja praktycznie obowiązkowa</li><li>Dużo zwierząt na rynku z odłowu, często w złej kondycji</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Tylko dla doświadczonych hodowców z kontrolą temperatury. Zysk w modelu jest „na papierze” – realnie łatwo o rok bez potomstwa.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−467 zł</b> · bazowy <b class="pos">3 104 zł</b> · optymistyczny <b class="pos">6 870 zł</b></p>
+</article>
+<article class="card" id="regius">
+<header><div><span class="rank">#16</span><h3>Pyton królewski</h3><br><i class="lat">Python regius</i></div>
+<div class="score"><b>36</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 150–8 000 (normal 150–250; popularne morfy 300–1 200; multi-gen 2 000+)</span></div>
+<p class="bio">4–8 jaj, jedno zniesienie w roku (nie każda samica co roku). Inkubacja 55–60 dni. Samica gotowa przy ~1 500 g (2,5–3 lata). Życie 30+ lat.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.3 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>11,5 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (65% × 480 zł)</td><td>3 580 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>578 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>4 159 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−607 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 000 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 016 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 040 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neg">−504 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>9 600 zł</b></div><div><small>ROI/rok</small><b class="neg">-5%</b></div><div><small>Zwrot</small><b>brak zwrotu przy założeniach bazowych</b></div><div><small>Stawka</small><b>−2 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B UE – rejestracja w starostwie, dokumenty pochodzenia.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Ogromna biblioteka genetyczna (kodominanty, recesywy)</li><li>Tani w utrzymaniu w systemie regałowym</li><li>Długowieczne samice = długi okres produkcji</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Załamanie cen po 2015 – normale i proste morfy prawie bez wartości</li><li>Częste problemy z karmieniem młodych (odmowa pokarmu)</li><li>Pewne morfy z wadami neurologicznymi (spider wobble) – ryzyko wizerunkowe</li><li>Długie oczekiwanie na pierwszy rozród</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Zarabia się tylko na morfach z „wyższej półki” i to przy dobrej marce hodowcy. Zacznij od samca z 2–3 genami i tańszych samic – samiec pokrywa całe stado.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−2 030 zł</b> · bazowy <b class="neg">−504 zł</b> · optymistyczny <b class="pos">1 096 zł</b></p>
+</article>
+<article class="card" id="lampropeltis">
+<header><div><span class="rank">#17</span><h3>Wąż królewski</h3><br><i class="lat">Lampropeltis californiae / L. triangulum ssp.</i></div>
+<div class="score"><b>36</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">3,3 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 150–900</span></div>
+<p class="bio">5–15 jaj, 1 zniesienie. Brumacja wskazana. Dojrzałość 2–3 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.3 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>25,5 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (50% × 220 zł)</td><td>2 805 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>841 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>3 646 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 116 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 400 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−965 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−700 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neg">−534 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>4 900 zł</b></div><div><small>ROI/rok</small><b class="neg">-11%</b></div><div><small>Zwrot</small><b>brak zwrotu przy założeniach bazowych</b></div><div><small>Stawka</small><b>−2 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:20%" class="easy"></span></span><b>2/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak wymogów CITES i rejestracji.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Odporne i łatwe w utrzymaniu</li><li>Dobra przeżywalność młodych</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Kanibalizm – każdy osobnik osobno, także przy kopulacji pod nadzorem</li><li>Niski i niestabilny popyt w PL</li><li>Niskie ceny poza rzadkimi podgatunkami mlecznych węży</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Na zarobek tylko rzadsze formy (np. Lampropeltis pyromelana, L. alterna, wybrane lokalizacje L. triangulum).</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−1 956 zł</b> · bazowy <b class="neg">−534 zł</b> · optymistyczny <b class="neu">955 zł</b></p>
+</article>
+<article class="card" id="guttatus">
+<header><div><span class="rank">#18</span><h3>Wąż zbożowy</h3><br><i class="lat">Pantherophis guttatus</i></div>
+<div class="score"><b>35</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">3,0 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 80–600</span></div>
+<p class="bio">10–25 jaj, czasem 2 zniesienia. Inkubacja ~60 dni. Dojrzałość 18–24 mies. Życie 15–20 lat.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.3 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>40,8 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (55% × 130 zł)</td><td>2 917 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>716 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>3 633 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−1 499 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 400 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−963 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−680 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neg">−909 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>4 300 zł</b></div><div><small>ROI/rok</small><b class="neg">-21%</b></div><div><small>Zwrot</small><b>brak zwrotu przy założeniach bazowych</b></div><div><small>Stawka</small><b>−3 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:20%" class="easy"></span></span><b>2/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak wymogów CITES i rejestracji.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Bardzo łatwe utrzymanie i rozmnażanie</li><li>Tania infrastruktura</li><li>Spokojne, „bezpieczne” zwierzę dla klienta</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Niskie ceny, duża podaż</li><li>Każdego młodego trzeba rozkarmić osobno (pinki) – czasochłonne</li><li>Kanibalizm u niektórych linii</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Dobry gatunek do nauki rozrodu węży, nie do zarabiania. Opłacalne tylko nowe/rzadkie morfy (np. palmetto – drogi start).</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−2 333 zł</b> · bazowy <b class="neg">−909 zł</b> · optymistyczny <b class="neu">567 zł</b></p>
+</article>
+<article class="card" id="boa">
+<header><div><span class="rank">#19</span><h3>Boa cesarski</h3><br><i class="lat">Boa imperator</i></div>
+<div class="score"><b>29</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 150–5 000 (normal 150–250; morfy: hypo, anery, sharp albino, motley, jungle)</span></div>
+<p class="bio">Żyworodny, 10–30 młodych co 1–2 lata. Dojrzałość samic 3–4 lata. Życie 25–30 lat.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.3 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>27,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (50% × 380 zł)</td><td>5 130 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 539 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>6 669 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−2 025 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 900 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 267 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 133 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neg">−656 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>9 000 zł</b></div><div><small>ROI/rok</small><b class="neg">-7%</b></div><div><small>Zwrot</small><b>brak zwrotu przy założeniach bazowych</b></div><div><small>Stawka</small><b>−2 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja w starostwie (B. c. occidentalis – Aneks A).</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Brak inkubacji (żyworodność)</li><li>Duże mioty</li><li>Długowieczne zwierzęta</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Duże zwierzę = duże pojemniki i koszty pokarmu dorosłych</li><li>Długie oczekiwanie na zwrot</li><li>Normalne i proste morfy trudno sprzedać</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Opłacalność tylko przy morfach i konsekwentnym budowaniu marki. Tańszą alternatywą bywają karłowate lokalizacje (np. Hog Island, Corn Island).</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−3 257 zł</b> · bazowy <b class="neg">−656 zł</b> · optymistyczny <b class="pos">2 066 zł</b></p>
+</article>
+<article class="card" id="uromastyx">
+<header><div><span class="rank">#20</span><h3>Szczeciniak (np. ozdobny)</h3><br><i class="lat">Uromastyx ornata / U. geyri</i></div>
+<div class="score"><b>29</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">6,3 · trudny</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 700–2 000</span></div>
+<p class="bio">6–20 jaj, 1 zniesienie. Wymaga wyraźnej zimowej brumacji i bardzo wysokich temp. (miejsce wygrzewania 50°C+). Dojrzałość 3–4 lata.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.1 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>7,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (55% × 1 100 zł)</td><td>4 235 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 039 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>5 275 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−514 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 400 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 127 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−717 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neu">516 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>6 500 zł</b></div><div><small>ROI/rok</small><b class="neu">8%</b></div><div><small>Zwrot</small><b>14,6 roku</b></div><div><small>Stawka</small><b>2 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:80%" class="hard"></span></span><b>8/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja w starostwie.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Wciąż niska podaż z hodowli (dużo odłowów na rynku)</li><li>Roślinożerność = tanie utrzymanie dorosłych</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Trudne do rozmnożenia – wiele par latami nie daje potomstwa</li><li>Wysokie zużycie prądu (gorące stanowiska)</li><li>Konkurencja ze strony tanich zwierząt z odłowu</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Hodowla dla zaawansowanych z cierpliwością. Udokumentowane CB (urodzone w niewoli) potomstwo jest premium wobec odłowów.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−1 449 zł</b> · bazowy <b class="neu">516 zł</b> · optymistyczny <b class="pos">2 592 zł</b></p>
+</article>
+<article class="card" id="phelsuma">
+<header><div><span class="rank">#21</span><h3>Felsuma madagaskarska</h3><br><i class="lat">Phelsuma grandis</i></div>
+<div class="score"><b>28</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 150–450</span></div>
+<p class="bio">2 jaja przyklejane, co 3–5 tyg. Inkubacja 45–70 dni. Dojrzałość ~1 rok.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>19,2 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (50% × 220 zł)</td><td>2 112 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>634 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>2 746 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−840 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−1 500 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−875 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−550 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neg">−1 019 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>2 900 zł</b></div><div><small>ROI/rok</small><b class="neg">-35%</b></div><div><small>Zwrot</small><b>brak zwrotu przy założeniach bazowych</b></div><div><small>Stawka</small><b>−5 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> CITES II / Aneks B – rejestracja w starostwie.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Tani start, szybka dojrzałość</li><li>Atrakcyjny, dzienny gekon</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Niskie ceny, ograniczony popyt</li><li>Wymaga UVB i terrariów pionowych</li><li>Agresja wewnątrzgatunkowa</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Bardziej sensowne są rzadsze felsumy (P. klemmeri, P. standingi, P. laticauda), ale też z niewielkim rynkiem.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−2 090 zł</b> · bazowy <b class="neg">−1 019 zł</b> · optymistyczny <b class="neu">102 zł</b></p>
+</article>
+<article class="card" id="pogona">
+<header><div><span class="rank">#22</span><h3>Agama brodata</h3><br><i class="lat">Pogona vitticeps</i></div>
+<div class="score"><b>25</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,3 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 120–1 200 (morfy: hypo, trans, leatherback, zero, witblits)</span></div>
+<p class="bio">15–30 jaj w zniesieniu, 2–4 zniesienia w sezonie. Inkubacja 55–70 dni. Dojrzałość 12–18 mies. Życie 10–12 lat.</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>48,0 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (55% × 220 zł)</td><td>5 808 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 426 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>7 234 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−3 822 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 900 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 323 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 020 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neg">−1 832 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>5 100 zł</b></div><div><small>ROI/rok</small><b class="neg">-36%</b></div><div><small>Zwrot</small><b>brak zwrotu przy założeniach bazowych</b></div><div><small>Stawka</small><b>−4 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:40%" class="mid"></span></span><b>4/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:30%" class="easy"></span></span><b>3/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="3/5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak wymogów CITES i rejestracji.</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Duży, stały popyt na zwierzę „dla początkujących”</li><li>Wysoka płodność</li><li>Proste rozmnażanie po krótkiej brumacji</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Ogromne mioty = ogromne koszty odchowu (owady, UVB, przestrzeń)</li><li>Młode kanibalizują i podgryzają się – trzeba je rozdzielać</li><li>Bardzo wysoki rachunek za prąd (lampy grzewcze + UVB)</li><li>Rynek przesycony, sklepy płacą 40–60 zł za sztukę</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Wykorzystuj 1 zniesienie na samicę (resztę jaj usuwaj) i rozmnażaj tylko morfy, na które masz zbyt. Klasyczne „kopanie” 100 młodych rocznie kończy się stratą.</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−4 717 zł</b> · bazowy <b class="neg">−1 832 zł</b> · optymistyczny <b class="pos">1 142 zł</b></p>
+</article>
+<article class="card" id="calyptratus">
+<header><div><span class="rank">#23</span><h3>Kameleon jemeński</h3><br><i class="lat">Chamaeleo calyptratus</i></div>
+<div class="score"><b>12</b><small>/100</small></div></header>
+<div class="chips"><span class="cat c-pop">Popularny</span><span class="badge hard">6,0 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 100–350 (translucent do 500)</span></div>
+<p class="bio">30–80 jaj w zniesieniu, samica składa nawet bez samca (jaja niezapłodnione). Inkubacja 150–200 dni. Samice żyją 3–5 lat (rozród je wyniszcza).</p>
+<div class="cgrid">
+<div class="econ"><h4>Ekonomika grupy 1.2 (scenariusz bazowy, rok)</h4>
+<table class="mini">
+<tr><td>Młode do sprzedaży</td><td>57,6 szt.</td></tr>
+<tr><td>Sprzedane w cenie średniej (35% × 160 zł)</td><td>3 226 zł</td></tr>
+<tr><td>Wyprzedaż reszty (30% ceny)</td><td>1 797 zł</td></tr>
+<tr class="sum"><td>Przychód</td><td>5 023 zł</td></tr>
+<tr><td>Odchów młodych</td><td>−4 198 zł</td></tr>
+<tr><td>Koszty stałe (prąd, pokarm, weterynarz)</td><td>−2 600 zł</td></tr>
+<tr><td>Sprzedaż (giełdy, wysyłka, ogłoszenia)</td><td>−1 102 zł</td></tr>
+<tr><td>Amortyzacja sprzętu i zwierząt</td><td>−1 060 zł</td></tr>
+<tr class="sum"><td>Zysk</td><td class="neg">−3 937 zł</td></tr>
+</table>
+<div class="kpis"><div><small>Start</small><b>4 400 zł</b></div><div><small>ROI/rok</small><b class="neg">-89%</b></div><div><small>Zwrot</small><b>brak zwrotu przy założeniach bazowych</b></div><div><small>Stawka</small><b>−8 zł/h</b></div></div>
+</div>
+<div class="side"><h4>Trudność</h4><div class="dl"><span>Utrzymanie</span><span class="dtrack"><span style="width:60%" class="hard"></span></span><b>6/10</b></div><div class="dl"><span>Rozród</span><span class="dtrack"><span style="width:50%" class="mid"></span></span><b>5/10</b></div><div class="dl"><span>Inkubacja i odchów</span><span class="dtrack"><span style="width:70%" class="hard"></span></span><b>7/10</b></div>
+<div class="dl"><span>Płynność rynku</span><span class="dots" aria-label="2/5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+<div class="dl"><span>Nasycenie rynku</span><span class="dots" aria-label="5/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+<div class="dl"><span>Ryzyko</span><span class="dots" aria-label="4/5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+<div class="legal"><b>Prawo:</b> Brak wymogów CITES dla tego gatunku (inne kameleony – zwykle CITES II).</div>
+</div></div>
+<div class="pc"><div><h4>Plusy</h4><ul class="plus"><li>Bardzo szybkie dojrzewanie</li><li>Ogromna płodność</li><li>Efektowne zwierzę, łatwo przyciąga kupujących na giełdzie</li></ul></div>
+<div><h4>Minusy</h4><ul class="minus"><li>Przesycony rynek, sklepy biorą po 50–80 zł</li><li>Młode muszą szybko trafić do osobnych terrariów (stres, agresja)</li><li>Krótkie życie samic – częsta wymiana stada</li><li>Drogi odchów: muszki, drobne świerszcze, zraszanie</li></ul></div></div>
+<p class="tip"><b>Wskazówka:</b> Model typowo stratny przy dużej skali. Jeśli już – tylko małe, zaplanowane mioty pod zamówienia (np. translucent).</p>
+<p class="scen">Scenariusze: pesymistyczny <b class="neg">−6 141 zł</b> · bazowy <b class="neg">−3 937 zł</b> · optymistyczny <b class="neg">−1 668 zł</b></p>
+</article>
+</div>
+</section>
+
+<section id="koszty">
+<h2>7. Struktura kosztów – gdzie uciekają pieniądze</h2>
+<div class="grid2">
+<div class="panel">
+<h3>Energia elektryczna (przy 1,00 zł/kWh)</h3>
+<div class="tablewrap"><table>
+<tr><th>Urządzenie</th><th>Moc · czas</th><th>Koszt/rok</th></tr>
+<tr><td>Mata/kabel grzewczy w regale (1 półka)</td><td>15 W · 24 h (termostat ~50%)</td><td>~65 zł</td></tr>
+<tr><td>Żarówka grzewcza (agama, waran)</td><td>100 W · 12 h</td><td>~440 zł</td></tr>
+<tr><td>Świetlówka/LED UVB T5</td><td>24–54 W · 12 h</td><td>105–240 zł</td></tr>
+<tr><td>Ceramik nocny</td><td>60 W · 10 h (termostat ~60%)</td><td>~130 zł</td></tr>
+<tr><td>Inkubator</td><td>30–50 W · 24 h (sezon 4 mies.)</td><td>~45–70 zł</td></tr>
+<tr><td>Klimatyzator pokoju (Uroplatus, Abronia)</td><td>~700 W · 6 h · 90 dni</td><td>~380 zł + zakup 2–4 tys.</td></tr>
+<tr><td>Nawilżacz/zraszacz</td><td>20–40 W</td><td>~50–100 zł</td></tr>
+</table></div>
+<p class="meta">Jedno terrarium pustynne z pełnym oświetleniem to 600–900 zł rocznie. Regał z 10 pojemnikami na gekony lamparcie to łącznie 300–500 zł.</p>
+</div>
+<div class="panel">
+<h3>Pokarm i odchów</h3>
+<ul>
+<li><b>Owady kupowane</b> to 30–60% kosztów odchowu owadożerców. Własna hodowla karaczanów (np. <i>Blaptica dubia</i>, <i>Shelfordella lateralis</i>) obniża ten koszt o 50–70% po 4–6 miesiącach rozruchu.</li>
+<li><b>Gryzonie</b>: pinki 1,5–3 zł/szt., myszy dorosłe 3–5 zł, szczury 6–15 zł. Duże węże (boa) zjadają 300–600 zł pokarmu rocznie na osobnika.</li>
+<li><b>Gotowe karmy (CGD, Repashy, Pangea)</b>: 2–5 zł miesięcznie na młodego gekona – najtańszy odchów w zestawieniu.</li>
+<li><b>Suplementy</b> (wapń, D3, witaminy): 100–250 zł rocznie na hodowlę.</li>
+<li><b>Rośliny</b> dla roślinożerców (szczeciniaki, żółwie): latem prawie za darmo (mniszek, koniczyna), zimą 30–60 zł/mies.</li>
+</ul>
+</div>
+<div class="panel">
+<h3>Weterynarz i straty</h3>
+<ul>
+<li>Wizyta u weterynarza egzotycznego: 120–250 zł, badanie kału 60–120 zł, RTG 150–300 zł, zabieg (np. zatrzymanie jaj) 400–1 500 zł.</li>
+<li>Kwarantanna nowych zwierząt (min. 60–90 dni) to osobny sprzęt i czas, ale tańsza niż zarażenie całej kolekcji (kryptosporydioza, nicienie, IBD u wężów).</li>
+<li>Typowa śmiertelność dorosłych w dobrze prowadzonej hodowli: 2–5% rocznie. U gatunków trudnych (Uroplatus, kameleony) – nawet 15–25%.</li>
+</ul>
+</div>
+<div class="panel">
+<h3>Ukryte koszty, o których się zapomina</h3>
+<ul>
+<li><b>Holdbacki</b> – młode zostawiane do własnego projektu. Przez 1–3 lata tylko kosztują.</li>
+<li><b>Niesprzedane zwierzęta</b> rosną, jedzą i zajmują miejsce. Po 6 miesiącach ich wartość handlowa zwykle spada.</li>
+<li><b>Giełdy</b>: stoisko 150–500 zł, dojazd, nocleg, czas. Giełda w Hamm (Niemcy) to 1 000–2 000 zł kosztów wyjazdu.</li>
+<li><b>Wysyłka</b>: specjalistyczny przewoźnik zwierząt 100–250 zł za paczkę, opakowanie termiczne 20–40 zł, ogrzewacze/chłodzenie.</li>
+<li><b>Zdjęcia</b>: dobry obiektyw makro i lampa to 1–3 tys. zł, ale przy rzadkich i drogich gatunkach jakość zdjęcia bezpośrednio podnosi cenę.</li>
+<li><b>Dokumenty</b>: świadectwa UE dla gatunków z Aneksu A, chipowanie (40–80 zł/szt.), czas na formalności.</li>
+</ul>
+</div>
+</div>
+
+<div class="panel" style="margin-top:16px">
+<h3>Efekt skali</h3>
+<p>Model dotyczy jednej grupy hodowlanej. Przy powiększaniu hodowli:</p>
+<ul>
+<li><b>Koszty stałe na zwierzę spadają</b> – jeden inkubator, jedna hodowla owadów, jeden wyjazd na giełdę obsługuje więcej sztuk.</li>
+<li><b>Sprzedawalność spada</b> – rynek nie wchłonie nieograniczonej liczby zwierząt od jednego hodowcy. Przy popularnych gatunkach podwojenie produkcji często daje tylko 30–50% więcej przychodu.</li>
+<li><b>Czas pracy rośnie liniowo</b> przy gatunkach wymagających osobnych pojemników (gekony orzęsione, kameleony, węże królewskie).</li>
+<li>Najlepiej skalują się gatunki o <b>wysokiej cenie i niskiej pracy na sztukę</b>: Nephrurus, Tiliqua, leachianus, hognose (jeśli linie same jedzą).</li>
+</ul>
+</div>
+</section>
+
+<section id="rynek">
+<h2>8. Rynek i kanały sprzedaży</h2>
+<div class="grid3">
+<div class="panel"><h3>Giełdy terrarystyczne</h3><p>Największy kanał w Polsce (m.in. Warszawa, Kraków, Wrocław, Poznań, Łódź, Gdańsk) oraz w Niemczech (Hamm, Houten w Holandii). Plusy: bezpośredni kontakt, brak wysyłki. Minusy: koszt stoiska, presja cenowa, sezonowość (wiosna i jesień najlepsze).</p></div>
+<div class="panel"><h3>Grupy i ogłoszenia online</h3><p>Grupy hodowców na Facebooku, fora, MorphMarket (rynek UE), własna strona i Instagram. Kluczowe są zdjęcia, opis genetyki i opinie. Większość dużych platform zakupowych nie dopuszcza handlu żywymi kręgowcami – sprawdź regulamin przed wystawieniem.</p></div>
+<div class="panel"><h3>Sklepy zoologiczne i hurt</h3><p>Biorą duże ilości, ale płacą 30–50% ceny detalicznej. Sensowne jako sposób na nadwyżki popularnych gatunków. Przy gatunkach rzadkich sklepy rzadko są odbiorcą.</p></div>
+</div>
+<div class="panel" style="margin-top:16px">
+<h3>Trendy 2024–2026</h3>
+<ul>
+<li><b>Spadek cen „klasyków”</b>: normalne pytony królewskie, gekony lamparcie, agamy i kameleony jemeńskie – nadpodaż po boomie pandemicznym.</li>
+<li><b>Wzrost zainteresowania</b>: hognose, Nephrurus, Tiliqua (formy indonezyjskie i australijskie), gekony z rodzaju <i>Correlophus</i> w topowych morfach (Lilly White, Cappuccino, Sable, Frappuccino), warany karłowate (<i>V. acanthurus, V. storri, V. tristis</i>), rzadkie gekony z Nowej Kaledonii.</li>
+<li><b>Premia za dokumentację</b>: lokalizacja, linia rodowodowa, testy genetyczne. Zwierzę „bez historii” jest warte znacznie mniej.</li>
+<li><b>Eksport wewnątrz UE</b> jest kluczowy dla gatunków rzadkich – polski rynek jest za mały na kilkanaście młodych rocznie jednego rzadkiego gatunku.</li>
+<li><b>Dobrostan i wizerunek</b>: morfy z wadami (spider wobble u pytonów, Lemon Frost u gekonów lamparcich, problemy oczu u Enigmy) tracą na wartości i reputacji hodowcy.</li>
+</ul>
+</div>
+</section>
+
+<section id="prawo">
+<h2>9. Prawo i formalności (Polska / UE)</h2>
+<div class="grid2">
+<div class="panel"><h3>CITES i Aneksy UE</h3>
+<ul>
+<li><b>Rozporządzenie Rady (WE) nr 338/97</b> dzieli gatunki na Aneksy A, B, C, D.</li>
+<li><b>Aneks A</b> (np. <i>Testudo hermanni</i>, <i>Shinisaurus crocodilurus</i>): handel komercyjny tylko ze <b>świadectwem UE</b> wydanym dla konkretnego osobnika (w Polsce: Minister Klimatu i Środowiska jako organ zarządzający CITES) i zwykle ze znakowaniem.</li>
+<li><b>Aneks B</b> (np. pyton królewski, boa cesarski, Uromastyx, warany, Phelsuma, Uroplatus, kameleony lamparcie, Abronia): wymagany dowód legalnego pochodzenia (faktura, dokument hodowcy, kopia dokumentów rodziców).</li>
+<li><b>Rejestracja u starosty</b> (art. 64 ustawy o ochronie przyrody) dla zwierząt z Aneksów A i B – w ustawowym terminie od nabycia lub wyklucia/urodzenia. Sprawdź aktualne terminy i wyjątki w swoim starostwie.</li>
+</ul></div>
+<div class="panel"><h3>Zakazy</h3>
+<ul>
+<li><b>Zwierzęta niebezpieczne</b> (art. 73 ustawy o ochronie przyrody i lista gatunków): zakaz utrzymywania m.in. gatunków jadowitych węży, krokodyli, helodermów. Przed rozpoczęciem hodowli gatunku tylnobruzdowego lub dużego dusiciela sprawdź aktualną listę.</li>
+<li><b>Gatunki inwazyjne</b> (rozp. UE 1143/2014): np. żółw czerwonolicy i żółtolicy (<i>Trachemys scripta</i>) – zakaz rozmnażania, sprzedaży i transportu.</li>
+<li><b>Ustawa o ochronie zwierząt</b> ogranicza obrót zwierzętami na targowiskach i giełdach. Imprezy terrarystyczne działają w oparciu o wyjątki i własne regulaminy – sprzedawca odpowiada za warunki i dokumenty.</li>
+<li><b>Ryzyko regulacyjne</b>: w Polsce i UE trwa dyskusja o tzw. „liście pozytywnej” gatunków dopuszczonych do trzymania. Jej wprowadzenie mogłoby z dnia na dzień zmienić rynek – to argument za dywersyfikacją gatunków.</li>
+</ul></div>
+<div class="panel"><h3>Podatki i działalność</h3>
+<ul>
+<li><b>Działalność nierejestrowana</b>: od 2025 r. limit przychodu wynosi 225% minimalnego wynagrodzenia na kwartał (w 2026 r. ok. 10,8 tys. zł kwartalnie). Przychód rozlicza się w rocznym PIT.</li>
+<li>Powyżej limitu lub przy regularnej sprzedaży w dużej skali potrzebna jest działalność gospodarcza (rozważ ryczałt i kody PKD związane z chowem zwierząt).</li>
+<li>Prowadź ewidencję sprzedaży i dokumenty pochodzenia – przydadzą się zarówno przy kontroli skarbowej, jak i przy kontroli CITES.</li>
+<li>W razie wątpliwości – księgowy. Ta sekcja to ogólne wskazówki, nie porada prawna.</li>
+</ul></div>
+<div class="panel"><h3>Transport i wysyłka</h3>
+<ul>
+<li>Transport komercyjny zwierząt regulują przepisy UE (rozp. 1/2005) – przy regularnej sprzedaży wysyłkowej korzystaj z przewoźników wyspecjalizowanych w zwierzętach.</li>
+<li>Zwykli kurierzy zazwyczaj nie przyjmują żywych zwierząt w regulaminie.</li>
+<li>Przy sprzedaży za granicę zwierząt z Aneksu A/B dołącz kopie dokumentów; poza UE wymagane są zezwolenia CITES.</li>
+<li>Unikaj wysyłek przy temperaturze poniżej 5°C i powyżej 28°C.</li>
+</ul></div>
+</div>
+</section>
+
+<section id="strategie">
+<h2>10. Strategie i rekomendacje</h2>
+<div class="grid3">
+<div class="panel"><h3>Budżet do 5 tys. zł · początkujący</h3>
+<p><b>Rekomendacja:</b> gekon orzęsiony (dobre linie) lub hognose.</p>
+<ul>
+<li>Temperatura pokojowa lub tani regał</li>
+<li>Gotowe karmy / gryzonie</li>
+<li>Zwrot w 2–3 lata, jeśli kupisz jakościowe zwierzęta, a nie najtańsze</li>
+<li>Unikaj: agamy, kameleona jemeńskiego, normalnych pytonów</li>
+</ul></div>
+<div class="panel"><h3>Budżet 7–15 tys. zł · średniozaawansowany</h3>
+<p><b>Rekomendacja:</b> Nephrurus, Tiliqua lub waran kolczastoogonowy (z własną hodowlą owadów).</p>
+<ul>
+<li>Wyższa cena jednostkowa, mniejsza konkurencja</li>
+<li>Rynek PL + giełdy w Niemczech</li>
+<li>Zysk 5–12 tys. zł rocznie z jednej grupy przy dobrym zarządzaniu</li>
+</ul></div>
+<div class="panel"><h3>Budżet 20 tys. zł+ · zaawansowany</h3>
+<p><b>Rekomendacja:</b> leachianus (sprawdzone pary), pyton zielony z lokalizacji lub Abronia – tylko z kontaktami w UE.</p>
+<ul>
+<li>Inwestycja na 5–10 lat</li>
+<li>Najważniejsze: udokumentowane pochodzenie i reputacja</li>
+<li>Klimatyzacja, kontrola temperatury, kwarantanna</li>
+</ul></div>
+</div>
+<div class="panel" style="margin-top:16px">
+<h3>Zasady, które najbardziej podnoszą opłacalność</h3>
+<ol>
+<li><b>Najpierw rynek, potem rozród.</b> Zanim połączysz parę, sprawdź, ile podobnych zwierząt jest w ogłoszeniach i za ile się faktycznie sprzedają (nie za ile są wystawione).</li>
+<li><b>Kupuj najlepszego samca, na jakiego cię stać.</b> Samiec przekazuje geny całemu miotowi wszystkich samic.</li>
+<li><b>Hoduj własny pokarm.</b> Karaczany, świerszcze lub myszy – największa pojedyncza oszczędność dla owadożerców i węży.</li>
+<li><b>Kontroluj liczbę zniesień.</b> Lepiej 20 młodych, które sprzedasz w pełnej cenie, niż 80, z których połowa trafi do sklepu za bezcen.</li>
+<li><b>Buduj markę.</b> Dobre zdjęcia, rzetelna genetyka, opinie, wsparcie po sprzedaży. Rozpoznawalny hodowca sprzedaje 20–50% drożej.</li>
+<li><b>Dywersyfikuj.</b> 2–3 gatunki o różnych sezonach rozrodu i grupach klientów zmniejszają ryzyko załamania cen i zmian prawa.</li>
+<li><b>Licz wszystko.</b> Arkusz z kosztami prądu, pokarmu i czasu pracy szybko pokaże, które gatunki dokładasz z własnej kieszeni.</li>
+</ol>
+</div>
+</section>
+
+<section id="bledy">
+<h2>11. Najczęstsze błędy finansowe hodowców</h2>
+<div class="grid2">
+<div class="panel"><ul>
+<li><b>Liczenie przychodu po cenach z ogłoszeń.</b> Ceny wystawione są zwykle o 20–40% wyższe od transakcyjnych.</li>
+<li><b>Rozmnażanie „bo samica jest gotowa”.</b> Bez planu sprzedaży kończy się to pełnymi regałami i wyprzedażą.</li>
+<li><b>Ignorowanie kosztu prądu.</b> W 2026 r. to często największa pozycja przy gatunkach pustynnych.</li>
+<li><b>Kupowanie najtańszych zwierząt startowych.</b> Słaba genetyka = najtańsze potomstwo = brak marży.</li>
+</ul></div>
+<div class="panel"><ul>
+<li><b>Brak kwarantanny.</b> Jedna choroba może wyzerować kilka lat pracy.</li>
+<li><b>Brak dokumentów pochodzenia.</b> Przy gatunkach z Aneksu A/B oznacza to brak możliwości legalnej sprzedaży.</li>
+<li><b>Niedoszacowanie czasu odchowu.</b> Młode, które nie chcą jeść (hognose, pyton królewski, pyton zielony), potrafią pochłonąć więcej czasu niż cała reszta hodowli.</li>
+<li><b>Wejście w modny gatunek na szczycie hype’u.</b> Ceny morfów potrafią spaść o 50–80% w 2–3 lata.</li>
+</ul></div>
+</div>
+</section>
+
+<footer>
+<p>Analiza przygotowana w październiku 2026 r. Ceny i parametry rozrodu są szacunkami na podstawie typowych wartości z rynku polskiego i europejskiego oraz literatury hodowlanej. Nie stanowią porady inwestycyjnej ani prawnej. Przepisy (CITES, ustawa o ochronie przyrody, lista zwierząt niebezpiecznych, podatki) zweryfikuj w aktualnych źródłach przed rozpoczęciem hodowli.</p>
+</footer>
+</main>
+
+<button class="themebtn" id="themebtn" type="button" aria-label="Przełącz motyw">◐ Motyw</button>
+
+<script>
+(function(){
+  // sortowanie tabeli
+  var tbl=document.getElementById('tbl');
+  if(tbl){
+    var ths=tbl.querySelectorAll('th');
+    ths.forEach(function(th,i){
+      var asc=false;
+      th.addEventListener('click',function(){
+        asc=!asc;
+        var body=tbl.tBodies[0];
+        var rows=Array.prototype.slice.call(body.rows);
+        rows.sort(function(a,b){
+          var x=a.cells[i].getAttribute('data-v'), y=b.cells[i].getAttribute('data-v');
+          var nx=parseFloat(x), ny=parseFloat(y);
+          var r=(!isNaN(nx)&&!isNaN(ny))?nx-ny:String(x).localeCompare(String(y),'pl');
+          return asc?r:-r;
+        });
+        rows.forEach(function(r){body.appendChild(r);});
+      });
+    });
+  }
+  // filtry kategorii
+  var f=document.getElementById('filters');
+  if(f){
+    f.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      f.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var v=b.getAttribute('data-f');
+      tbl.querySelectorAll('tbody tr').forEach(function(r){
+        r.style.display=(v==='all'||r.getAttribute('data-cat')===v)?'':'none';
+      });
+    });
+  }
+  // motyw
+  var root=document.documentElement, KEY='gady-theme';
+  try{var t=localStorage.getItem(KEY); if(t) root.setAttribute('data-theme',t);}catch(e){}
+  document.getElementById('themebtn').addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    if(!cur){cur=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
