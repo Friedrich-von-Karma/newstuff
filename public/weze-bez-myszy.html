@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Węże bez myszy</title>
+<style>
+:root{
+  --bg:#f6f4ee; --card:#ffffff; --ink:#1f2420; --muted:#5d665f; --line:#e1ddd2;
+  --accent:#2f6b45; --accent2:#9a5b1e; --warn-bg:#fff6e0; --warn-line:#e7c66b;
+  --c1:#2f6b45; --c2:#6b7f2f; --c3:#9a5b1e; --c4:#9a2f2f;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151815; --card:#1e221f; --ink:#e8ebe6; --muted:#a3aba4; --line:#323832;
+    --accent:#7cc495; --accent2:#e0a466; --warn-bg:#2b2616; --warn-line:#6b5a25;
+    --c1:#7cc495; --c2:#bcd06a; --c3:#e0a466; --c4:#e88a8a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151815; --card:#1e221f; --ink:#e8ebe6; --muted:#a3aba4; --line:#323832;
+  --accent:#7cc495; --accent2:#e0a466; --warn-bg:#2b2616; --warn-line:#6b5a25;
+  --c1:#7cc495; --c2:#bcd06a; --c3:#e0a466; --c4:#e88a8a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0 .3em}
+h2{font-size:1.35rem;margin:2.2em 0 .5em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+.lead{color:var(--muted);margin-top:0}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+nav a{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none;color:var(--ink);font-size:.95rem}
+a{color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:12px 0}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:12px 14px;margin:14px 0}
+.table{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.93rem;background:var(--card);border:1px solid var(--line);border-radius:10px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+td:first-child{min-width:170px}
+td i{white-space:nowrap}
+.pl{display:block;color:var(--muted);font-size:.85rem}
+.av{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.a1{color:var(--c1)} .a2{color:var(--c2)} .a3{color:var(--c3)} .a4{color:var(--c4)}
+ul{padding-left:1.2em} li{margin:.25em 0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.9rem;color:var(--muted)}
+footer{margin-top:40px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Węże, które nie jedzą myszy</h1>
+<p class="lead">Gatunki spotykane w hodowlach, które w naturze i w terrarium żywią się jajami, owadami, ślimakami, rybami, płazami lub jaszczurkami. Stan na październik 2026.</p>
+
+<div class="card">
+<b>Dostępność</b> (orientacyjna, w Polsce i na targach w UE):
+<div class="legend" style="margin-top:6px">
+  <span><span class="av a1">często</span> regularnie na OLX i targach</span>
+  <span><span class="av a2">czasem</span> kilka ofert w roku</span>
+  <span><span class="av a3">rzadko</span> głównie targi w Niemczech/Czechach</span>
+  <span><span class="av a4">b. rzadko</span> pojedyncze importy</span>
+</div>
+</div>
+
+<nav>
+  <a href="#top">Najlepsze na start</a>
+  <a href="#jaja">Jaja</a>
+  <a href="#owady">Owady i dżdżownice</a>
+  <a href="#slimaki">Ślimaki</a>
+  <a href="#ryby">Ryby</a>
+  <a href="#plazy">Płazy</a>
+  <a href="#jaszczurki">Jaszczurki</a>
+  <a href="#weze">Inne węże</a>
+  <a href="#mieszane">Mogą, ale nie muszą</a>
+  <a href="#prawo">Przepisy</a>
+</nav>
+
+<h2 id="top">Najlepsze na start</h2>
+<div class="card">
+<ul>
+  <li><b>Pończosznik</b> (<i>Thamnophis</i>): ryby, dżdżownice. Łatwy, tani, łatwo dostępny. <a href="ponczoszniki-i-jajozery.html">Pełny opis hodowli</a></li>
+  <li><b>Wąż trawny</b> (<i>Opheodrys aestivus</i>): świerszcze, gąsienice, pająki. Spokojny, nie gryzie.</li>
+  <li><b>Jajożer</b> (<i>Dasypeltis scabra</i>): jaja przepiórcze. Dorosłe są łatwe, młode trudne. <a href="ponczoszniki-i-jajozery.html#jajozery">Pełny opis hodowli</a></li>
+  <li><b>Wąż wodny</b> (<i>Nerodia</i>) i <b>homalopsis</b> (<i>Homalopsis buccata</i>): ryby. Potrzebują dużej części wodnej.</li>
+</ul>
+</div>
+
+<!-- JAJA -->
+<h2 id="jaja">Jedzą jaja</h2>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Pokarm</th><th>Długość</th><th>Trudność</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Dasypeltis scabra</i><span class="pl">jajożer pospolity</span></td><td>jaja ptaków (przepiórcze)</td><td>70–100 cm</td><td>średnia</td><td><span class="av a2">czasem</span></td><td>Najczęstszy jajożer w hodowli.</td></tr>
+<tr><td><i>Dasypeltis gansi</i><span class="pl">jajożer Gansa</span></td><td>jaja ptaków</td><td>do 100 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Często importy z odłowu.</td></tr>
+<tr><td><i>Dasypeltis confusa</i></td><td>jaja ptaków</td><td>do 90 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Oferty na terraristik.com.</td></tr>
+<tr><td><i>Dasypeltis atra</i><span class="pl">jajożer czarny</span></td><td>jaja ptaków</td><td>do 100 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Czarne i wzorzyste formy, CB z Niemiec.</td></tr>
+<tr><td><i>Dasypeltis fasciata</i>, <i>D. medici</i></td><td>jaja ptaków</td><td>70–100 cm</td><td>średnia–trudna</td><td><span class="av a4">b. rzadko</span></td><td>Prawie tylko z odłowu.</td></tr>
+<tr><td><i>Prosymna</i> spp.</td><td>jaja gadów</td><td>20–30 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Pokarm bardzo trudny do zdobycia. Tylko dla specjalistów.</td></tr>
+</table></div>
+
+<!-- OWADY -->
+<h2 id="owady">Jedzą owady, pająki i dżdżownice</h2>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Pokarm</th><th>Długość</th><th>Trudność</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Opheodrys aestivus</i><span class="pl">wąż trawny szorstki</span></td><td>świerszcze, gąsienice, pająki, koniki</td><td>60–90 cm</td><td>łatwa–średnia</td><td><span class="av a2">czasem</span></td><td>Nadrzewny, aktywny w dzień. Potrzebuje UVB, zraszania i jedzenia co 2–3 dni.</td></tr>
+<tr><td><i>Opheodrys vernalis</i><span class="pl">wąż trawny gładki</span></td><td>owady, pająki</td><td>35–50 cm</td><td>średnia</td><td><span class="av a4">b. rzadko</span></td><td>Naziemny, delikatniejszy od <i>O. aestivus</i>.</td></tr>
+<tr><td><i>Sonora semiannulata</i><span class="pl">wąż ziemny</span></td><td>świerszcze, pająki, skorpiony, stonogi</td><td>20–40 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Mały, ryjący, ma wiele odmian barwnych.</td></tr>
+<tr><td><i>Tantilla</i> spp.</td><td>wije (skolopendry), larwy</td><td>15–30 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Pokarm trudny do zdobycia.</td></tr>
+<tr><td><i>Chilomeniscus</i> spp.</td><td>larwy owadów, pająki</td><td>20–25 cm</td><td>średnia</td><td><span class="av a4">b. rzadko</span></td><td>Pustynny, żyje w piasku.</td></tr>
+<tr><td><i>Carphophis amoenus</i><span class="pl">wąż robaczkowy</span></td><td>dżdżownice</td><td>20–30 cm</td><td>łatwa</td><td><span class="av a4">b. rzadko</span></td><td>Ryjący, zwykle nie widać go w terrarium.</td></tr>
+<tr><td><i>Storeria dekayi</i>, <i>S. occipitomaculata</i><span class="pl">węże Dekaya / czerwonobrzuche</span></td><td>dżdżownice, ślimaki, nagie ślimaki</td><td>20–35 cm</td><td>łatwa</td><td><span class="av a3">rzadko</span></td><td>Żyworodne, małe, spokojne.</td></tr>
+<tr><td><i>Virginia valeriae</i></td><td>dżdżownice</td><td>20–30 cm</td><td>łatwa</td><td><span class="av a4">b. rzadko</span></td><td>Ryjący.</td></tr>
+<tr><td><i>Diadophis punctatus</i><span class="pl">wąż obrożny</span></td><td>dżdżownice, salamandry, małe węże i jaszczurki</td><td>25–45 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Pomarańczowa obroża i brzuch. Bywa wybredny.</td></tr>
+<tr><td><i>Indotyphlops braminus</i><span class="pl">ślepuch braminy</span></td><td>larwy i poczwarki mrówek i termitów</td><td>10–17 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Partenogenetyczny (same samice). Żyje cały czas w podłożu.</td></tr>
+</table></div>
+
+<!-- SLIMAKI -->
+<h2 id="slimaki">Jedzą ślimaki</h2>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Pokarm</th><th>Długość</th><th>Trudność</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Pareas carinatus</i></td><td>ślimaki nagie i z muszlą</td><td>40–60 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Nocny, nadrzewny. Na targach w Hamm ok. 120 €. Wymaga stałego źródła ślimaków (własna hodowla).</td></tr>
+<tr><td><i>Pareas iwasakii</i>, <i>P. hamptoni</i></td><td>ślimaki</td><td>40–70 cm</td><td>średnia–trudna</td><td><span class="av a4">b. rzadko</span></td><td>Asymetryczna żuchwa przystosowana do ślimaków.</td></tr>
+<tr><td><i>Dipsas</i> spp.<span class="pl">ślimakojady neotropikalne</span></td><td>ślimaki</td><td>40–90 cm</td><td>średnia–trudna</td><td><span class="av a4">b. rzadko</span></td><td>Duże oczy, cienkie ciało, nocne.</td></tr>
+<tr><td><i>Sibon nebulatus</i></td><td>ślimaki</td><td>50–80 cm</td><td>średnia</td><td><span class="av a4">b. rzadko</span></td><td>Pojawia się czasem w Czechach i Niemczech.</td></tr>
+<tr><td><i>Duberria lutrix</i>, <i>D. atriventris</i></td><td>nagie ślimaki</td><td>30–40 cm</td><td>średnia</td><td><span class="av a4">b. rzadko</span></td><td>Afrykańskie, żyworodne.</td></tr>
+</table></div>
+<div class="warn">Do karmienia nadają się tylko ślimaki z własnej hodowli (np. <i>Achatina</i>, ślimak winniczek z hodowli, nagie ślimaki z czystego ogródka po kwarantannie). Dzikie ślimaki mogą zawierać pasożyty i trucizny ślimakobójcze.</div>
+
+<!-- RYBY -->
+<h2 id="ryby">Jedzą ryby</h2>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Pokarm</th><th>Długość</th><th>Trudność</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Thamnophis</i> spp.<span class="pl">pończoszniki</span></td><td>ryby, dżdżownice, (opcjonalnie myszy)</td><td>40–100 cm</td><td>łatwa</td><td><span class="av a1">często</span></td><td>Dużo gatunków i odmian, 300–1500 zł. Przy samych rybach trzeba podawać witaminę B1.</td></tr>
+<tr><td><i>Nerodia fasciata</i>, <i>N. sipedon</i>, <i>N. rhombifer</i><span class="pl">węże wodne</span></td><td>ryby, żaby</td><td>60–150 cm</td><td>łatwa–średnia</td><td><span class="av a2">czasem</span></td><td>Duża część wodna. Gryzą i wydzielają zapach, zwłaszcza młode.</td></tr>
+<tr><td><i>Homalopsis buccata</i><span class="pl">homalopsis maskowy</span></td><td>ryby</td><td>80–100 cm</td><td>średnia</td><td><span class="av a2">czasem</span></td><td>Prawie całkowicie wodny. W Hamm ok. 75 €, zwykle z odłowu.</td></tr>
+<tr><td><i>Erpeton tentaculatum</i><span class="pl">wąż wąsaty</span></td><td>żywe ryby</td><td>50–90 cm</td><td>średnia–trudna</td><td><span class="av a3">rzadko</span></td><td>W pełni wodny, na lądzie jest bezradny. Trzymany w akwarium.</td></tr>
+<tr><td><i>Hypsiscopus plumbea</i> (dawniej <i>Enhydris</i>)<span class="pl">wąż ołowiany</span></td><td>ryby, żaby</td><td>40–60 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Wodny, żyworodny.</td></tr>
+<tr><td><i>Fowlea piscator</i> (dawniej <i>Xenochrophis</i>)<span class="pl">zaskroniec rybołów</span></td><td>ryby, żaby</td><td>60–120 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Nerwowy, chętnie gryzie.</td></tr>
+<tr><td><i>Helicops angulatus</i></td><td>ryby, kijanki</td><td>60–80 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Wodny, z Ameryki Południowej.</td></tr>
+<tr><td><i>Acrochordus javanicus</i>, <i>A. granulatus</i><span class="pl">brodawczaki (węże pilnikowate)</span></td><td>ryby</td><td>100–250 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>W pełni wodne, wymagają dużego akwarium. Często są w złej kondycji po imporcie.</td></tr>
+<tr><td><i>Regina septemvittata</i><span class="pl">wąż rakożerny</span></td><td>świeżo wylinkowane raki</td><td>40–60 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Bardzo wąska dieta.</td></tr>
+<tr><td><i>Farancia abacura</i><span class="pl">wąż błotny</span></td><td>amfiumy, węgorze, ryby</td><td>100–160 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Prawie nieobecny w hodowlach.</td></tr>
+<tr><td><i>Natrix maura</i><span class="pl">zaskroniec żmijowy</span></td><td>ryby, żaby</td><td>60–90 cm</td><td>łatwa–średnia</td><td><span class="av a3">rzadko</span></td><td>Gatunek europejski, sprawdź przepisy (patrz niżej).</td></tr>
+</table></div>
+<div class="warn">Nie podawaj ryb z tiaminazą (karaś, złota rybka, stynka, szprot, karp). Dobre są: dorsz, mintaj, tilapia, pstrąg, gupiki i molinezje z własnej hodowli.</div>
+
+<!-- PLAZY -->
+<h2 id="plazy">Jedzą żaby i inne płazy</h2>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Pokarm</th><th>Długość</th><th>Trudność</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Leptodeira annulata</i>, <i>L. septentrionalis</i></td><td>żaby, skrzek, jaszczurki</td><td>50–90 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Nocne, nadrzewne. Słabo jadowite (tylne zęby), niegroźne dla ludzi.</td></tr>
+<tr><td><i>Leptophis ahaetulla</i><span class="pl">papuzi</span></td><td>żaby drzewne, jaszczurki</td><td>100–200 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Bardzo smukły, intensywnie zielony.</td></tr>
+<tr><td><i>Dendrelaphis</i> spp.</td><td>żaby, jaszczurki</td><td>80–150 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Szybkie, płochliwe, potrzebują wysokiego terrarium.</td></tr>
+<tr><td><i>Erythrolamprus</i> spp. (dawniej <i>Liophis</i>)</td><td>żaby, ryby</td><td>40–80 cm</td><td>średnia</td><td><span class="av a4">b. rzadko</span></td><td>Część osobników da się przestawić na ryby.</td></tr>
+<tr><td><i>Hebius</i> / <i>Amphiesma</i> spp.<span class="pl">azjatyckie zaskrońce</span></td><td>żaby, ryby, dżdżownice</td><td>50–80 cm</td><td>średnia</td><td><span class="av a3">rzadko</span></td><td>Zwykle z odłowu.</td></tr>
+<tr><td><i>Xenodon</i> spp.</td><td>ropuchy</td><td>60–120 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Krewny <i>Heterodon</i>.</td></tr>
+<tr><td><i>Rhabdophis subminiatus</i>, <i>R. tigrinus</i></td><td>żaby, ropuchy, ryby</td><td>60–100 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>⚠️ Silnie jadowity, były ofiary śmiertelne. Raczej wymaga zezwolenia (patrz Przepisy).</td></tr>
+</table></div>
+<div class="warn">Żaby to pokarm problematyczny: dzikie są chronione i przenoszą pasożyty, a karmówki są rzadko dostępne. Wiele „żabożernych” węży można powoli przestawić na ryby, a ryby czasem na myszy natarte zapachem ryby.</div>
+
+<!-- JASZCZURKI -->
+<h2 id="jaszczurki">Jedzą jaszczurki</h2>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Pokarm</th><th>Długość</th><th>Trudność</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Ahaetulla prasina</i><span class="pl">wąż biczowaty</span></td><td>jaszczurki (anolisy, gekony), żaby, ryby</td><td>90–180 cm</td><td>trudna</td><td><span class="av a2">czasem</span></td><td>Zwykle z odłowu, wrażliwy. Część osobników przyjmuje ryby, a nawet myszy.</td></tr>
+<tr><td><i>Ahaetulla nasuta</i>, <i>A. mycterizans</i></td><td>jaszczurki, żaby</td><td>90–150 cm</td><td>trudna</td><td><span class="av a3">rzadko</span></td><td>Jak wyżej. Słabo jadowite, niegroźne dla ludzi.</td></tr>
+<tr><td><i>Chrysopelea ornata</i>, <i>C. paradisi</i><span class="pl">węże latające</span></td><td>jaszczurki, gekony</td><td>70–130 cm</td><td>trudna</td><td><span class="av a3">rzadko</span></td><td>Szybowce. Potrzebują wysokiego i dużego terrarium.</td></tr>
+<tr><td><i>Oxybelis aeneus</i>, <i>O. fulgidus</i><span class="pl">węże liściaste</span></td><td>jaszczurki</td><td>100–200 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Bardzo cienkie, dzienne.</td></tr>
+<tr><td><i>Imantodes cenchoa</i></td><td>jaszczurki (anolisy), żaby, jaja żab</td><td>80–120 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Ekstremalnie smukły, nocny.</td></tr>
+<tr><td><i>Langaha madagascariensis</i><span class="pl">wąż liścionosy</span></td><td>jaszczurki</td><td>70–100 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Bardzo dziwny wygląd (wyrostek na nosie).</td></tr>
+<tr><td><i>Psammophis</i> spp.</td><td>jaszczurki, czasem gryzonie</td><td>80–150 cm</td><td>średnia–trudna</td><td><span class="av a3">rzadko</span></td><td>Szybkie, nerwowe. Część przechodzi na myszy.</td></tr>
+<tr><td><i>Uromacer</i> spp.</td><td>jaszczurki (anolisy)</td><td>80–150 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Endemit Haiti.</td></tr>
+</table></div>
+<div class="warn">Karmienie jaszczurkami jest drogie i budzi wątpliwości etyczne. Hodowcy próbują przestawiać te węże na ryby lub myszy natarte zapachem gekona. Udaje się to tylko z częścią osobników.</div>
+
+<!-- WEZE -->
+<h2 id="weze">Jedzą inne węże</h2>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Pokarm</th><th>Długość</th><th>Trudność</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Cylindrophis ruffus</i><span class="pl">wąż walcowaty</span></td><td>węgorze, węże, ryby</td><td>50–100 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Ryjący, z odłowu.</td></tr>
+<tr><td><i>Clelia clelia</i><span class="pl">musurana</span></td><td>węże (także jadowite), jaszczurki</td><td>150–250 cm</td><td>trudna</td><td><span class="av a4">b. rzadko</span></td><td>Prawie nieobecny w hodowlach.</td></tr>
+<tr><td><i>Ophiophagus hannah</i>, <i>Micrurus</i> spp.<span class="pl">kobra królewska, koralówki</span></td><td>węże</td><td>—</td><td>ekspert</td><td><span class="av a4">b. rzadko</span></td><td>⚠️ Silnie jadowite. W Polsce wymagają zezwolenia.</td></tr>
+</table></div>
+
+<!-- MIESZANE -->
+<h2 id="mieszane">Mogą jeść myszy, ale nie muszą</h2>
+<p>Te gatunki w naturze jedzą głównie ryby lub płazy, ale w hodowli zwykle szybko przechodzą na gryzonie. Jeśli kupujesz takiego węża, żeby nie karmić go myszami, wybieraj osobnika, który już je ryby.</p>
+<div class="table"><table>
+<tr><th>Gatunek</th><th>Naturalny pokarm</th><th>Dostępność</th><th>Uwagi</th></tr>
+<tr><td><i>Heterodon nasicus</i>, <i>H. platirhinos</i><span class="pl">heterodony (węże świnionose)</span></td><td>ropuchy, żaby</td><td><span class="av a1">często</span></td><td>W hodowli prawie wszystkie jedzą myszy. <i>H. platirhinos</i> częściej trzyma się płazów.</td></tr>
+<tr><td><i>Xenopeltis unicolor</i><span class="pl">wąż tęczowy</span></td><td>żaby, ryby, gryzonie</td><td><span class="av a2">czasem</span></td><td>Ryjący, opalizujące łuski.</td></tr>
+<tr><td><i>Hydrodynastes gigas</i><span class="pl">fałszywa kobra wodna</span></td><td>ryby, płazy, wszystko</td><td><span class="av a2">czasem</span></td><td>Duży (do 3 m), bardzo żarłoczny.</td></tr>
+<tr><td><i>Leioheterodon madagascariensis</i></td><td>żaby, jaja, jaszczurki</td><td><span class="av a3">rzadko</span></td><td>Zwykle je też myszy.</td></tr>
+<tr><td><i>Thamnophis</i>, <i>Nerodia</i></td><td>ryby, płazy, dżdżownice</td><td><span class="av a1">często</span></td><td>Można je karmić bez myszy przez całe życie, z suplementami.</td></tr>
+</table></div>
+
+<!-- PRAWO -->
+<h2 id="prawo">Przepisy</h2>
+<div class="card">
+<ul>
+  <li><b>Polskie gatunki</b> są pod ochroną: zaskroniec (<i>Natrix natrix</i>), gniewosz plamisty (<i>Coronella austriaca</i>, je jaszczurki), żmija, wąż Eskulapa. Nie wolno ich odławiać ani trzymać bez zezwolenia.</li>
+  <li><b>Inne europejskie gatunki</b> (np. <i>Natrix maura</i>, <i>N. tessellata</i>) mogą być chronione prawem UE. Przed zakupem poproś o dokumenty pochodzenia z hodowli.</li>
+  <li><b>Gatunki jadowite</b>: trzymanie zwierząt groźnych dla ludzi wymaga w Polsce zezwolenia (ustawa o ochronie przyrody i rozporządzenie z listą gatunków niebezpiecznych). Dotyczy to m.in. kobr, koralówek i żmijowatych, a prawdopodobnie także <i>Rhabdophis</i>. Słabo jadowite węże z tylnymi zębami (<i>Ahaetulla</i>, <i>Leptodeira</i>, <i>Psammophis</i>) zwykle nie są na tej liście, ale sprawdź aktualną wersję rozporządzenia.</li>
+  <li><b>CITES</b>: większość gatunków z tej strony nie jest na listach CITES. Dla pewności sprawdź gatunek na <a href="https://speciesplus.net/">Species+</a>.</li>
+</ul>
+</div>
+
+<h2>Gdzie szukać</h2>
+<div class="card">
+<ul>
+  <li><a href="https://www.olx.pl/zwierzeta/terrarystyka/zwierzeta-terrariowe/">OLX – zwierzęta terrariowe</a> (wpisz nazwę łacińską, np. „Opheodrys”, „Thamnophis”)</li>
+  <li><a href="https://www.terrarium.pl/">Forum terrarium.pl</a> – dział giełdowy, np. <a href="https://www.terrarium.pl/topic/497148-opheodrys-aestivus-waz-trawny/">oferta węża trawnego</a></li>
+  <li><a href="https://www.terraristik.com/">Terraristik.com</a> – ogłoszenia z całej Europy, odbiór najczęściej na targach w Hamm (np. <i>Pareas carinatus</i>, <i>Homalopsis buccata</i>)</li>
+  <li><a href="https://www.zoopet.cz/katalog.jsp?kategorie=10">ZOOPET (Czechy)</a> – hurtownia z importami, m.in. <i>Homalopsis buccata</i> i <i>Opheodrys aestivus</i></li>
+  <li>Targi: <a href="https://www.ebilet.pl/biznes/targi/exoticarium">Exoticarium</a>, ZooEgzotyka Wrocław, <a href="https://www.terraristika.de/">Terraristika Hamm</a></li>
+</ul>
+</div>
+
+<footer>
+<p>Dostępność i trudność to szacunki na podstawie ogłoszeń i literatury terrarystycznej (październik 2026), nie pełny spis rynku. Lista obejmuje gatunki, które pojawiają się w hodowlach lub handlu. Rzadkie gatunki to często importy z odłowu, więc szukaj osobników CB (urodzonych w niewoli).</p>
+</footer>
+
+</div>
+</body>
+</html>
