@@ -138,6 +138,17 @@ ul.minus li:before{content:"–";position:absolute;left:4px;color:var(--neg);fon
 .formula{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;background:var(--surface2);padding:12px;border-radius:10px;overflow-x:auto;white-space:pre}
 footer{margin:60px 0 40px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
 .themebtn{position:fixed;right:14px;bottom:14px;z-index:9;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 12px;cursor:pointer;box-shadow:var(--shadow);font:inherit;font-size:.85rem}
+
+/* zdjęcia */
+.photo{margin:12px 0 4px;border-radius:12px;overflow:hidden;background:var(--surface2);border:1px solid var(--line)}
+.photo img{display:block;width:100%;height:clamp(200px,42vw,380px);object-fit:cover;background:var(--surface2)}
+.photo figcaption{font-size:.74rem;color:var(--muted);padding:6px 10px;line-height:1.4}
+.photo figcaption a{color:var(--muted)}
+.photo .ph{padding:22px 14px;text-align:center;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:6px;align-items:center}
+.photo .ph a{font-weight:600}
+.photo.ok .ph{display:none}
+.tthumb{display:inline-block;width:44px;height:44px;border-radius:8px;background:var(--surface2) center/cover no-repeat;vertical-align:middle;margin-right:8px;float:left}
+td:nth-child(2){min-width:210px}
 @media (max-width:820px){
   .cgrid,.pc,.grid2,.grid3{grid-template-columns:1fr}
   .brow{grid-template-columns:110px 1fr 84px;font-size:.78rem}
@@ -236,7 +247,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 
 <section id="ranking">
 <h2>3. Ranking zbiorczy</h2>
-<p>Kliknij nagłówek, aby posortować. Kliknij nazwę gatunku, aby przejść do szczegółowej karty.</p>
+<p>Kliknij nagłówek, aby posortować. Kliknij nazwę gatunku, aby przejść do szczegółowej karty ze zdjęciem.</p>
 <div class="filters" id="filters">
 <button class="on" data-f="all">Wszystkie</button>
 <button data-f="Popularny">Popularne</button>
@@ -249,7 +260,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <tbody>
 <tr data-cat="Rzadki">
 <td data-v="1">1</td>
-<td data-v="Gekon mchowy"><a href="#chahoua"><b>Gekon mchowy</b></a><br><span class="en">Mossy New Caledonian gecko</span><br><i class="lat">Mniarogekko chahoua</i></td>
+<td data-v="Gekon mchowy"><span class="tthumb" data-sp="chahoua"></span><a href="#chahoua"><b>Gekon mchowy</b></a><br><span class="en">Mossy New Caledonian gecko</span><br><i class="lat">Mniarogekko chahoua</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="1300">1 300 zł</td>
 <td data-v="12.8">13</td>
@@ -266,7 +277,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="2">2</td>
-<td data-v="Gekon chropowaty"><a href="#auriculatus"><b>Gekon chropowaty</b></a><br><span class="en">Gargoyle gecko</span><br><i class="lat">Rhacodactylus auriculatus</i></td>
+<td data-v="Gekon chropowaty"><span class="tthumb" data-sp="auriculatus"></span><a href="#auriculatus"><b>Gekon chropowaty</b></a><br><span class="en">Gargoyle gecko</span><br><i class="lat">Rhacodactylus auriculatus</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="400">400 zł</td>
 <td data-v="30.6">31</td>
@@ -283,7 +294,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="3">3</td>
-<td data-v="Gekon Sarasinów"><a href="#sarasinorum"><b>Gekon Sarasinów</b></a><br><span class="en">Sarasin&#x27;s giant gecko (Roux&#x27;s giant gecko)</span><br><i class="lat">Correlophus sarasinorum</i></td>
+<td data-v="Gekon Sarasinów"><span class="tthumb" data-sp="sarasinorum"></span><a href="#sarasinorum"><b>Gekon Sarasinów</b></a><br><span class="en">Sarasin&#x27;s giant gecko (Roux&#x27;s giant gecko)</span><br><i class="lat">Correlophus sarasinorum</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="900">900 zł</td>
 <td data-v="20.4">20</td>
@@ -300,7 +311,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="4">4</td>
-<td data-v="Gekon gałkoogonowy"><a href="#nephrurus"><b>Gekon gałkoogonowy</b></a><br><span class="en">Knob-tailed gecko</span><br><i class="lat">Nephrurus levis / N. amyae</i></td>
+<td data-v="Gekon gałkoogonowy"><span class="tthumb" data-sp="nephrurus"></span><a href="#nephrurus"><b>Gekon gałkoogonowy</b></a><br><span class="en">Knob-tailed gecko</span><br><i class="lat">Nephrurus levis / N. amyae</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="1300">1 300 zł</td>
 <td data-v="13.6">14</td>
@@ -317,7 +328,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="5">5</td>
-<td data-v="Wąż świnionosy (hognose)"><a href="#heterodon"><b>Wąż świnionosy (hognose)</b></a><br><span class="en">Western hognose snake</span><br><i class="lat">Heterodon nasicus</i></td>
+<td data-v="Wąż świnionosy (hognose)"><span class="tthumb" data-sp="heterodon"></span><a href="#heterodon"><b>Wąż świnionosy (hognose)</b></a><br><span class="en">Western hognose snake</span><br><i class="lat">Heterodon nasicus</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="480">480 zł</td>
 <td data-v="29.5">30</td>
@@ -334,7 +345,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Bardzo rzadki">
 <td data-v="6">6</td>
-<td data-v="Scynk Stokesa"><a href="#egernia"><b>Scynk Stokesa</b></a><br><span class="en">Gidgee skink (Stokes&#x27; skink)</span><br><i class="lat">Egernia stokesii</i></td>
+<td data-v="Scynk Stokesa"><span class="tthumb" data-sp="egernia"></span><a href="#egernia"><b>Scynk Stokesa</b></a><br><span class="en">Gidgee skink (Stokes&#x27; skink)</span><br><i class="lat">Egernia stokesii</i></td>
 <td data-v="Bardzo rzadki"><span class="cat c-bar">Bardzo rzadki</span></td>
 <td data-v="2200">2 200 zł</td>
 <td data-v="9.5">10</td>
@@ -351,7 +362,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="7">7</td>
-<td data-v="Waran Storra"><a href="#storri"><b>Waran Storra</b></a><br><span class="en">Storr&#x27;s monitor</span><br><i class="lat">Varanus storri</i></td>
+<td data-v="Waran Storra"><span class="tthumb" data-sp="storri"></span><a href="#storri"><b>Waran Storra</b></a><br><span class="en">Storr&#x27;s monitor</span><br><i class="lat">Varanus storri</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="2200">2 200 zł</td>
 <td data-v="12.0">12</td>
@@ -368,7 +379,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="8">8</td>
-<td data-v="Gekon orzęsiony"><a href="#correlophus"><b>Gekon orzęsiony</b></a><br><span class="en">Crested gecko</span><br><i class="lat">Correlophus ciliatus</i></td>
+<td data-v="Gekon orzęsiony"><span class="tthumb" data-sp="correlophus"></span><a href="#correlophus"><b>Gekon orzęsiony</b></a><br><span class="en">Crested gecko</span><br><i class="lat">Correlophus ciliatus</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="240">240 zł</td>
 <td data-v="47.6">48</td>
@@ -385,7 +396,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="9">9</td>
-<td data-v="Waran kolczastoogonowy"><a href="#acanthurus"><b>Waran kolczastoogonowy</b></a><br><span class="en">Ackie monitor (Spiny-tailed monitor)</span><br><i class="lat">Varanus acanthurus</i></td>
+<td data-v="Waran kolczastoogonowy"><span class="tthumb" data-sp="acanthurus"></span><a href="#acanthurus"><b>Waran kolczastoogonowy</b></a><br><span class="en">Ackie monitor (Spiny-tailed monitor)</span><br><i class="lat">Varanus acanthurus</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="1900">1 900 zł</td>
 <td data-v="21.0">21</td>
@@ -402,7 +413,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="10">10</td>
-<td data-v="Gekon kolcoogonowy"><a href="#strophurus"><b>Gekon kolcoogonowy</b></a><br><span class="en">Spiny-tailed gecko (Golden-tailed gecko)</span><br><i class="lat">Strophurus taenicauda / S. williamsi</i></td>
+<td data-v="Gekon kolcoogonowy"><span class="tthumb" data-sp="strophurus"></span><a href="#strophurus"><b>Gekon kolcoogonowy</b></a><br><span class="en">Spiny-tailed gecko (Golden-tailed gecko)</span><br><i class="lat">Strophurus taenicauda / S. williamsi</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="900">900 zł</td>
 <td data-v="16.0">16</td>
@@ -419,7 +430,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Bardzo rzadki">
 <td data-v="11">11</td>
-<td data-v="Pyton woma"><a href="#aspidites"><b>Pyton woma</b></a><br><span class="en">Woma python</span><br><i class="lat">Aspidites ramsayi</i></td>
+<td data-v="Pyton woma"><span class="tthumb" data-sp="aspidites"></span><a href="#aspidites"><b>Pyton woma</b></a><br><span class="en">Woma python</span><br><i class="lat">Aspidites ramsayi</i></td>
 <td data-v="Bardzo rzadki"><span class="cat c-bar">Bardzo rzadki</span></td>
 <td data-v="3000">3 000 zł</td>
 <td data-v="8.0">8</td>
@@ -436,7 +447,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Bardzo rzadki">
 <td data-v="12">12</td>
-<td data-v="Gekon liściastoogonowy"><a href="#saltuarius"><b>Gekon liściastoogonowy</b></a><br><span class="en">Northern leaf-tailed gecko</span><br><i class="lat">Saltuarius cornutus / S. swaini</i></td>
+<td data-v="Gekon liściastoogonowy"><span class="tthumb" data-sp="saltuarius"></span><a href="#saltuarius"><b>Gekon liściastoogonowy</b></a><br><span class="en">Northern leaf-tailed gecko</span><br><i class="lat">Saltuarius cornutus / S. swaini</i></td>
 <td data-v="Bardzo rzadki"><span class="cat c-bar">Bardzo rzadki</span></td>
 <td data-v="4000">4 000 zł</td>
 <td data-v="6.4">6</td>
@@ -453,7 +464,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="13">13</td>
-<td data-v="Scynk niebieskojęzyczny"><a href="#tiliqua"><b>Scynk niebieskojęzyczny</b></a><br><span class="en">Blue-tongued skink</span><br><i class="lat">Tiliqua scincoides / T. gigas</i></td>
+<td data-v="Scynk niebieskojęzyczny"><span class="tthumb" data-sp="tiliqua"></span><a href="#tiliqua"><b>Scynk niebieskojęzyczny</b></a><br><span class="en">Blue-tongued skink</span><br><i class="lat">Tiliqua scincoides / T. gigas</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="1100">1 100 zł</td>
 <td data-v="14.9">15</td>
@@ -470,7 +481,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="14">14</td>
-<td data-v="Pyton dywanowy"><a href="#spilota"><b>Pyton dywanowy</b></a><br><span class="en">Carpet python</span><br><i class="lat">Morelia spilota ssp.</i></td>
+<td data-v="Pyton dywanowy"><span class="tthumb" data-sp="spilota"></span><a href="#spilota"><b>Pyton dywanowy</b></a><br><span class="en">Carpet python</span><br><i class="lat">Morelia spilota ssp.</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="700">700 zł</td>
 <td data-v="24.0">24</td>
@@ -487,7 +498,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="15">15</td>
-<td data-v="Gekon grubogonowy australijski"><a href="#underwoodisaurus"><b>Gekon grubogonowy australijski</b></a><br><span class="en">Thick-tailed gecko (Barking gecko)</span><br><i class="lat">Underwoodisaurus milii</i></td>
+<td data-v="Gekon grubogonowy australijski"><span class="tthumb" data-sp="underwoodisaurus"></span><a href="#underwoodisaurus"><b>Gekon grubogonowy australijski</b></a><br><span class="en">Thick-tailed gecko (Barking gecko)</span><br><i class="lat">Underwoodisaurus milii</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="500">500 zł</td>
 <td data-v="17.0">17</td>
@@ -504,7 +515,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Bardzo rzadki">
 <td data-v="16">16</td>
-<td data-v="Abronia (zielona)"><a href="#abronia"><b>Abronia (zielona)</b></a><br><span class="en">Green arboreal alligator lizard</span><br><i class="lat">Abronia graminea</i></td>
+<td data-v="Abronia (zielona)"><span class="tthumb" data-sp="abronia"></span><a href="#abronia"><b>Abronia (zielona)</b></a><br><span class="en">Green arboreal alligator lizard</span><br><i class="lat">Abronia graminea</i></td>
 <td data-v="Bardzo rzadki"><span class="cat c-bar">Bardzo rzadki</span></td>
 <td data-v="6500">6 500 zł</td>
 <td data-v="10.2">10</td>
@@ -521,7 +532,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="17">17</td>
-<td data-v="Gekon lamparci"><a href="#eublepharis"><b>Gekon lamparci</b></a><br><span class="en">Leopard gecko</span><br><i class="lat">Eublepharis macularius</i></td>
+<td data-v="Gekon lamparci"><span class="tthumb" data-sp="eublepharis"></span><a href="#eublepharis"><b>Gekon lamparci</b></a><br><span class="en">Leopard gecko</span><br><i class="lat">Eublepharis macularius</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="170">170 zł</td>
 <td data-v="45.9">46</td>
@@ -538,7 +549,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="18">18</td>
-<td data-v="Żółw obrzeżony"><a href="#marginata"><b>Żółw obrzeżony</b></a><br><span class="en">Marginated tortoise</span><br><i class="lat">Testudo marginata</i></td>
+<td data-v="Żółw obrzeżony"><span class="tthumb" data-sp="marginata"></span><a href="#marginata"><b>Żółw obrzeżony</b></a><br><span class="en">Marginated tortoise</span><br><i class="lat">Testudo marginata</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="450">450 zł</td>
 <td data-v="27.0">27</td>
@@ -555,7 +566,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="19">19</td>
-<td data-v="Gekon olbrzymi (leachianus)"><a href="#leachianus"><b>Gekon olbrzymi (leachianus)</b></a><br><span class="en">New Caledonian giant gecko</span><br><i class="lat">Rhacodactylus leachianus</i></td>
+<td data-v="Gekon olbrzymi (leachianus)"><span class="tthumb" data-sp="leachianus"></span><a href="#leachianus"><b>Gekon olbrzymi (leachianus)</b></a><br><span class="en">New Caledonian giant gecko</span><br><i class="lat">Rhacodactylus leachianus</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="2800">2 800 zł</td>
 <td data-v="6.0">6</td>
@@ -572,7 +583,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="20">20</td>
-<td data-v="Żółw grecki (Hermanna)"><a href="#testudo"><b>Żółw grecki (Hermanna)</b></a><br><span class="en">Hermann&#x27;s tortoise</span><br><i class="lat">Testudo hermanni</i></td>
+<td data-v="Żółw grecki (Hermanna)"><span class="tthumb" data-sp="testudo"></span><a href="#testudo"><b>Żółw grecki (Hermanna)</b></a><br><span class="en">Hermann&#x27;s tortoise</span><br><i class="lat">Testudo hermanni</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="320">320 zł</td>
 <td data-v="28.8">29</td>
@@ -589,7 +600,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="21">21</td>
-<td data-v="Gekon jaskiniowy"><a href="#goniurosaurus"><b>Gekon jaskiniowy</b></a><br><span class="en">Cave gecko (Tiger gecko)</span><br><i class="lat">Goniurosaurus hainanensis / lichtenfelderi / araneus</i></td>
+<td data-v="Gekon jaskiniowy"><span class="tthumb" data-sp="goniurosaurus"></span><a href="#goniurosaurus"><b>Gekon jaskiniowy</b></a><br><span class="en">Cave gecko (Tiger gecko)</span><br><i class="lat">Goniurosaurus hainanensis / lichtenfelderi / araneus</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="700">700 zł</td>
 <td data-v="12.8">13</td>
@@ -606,7 +617,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="22">22</td>
-<td data-v="Boa różowy"><a href="#lichanura"><b>Boa różowy</b></a><br><span class="en">Rosy boa</span><br><i class="lat">Lichanura trivirgata / L. orcutti</i></td>
+<td data-v="Boa różowy"><span class="tthumb" data-sp="lichanura"></span><a href="#lichanura"><b>Boa różowy</b></a><br><span class="en">Rosy boa</span><br><i class="lat">Lichanura trivirgata / L. orcutti</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="700">700 zł</td>
 <td data-v="10.8">11</td>
@@ -623,7 +634,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="23">23</td>
-<td data-v="Kameleon lamparci"><a href="#pardalis"><b>Kameleon lamparci</b></a><br><span class="en">Panther chameleon</span><br><i class="lat">Furcifer pardalis</i></td>
+<td data-v="Kameleon lamparci"><span class="tthumb" data-sp="pardalis"></span><a href="#pardalis"><b>Kameleon lamparci</b></a><br><span class="en">Panther chameleon</span><br><i class="lat">Furcifer pardalis</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="780">780 zł</td>
 <td data-v="34.0">34</td>
@@ -640,7 +651,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="24">24</td>
-<td data-v="Gekon grubogonowy"><a href="#hemitheconyx"><b>Gekon grubogonowy</b></a><br><span class="en">African fat-tailed gecko</span><br><i class="lat">Hemitheconyx caudicinctus</i></td>
+<td data-v="Gekon grubogonowy"><span class="tthumb" data-sp="hemitheconyx"></span><a href="#hemitheconyx"><b>Gekon grubogonowy</b></a><br><span class="en">African fat-tailed gecko</span><br><i class="lat">Hemitheconyx caudicinctus</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="280">280 zł</td>
 <td data-v="24.0">24</td>
@@ -657,7 +668,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="25">25</td>
-<td data-v="Pyton Childrena"><a href="#antaresia"><b>Pyton Childrena</b></a><br><span class="en">Children&#x27;s python / Spotted python</span><br><i class="lat">Antaresia childreni / A. maculosa</i></td>
+<td data-v="Pyton Childrena"><span class="tthumb" data-sp="antaresia"></span><a href="#antaresia"><b>Pyton Childrena</b></a><br><span class="en">Children&#x27;s python / Spotted python</span><br><i class="lat">Antaresia childreni / A. maculosa</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="450">450 zł</td>
 <td data-v="13.6">14</td>
@@ -674,7 +685,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="26">26</td>
-<td data-v="Boa piaskowy"><a href="#eryx"><b>Boa piaskowy</b></a><br><span class="en">Kenyan sand boa / Javelin sand boa</span><br><i class="lat">Eryx colubrinus / E. jaculus</i></td>
+<td data-v="Boa piaskowy"><span class="tthumb" data-sp="eryx"></span><a href="#eryx"><b>Boa piaskowy</b></a><br><span class="en">Kenyan sand boa / Javelin sand boa</span><br><i class="lat">Eryx colubrinus / E. jaculus</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="350">350 zł</td>
 <td data-v="20.4">20</td>
@@ -691,7 +702,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="27">27</td>
-<td data-v="Pyton zielony"><a href="#viridis"><b>Pyton zielony</b></a><br><span class="en">Green tree python</span><br><i class="lat">Morelia viridis</i></td>
+<td data-v="Pyton zielony"><span class="tthumb" data-sp="viridis"></span><a href="#viridis"><b>Pyton zielony</b></a><br><span class="en">Green tree python</span><br><i class="lat">Morelia viridis</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="1900">1 900 zł</td>
 <td data-v="7.2">7</td>
@@ -708,7 +719,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="28">28</td>
-<td data-v="Wąż sosnowy / byczy"><a href="#pituophis"><b>Wąż sosnowy / byczy</b></a><br><span class="en">Pine snake / Bullsnake</span><br><i class="lat">Pituophis melanoleucus / P. catenifer</i></td>
+<td data-v="Wąż sosnowy / byczy"><span class="tthumb" data-sp="pituophis"></span><a href="#pituophis"><b>Wąż sosnowy / byczy</b></a><br><span class="en">Pine snake / Bullsnake</span><br><i class="lat">Pituophis melanoleucus / P. catenifer</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="450">450 zł</td>
 <td data-v="17.0">17</td>
@@ -725,7 +736,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="29">29</td>
-<td data-v="Gekon błękitny"><a href="#lygodactylus"><b>Gekon błękitny</b></a><br><span class="en">Electric blue gecko (William&#x27;s dwarf gecko)</span><br><i class="lat">Lygodactylus williamsi</i></td>
+<td data-v="Gekon błękitny"><span class="tthumb" data-sp="lygodactylus"></span><a href="#lygodactylus"><b>Gekon błękitny</b></a><br><span class="en">Electric blue gecko (William&#x27;s dwarf gecko)</span><br><i class="lat">Lygodactylus williamsi</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="350">350 zł</td>
 <td data-v="25.2">25</td>
@@ -742,7 +753,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="30">30</td>
-<td data-v="Gekon malowany"><a href="#paroedura"><b>Gekon malowany</b></a><br><span class="en">Ocelot gecko</span><br><i class="lat">Paroedura picta</i></td>
+<td data-v="Gekon malowany"><span class="tthumb" data-sp="paroedura"></span><a href="#paroedura"><b>Gekon malowany</b></a><br><span class="en">Ocelot gecko</span><br><i class="lat">Paroedura picta</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="90">90 zł</td>
 <td data-v="51.2">51</td>
@@ -759,7 +770,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="31">31</td>
-<td data-v="Scynk krokodylowy"><a href="#tribolonotus"><b>Scynk krokodylowy</b></a><br><span class="en">Red-eyed crocodile skink</span><br><i class="lat">Tribolonotus gracilis</i></td>
+<td data-v="Scynk krokodylowy"><span class="tthumb" data-sp="tribolonotus"></span><a href="#tribolonotus"><b>Scynk krokodylowy</b></a><br><span class="en">Red-eyed crocodile skink</span><br><i class="lat">Tribolonotus gracilis</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="650">650 zł</td>
 <td data-v="8.4">8</td>
@@ -776,7 +787,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="32">32</td>
-<td data-v="Gekon żabiooki"><a href="#teratoscincus"><b>Gekon żabiooki</b></a><br><span class="en">Frog-eyed gecko (Wonder gecko)</span><br><i class="lat">Teratoscincus scincus / T. roborowskii</i></td>
+<td data-v="Gekon żabiooki"><span class="tthumb" data-sp="teratoscincus"></span><a href="#teratoscincus"><b>Gekon żabiooki</b></a><br><span class="en">Frog-eyed gecko (Wonder gecko)</span><br><i class="lat">Teratoscincus scincus / T. roborowskii</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="400">400 zł</td>
 <td data-v="12.0">12</td>
@@ -793,7 +804,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="33">33</td>
-<td data-v="Wąż zbożowy"><a href="#guttatus"><b>Wąż zbożowy</b></a><br><span class="en">Corn snake</span><br><i class="lat">Pantherophis guttatus</i></td>
+<td data-v="Wąż zbożowy"><span class="tthumb" data-sp="guttatus"></span><a href="#guttatus"><b>Wąż zbożowy</b></a><br><span class="en">Corn snake</span><br><i class="lat">Pantherophis guttatus</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="130">130 zł</td>
 <td data-v="40.8">41</td>
@@ -810,7 +821,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="34">34</td>
-<td data-v="Wąż królewski"><a href="#lampropeltis"><b>Wąż królewski</b></a><br><span class="en">Kingsnake / Milk snake</span><br><i class="lat">Lampropeltis californiae / L. triangulum ssp.</i></td>
+<td data-v="Wąż królewski"><span class="tthumb" data-sp="lampropeltis"></span><a href="#lampropeltis"><b>Wąż królewski</b></a><br><span class="en">Kingsnake / Milk snake</span><br><i class="lat">Lampropeltis californiae / L. triangulum ssp.</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="220">220 zł</td>
 <td data-v="25.5">26</td>
@@ -827,7 +838,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="35">35</td>
-<td data-v="Płaskogon (Uroplatus)"><a href="#uroplatus"><b>Płaskogon (Uroplatus)</b></a><br><span class="en">Leaf-tailed gecko</span><br><i class="lat">Uroplatus sikorae / henkeli / phantasticus</i></td>
+<td data-v="Płaskogon (Uroplatus)"><span class="tthumb" data-sp="uroplatus"></span><a href="#uroplatus"><b>Płaskogon (Uroplatus)</b></a><br><span class="en">Leaf-tailed gecko</span><br><i class="lat">Uroplatus sikorae / henkeli / phantasticus</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="1500">1 500 zł</td>
 <td data-v="9.0">9</td>
@@ -844,7 +855,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="36">36</td>
-<td data-v="Pyton królewski"><a href="#regius"><b>Pyton królewski</b></a><br><span class="en">Ball python (Royal python)</span><br><i class="lat">Python regius</i></td>
+<td data-v="Pyton królewski"><span class="tthumb" data-sp="regius"></span><a href="#regius"><b>Pyton królewski</b></a><br><span class="en">Ball python (Royal python)</span><br><i class="lat">Python regius</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="480">480 zł</td>
 <td data-v="11.5">11</td>
@@ -861,7 +872,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="37">37</td>
-<td data-v="Mułowiec piżmowy"><a href="#sternotherus"><b>Mułowiec piżmowy</b></a><br><span class="en">Common musk turtle (Stinkpot)</span><br><i class="lat">Sternotherus odoratus</i></td>
+<td data-v="Mułowiec piżmowy"><span class="tthumb" data-sp="sternotherus"></span><a href="#sternotherus"><b>Mułowiec piżmowy</b></a><br><span class="en">Common musk turtle (Stinkpot)</span><br><i class="lat">Sternotherus odoratus</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="150">150 zł</td>
 <td data-v="19.2">19</td>
@@ -878,7 +889,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="38">38</td>
-<td data-v="Felsuma madagaskarska"><a href="#phelsuma"><b>Felsuma madagaskarska</b></a><br><span class="en">Giant day gecko</span><br><i class="lat">Phelsuma grandis</i></td>
+<td data-v="Felsuma madagaskarska"><span class="tthumb" data-sp="phelsuma"></span><a href="#phelsuma"><b>Felsuma madagaskarska</b></a><br><span class="en">Giant day gecko</span><br><i class="lat">Phelsuma grandis</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="220">220 zł</td>
 <td data-v="19.2">19</td>
@@ -895,7 +906,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="39">39</td>
-<td data-v="Szczeciniak (np. ozdobny)"><a href="#uromastyx"><b>Szczeciniak (np. ozdobny)</b></a><br><span class="en">Spiny-tailed lizard (Uromastyx)</span><br><i class="lat">Uromastyx ornata / U. geyri</i></td>
+<td data-v="Szczeciniak (np. ozdobny)"><span class="tthumb" data-sp="uromastyx"></span><a href="#uromastyx"><b>Szczeciniak (np. ozdobny)</b></a><br><span class="en">Spiny-tailed lizard (Uromastyx)</span><br><i class="lat">Uromastyx ornata / U. geyri</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="1100">1 100 zł</td>
 <td data-v="7.0">7</td>
@@ -912,7 +923,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="40">40</td>
-<td data-v="Boa cesarski"><a href="#boa"><b>Boa cesarski</b></a><br><span class="en">Central American boa</span><br><i class="lat">Boa imperator</i></td>
+<td data-v="Boa cesarski"><span class="tthumb" data-sp="boa"></span><a href="#boa"><b>Boa cesarski</b></a><br><span class="en">Central American boa</span><br><i class="lat">Boa imperator</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="380">380 zł</td>
 <td data-v="27.0">27</td>
@@ -929,7 +940,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="41">41</td>
-<td data-v="Żółw stepowy"><a href="#horsfieldii"><b>Żółw stepowy</b></a><br><span class="en">Russian tortoise</span><br><i class="lat">Testudo horsfieldii</i></td>
+<td data-v="Żółw stepowy"><span class="tthumb" data-sp="horsfieldii"></span><a href="#horsfieldii"><b>Żółw stepowy</b></a><br><span class="en">Russian tortoise</span><br><i class="lat">Testudo horsfieldii</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="250">250 zł</td>
 <td data-v="13.5">14</td>
@@ -946,7 +957,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Rzadki">
 <td data-v="42">42</td>
-<td data-v="Kameleon Jacksona"><a href="#jacksonii"><b>Kameleon Jacksona</b></a><br><span class="en">Jackson&#x27;s chameleon</span><br><i class="lat">Trioceros jacksonii</i></td>
+<td data-v="Kameleon Jacksona"><span class="tthumb" data-sp="jacksonii"></span><a href="#jacksonii"><b>Kameleon Jacksona</b></a><br><span class="en">Jackson&#x27;s chameleon</span><br><i class="lat">Trioceros jacksonii</i></td>
 <td data-v="Rzadki"><span class="cat c-rza">Rzadki</span></td>
 <td data-v="500">500 zł</td>
 <td data-v="22.5">22</td>
@@ -963,7 +974,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="43">43</td>
-<td data-v="Agama karłowata"><a href="#henrylawsoni"><b>Agama karłowata</b></a><br><span class="en">Rankin&#x27;s dragon (Dwarf bearded dragon)</span><br><i class="lat">Pogona henrylawsoni</i></td>
+<td data-v="Agama karłowata"><span class="tthumb" data-sp="henrylawsoni"></span><a href="#henrylawsoni"><b>Agama karłowata</b></a><br><span class="en">Rankin&#x27;s dragon (Dwarf bearded dragon)</span><br><i class="lat">Pogona henrylawsoni</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="180">180 zł</td>
 <td data-v="40.0">40</td>
@@ -980,7 +991,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="44">44</td>
-<td data-v="Gekon toke"><a href="#gekko"><b>Gekon toke</b></a><br><span class="en">Tokay gecko</span><br><i class="lat">Gekko gecko</i></td>
+<td data-v="Gekon toke"><span class="tthumb" data-sp="gekko"></span><a href="#gekko"><b>Gekon toke</b></a><br><span class="en">Tokay gecko</span><br><i class="lat">Gekko gecko</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="180">180 zł</td>
 <td data-v="16.0">16</td>
@@ -997,7 +1008,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Bardzo rzadki">
 <td data-v="45">45</td>
-<td data-v="Scynk salomoński"><a href="#corucia"><b>Scynk salomoński</b></a><br><span class="en">Solomon Islands skink (Monkey-tailed skink)</span><br><i class="lat">Corucia zebrata</i></td>
+<td data-v="Scynk salomoński"><span class="tthumb" data-sp="corucia"></span><a href="#corucia"><b>Scynk salomoński</b></a><br><span class="en">Solomon Islands skink (Monkey-tailed skink)</span><br><i class="lat">Corucia zebrata</i></td>
 <td data-v="Bardzo rzadki"><span class="cat c-bar">Bardzo rzadki</span></td>
 <td data-v="3000">3 000 zł</td>
 <td data-v="1.8">2</td>
@@ -1014,7 +1025,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="46">46</td>
-<td data-v="Agama brodata"><a href="#pogona"><b>Agama brodata</b></a><br><span class="en">Central bearded dragon</span><br><i class="lat">Pogona vitticeps</i></td>
+<td data-v="Agama brodata"><span class="tthumb" data-sp="pogona"></span><a href="#pogona"><b>Agama brodata</b></a><br><span class="en">Central bearded dragon</span><br><i class="lat">Pogona vitticeps</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="220">220 zł</td>
 <td data-v="48.0">48</td>
@@ -1031,7 +1042,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Średnio popularny">
 <td data-v="47">47</td>
-<td data-v="Agama wodna"><a href="#physignathus"><b>Agama wodna</b></a><br><span class="en">Chinese water dragon</span><br><i class="lat">Physignathus cocincinus</i></td>
+<td data-v="Agama wodna"><span class="tthumb" data-sp="physignathus"></span><a href="#physignathus"><b>Agama wodna</b></a><br><span class="en">Chinese water dragon</span><br><i class="lat">Physignathus cocincinus</i></td>
 <td data-v="Średnio popularny"><span class="cat c-śre">Średnio popularny</span></td>
 <td data-v="220">220 zł</td>
 <td data-v="15.0">15</td>
@@ -1048,7 +1059,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="48">48</td>
-<td data-v="Żółw pustynny (sulcata)"><a href="#sulcata"><b>Żółw pustynny (sulcata)</b></a><br><span class="en">African spurred tortoise (Sulcata)</span><br><i class="lat">Centrochelys sulcata</i></td>
+<td data-v="Żółw pustynny (sulcata)"><span class="tthumb" data-sp="sulcata"></span><a href="#sulcata"><b>Żółw pustynny (sulcata)</b></a><br><span class="en">African spurred tortoise (Sulcata)</span><br><i class="lat">Centrochelys sulcata</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="280">280 zł</td>
 <td data-v="30.0">30</td>
@@ -1065,7 +1076,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="49">49</td>
-<td data-v="Kameleon jemeński"><a href="#calyptratus"><b>Kameleon jemeński</b></a><br><span class="en">Veiled chameleon</span><br><i class="lat">Chamaeleo calyptratus</i></td>
+<td data-v="Kameleon jemeński"><span class="tthumb" data-sp="calyptratus"></span><a href="#calyptratus"><b>Kameleon jemeński</b></a><br><span class="en">Veiled chameleon</span><br><i class="lat">Chamaeleo calyptratus</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="160">160 zł</td>
 <td data-v="57.6">58</td>
@@ -1082,7 +1093,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </tr>
 <tr data-cat="Popularny">
 <td data-v="50">50</td>
-<td data-v="Legwan zielony"><a href="#iguana"><b>Legwan zielony</b></a><br><span class="en">Green iguana</span><br><i class="lat">Iguana iguana</i></td>
+<td data-v="Legwan zielony"><span class="tthumb" data-sp="iguana"></span><a href="#iguana"><b>Legwan zielony</b></a><br><span class="en">Green iguana</span><br><i class="lat">Iguana iguana</i></td>
 <td data-v="Popularny"><span class="cat c-pop">Popularny</span></td>
 <td data-v="120">120 zł</td>
 <td data-v="24.0">24</td>
@@ -1521,6 +1532,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="chahoua">
 <header><div><span class="rank">#1</span><h3>Gekon mchowy</h3><br><span class="en">Mossy New Caledonian gecko</span> · <i class="lat">Mniarogekko chahoua</i></div>
 <div class="score"><b>71</b><small>/100</small></div></header>
+<figure class="photo" data-sp="chahoua" data-wiki="Mniarogekko chahoua" data-lat="Mniarogekko chahoua">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Mniarogekko_chahoua" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Mniarogekko%20chahoua&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Mniarogekko%20chahoua" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 1 000–3 500 (Pine Island, mainland, high-color)</span></div>
 <p class="bio">2 jaja co 30–45 dni, 4–6 zniesień. Temperatura pokojowa. Dojrzałość 2–3 lata.</p>
 <div class="cgrid">
@@ -1552,6 +1569,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="auriculatus">
 <header><div><span class="rank">#2</span><h3>Gekon chropowaty</h3><br><span class="en">Gargoyle gecko</span> · <i class="lat">Rhacodactylus auriculatus</i></div>
 <div class="score"><b>70</b><small>/100</small></div></header>
+<figure class="photo" data-sp="auriculatus" data-wiki="Rhacodactylus auriculatus" data-lat="Rhacodactylus auriculatus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Rhacodactylus_auriculatus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Rhacodactylus%20auriculatus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Rhacodactylus%20auriculatus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">2,7 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 250–1 200 (red stripe, white, high-contrast)</span></div>
 <p class="bio">2 jaja co ~30 dni, 6–8 zniesień. Temperatura pokojowa. Dojrzałość 1,5–2 lata.</p>
 <div class="cgrid">
@@ -1583,6 +1606,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="sarasinorum">
 <header><div><span class="rank">#3</span><h3>Gekon Sarasinów</h3><br><span class="en">Sarasin&#x27;s giant gecko (Roux&#x27;s giant gecko)</span> · <i class="lat">Correlophus sarasinorum</i></div>
 <div class="score"><b>70</b><small>/100</small></div></header>
+<figure class="photo" data-sp="sarasinorum" data-wiki="Correlophus sarasinorum" data-lat="Correlophus sarasinorum">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Correlophus_sarasinorum" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Correlophus%20sarasinorum&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Correlophus%20sarasinorum" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge easy">3,3 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 600–1 800</span></div>
 <p class="bio">2 jaja co ~30 dni, 5–7 zniesień. Temperatura pokojowa. Dojrzałość ~2 lata.</p>
 <div class="cgrid">
@@ -1614,6 +1643,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="nephrurus">
 <header><div><span class="rank">#4</span><h3>Gekon gałkoogonowy</h3><br><span class="en">Knob-tailed gecko</span> · <i class="lat">Nephrurus levis / N. amyae</i></div>
 <div class="score"><b>69</b><small>/100</small></div></header>
+<figure class="photo" data-sp="nephrurus" data-wiki="Nephrurus amyae" data-lat="Nephrurus levis">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Nephrurus_amyae" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Nephrurus%20levis&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Nephrurus%20levis" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 600–4 000 (N. levis 600–1 200; N. amyae 1 500–4 000; morfy patternless, hypo)</span></div>
 <p class="bio">2 jaja, 3–6 zniesień w sezonie. Wymaga chłodnego okresu zimowego. Inkubacja 60–80 dni.</p>
 <div class="cgrid">
@@ -1645,6 +1680,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="heterodon">
 <header><div><span class="rank">#5</span><h3>Wąż świnionosy (hognose)</h3><br><span class="en">Western hognose snake</span> · <i class="lat">Heterodon nasicus</i></div>
 <div class="score"><b>68</b><small>/100</small></div></header>
+<figure class="photo" data-sp="heterodon" data-wiki="Heterodon nasicus" data-lat="Heterodon nasicus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Heterodon_nasicus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Heterodon%20nasicus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Heterodon%20nasicus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 250–4 000 (normal 250–350; Albino, Anaconda/Superconda, Arctic, Toffeebelly, Lavender 500–4 000)</span></div>
 <p class="bio">8–20 jaj, zwykle 1 zniesienie (czasem 2). Wymaga brumacji 2–3 mies. Inkubacja 50–60 dni. Dojrzałość samicy 2–3 lata.</p>
 <div class="cgrid">
@@ -1676,6 +1717,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="egernia">
 <header><div><span class="rank">#6</span><h3>Scynk Stokesa</h3><br><span class="en">Gidgee skink (Stokes&#x27; skink)</span> · <i class="lat">Egernia stokesii</i></div>
 <div class="score"><b>68</b><small>/100</small></div></header>
+<figure class="photo" data-sp="egernia" data-wiki="Egernia stokesii" data-lat="Egernia stokesii">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Egernia_stokesii" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Egernia%20stokesii&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Egernia%20stokesii" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-bar">Bardzo rzadki</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 1 500–4 000</span></div>
 <p class="bio">Żyworodny, 3–8 młodych rocznie. Żyje w grupach rodzinnych. Dojrzałość 3–4 lata.</p>
 <div class="cgrid">
@@ -1707,6 +1754,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="storri">
 <header><div><span class="rank">#7</span><h3>Waran Storra</h3><br><span class="en">Storr&#x27;s monitor</span> · <i class="lat">Varanus storri</i></div>
 <div class="score"><b>67</b><small>/100</small></div></header>
+<figure class="photo" data-sp="storri" data-wiki="Varanus storri" data-lat="Varanus storri">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Varanus_storri" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Varanus%20storri&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Varanus%20storri" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 1 500–3 500</span></div>
 <p class="bio">3–6 jaj, 2–3 zniesienia. Inkubacja 90–120 dni. Dojrzałość ~1,5 roku. Najmniejszy waran (~35 cm).</p>
 <div class="cgrid">
@@ -1738,6 +1791,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="correlophus">
 <header><div><span class="rank">#8</span><h3>Gekon orzęsiony</h3><br><span class="en">Crested gecko</span> · <i class="lat">Correlophus ciliatus</i></div>
 <div class="score"><b>66</b><small>/100</small></div></header>
+<figure class="photo" data-sp="correlophus" data-wiki="Correlophus ciliatus" data-lat="Correlophus ciliatus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Correlophus_ciliatus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Correlophus%20ciliatus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Correlophus%20ciliatus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">2,3 · łatwy</span><span class="chip">Grupa 1.4</span><span class="chip">Ceny młodych (zł): 120–3 000 (normal/flame 120–250; harlequin/extreme 300–900; Lilly White, Cappuccino, Sable 1 000+)</span></div>
 <p class="bio">2 jaja co ~30 dni, 8–10 zniesień w sezonie (zalecana przerwa zimowa). Inkubacja 60–90 dni w temp. pokojowej. Dojrzałość ~18 mies. (samica ≥ 35 g).</p>
 <div class="cgrid">
@@ -1769,6 +1828,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="acanthurus">
 <header><div><span class="rank">#9</span><h3>Waran kolczastoogonowy</h3><br><span class="en">Ackie monitor (Spiny-tailed monitor)</span> · <i class="lat">Varanus acanthurus</i></div>
 <div class="score"><b>66</b><small>/100</small></div></header>
+<figure class="photo" data-sp="acanthurus" data-wiki="Varanus acanthurus" data-lat="Varanus acanthurus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Varanus_acanthurus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Varanus%20acanthurus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Varanus%20acanthurus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">5,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 1 300–5 000 (red, yellow, odmiany „Kimberley”)</span></div>
 <p class="bio">5–18 jaj, 2–3 zniesienia rocznie. Inkubacja 70–120 dni. Dojrzałość 1,5–2 lata.</p>
 <div class="cgrid">
@@ -1800,6 +1865,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="strophurus">
 <header><div><span class="rank">#10</span><h3>Gekon kolcoogonowy</h3><br><span class="en">Spiny-tailed gecko (Golden-tailed gecko)</span> · <i class="lat">Strophurus taenicauda / S. williamsi</i></div>
 <div class="score"><b>65</b><small>/100</small></div></header>
+<figure class="photo" data-sp="strophurus" data-wiki="Strophurus taenicauda" data-lat="Strophurus taenicauda">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Strophurus_taenicauda" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Strophurus%20taenicauda&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Strophurus%20taenicauda" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,3 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 500–2 000</span></div>
 <p class="bio">2 jaja, 3–6 zniesień. Wymaga zimowego obniżenia temperatury.</p>
 <div class="cgrid">
@@ -1831,6 +1902,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="aspidites">
 <header><div><span class="rank">#11</span><h3>Pyton woma</h3><br><span class="en">Woma python</span> · <i class="lat">Aspidites ramsayi</i></div>
 <div class="score"><b>64</b><small>/100</small></div></header>
+<figure class="photo" data-sp="aspidites" data-wiki="Aspidites ramsayi" data-lat="Aspidites ramsayi">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Aspidites_ramsayi" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Aspidites%20ramsayi&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Aspidites%20ramsayi" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-bar">Bardzo rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 2 000–6 000</span></div>
 <p class="bio">5–15 jaj, 1 zniesienie. Inkubacja ~60 dni. Dojrzałość 3–4 lata.</p>
 <div class="cgrid">
@@ -1862,6 +1939,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="saltuarius">
 <header><div><span class="rank">#12</span><h3>Gekon liściastoogonowy</h3><br><span class="en">Northern leaf-tailed gecko</span> · <i class="lat">Saltuarius cornutus / S. swaini</i></div>
 <div class="score"><b>63</b><small>/100</small></div></header>
+<figure class="photo" data-sp="saltuarius" data-wiki="Saltuarius cornutus" data-lat="Saltuarius cornutus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Saltuarius_cornutus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Saltuarius%20cornutus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Saltuarius%20cornutus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-bar">Bardzo rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 3 000–7 000</span></div>
 <p class="bio">2 jaja, 3–5 zniesień. Umiarkowane temperatury, chłodna zima. Dojrzałość 2–3 lata.</p>
 <div class="cgrid">
@@ -1893,6 +1976,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="tiliqua">
 <header><div><span class="rank">#13</span><h3>Scynk niebieskojęzyczny</h3><br><span class="en">Blue-tongued skink</span> · <i class="lat">Tiliqua scincoides / T. gigas</i></div>
 <div class="score"><b>60</b><small>/100</small></div></header>
+<figure class="photo" data-sp="tiliqua" data-wiki="Tiliqua scincoides" data-lat="Tiliqua scincoides">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Tiliqua_scincoides" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Tiliqua%20scincoides&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Tiliqua%20scincoides" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 600–4 000 (Merauke, Kei, T. s. intermedia, T. gigas evanescens; morfy hypo, albino)</span></div>
 <p class="bio">Żyworodny, 8–20 młodych co 1–2 lata. Dojrzałość 2–3 lata. Życie 15–20 lat.</p>
 <div class="cgrid">
@@ -1924,6 +2013,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="spilota">
 <header><div><span class="rank">#14</span><h3>Pyton dywanowy</h3><br><span class="en">Carpet python</span> · <i class="lat">Morelia spilota ssp.</i></div>
 <div class="score"><b>60</b><small>/100</small></div></header>
+<figure class="photo" data-sp="spilota" data-wiki="Morelia spilota" data-lat="Morelia spilota">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Morelia_spilota" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Morelia%20spilota&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Morelia%20spilota" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 400–3 000 (jungle, jaguar, zebra, axanthic, granite)</span></div>
 <p class="bio">10–30 jaj, 1 zniesienie. Inkubacja 50–60 dni. Dojrzałość 3–4 lata.</p>
 <div class="cgrid">
@@ -1955,6 +2050,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="underwoodisaurus">
 <header><div><span class="rank">#15</span><h3>Gekon grubogonowy australijski</h3><br><span class="en">Thick-tailed gecko (Barking gecko)</span> · <i class="lat">Underwoodisaurus milii</i></div>
 <div class="score"><b>58</b><small>/100</small></div></header>
+<figure class="photo" data-sp="underwoodisaurus" data-wiki="Underwoodisaurus milii" data-lat="Underwoodisaurus milii">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Underwoodisaurus_milii" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Underwoodisaurus%20milii&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Underwoodisaurus%20milii" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge easy">3,3 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 300–1 200 (hypo, patternless)</span></div>
 <p class="bio">2 jaja, 3–6 zniesień. Wymaga chłodnej zimy. Dojrzałość 1–1,5 roku.</p>
 <div class="cgrid">
@@ -1986,6 +2087,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="abronia">
 <header><div><span class="rank">#16</span><h3>Abronia (zielona)</h3><br><span class="en">Green arboreal alligator lizard</span> · <i class="lat">Abronia graminea</i></div>
 <div class="score"><b>57</b><small>/100</small></div></header>
+<figure class="photo" data-sp="abronia" data-wiki="Abronia graminea" data-lat="Abronia graminea">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Abronia_graminea" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Abronia%20graminea&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Abronia%20graminea" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-bar">Bardzo rzadki</span><span class="badge hard">6,0 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 4 500–12 000 (CB z dokumentami)</span></div>
 <p class="bio">Żyworodna, 5–12 młodych raz w roku. Wymaga chłodnych nocy (15–18°C) i chłodzenia latem. Dojrzałość 2–3 lata.</p>
 <div class="cgrid">
@@ -2017,6 +2124,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="eublepharis">
 <header><div><span class="rank">#17</span><h3>Gekon lamparci</h3><br><span class="en">Leopard gecko</span> · <i class="lat">Eublepharis macularius</i></div>
 <div class="score"><b>55</b><small>/100</small></div></header>
+<figure class="photo" data-sp="eublepharis" data-wiki="Eublepharis macularius" data-lat="Eublepharis macularius">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Eublepharis_macularius" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Eublepharis%20macularius&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Eublepharis%20macularius" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">2,7 · łatwy</span><span class="chip">Grupa 1.4</span><span class="chip">Ceny młodych (zł): 80–1 500 (normal 80–150; morfy 250–1 500)</span></div>
 <p class="bio">2 jaja co 2–4 tyg., 5–8 zniesień w sezonie. Płeć zależna od temperatury inkubacji (TSD). Dojrzałość 10–12 mies. (samica ≥ 45–50 g). Życie 15–20 lat.</p>
 <div class="cgrid">
@@ -2048,6 +2161,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="marginata">
 <header><div><span class="rank">#18</span><h3>Żółw obrzeżony</h3><br><span class="en">Marginated tortoise</span> · <i class="lat">Testudo marginata</i></div>
 <div class="score"><b>55</b><small>/100</small></div></header>
+<figure class="photo" data-sp="marginata" data-wiki="Marginated tortoise" data-lat="Testudo marginata">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Marginated_tortoise" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Testudo%20marginata&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Testudo%20marginata" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 350–800 (z dokumentami)</span></div>
 <p class="bio">4–12 jaj, 1–3 zniesienia. Hibernacja konieczna. Dojrzałość 8–12 lat.</p>
 <div class="cgrid">
@@ -2079,6 +2198,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="leachianus">
 <header><div><span class="rank">#19</span><h3>Gekon olbrzymi (leachianus)</h3><br><span class="en">New Caledonian giant gecko</span> · <i class="lat">Rhacodactylus leachianus</i></div>
 <div class="score"><b>54</b><small>/100</small></div></header>
+<figure class="photo" data-sp="leachianus" data-wiki="Rhacodactylus leachianus" data-lat="Rhacodactylus leachianus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Rhacodactylus_leachianus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Rhacodactylus%20leachianus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Rhacodactylus%20leachianus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 1 800–15 000+ (lokalizacje: Nuu Ana, GT, Pine Island, Nuu Bo, Moro; pełne pochodzenie)</span></div>
 <p class="bio">2 jaja w zniesieniu, 4–8 zniesień rocznie. Dojrzałość 3–5 lat. Życie 20+ lat. Pary często nie kopulują latami.</p>
 <div class="cgrid">
@@ -2110,6 +2235,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="testudo">
 <header><div><span class="rank">#20</span><h3>Żółw grecki (Hermanna)</h3><br><span class="en">Hermann&#x27;s tortoise</span> · <i class="lat">Testudo hermanni</i></div>
 <div class="score"><b>53</b><small>/100</small></div></header>
+<figure class="photo" data-sp="testudo" data-wiki="Hermann&#x27;s tortoise" data-lat="Testudo hermanni">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Hermann%27s_tortoise" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Testudo%20hermanni&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Testudo%20hermanni" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 250–600 (z dokumentami)</span></div>
 <p class="bio">3–8 jaj, 2–3 zniesienia. Inkubacja 55–70 dni. Dojrzałość 8–12 lat (dlatego kupuje się dorosłe). Życie 50+ lat. Hibernacja konieczna.</p>
 <div class="cgrid">
@@ -2141,6 +2272,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="goniurosaurus">
 <header><div><span class="rank">#21</span><h3>Gekon jaskiniowy</h3><br><span class="en">Cave gecko (Tiger gecko)</span> · <i class="lat">Goniurosaurus hainanensis / lichtenfelderi / araneus</i></div>
 <div class="score"><b>53</b><small>/100</small></div></header>
+<figure class="photo" data-sp="goniurosaurus" data-wiki="Goniurosaurus lichtenfelderi" data-lat="Goniurosaurus hainanensis">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Goniurosaurus_lichtenfelderi" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Goniurosaurus%20hainanensis&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Goniurosaurus%20hainanensis" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,3 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 400–2 500</span></div>
 <p class="bio">2 jaja, 3–5 zniesień. Niska temperatura (20–25°C), wysoka wilgotność. Dojrzałość 1,5–2 lata.</p>
 <div class="cgrid">
@@ -2172,6 +2309,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="lichanura">
 <header><div><span class="rank">#22</span><h3>Boa różowy</h3><br><span class="en">Rosy boa</span> · <i class="lat">Lichanura trivirgata / L. orcutti</i></div>
 <div class="score"><b>53</b><small>/100</small></div></header>
+<figure class="photo" data-sp="lichanura" data-wiki="Lichanura trivirgata" data-lat="Lichanura trivirgata">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Lichanura_trivirgata" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Lichanura%20trivirgata&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Lichanura%20trivirgata" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 400–2 500 (lokalizacje, albino, axanthic)</span></div>
 <p class="bio">Żyworodny, 3–10 młodych. Wymaga chłodnej zimy. Dojrzałość 2–3 lata.</p>
 <div class="cgrid">
@@ -2203,6 +2346,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="pardalis">
 <header><div><span class="rank">#23</span><h3>Kameleon lamparci</h3><br><span class="en">Panther chameleon</span> · <i class="lat">Furcifer pardalis</i></div>
 <div class="score"><b>51</b><small>/100</small></div></header>
+<figure class="photo" data-sp="pardalis" data-wiki="Furcifer pardalis" data-lat="Furcifer pardalis">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Furcifer_pardalis" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Furcifer%20pardalis&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Furcifer%20pardalis" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">6,7 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 500–2 500 (lokalizacje: Ambilobe, Nosy Be, Ambanja, Nosy Faly, Sambava)</span></div>
 <p class="bio">15–40 jaj, inkubacja 6–12 mies. (z diapauzą). Samice żyją 2–4 lata. Dojrzałość 7–9 mies.</p>
 <div class="cgrid">
@@ -2234,6 +2383,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="hemitheconyx">
 <header><div><span class="rank">#24</span><h3>Gekon grubogonowy</h3><br><span class="en">African fat-tailed gecko</span> · <i class="lat">Hemitheconyx caudicinctus</i></div>
 <div class="score"><b>50</b><small>/100</small></div></header>
+<figure class="photo" data-sp="hemitheconyx" data-wiki="Hemitheconyx caudicinctus" data-lat="Hemitheconyx caudicinctus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Hemitheconyx_caudicinctus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Hemitheconyx%20caudicinctus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Hemitheconyx%20caudicinctus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,3 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 200–1 200 (morfy: amel, oreo, ghost, whiteout, zero)</span></div>
 <p class="bio">2 jaja co 3–5 tyg., 4–6 zniesień. Inkubacja 50–70 dni (TSD). Dojrzałość 1,5–2 lata.</p>
 <div class="cgrid">
@@ -2265,6 +2420,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="antaresia">
 <header><div><span class="rank">#25</span><h3>Pyton Childrena</h3><br><span class="en">Children&#x27;s python / Spotted python</span> · <i class="lat">Antaresia childreni / A. maculosa</i></div>
 <div class="score"><b>50</b><small>/100</small></div></header>
+<figure class="photo" data-sp="antaresia" data-wiki="Antaresia childreni" data-lat="Antaresia childreni">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Antaresia_childreni" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Antaresia%20childreni&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Antaresia%20childreni" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,0 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 300–1 200 (A. maculosa, morfy granite, IJ)</span></div>
 <p class="bio">6–12 jaj, 1 zniesienie, samica wysiaduje lub inkubator. Dojrzałość 2–3 lata. Długość do 1 m.</p>
 <div class="cgrid">
@@ -2296,6 +2457,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="eryx">
 <header><div><span class="rank">#26</span><h3>Boa piaskowy</h3><br><span class="en">Kenyan sand boa / Javelin sand boa</span> · <i class="lat">Eryx colubrinus / E. jaculus</i></div>
 <div class="score"><b>49</b><small>/100</small></div></header>
+<figure class="photo" data-sp="eryx" data-wiki="Eryx colubrinus" data-lat="Eryx colubrinus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Eryx_colubrinus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Eryx%20colubrinus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Eryx%20colubrinus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,3 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 200–1 200 (morfy: anery, albino, snow, paradox)</span></div>
 <p class="bio">Żyworodny, 5–15 młodych. Wymaga chłodnej zimy. Dojrzałość 2–3 lata.</p>
 <div class="cgrid">
@@ -2327,6 +2494,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="viridis">
 <header><div><span class="rank">#27</span><h3>Pyton zielony</h3><br><span class="en">Green tree python</span> · <i class="lat">Morelia viridis</i></div>
 <div class="score"><b>48</b><small>/100</small></div></header>
+<figure class="photo" data-sp="viridis" data-wiki="Morelia viridis" data-lat="Morelia viridis">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Morelia_viridis" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Morelia%20viridis&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Morelia%20viridis" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">7,0 · trudny</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 1 200–6 000 (lokalizacje: Biak, Aru, Sorong, Jayapura; high-yellow, blue line)</span></div>
 <p class="bio">10–25 jaj co 1–2 lata. Inkubacja 45–55 dni, bardzo wrażliwa na wilgotność. Młode często wymagają karmienia wspomaganego. Dojrzałość 3–4 lata.</p>
 <div class="cgrid">
@@ -2358,6 +2531,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="pituophis">
 <header><div><span class="rank">#28</span><h3>Wąż sosnowy / byczy</h3><br><span class="en">Pine snake / Bullsnake</span> · <i class="lat">Pituophis melanoleucus / P. catenifer</i></div>
 <div class="score"><b>47</b><small>/100</small></div></header>
+<figure class="photo" data-sp="pituophis" data-wiki="Pituophis melanoleucus" data-lat="Pituophis melanoleucus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Pituophis_melanoleucus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Pituophis%20melanoleucus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Pituophis%20melanoleucus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 250–1 500 (lokalizacje, albino, hypo, white-sided)</span></div>
 <p class="bio">6–15 dużych jaj, 1 zniesienie. Brumacja. Dojrzałość 2–3 lata.</p>
 <div class="cgrid">
@@ -2389,6 +2568,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="lygodactylus">
 <header><div><span class="rank">#29</span><h3>Gekon błękitny</h3><br><span class="en">Electric blue gecko (William&#x27;s dwarf gecko)</span> · <i class="lat">Lygodactylus williamsi</i></div>
 <div class="score"><b>47</b><small>/100</small></div></header>
+<figure class="photo" data-sp="lygodactylus" data-wiki="Lygodactylus williamsi" data-lat="Lygodactylus williamsi">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Lygodactylus_williamsi" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Lygodactylus%20williamsi&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Lygodactylus%20williamsi" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">4,3 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 250–600 (z dokumentami)</span></div>
 <p class="bio">2 jaja co 3–4 tyg. Inkubacja 60–90 dni. Bardzo małe młode. Dojrzałość ~1 rok.</p>
 <div class="cgrid">
@@ -2420,6 +2605,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="paroedura">
 <header><div><span class="rank">#30</span><h3>Gekon malowany</h3><br><span class="en">Ocelot gecko</span> · <i class="lat">Paroedura picta</i></div>
 <div class="score"><b>45</b><small>/100</small></div></header>
+<figure class="photo" data-sp="paroedura" data-wiki="Paroedura picta" data-lat="Paroedura picta">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Paroedura_picta" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Paroedura%20picta&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Paroedura%20picta" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">2,3 · łatwy</span><span class="chip">Grupa 1.4</span><span class="chip">Ceny młodych (zł): 60–300 (normal, striped, hypo, snow)</span></div>
 <p class="bio">2 jaja co 2–3 tyg. przez większość roku. Inkubacja 50–80 dni. Dojrzałość 6–8 mies. Życie 6–10 lat.</p>
 <div class="cgrid">
@@ -2451,6 +2642,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="tribolonotus">
 <header><div><span class="rank">#31</span><h3>Scynk krokodylowy</h3><br><span class="en">Red-eyed crocodile skink</span> · <i class="lat">Tribolonotus gracilis</i></div>
 <div class="score"><b>44</b><small>/100</small></div></header>
+<figure class="photo" data-sp="tribolonotus" data-wiki="Tribolonotus gracilis" data-lat="Tribolonotus gracilis">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Tribolonotus_gracilis" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Tribolonotus%20gracilis&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Tribolonotus%20gracilis" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">5,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 450–1 000</span></div>
 <p class="bio">1 jajo co 4–8 tyg. Wysoka wilgotność, umiarkowane temp. Dojrzałość ~1,5 roku.</p>
 <div class="cgrid">
@@ -2482,6 +2679,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="teratoscincus">
 <header><div><span class="rank">#32</span><h3>Gekon żabiooki</h3><br><span class="en">Frog-eyed gecko (Wonder gecko)</span> · <i class="lat">Teratoscincus scincus / T. roborowskii</i></div>
 <div class="score"><b>41</b><small>/100</small></div></header>
+<figure class="photo" data-sp="teratoscincus" data-wiki="Teratoscincus scincus" data-lat="Teratoscincus scincus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Teratoscincus_scincus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Teratoscincus%20scincus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Teratoscincus%20scincus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge mid">4,3 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 250–800</span></div>
 <p class="bio">2 jaja co 3–4 tyg., 3–5 zniesień. Bardzo suche warunki. Dojrzałość ~1,5 roku.</p>
 <div class="cgrid">
@@ -2513,6 +2716,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="guttatus">
 <header><div><span class="rank">#33</span><h3>Wąż zbożowy</h3><br><span class="en">Corn snake</span> · <i class="lat">Pantherophis guttatus</i></div>
 <div class="score"><b>38</b><small>/100</small></div></header>
+<figure class="photo" data-sp="guttatus" data-wiki="Corn snake" data-lat="Pantherophis guttatus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Corn_snake" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Pantherophis%20guttatus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Pantherophis%20guttatus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">3,0 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 80–600</span></div>
 <p class="bio">10–25 jaj, czasem 2 zniesienia. Inkubacja ~60 dni. Dojrzałość 18–24 mies. Życie 15–20 lat.</p>
 <div class="cgrid">
@@ -2544,6 +2753,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="lampropeltis">
 <header><div><span class="rank">#34</span><h3>Wąż królewski</h3><br><span class="en">Kingsnake / Milk snake</span> · <i class="lat">Lampropeltis californiae / L. triangulum ssp.</i></div>
 <div class="score"><b>38</b><small>/100</small></div></header>
+<figure class="photo" data-sp="lampropeltis" data-wiki="Lampropeltis californiae" data-lat="Lampropeltis californiae">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Lampropeltis_californiae" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Lampropeltis%20californiae&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Lampropeltis%20californiae" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">3,3 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 150–900</span></div>
 <p class="bio">5–15 jaj, 1 zniesienie. Brumacja wskazana. Dojrzałość 2–3 lata.</p>
 <div class="cgrid">
@@ -2575,6 +2790,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="uroplatus">
 <header><div><span class="rank">#35</span><h3>Płaskogon (Uroplatus)</h3><br><span class="en">Leaf-tailed gecko</span> · <i class="lat">Uroplatus sikorae / henkeli / phantasticus</i></div>
 <div class="score"><b>38</b><small>/100</small></div></header>
+<figure class="photo" data-sp="uroplatus" data-wiki="Uroplatus sikorae" data-lat="Uroplatus sikorae">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Uroplatus_sikorae" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Uroplatus%20sikorae&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Uroplatus%20sikorae" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">7,7 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 900–3 500</span></div>
 <p class="bio">2 jaja co 30–45 dni. Wymaga temperatur 18–26°C i bardzo wysokiej wilgotności. Jaja i młode bardzo wrażliwe.</p>
 <div class="cgrid">
@@ -2606,6 +2827,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="regius">
 <header><div><span class="rank">#36</span><h3>Pyton królewski</h3><br><span class="en">Ball python (Royal python)</span> · <i class="lat">Python regius</i></div>
 <div class="score"><b>37</b><small>/100</small></div></header>
+<figure class="photo" data-sp="regius" data-wiki="Ball python" data-lat="Python regius">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Ball_python" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Python%20regius&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Python%20regius" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 150–8 000 (normal 150–250; popularne morfy 300–1 200; multi-gen 2 000+)</span></div>
 <p class="bio">4–8 jaj, jedno zniesienie w roku (nie każda samica co roku). Inkubacja 55–60 dni. Samica gotowa przy ~1 500 g (2,5–3 lata). Życie 30+ lat.</p>
 <div class="cgrid">
@@ -2637,6 +2864,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="sternotherus">
 <header><div><span class="rank">#37</span><h3>Mułowiec piżmowy</h3><br><span class="en">Common musk turtle (Stinkpot)</span> · <i class="lat">Sternotherus odoratus</i></div>
 <div class="score"><b>36</b><small>/100</small></div></header>
+<figure class="photo" data-sp="sternotherus" data-wiki="Sternotherus odoratus" data-lat="Sternotherus odoratus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Sternotherus_odoratus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Sternotherus%20odoratus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Sternotherus%20odoratus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">2,7 · łatwy</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 100–300</span></div>
 <p class="bio">2–6 jaj, 2–3 zniesienia. Inkubacja 60–80 dni. Dojrzałość 3–4 lata.</p>
 <div class="cgrid">
@@ -2668,6 +2901,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="phelsuma">
 <header><div><span class="rank">#38</span><h3>Felsuma madagaskarska</h3><br><span class="en">Giant day gecko</span> · <i class="lat">Phelsuma grandis</i></div>
 <div class="score"><b>32</b><small>/100</small></div></header>
+<figure class="photo" data-sp="phelsuma" data-wiki="Phelsuma grandis" data-lat="Phelsuma grandis">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Phelsuma_grandis" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Phelsuma%20grandis&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Phelsuma%20grandis" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 150–450</span></div>
 <p class="bio">2 jaja przyklejane, co 3–5 tyg. Inkubacja 45–70 dni. Dojrzałość ~1 rok.</p>
 <div class="cgrid">
@@ -2699,6 +2938,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="uromastyx">
 <header><div><span class="rank">#39</span><h3>Szczeciniak (np. ozdobny)</h3><br><span class="en">Spiny-tailed lizard (Uromastyx)</span> · <i class="lat">Uromastyx ornata / U. geyri</i></div>
 <div class="score"><b>32</b><small>/100</small></div></header>
+<figure class="photo" data-sp="uromastyx" data-wiki="Uromastyx ornata" data-lat="Uromastyx ornata">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Uromastyx_ornata" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Uromastyx%20ornata&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Uromastyx%20ornata" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge hard">6,3 · trudny</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 700–2 000</span></div>
 <p class="bio">6–20 jaj, 1 zniesienie. Wymaga wyraźnej zimowej brumacji i bardzo wysokich temp. (miejsce wygrzewania 50°C+). Dojrzałość 3–4 lata.</p>
 <div class="cgrid">
@@ -2730,6 +2975,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="boa">
 <header><div><span class="rank">#40</span><h3>Boa cesarski</h3><br><span class="en">Central American boa</span> · <i class="lat">Boa imperator</i></div>
 <div class="score"><b>31</b><small>/100</small></div></header>
+<figure class="photo" data-sp="boa" data-wiki="Boa imperator" data-lat="Boa imperator">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Boa_imperator" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Boa%20imperator&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Boa%20imperator" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 150–5 000 (normal 150–250; morfy: hypo, anery, sharp albino, motley, jungle)</span></div>
 <p class="bio">Żyworodny, 10–30 młodych co 1–2 lata. Dojrzałość samic 3–4 lata. Życie 25–30 lat.</p>
 <div class="cgrid">
@@ -2761,6 +3012,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="horsfieldii">
 <header><div><span class="rank">#41</span><h3>Żółw stepowy</h3><br><span class="en">Russian tortoise</span> · <i class="lat">Testudo horsfieldii</i></div>
 <div class="score"><b>30</b><small>/100</small></div></header>
+<figure class="photo" data-sp="horsfieldii" data-wiki="Russian tortoise" data-lat="Testudo horsfieldii">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Russian_tortoise" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Testudo%20horsfieldii&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Testudo%20horsfieldii" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.3</span><span class="chip">Ceny młodych (zł): 180–450</span></div>
 <p class="bio">2–6 jaj, 1–3 zniesienia. Hibernacja konieczna. Rozród w niewoli nieregularny.</p>
 <div class="cgrid">
@@ -2792,6 +3049,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="jacksonii">
 <header><div><span class="rank">#42</span><h3>Kameleon Jacksona</h3><br><span class="en">Jackson&#x27;s chameleon</span> · <i class="lat">Trioceros jacksonii</i></div>
 <div class="score"><b>30</b><small>/100</small></div></header>
+<figure class="photo" data-sp="jacksonii" data-wiki="Trioceros jacksonii" data-lat="Trioceros jacksonii">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Trioceros_jacksonii" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Trioceros%20jacksonii&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Trioceros%20jacksonii" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-rza">Rzadki</span><span class="badge mid">5,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 350–1 000 (T. j. xantholophus, merumontanus)</span></div>
 <p class="bio">Żyworodny, 8–30 młodych. Wymaga chłodnych nocy (12–16°C). Dojrzałość 5–9 mies.</p>
 <div class="cgrid">
@@ -2823,6 +3086,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="henrylawsoni">
 <header><div><span class="rank">#43</span><h3>Agama karłowata</h3><br><span class="en">Rankin&#x27;s dragon (Dwarf bearded dragon)</span> · <i class="lat">Pogona henrylawsoni</i></div>
 <div class="score"><b>29</b><small>/100</small></div></header>
+<figure class="photo" data-sp="henrylawsoni" data-wiki="Pogona henrylawsoni" data-lat="Pogona henrylawsoni">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Pogona_henrylawsoni" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Pogona%20henrylawsoni&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Pogona%20henrylawsoni" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 120–400</span></div>
 <p class="bio">8–20 jaj, 2–4 zniesienia. Inkubacja 50–60 dni. Dojrzałość ~1 rok.</p>
 <div class="cgrid">
@@ -2854,6 +3123,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="gekko">
 <header><div><span class="rank">#44</span><h3>Gekon toke</h3><br><span class="en">Tokay gecko</span> · <i class="lat">Gekko gecko</i></div>
 <div class="score"><b>28</b><small>/100</small></div></header>
+<figure class="photo" data-sp="gekko" data-wiki="Tokay gecko" data-lat="Gekko gecko">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Tokay_gecko" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Gekko%20gecko&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Gekko%20gecko" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge easy">3,7 · łatwy</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 100–600 (morfy: blue, granite, calico, albino)</span></div>
 <p class="bio">2 twarde jaja przyklejane do ścian co 3–5 tyg., 4–6 zniesień. Inkubacja 60–120 dni. Dojrzałość ~1 rok.</p>
 <div class="cgrid">
@@ -2885,6 +3160,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="corucia">
 <header><div><span class="rank">#45</span><h3>Scynk salomoński</h3><br><span class="en">Solomon Islands skink (Monkey-tailed skink)</span> · <i class="lat">Corucia zebrata</i></div>
 <div class="score"><b>28</b><small>/100</small></div></header>
+<figure class="photo" data-sp="corucia" data-wiki="Corucia zebrata" data-lat="Corucia zebrata">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Corucia_zebrata" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Corucia%20zebrata&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Corucia%20zebrata" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-bar">Bardzo rzadki</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 2 000–5 000</span></div>
 <p class="bio">Żyworodny, zwykle 1 (rzadko 2) młode rocznie po ciąży 6–8 mies. Roślinożerca.</p>
 <div class="cgrid">
@@ -2916,6 +3197,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="pogona">
 <header><div><span class="rank">#46</span><h3>Agama brodata</h3><br><span class="en">Central bearded dragon</span> · <i class="lat">Pogona vitticeps</i></div>
 <div class="score"><b>27</b><small>/100</small></div></header>
+<figure class="photo" data-sp="pogona" data-wiki="Pogona vitticeps" data-lat="Pogona vitticeps">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Pogona_vitticeps" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Pogona%20vitticeps&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Pogona%20vitticeps" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,3 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 120–1 200 (morfy: hypo, trans, leatherback, zero, witblits)</span></div>
 <p class="bio">15–30 jaj w zniesieniu, 2–4 zniesienia w sezonie. Inkubacja 55–70 dni. Dojrzałość 12–18 mies. Życie 10–12 lat.</p>
 <div class="cgrid">
@@ -2947,6 +3234,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="physignathus">
 <header><div><span class="rank">#47</span><h3>Agama wodna</h3><br><span class="en">Chinese water dragon</span> · <i class="lat">Physignathus cocincinus</i></div>
 <div class="score"><b>24</b><small>/100</small></div></header>
+<figure class="photo" data-sp="physignathus" data-wiki="Physignathus cocincinus" data-lat="Physignathus cocincinus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Physignathus_cocincinus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Physignathus%20cocincinus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Physignathus%20cocincinus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-śre">Średnio popularny</span><span class="badge mid">4,7 · średni</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 150–400</span></div>
 <p class="bio">8–15 jaj, 1–3 zniesienia. Inkubacja 60–100 dni. Dojrzałość ~2 lata.</p>
 <div class="cgrid">
@@ -2978,6 +3271,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="sulcata">
 <header><div><span class="rank">#48</span><h3>Żółw pustynny (sulcata)</h3><br><span class="en">African spurred tortoise (Sulcata)</span> · <i class="lat">Centrochelys sulcata</i></div>
 <div class="score"><b>24</b><small>/100</small></div></header>
+<figure class="photo" data-sp="sulcata" data-wiki="African spurred tortoise" data-lat="Centrochelys sulcata">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/African_spurred_tortoise" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Centrochelys%20sulcata&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Centrochelys%20sulcata" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">4,0 · średni</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 180–500</span></div>
 <p class="bio">15–30 jaj, 2–3 zniesienia. Inkubacja 85–120 dni. Dorosły waży 40–100 kg.</p>
 <div class="cgrid">
@@ -3009,6 +3308,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="calyptratus">
 <header><div><span class="rank">#49</span><h3>Kameleon jemeński</h3><br><span class="en">Veiled chameleon</span> · <i class="lat">Chamaeleo calyptratus</i></div>
 <div class="score"><b>14</b><small>/100</small></div></header>
+<figure class="photo" data-sp="calyptratus" data-wiki="Chamaeleo calyptratus" data-lat="Chamaeleo calyptratus">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Chamaeleo_calyptratus" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Chamaeleo%20calyptratus&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Chamaeleo%20calyptratus" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge hard">6,0 · trudny</span><span class="chip">Grupa 1.2</span><span class="chip">Ceny młodych (zł): 100–350 (translucent do 500)</span></div>
 <p class="bio">30–80 jaj w zniesieniu, samica składa nawet bez samca (jaja niezapłodnione). Inkubacja 150–200 dni. Samice żyją 3–5 lat (rozród je wyniszcza).</p>
 <div class="cgrid">
@@ -3040,6 +3345,12 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 <article class="card" id="iguana">
 <header><div><span class="rank">#50</span><h3>Legwan zielony</h3><br><span class="en">Green iguana</span> · <i class="lat">Iguana iguana</i></div>
 <div class="score"><b>14</b><small>/100</small></div></header>
+<figure class="photo" data-sp="iguana" data-wiki="Green iguana" data-lat="Iguana iguana">
+<div class="ph"><span>Zdjęcie ładuje się z Wikipedii (wymaga internetu).</span>
+<a href="https://en.wikipedia.org/wiki/Green_iguana" target="_blank" rel="noopener">Wikipedia</a>
+<a href="https://commons.wikimedia.org/w/index.php?search=Iguana%20iguana&amp;title=Special:MediaSearch&amp;type=image" target="_blank" rel="noopener">Galeria Wikimedia Commons</a>
+<a href="https://www.google.com/search?tbm=isch&amp;q=Iguana%20iguana" target="_blank" rel="noopener">Grafika Google</a></div>
+</figure>
 <div class="chips"><span class="cat c-pop">Popularny</span><span class="badge mid">5,3 · średni</span><span class="chip">Grupa 1.1</span><span class="chip">Ceny młodych (zł): 80–600 (red, blue, axanthic)</span></div>
 <p class="bio">20–70 jaj raz w roku. Inkubacja 65–90 dni. Dojrzałość 2–3 lata. Dorosły osiąga 1,5–1,8 m.</p>
 <div class="cgrid">
@@ -3243,6 +3554,7 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
 </section>
 
 <footer>
+<p>Zdjęcia: Wikimedia Commons / Wikipedia, na wolnych licencjach – autor i licencja pod każdym zdjęciem (kliknij podpis, aby zobaczyć szczegóły). Zdjęcie przedstawia gatunek typowy; przy kartach obejmujących kilka gatunków pokazany jest pierwszy z nich.</p>
 <p>Analiza przygotowana w październiku 2026 r. Ceny i parametry rozrodu są szacunkami na podstawie typowych wartości z rynku polskiego i europejskiego oraz literatury hodowlanej. Nie stanowią porady inwestycyjnej ani prawnej. Przepisy (CITES, ustawa o ochronie przyrody, lista zwierząt niebezpiecznych, podatki) zweryfikuj w aktualnych źródłach przed rozpoczęciem hodowli.</p>
 </footer>
 </main>
@@ -3284,6 +3596,84 @@ Stawka/h    = Zysk / (godziny tygodniowo × 52)</div>
       });
     });
   }
+
+  // zdjęcia gatunków z Wikipedii / Wikimedia Commons (ładowane w przeglądarce)
+  (function(){
+    var figs=[].slice.call(document.querySelectorAll('figure.photo'));
+    if(!figs.length||!window.fetch) return;
+    var CK='gady-photos-v1', cache={};
+    try{cache=JSON.parse(localStorage.getItem(CK)||'{}')||{};}catch(e){cache={};}
+    function save(){try{localStorage.setItem(CK,JSON.stringify(cache));}catch(e){}}
+    function strip(h){var d=document.createElement('div');d.innerHTML=h||'';return (d.textContent||'').replace(/\s+/g,' ').trim();}
+    function api(host,params){
+      params.format='json';params.origin='*';
+      var q=Object.keys(params).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(params[k]);}).join('&');
+      return fetch('https://'+host+'/w/api.php?'+q).then(function(r){if(!r.ok) throw new Error(r.status);return r.json();});
+    }
+    function render(f,info){
+      if(!info||!info.src) return;
+      var sp=f.getAttribute('data-sp');
+      var img=document.createElement('img');
+      img.loading='lazy';img.decoding='async';img.src=info.src;
+      img.alt=(f.closest('.card').querySelector('h3')||{}).textContent||'';
+      img.onerror=function(){f.classList.remove('ok');img.remove();cap.remove();};
+      var cap=document.createElement('figcaption');
+      var who=info.artist?('Fot. '+info.artist):'Zdjęcie';
+      cap.innerHTML='';
+      var a=document.createElement('a');a.href=info.page||'#';a.target='_blank';a.rel='noopener';
+      a.textContent=who+(info.license?(' · '+info.license):'')+' · Wikimedia Commons';
+      cap.appendChild(a);
+      f.insertBefore(cap,f.firstChild);f.insertBefore(img,f.firstChild);
+      f.classList.add('ok');
+      var t=document.querySelector('.tthumb[data-sp="'+sp+'"]');
+      if(t) t.style.backgroundImage='url("'+info.src.replace(/"/g,'%22')+'")';
+    }
+    var todo=figs.filter(function(f){var c=cache[f.getAttribute('data-sp')];if(c&&c.src){render(f,c);return false;}return true;});
+    if(!todo.length) return;
+    var titles=todo.map(function(f){return f.getAttribute('data-wiki');});
+    // krok 1: główne zdjęcie artykułu
+    api('en.wikipedia.org',{action:'query',redirects:'1',prop:'pageimages',piprop:'thumbnail|name',pithumbsize:'800',pilimit:'50',titles:titles.join('|')})
+    .then(function(j){
+      var q=j.query||{}, map={};
+      titles.forEach(function(t){map[t]=t;});
+      (q.normalized||[]).forEach(function(n){Object.keys(map).forEach(function(k){if(map[k]===n.from) map[k]=n.to;});});
+      (q.redirects||[]).forEach(function(n){Object.keys(map).forEach(function(k){if(map[k]===n.from) map[k]=n.to;});});
+      var pages={};Object.keys(q.pages||{}).forEach(function(id){var p=q.pages[id];pages[p.title]=p;});
+      var res={}, files=[];
+      todo.forEach(function(f){
+        var p=pages[map[f.getAttribute('data-wiki')]];
+        if(p&&p.thumbnail&&p.pageimage){res[f.getAttribute('data-sp')]={src:p.thumbnail.source,file:'File:'+p.pageimage};files.push('File:'+p.pageimage);}
+      });
+      // krok 2: autor i licencja
+      var uniq=files.filter(function(v,i){return files.indexOf(v)===i;});
+      var meta={};
+      var chain=Promise.resolve();
+      for(var i=0;i<uniq.length;i+=50){(function(chunk){
+        chain=chain.then(function(){return api('en.wikipedia.org',{action:'query',prop:'imageinfo',iiprop:'extmetadata|url',iiextmetadatafilter:'Artist|LicenseShortName',titles:chunk.join('|')}).then(function(j2){
+          var q2=j2.query||{}, nm={};
+          (q2.normalized||[]).forEach(function(n){nm[n.to]=n.from;});
+          Object.keys(q2.pages||{}).forEach(function(id){var p=q2.pages[id],ii=(p.imageinfo||[])[0];if(!ii) return;
+            var em=ii.extmetadata||{};var m={page:ii.descriptionurl,artist:strip((em.Artist||{}).value).slice(0,80),license:strip((em.LicenseShortName||{}).value)};
+            meta[p.title]=m;if(nm[p.title]) meta[nm[p.title]]=m;});
+        }).catch(function(){});});
+      })(uniq.slice(i,i+50));}
+      return chain.then(function(){
+        todo.forEach(function(f){var sp=f.getAttribute('data-sp'),r=res[sp];if(!r) return;
+          var m=meta[r.file]||{};var info={src:r.src,page:m.page||('https://commons.wikimedia.org/wiki/'+encodeURIComponent(r.file)),artist:m.artist||'',license:m.license||''};
+          cache[sp]=info;render(f,info);});
+        save();
+        // krok 3: zapas – wyszukiwanie w Wikimedia Commons po nazwie łacińskiej
+        return todo.filter(function(f){return !res[f.getAttribute('data-sp')];}).reduce(function(pr,f){
+          return pr.then(function(){
+            return api('commons.wikimedia.org',{action:'query',generator:'search',gsrnamespace:'6',gsrlimit:'1',gsrsearch:f.getAttribute('data-lat')+' filetype:bitmap',prop:'imageinfo',iiprop:'url|extmetadata',iiurlwidth:'800',iiextmetadatafilter:'Artist|LicenseShortName'})
+            .then(function(j3){var ps=(j3.query||{}).pages||{};var k=Object.keys(ps)[0];if(!k) return;var ii=(ps[k].imageinfo||[])[0];if(!ii) return;
+              var em=ii.extmetadata||{};var info={src:ii.thumburl||ii.url,page:ii.descriptionurl,artist:strip((em.Artist||{}).value).slice(0,80),license:strip((em.LicenseShortName||{}).value)};
+              cache[f.getAttribute('data-sp')]=info;save();render(f,info);}).catch(function(){});
+          });
+        },Promise.resolve());
+      });
+    }).catch(function(){});
+  })();
   // motyw
   var root=document.documentElement, KEY='gady-theme';
   try{var t=localStorage.getItem(KEY); if(t) root.setAttribute('data-theme',t);}catch(e){}
