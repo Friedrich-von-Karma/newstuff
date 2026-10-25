@@ -1,10 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
-import PackPicker from '../components/PackPicker.astro';
 import { site } from '../data/site';
-import { photos, photoSrc, photoPage } from '../data/photos';
 import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
-import { getPricelist, getPricelistUpdated, getSpecies } from '../lib/content';
+import { formatPrice, getPricelist, getPricelistUpdated, getSpecies, packKinds } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -20,7 +18,6 @@ const anySample = items.some((i) => i.data.sample);
 const updatedIso = getPricelistUpdated();
 const updatedDate = updatedIso ? new Date(`${updatedIso}T12:00:00`) : null;
 const updatedText = updatedDate && !isNaN(updatedDate.valueOf()) ? formatDate(updatedDate, lang) : '';
-const [bigDay, ...restDate] = updatedText.split(' ');
 
 const t = pl
   ? {
@@ -28,7 +25,7 @@ const t = pl
       h1a: 'Cennik',
       h1b: 'na żywo',
       intro:
-        'Każdy gatunek sprzedaję w paczkach po <strong>10 sztuk</strong>. Wybierz wariant – nimfy, mix (nimfy i imago) albo imago – i dodaj do koszyka. Całe zamówienie wyślesz jednym mailem.',
+        'Ceny za paczkę <strong>10 sztuk</strong> – nimfy, mix (nimfy i imago) albo imago. Kliknij nazwę gatunku, żeby zobaczyć jego profil hodowlany i zamówić.',
       updated: 'cennik zaktualizowany',
       pack: 'Paczka = 10 sztuk wybranego wariantu',
       cart: 'Zobacz koszyk',
@@ -41,11 +38,11 @@ const t = pl
       howH: 'Trzy kroki',
       howHem: 'do paczki',
       steps: [
-        ['Wybierz wariant', 'Nimfy, mix (nimfy i imago) albo imago. Cena dotyczy zawsze paczki 10 sztuk.'],
+        ['Kliknij gatunek', 'Na liście powyżej. Otworzy się jego profil hodowlany z wyborem wariantu: nimfy, mix albo imago.'],
         ['Dodaj do koszyka', 'Możesz zebrać kilka gatunków i wariantów, także po kilka paczek tego samego.'],
         ['Wyślij jednym mailem', 'Koszyk przygotuje wiadomość z całym zamówieniem. W odpowiedzi dostaniesz potwierdzenie dostępności i koszt wysyłki.'],
       ],
-      wait: 'Gatunku chwilowo brak albo pojawi się wkrótce? Kliknij „Powiadom mnie” przy jego kaflu – wiadomość zapisze Cię na listę oczekujących.',
+      wait: 'Gatunku chwilowo brak albo pojawi się wkrótce? Kliknij „Powiadom mnie” w jego profilu – wiadomość zapisze Cię na listę oczekujących.',
       note: 'Ceny w złotych za paczkę 10 szt. · stan hodowli zmienia się z tygodnia na tydzień',
       compare: 'Porównaj gatunki',
     }
@@ -54,7 +51,7 @@ const t = pl
       h1a: 'Price list',
       h1b: 'live',
       intro:
-        'Every species is sold in packs of <strong>10</strong>. Choose an option – nymphs, a mix (nymphs and adults) or adults – and add it to the cart. You send the whole order in a single e-mail.',
+        'Prices per pack of <strong>10</strong> – nymphs, a mix (nymphs and adults) or adults. Click a species name to see its care sheet and order.',
       updated: 'price list updated',
       pack: 'Pack = 10 individuals of the chosen option',
       cart: 'View cart',
@@ -67,17 +64,15 @@ const t = pl
       howH: 'Three steps',
       howHem: 'to a parcel',
       steps: [
-        ['Choose an option', 'Nymphs, a mix (nymphs and adults) or adults. The price is always for a pack of 10.'],
+        ['Click a species', 'In the list above. Its care sheet opens with the options: nymphs, a mix or adults.'],
         ['Add it to the cart', 'Collect several species and options – or several packs of the same one.'],
         ['Send one e-mail', 'The cart prepares a message with your whole order. The reply confirms availability and the shipping cost.'],
       ],
-      wait: 'Species out of stock or coming soon? Click “Notify me” on its tile – the message adds you to the waiting list.',
+      wait: 'Species out of stock or coming soon? Click “Notify me” on its care sheet – the message adds you to the waiting list.',
       note: 'Prices in PLN per pack of 10 · stock changes from week to week',
       compare: 'Compare species',
     };
 
-/** Układ bento: 0 – duży kafel, 2 – wąski (obok niego kafel z datą), reszta – szerokie. */
-const sizeOf = (i: number) => (i === 0 ? 't-big' : i === 2 ? 't-narrow' : 't-wide');
 ---
 
 <Base lang={lang} title={tr('pricelist.title')} description={tr('pricelist.lead')} alt={routes.pricelist[other]} active="pricelist">
@@ -91,116 +86,60 @@ const sizeOf = (i: number) => (i === 0 ? 't-big' : i === 2 ? 't-narrow' : 't-wid
         </div>
         <div class="rv intro" style="--d:.15s">
           <p set:html={t.intro} />
+          {updatedText && (
+            <p class="upd">
+              {t.updated}: <time datetime={updatedIso}>{updatedText}</time>
+            </p>
+          )}
           {anySample && <p class="draft"><b>{tr('sample.badge')}</b> {tr('sample.note')}</p>}
         </div>
       </div>
 
-      <div class="bar glass rv" style="--d:.2s">
-        <label class="switch">
-          <input type="checkbox" id="only-available" />
-          <span class="track" aria-hidden="true"><span class="knob"></span></span>
-          <span>{tr('pricelist.filterAvailable')}</span>
-        </label>
-        <span class="tally" aria-live="polite"><b id="n-visible">{items.length}</b> / {items.length} <span class="lbl">{t.shown}</span></span>
-        <button type="button" class="btn quiet small" data-open-cart>
-          <span aria-hidden="true">◫</span>
-          {t.cart}
-        </button>
-      </div>
-
-      <div class="bento" id="bento">
+      <div class="list rv" style="--d:.2s" role="table" aria-label={tr('pricelist.title')}>
+        <div class="row head" role="row">
+          <span role="columnheader">{tr('pricelist.species')}</span>
+          {packKinds.map((k) => <span class="pc" role="columnheader">{tr(`pack.${k}`)}</span>)}
+        </div>
         {
-          items.map((item, i) => {
+          items.map((item) => {
             const d = item.data;
-            const pid = d.profile ?? item.id;
-            const ph = photos[pid];
             const profile = d.profile ? speciesById.get(d.profile) : undefined;
-            const common = profile?.data.commonName?.[lang];
-            const size = sizeOf(i);
+            const href = profile ? `${routes.species[lang]}${profile.id}/` : undefined;
             return (
-              <>
-                <article class:list={['tile', 'rv', size, { dim: d.status === 'out' }]} style={`--d:${(i % 4) * 0.08}s`} data-status={d.status}>
-                  <div class="sp-img">
-                    {ph ? (
-                      <img src={photoSrc(ph, size === 't-narrow' ? 500 : 960)} alt={d.latin} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" />
-                    ) : (
-                      <span class="noimg">{t.nophoto}</span>
-                    )}
-                  </div>
-                  <div class="tile-body">
-                    <div class="tile-top">
-                      <span class={`status st-${d.status}`}>{tr(`status.${d.status}`)}</span>
-                      {d.sample && <span class="smp">{tr('sample.badge')}</span>}
-                    </div>
-                    <div>
-                      <h2 class="sp-name latin">{d.latin}</h2>
-                      {common && <div class="sp-common">{common}</div>}
-                      {d.note && <div class="sp-note">{d.note[lang]}</div>}
-                      {profile && (
-                        <a class="prof" href={`${routes.species[lang]}${profile.id}/`}>
-                          {t.profile} <span aria-hidden="true">→</span>
-                        </a>
-                      )}
-                    </div>
-                    <PackPicker item={item} lang={lang} big={size === 't-big'} />
-                    {ph && (
-                      <div class="credit">
-                        {pl ? 'Fot.' : 'Photo:'} {ph.author} ·{' '}
-                        <a href={ph.licenseUrl} target="_blank" rel="noopener license">
-                          {ph.license}
-                        </a>{' '}
-                        ·{' '}
-                        <a href={photoPage(ph)} target="_blank" rel="noopener">
-                          Wikimedia Commons
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                </article>
-                {i === 2 && updatedText && (
-                  <article class="tile rv t-date" style="--d:.2s">
-                    <div class="tile-body">
-                      <div class="lbl">{t.updated}</div>
-                      <div>
-                        <time datetime={updatedIso}>
-                          <span class="bigdate">{bigDay}</span>
-                          <span class="restdate">{restDate.join(' ')}</span>
-                        </time>
-                      </div>
-                      <div class="credit">{t.pack}</div>
-                    </div>
-                  </article>
-                )}
-              </>
+              <div class:list={['row', { dim: d.status === 'out' }]} role="row">
+                <span class="name" role="cell">
+                  {href ? (
+                    <a class="latin" href={href}>
+                      {d.latin}
+                      <span class="arr" aria-hidden="true">→</span>
+                    </a>
+                  ) : (
+                    <span class="latin">{d.latin}</span>
+                  )}
+                  {d.status !== 'available' && <span class={`st st-${d.status}`}>{tr(`status.${d.status}`)}</span>}
+                </span>
+                {packKinds.map((k) => {
+                  const v = d.packs[k];
+                  return (
+                    <span class="pc" role="cell" data-label={tr(`pack.${k}`)}>
+                      {typeof v === 'number' ? formatPrice(v, lang) : <span class="none">—</span>}
+                    </span>
+                  );
+                })}
+              </div>
             );
           })
         }
-        {
-          items.length < 3 && updatedText && (
-            <article class="tile rv t-date">
-              <div class="tile-body">
-                <div class="lbl">{t.updated}</div>
-                <time datetime={updatedIso}>
-                  <span class="bigdate">{bigDay}</span>
-                  <span class="restdate">{restDate.join(' ')}</span>
-                </time>
-                <div class="credit">{t.pack}</div>
-              </div>
-            </article>
-          )
-        }
-        <p class="empty" id="pl-empty" hidden>{tr('pricelist.empty')}</p>
-        <article class="tile rv t-ship" style="--d:.1s">
-          <div class="tile-body">
-            <div class="lbl">{t.shipLbl}</div>
-            <h2>{t.shipH}</h2>
-            <ul class="ship">
-              {site.shipping[lang].map((s) => <li>{s}</li>)}
-            </ul>
-          </div>
-        </article>
+        {items.length === 0 && <p class="empty">{tr('pricelist.empty')}</p>}
       </div>
       <div class="pack-note rv">{t.note}</div>
+
+      <div class="ship-box glass rv">
+        <div class="lbl">{t.shipLbl}</div>
+        <ul class="ship">
+          {site.shipping[lang].map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -238,38 +177,6 @@ const sizeOf = (i: number) => (i === 0 ? 't-big' : i === 2 ? 't-narrow' : 't-wid
   </section>
 </Base>
 
-<script>
-  const box = document.querySelector<HTMLInputElement>('#only-available');
-  const tiles = document.querySelectorAll<HTMLElement>('#bento .tile[data-status]');
-  const empty = document.getElementById('pl-empty');
-  const n = document.getElementById('n-visible');
-  const KEY = 'pricelist-only-available';
-  try {
-    if (box && localStorage.getItem(KEY) === '1') box.checked = true;
-  } catch {
-    /* brak dostępu do pamięci przeglądarki */
-  }
-  const apply = (save: boolean) => {
-    const only = !!box?.checked;
-    let visible = 0;
-    tiles.forEach((el) => {
-      const show = !only || el.dataset.status === 'available' || el.dataset.status === 'low';
-      el.hidden = !show;
-      if (show) visible++;
-    });
-    if (empty) empty.hidden = visible > 0;
-    if (n) n.textContent = String(visible);
-    if (save) {
-      try {
-        localStorage.setItem(KEY, only ? '1' : '0');
-      } catch {
-        /* jw. */
-      }
-    }
-  };
-  box?.addEventListener('change', () => apply(true));
-  apply(false);
-</script>
 
 <style>
   .pl-scene {
@@ -281,287 +188,141 @@ const sizeOf = (i: number) => (i === 0 ? 't-big' : i === 2 ? 't-narrow' : 't-wid
   .intro .draft {
     margin: 18px 0 0;
   }
-
-  /* pasek: przełącznik, licznik, koszyk */
-  .bar {
-    display: flex;
-    align-items: center;
-    gap: 14px 24px;
-    flex-wrap: wrap;
-    padding: 12px 16px;
-    margin-bottom: 18px;
-  }
-  .switch {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
+  .upd {
+    margin: 14px 0 0;
     font-size: 13px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--text);
-  }
-  .switch input {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-  }
-  .track {
-    position: relative;
-    flex: none;
-    width: 44px;
-    height: 24px;
-    border-radius: 999px;
-    border: 1px solid var(--line2);
-    background: rgba(11, 18, 13, 0.6);
-    transition:
-      background 0.35s,
-      border-color 0.35s;
-  }
-  .knob {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--muted);
-    transition:
-      transform 0.4s var(--ease),
-      background 0.35s,
-      box-shadow 0.35s;
-  }
-  .switch input:checked + .track {
-    border-color: var(--amber);
-    background: rgba(232, 165, 71, 0.18);
-  }
-  .switch input:checked + .track .knob {
-    transform: translateX(20px);
-    background: var(--amber2);
-    box-shadow: 0 0 12px var(--amber);
-  }
-  .switch input:focus-visible + .track {
-    outline: 2px solid var(--amber2);
-    outline-offset: 2px;
-  }
-  .tally {
-    font-family: var(--serif);
-    font-size: 18px;
     color: var(--muted);
-    margin-right: auto;
   }
-  .tally b {
-    font-weight: 400;
+  .upd time {
     color: var(--amber2);
-    font-size: 26px;
-  }
-  .tally .lbl {
-    margin-left: 6px;
   }
 
-  /* bento */
-  .bento {
+  /* lista cen */
+  .list {
+    border-top: 1px solid var(--line2);
+  }
+  .row {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: minmax(270px, auto);
-    grid-auto-flow: dense;
-    gap: 14px;
+    grid-template-columns: minmax(0, 1fr) repeat(3, 7.5rem);
+    align-items: baseline;
+    gap: 12px 20px;
+    padding: 18px 8px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.3s;
   }
-  .tile {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    background: var(--bg2);
-    border-radius: 4px;
-    isolation: isolate;
-    transition:
-      border-color 0.5s,
-      box-shadow 0.7s;
+  .row:not(.head):hover {
+    background: linear-gradient(90deg, rgba(232, 165, 71, 0.07), transparent 70%);
   }
-  .tile:hover {
-    border-color: rgba(232, 165, 71, 0.45);
-    box-shadow: 0 30px 80px -30px rgba(232, 165, 71, 0.25);
-  }
-  .t-big {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-  .t-wide,
-  .t-ship {
-    grid-column: span 2;
-  }
-  .t-narrow,
-  .t-date {
-    grid-column: span 1;
-  }
-  .sp-img {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    overflow: hidden;
-    background:
-      radial-gradient(60% 50% at 65% 45%, #3a2a17 0%, transparent 70%),
-      radial-gradient(40% 40% at 25% 70%, #1d3320 0%, transparent 70%),
-      linear-gradient(160deg, #16231a, #0b120d);
-  }
-  .sp-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: saturate(0.75) brightness(0.7);
-    transition:
-      transform 1.6s var(--ease),
-      filter 1s;
-  }
-  .tile:hover .sp-img img {
-    transform: scale(1.06);
-    filter: saturate(0.95) brightness(0.8);
-  }
-  .sp-img::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(120% 90% at 50% 30%, transparent 25%, rgba(11, 18, 13, 0.6) 70%),
-      linear-gradient(180deg, rgba(11, 18, 13, 0.25) 0%, rgba(11, 18, 13, 0.2) 25%, rgba(11, 18, 13, 0.92) 70%, var(--bg2) 100%);
-  }
-  .noimg {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    font-size: 10.5px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-  .dim .sp-img img {
-    filter: saturate(0.3) brightness(0.55);
-  }
-  .tile-body {
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: clamp(18px, 2.2vw, 30px);
-    gap: 14px;
-  }
-  .tile-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: auto;
-  }
-  .t-big .tile-top {
-    margin-bottom: auto;
-  }
-  .smp {
-    font-size: 10px;
+  .head {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--amber2);
-    border: 1px solid rgba(232, 165, 71, 0.4);
-    padding: 3px 8px;
-    background: rgba(11, 18, 13, 0.5);
-  }
-  .sp-name {
-    font-size: clamp(26px, 2.6vw, 40px);
-    line-height: 1;
-    font-weight: 400;
-  }
-  .t-big .sp-name {
-    font-size: clamp(34px, 4.4vw, 64px);
-  }
-  .t-narrow .sp-name {
-    font-size: clamp(24px, 2vw, 30px);
-  }
-  .sp-common {
     color: var(--muted);
-    font-size: 14px;
-    margin-top: 6px;
   }
-  .sp-note {
-    margin-top: 6px;
-    font-size: 14px;
-    color: var(--amber2);
-    font-style: italic;
+  .pc {
+    text-align: right;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .row:not(.head) .pc {
     font-family: var(--serif);
+    font-size: clamp(18px, 1.6vw, 22px);
+    color: var(--amber2);
   }
-  .prof {
-    display: inline-flex;
-    gap: 8px;
-    margin-top: 10px;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--fern);
+  .none {
+    color: var(--dim);
+  }
+  .name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    min-width: 0;
+  }
+  .latin {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.15;
+    color: var(--text);
+  }
+  a.latin {
     text-decoration: none;
-    border-bottom: 1px solid rgba(169, 191, 127, 0.4);
-    padding-bottom: 2px;
+    background: linear-gradient(var(--amber), var(--amber)) 0 100% / 0 1px no-repeat;
     transition:
       color 0.3s,
-      border-color 0.3s;
+      background-size 0.45s var(--ease);
   }
-  .prof:hover {
+  a.latin:hover,
+  a.latin:focus-visible {
     color: var(--amber2);
-    border-color: var(--amber);
+    background-size: 100% 1px;
   }
-  .tile .credit {
-    margin-top: -4px;
-    opacity: 0.9;
+  .latin .arr {
+    display: inline-block;
+    margin-left: 10px;
+    font-style: normal;
+    font-size: 0.6em;
+    color: var(--amber);
+    opacity: 0.6;
+    transition:
+      transform 0.4s var(--ease),
+      opacity 0.3s;
   }
-
-  /* kafel z datą */
-  .t-date,
-  .t-ship {
-    background: linear-gradient(160deg, var(--bg3), var(--bg2));
+  a.latin:hover .arr {
+    transform: translateX(6px);
+    opacity: 1;
   }
-  .t-date .tile-body {
-    justify-content: space-between;
-    overflow: hidden;
+  .st {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1px solid var(--line2);
+    color: var(--muted);
   }
-  .t-date .tile-body::before {
+  .st-low {
+    color: var(--amber2);
+    border-color: rgba(232, 165, 71, 0.45);
+  }
+  .st-soon {
+    color: var(--fern);
+    border-color: rgba(169, 191, 127, 0.45);
+  }
+  .dim .latin,
+  .dim .pc {
+    opacity: 0.55;
+  }
+  .list .empty {
+    margin: 20px 0;
+  }
+  .pack-note {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .pack-note::before {
     content: '';
-    position: absolute;
-    inset: auto -30% -40% auto;
-    width: 120%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(232, 165, 71, 0.18), transparent 60%);
-    animation: breathe 6s ease-in-out infinite;
-    z-index: -1;
-  }
-  .t-date time {
-    display: block;
-  }
-  .bigdate {
-    display: block;
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(70px, 7vw, 120px);
-    line-height: 0.85;
-    color: var(--amber2);
-    text-shadow: 0 0 50px rgba(232, 165, 71, 0.35);
-  }
-  .restdate {
-    display: block;
-    margin-top: 8px;
-    font-family: var(--serif);
-    font-size: 22px;
-    font-style: italic;
+    flex: none;
+    width: 24px;
+    height: 1px;
+    background: var(--amber);
   }
 
   /* wysyłka */
-  .t-ship .tile-body {
-    justify-content: flex-start;
+  .ship-box {
+    margin-top: 40px;
+    padding: clamp(20px, 2.6vw, 32px);
+    max-width: 760px;
   }
-  .t-ship h2 {
-    font-size: 28px;
-    font-style: italic;
-    margin-bottom: 6px;
+  .ship-box .lbl {
+    margin-bottom: 14px;
   }
   .ship {
     list-style: none;
@@ -587,25 +348,6 @@ const sizeOf = (i: number) => (i === 0 ? 't-big' : i === 2 ? 't-narrow' : 't-wid
     color: var(--amber);
     font-size: 14px;
   }
-  .bento .empty {
-    grid-column: 1 / -1;
-    margin: 0;
-  }
-  .pack-note {
-    margin-top: 22px;
-    color: var(--muted);
-    font-size: 13px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  .pack-note::before {
-    content: '';
-    flex: none;
-    width: 24px;
-    height: 1px;
-    background: var(--amber);
-  }
 
   /* jak zamówić */
   .how-scene {
@@ -625,15 +367,6 @@ const sizeOf = (i: number) => (i === 0 ? 't-big' : i === 2 ? 't-narrow' : 't-wid
     position: relative;
     padding: clamp(22px, 2.6vw, 36px);
     overflow: hidden;
-  }
-  .step + .step::before {
-    content: '';
-    position: absolute;
-    left: -14px;
-    top: 50%;
-    width: 14px;
-    height: 1px;
-    background: var(--amber);
   }
   .roman {
     display: block;
@@ -677,57 +410,34 @@ const sizeOf = (i: number) => (i === 0 ? 't-big' : i === 2 ? 't-narrow' : 't-wid
     margin-top: 34px;
   }
 
-  @media (max-width: 1100px) {
-    .bento {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .t-big {
-      grid-column: 1 / -1;
-      grid-row: auto;
-      min-height: 520px;
-    }
-    .t-wide,
-    .t-ship {
-      grid-column: 1 / -1;
-    }
-  }
   @media (max-width: 860px) {
     .steps {
       grid-template-columns: minmax(0, 1fr);
     }
-    .step + .step::before {
-      left: 50%;
-      top: -14px;
-      width: 1px;
-      height: 14px;
-    }
   }
-  @media (max-width: 560px) {
-    .bento {
-      grid-template-columns: minmax(0, 1fr);
-      grid-auto-rows: auto;
+  @media (max-width: 640px) {
+    .head {
+      display: none;
     }
-    .t-narrow,
-    .t-date {
+    .row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding: 16px 4px;
+    }
+    .name {
       grid-column: 1 / -1;
     }
-    .tile {
-      min-height: 420px;
+    .pc {
+      text-align: left;
     }
-    .t-big {
-      min-height: 520px;
-    }
-    .t-date {
-      min-height: 220px;
-    }
-    .t-ship {
-      min-height: 0;
-    }
-    .tally {
-      margin-right: 0;
-    }
-    .bar .btn {
-      width: 100%;
+    .row .pc::before {
+      content: attr(data-label);
+      display: block;
+      font-family: var(--sans);
+      font-size: 10.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
     }
   }
 </style>
