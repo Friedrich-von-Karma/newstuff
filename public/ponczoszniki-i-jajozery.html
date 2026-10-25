@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pończoszniki i jajożery</title>
+<style>
+:root{
+  --bg:#f6f4ee; --card:#ffffff; --ink:#1f2420; --muted:#5d665f; --line:#e1ddd2;
+  --accent:#2f6b45; --accent2:#9a5b1e; --warn-bg:#fff6e0; --warn-line:#e7c66b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151815; --card:#1e221f; --ink:#e8ebe6; --muted:#a3aba4; --line:#323832;
+    --accent:#7cc495; --accent2:#e0a466; --warn-bg:#2b2616; --warn-line:#6b5a25;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151815; --card:#1e221f; --ink:#e8ebe6; --muted:#a3aba4; --line:#323832;
+  --accent:#7cc495; --accent2:#e0a466; --warn-bg:#2b2616; --warn-line:#6b5a25;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0 .3em}
+h2{font-size:1.4rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.1rem;margin:1.4em 0 .4em;color:var(--accent)}
+.lead{color:var(--muted);margin-top:0}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+nav a{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none;color:var(--ink);font-size:.95rem}
+a{color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:12px 0}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.fact b{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:12px 14px;margin:14px 0}
+ul{padding-left:1.2em} li{margin:.25em 0}
+.table{width:100%;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tag.pl{color:var(--accent);border-color:var(--accent)}
+.tag.eu{color:var(--accent2);border-color:var(--accent2)}
+footer{margin-top:40px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Pończoszniki i jajożery</h1>
+<p class="lead">Poradnik hodowli dwóch gatunków węży i lista miejsc, gdzie można je kupić. Stan na październik 2026.</p>
+
+<nav>
+  <a href="#ponczoszniki">Pończoszniki</a>
+  <a href="#jajozery">Jajożery</a>
+  <a href="#porownanie">Porównanie</a>
+  <a href="#kupno">Gdzie kupić</a>
+  <a href="#zasady">Zasady zakupu</a>
+</nav>
+
+<!-- ============ PONCZOSZNIKI ============ -->
+<h2 id="ponczoszniki">Pończoszniki (<i>Thamnophis</i>)</h2>
+<p>Pończoszniki (ang. <i>garter snakes</i>) to małe, niejadowite węże z Ameryki Północnej i Środkowej, bliscy krewni naszego zaskrońca. Są aktywne w dzień, ruchliwe, ciekawskie i dużo jedzą, więc dobrze nadają się dla początkujących. Popularne w Polsce gatunki to <i>T. sirtalis</i>, <i>T. marcianus</i> (pończosznik szachowany), <i>T. radix</i>, <i>T. eques</i> i miniaturowy <i>T. scaliger</i>.</p>
+
+<div class="facts">
+  <div class="fact"><b>Długość</b>40–100 cm (zależnie od gatunku)</div>
+  <div class="fact"><b>Długość życia</b>8–12 lat, czasem dłużej</div>
+  <div class="fact"><b>Aktywność</b>dzienna</div>
+  <div class="fact"><b>Trudność</b>łatwy, dla początkujących</div>
+  <div class="fact"><b>Rozmnażanie</b>żyworodne, 5–40 młodych</div>
+</div>
+
+<h3>Terrarium</h3>
+<ul>
+  <li>Terrarium poziome, dla 1–3 dorosłych osobników minimum 80×40×40 cm, lepiej 100×50×50 cm. Pończoszniki dobrze znoszą trzymanie w małych grupach.</li>
+  <li>Pokrywa szczelna, bo to dobrzy uciekinierzy.</li>
+  <li>Podłoże: włókno kokosowe, ziemia z korą, mech. Powinno być lekko wilgotne w jednym rogu i suche w reszcie.</li>
+  <li>Duża miska z wodą do kąpieli, kryjówki po ciepłej i chłodnej stronie, korzenie i gałęzie.</li>
+</ul>
+
+<h3>Temperatura, światło, wilgotność</h3>
+<ul>
+  <li>W dzień 24–28 °C, punkt grzewczy 30–32 °C. W nocy spadek do ok. 20 °C.</li>
+  <li>Światło przez 12–14 godzin. Lampa UVB jest zalecana, bo gatunek jest dzienny.</li>
+  <li>Wilgotność 50–70%. Stale mokre podłoże powoduje choroby skóry (pęcherze).</li>
+</ul>
+
+<h3>Karmienie</h3>
+<ul>
+  <li>Ryby (filety z dorsza, mintaja, tilapii, pstrąga), dżdżownice, a u wielu osobników także oseski myszy. Mysz to najbardziej kompletny pokarm, warto przyzwyczaić do niej węża.</li>
+  <li><b>Unikaj</b> ryb z tiaminazą (karasie, złote rybki, stynka, szprot), bo niszczą witaminę B1 i mogą powodować problemy neurologiczne. Przy diecie rybnej dodawaj suplement B1 i wapń.</li>
+  <li>Nie podawaj dżdżownic z ogródka ani przynęt wędkarskich z barwnikami (pasożyty, chemia).</li>
+  <li>Młode: co 2–3 dni. Dorosłe: co 4–7 dni.</li>
+</ul>
+
+<h3>Rozmnażanie</h3>
+<ul>
+  <li><b>Zimowanie</b> (brumacja): 6–10 tygodni w temperaturze 8–12 °C. Przed zimowaniem przestań karmić na ok. 2 tygodnie, żeby jelita były puste.</li>
+  <li>Po wybudzeniu karm samicę intensywnie. Kopulacje zwykle zaczynają się zaraz po pierwszym linieniu samicy.</li>
+  <li>Ciąża trwa ok. 2–4 miesięcy. Pończoszniki są <b>żyworodne</b>, więc nie potrzebujesz inkubatora.</li>
+  <li>Młode (12–20 cm) od razu oddzielaj od dorosłych. Pierwsze karmienie po pierwszym linieniu: kawałki ryby, rozdrobnione dżdżownice, potem kawałki osesków.</li>
+</ul>
+
+<!-- ============ JAJOZERY ============ -->
+<h2 id="jajozery">Jajożery (<i>Dasypeltis</i>)</h2>
+<p>Jajożery to afrykańskie węże, które jedzą <b>wyłącznie ptasie jaja</b>. Połykają jajo w całości, rozgniatają je wyrostkami kręgów w przełyku i wypluwają skorupkę. Prawie nie mają zębów, więc nie gryzą boleśnie. Kiedy się bronią, imitują żmiję: zwijają się i szeleszczą ocierającymi się łuskami. Najczęstszy w hodowlach jest <i>Dasypeltis scabra</i>, czasem spotyka się <i>D. gansi</i>, <i>D. confusa</i> i <i>D. atra</i>.</p>
+
+<div class="facts">
+  <div class="fact"><b>Długość</b>60–100 cm</div>
+  <div class="fact"><b>Długość życia</b>10–15 lat</div>
+  <div class="fact"><b>Aktywność</b>nocna/zmierzchowa</div>
+  <div class="fact"><b>Trudność</b>średnia, trudne młode</div>
+  <div class="fact"><b>Rozmnażanie</b>jajorodne, 6–25 jaj</div>
+</div>
+
+<h3>Terrarium</h3>
+<ul>
+  <li>Dla jednego dorosłego minimum 80×40×50 cm. Terrarium może być trochę wyższe, bo jajożery chętnie się wspinają.</li>
+  <li>Gałęzie, korzenie, sztuczne rośliny, kilka kryjówek.</li>
+  <li>Podłoże: ziemia z piaskiem, włókno kokosowe, kora.</li>
+</ul>
+
+<h3>Temperatura i wilgotność</h3>
+<ul>
+  <li>W dzień 25–28 °C, punkt grzewczy ok. 30–32 °C. W nocy 20–22 °C.</li>
+  <li>Wilgotność 50–70% (źródła podają różne wartości, zależnie od pochodzenia osobnika). Raz na kilka dni lekko zrosić terrarium.</li>
+</ul>
+
+<h3>Karmienie: największe wyzwanie</h3>
+<ul>
+  <li>Dorosłe: jaja przepiórcze, co 5–10 dni (1–2 sztuki). Duże samice zjedzą też małe jaja kurze (np. od kur karłowatych).</li>
+  <li>Jaja muszą być <b>świeże</b> i mieć temperaturę pokojową. Niektóre węże nie ruszą jaj z lodówki.</li>
+  <li>Młode jajożery (20–25 cm) potrzebują <b>bardzo małych jaj</b>: zeberek, mewek japońskich, kanarków. Jajo przepiórcze jest dla nich za duże. Zanim zaczniesz rozmnażać jajożery, załatw sobie stałe źródło małych jaj (np. własną hodowlę zeberek lub znajomego hodowcę ptaków).</li>
+  <li>Bywają okresy, kiedy jajożer nie je przez kilka tygodni lub miesięcy. U zdrowego dorosłego to zwykle normalne.</li>
+</ul>
+
+<h3>Rozmnażanie</h3>
+<ul>
+  <li>Większość hodowców stosuje zimowanie przez 6–12 tygodni w temperaturze ok. 15–18 °C, bez karmienia.</li>
+  <li>Po wybudzeniu dochodzi do kopulacji, a po ok. 1–2 miesiącach samica składa 6–25 jaj. Daj jej pojemnik z wilgotnym mchem.</li>
+  <li>Inkubacja w wermikulicie lub perlicie, w temperaturze 27–29 °C, przez ok. 60–90 dni.</li>
+  <li>Młode karm dopiero po pierwszym linieniu, jajami małych ptaków. Niektóre trzeba na początku dokarmiać na siłę (lekko nakłute jajo), więc to dobre zajęcie dla bardziej doświadczonych.</li>
+</ul>
+
+<div class="warn"><b>Uwaga:</b> część jajożerów w handlu pochodzi z odłowu (WC). Takie osobniki często mają pasożyty i gorzej się aklimatyzują. Kupuj młode urodzone w niewoli (CB, np. „cb25”), jeśli tylko się da.</div>
+
+<!-- ============ POROWNANIE ============ -->
+<h2 id="porownanie">Porównanie</h2>
+<div class="table"><table>
+<tr><th></th><th>Pończosznik</th><th>Jajożer</th></tr>
+<tr><td>Pochodzenie</td><td>Ameryka Płn. i Środk.</td><td>Afryka</td></tr>
+<tr><td>Pokarm</td><td>ryby, dżdżownice, myszy</td><td>wyłącznie ptasie jaja</td></tr>
+<tr><td>Aktywność</td><td>dzień</td><td>noc</td></tr>
+<tr><td>Rozmnażanie</td><td>żyworodny</td><td>jajorodny, inkubacja</td></tr>
+<tr><td>Dla początkujących</td><td>tak</td><td>raczej nie (młode)</td></tr>
+<tr><td>Dostępność w Polsce</td><td>dobra (wiele ofert)</td><td>słaba (rzadko w ofertach)</td></tr>
+<tr><td>Cena orientacyjna</td><td>300–700 zł, rzadkie odmiany do 1500 zł</td><td>brak ofert z ceną w PL; w UK ok. 150–160 £</td></tr>
+</table></div>
+
+<!-- ============ GDZIE KUPIC ============ -->
+<h2 id="kupno">Gdzie kupić</h2>
+<p>Ceny i dostępność to dane z ogłoszeń znalezionych w październiku 2026. Ogłoszenia szybko znikają, więc sprawdź każde przed kontaktem. Kontakt ze sprzedawcą na OLX odbywa się przez przycisk „Napisz” lub „Zadzwoń” w ogłoszeniu.</p>
+
+<h3>Pończoszniki: oferty w Polsce</h3>
+<div class="table"><table>
+<tr><th>Gatunek / oferta</th><th>Miejsce</th><th>Cena</th><th>Link i kontakt</th></tr>
+<tr><td><i>T. scaliger</i>, młode cb25 (miniaturka, ok. 40 cm)</td><td>Mielec</td><td>500 zł</td><td><a href="https://www.olx.pl/d/oferta/waz-ponczosznik-miniaturka-thamnophis-scaliger-cb25-CID103-ID16Odxm.html">OLX</a></td></tr>
+<tr><td><i>T. eques cuitzeoensis</i>, cb25, obie płcie</td><td>Mielec</td><td>650 zł</td><td><a href="https://www.olx.pl/d/oferta/waz-ponczosznik-thamnophis-eques-cuitzeoensis-cb25-CID103-ID13CabC.html">OLX</a></td></tr>
+<tr><td><i>T. eques cuitzeoensis</i>, młode cb24</td><td>Mielec</td><td>675 zł</td><td><a href="https://www.olx.pl/d/oferta/waz-ponczosznik-thamnophis-eques-cuitzeoensis-mlode-cb24-CID103-ID13CabC.html">OLX</a></td></tr>
+<tr><td><i>T. radix</i>, odmiany: het albino / albino / albino het anery</td><td>Mielec</td><td>350 / 450 / 550 zł</td><td><a href="https://www.olx.pl/d/oferta/waz-ponczosznik-thamnophis-radix-rozne-odmiany-cb25-CID103-ID16OePX.html">OLX</a></td></tr>
+<tr><td><i>T. marcianus</i> het albino, 2 szt. (jedzą oseski, serca, ryby)</td><td>Bytom</td><td>400 zł/szt.</td><td><a href="https://www.olx.pl/d/oferta/waz-ponczosznik-thamnophis-marcianus-CID103-ID16QlzX.html">OLX</a></td></tr>
+<tr><td><i>T. sirtalis infernalis</i> i <i>T. s. tetrataenia</i></td><td>Ostrowiec Świętokrzyski</td><td>1000 / 1500 zł</td><td><a href="https://www.olx.pl/zwierzeta/terrarystyka/q-w%C4%85%C5%BC-po%C5%84czosznik/">wyszukiwarka OLX</a></td></tr>
+<tr><td><i>T. eques obscurus</i>, urodzone w lutym 2026, możliwa sprzedaż hurtowa</td><td>forum</td><td>300 zł/szt.</td><td><a href="https://www.terrarium.pl/topic/573888-thamnophis-eques-obcurus/">terrarium.pl</a> (wiadomość prywatna na forum)</td></tr>
+<tr><td>Wszystkie ogłoszenia „wąż pończosznik” (ok. 70)</td><td>cała Polska</td><td>od ok. 300 zł</td><td><a href="https://www.olx.pl/zwierzeta/terrarystyka/q-w%C4%85%C5%BC-po%C5%84czosznik/">OLX – lista</a></td></tr>
+</table></div>
+<p>Kilka ofert z Mielca wygląda na jednego hodowcę z wieloma gatunkami. Warto napisać do niego o całą ofertę i ewentualny rabat przy zakupie pary.</p>
+
+<h3>Jajożery: oferty</h3>
+<p>W Polsce jajożery pojawiają się rzadko. W październiku 2026 nie znalazłem aktualnego ogłoszenia z ceną w Polsce. Najlepsze miejsca do szukania:</p>
+<div class="table"><table>
+<tr><th>Miejsce</th><th>Zasięg</th><th>Co tam jest</th><th>Link</th></tr>
+<tr><td>OLX – wyszukiwanie „Dasypeltis” / „jajożer”</td><td><span class="tag pl">PL</span></td><td>sporadyczne ogłoszenia, warto ustawić powiadomienia o nowych ofertach</td><td><a href="https://www.olx.pl/zwierzeta/q-dasypeltis/">Dasypeltis</a> · <a href="https://www.olx.pl/zwierzeta/q-jaja%C5%BCer/">jajożer</a></td></tr>
+<tr><td>Forum terrarium.pl</td><td><span class="tag pl">PL</span></td><td>dział giełdowy, karta gatunku, wątki o karmieniu. Można dodać ogłoszenie „kupię”.</td><td><a href="https://www.terrarium.pl/t/species/_/dasypeltis-scabra-waz-jajozer-r2984">karta gatunku</a> · <a href="https://www.terrarium.pl/topic/177161-dasypeltis-scabra-jajozer/">stare ogłoszenie</a></td></tr>
+<tr><td>Terraristik.com</td><td><span class="tag eu">DE/UE</span></td><td>największa giełda ogłoszeń w Europie. Były oferty <i>D. scabra</i>, <i>D. confusa</i> i <i>D. gansi</i> z odbiorem na targach w Hamm.</td><td><a href="https://www.terraristik.com/tb/buy-and-sell/all-herp-ads/01/?split=0&amp;ftsearch=dasypeltis">ogłoszenia Dasypeltis</a></td></tr>
+<tr><td>Interaquaristik.de (sklep)</td><td><span class="tag eu">DE</span></td><td>sklep internetowy z <i>Dasypeltis scabra</i> w ofercie. Sprawdź, czy wysyłają żywe zwierzęta do Polski.</td><td><a href="https://www.interaquaristik.de/terrarientiere/reptilien/schlangen/afrikanische-eierschlange-dasypeltis-scabra/a-100013">karta produktu</a></td></tr>
+<tr><td>ReptileForums.co.uk</td><td><span class="tag eu">UK</span></td><td>wątek „szukam jajożera”, z informacją o niemieckiej hodowczyni <i>D. atra</i> CB i cenach ok. 150–160 £</td><td><a href="https://www.reptileforums.co.uk/threads/dasypeltis-african-egg-eating-snakes-wanted.1292365/">wątek</a></td></tr>
+</table></div>
+<p>Sklepy z USA (np. <a href="https://www.lllreptile.com/products/34867-african-egg-eating-snakes">LLL Reptile</a>, <a href="https://www.backwaterreptiles.com/snakes/egg-eating-snake-for-sale.html">Backwater Reptiles</a>, <a href="https://www.bigappleherp.com/products/egg-eating-snakes">Big Apple Herp</a>) mają jajożery, ale nie wysyłają żywych zwierząt do Polski. Przydadzą się tylko do porównania cen i zdjęć.</p>
+
+<h3>Targi terrarystyczne</h3>
+<p>Na targach można obejrzeć zwierzę na żywo i porozmawiać z hodowcą. Rzadkie gatunki, takie jak jajożery, łatwiej znaleźć na dużych targach zagranicznych. Hodowcy często przywożą zwierzęta na zamówienie, więc warto napisać do nich przed targami.</p>
+<div class="table"><table>
+<tr><th>Targi</th><th>Gdzie</th><th>Info</th></tr>
+<tr><td>Exoticarium</td><td>m.in. Kalisz, Łódź, Tarnów, Radom, Siedlce, Kielce, Gniezno, Legnica, Nowy Sącz, Rzeszów, Wrocław</td><td><a href="https://www.ebilet.pl/biznes/targi/exoticarium">terminy i bilety (ebilet)</a> · <a href="https://www.ebilet.pl/biznes/targi/exoticarium-lokalnie">Exoticarium Lokalnie</a></td></tr>
+<tr><td>ZooEgzotyka</td><td>Wrocław</td><td><a href="https://www.wroclaw.pl/go/wydarzenia/wszystkie/1403101-zooegzotyka">wroclaw.pl</a></td></tr>
+<tr><td>Terraristika Hamm</td><td>Hamm, Niemcy – największe targi w Europie, 4 razy w roku</td><td><a href="https://www.terraristika.de/">terraristika.de</a> (jeden serwis podaje termin 12.12.2026, sprawdź u organizatora)</td></tr>
+</table></div>
+
+<!-- ============ ZASADY ============ -->
+<h2 id="zasady">Zasady zakupu</h2>
+<div class="card">
+<ul>
+  <li><b>CB, nie WC.</b> Pytaj o datę urodzenia i pochodzenie. Oznaczenie „cb25” to „urodzony w niewoli w 2025 roku”.</li>
+  <li><b>Poproś o dowód karmienia.</b> Najlepiej film, na którym wąż je pokarm, który ty też będziesz podawać. U młodych jajożerów zapytaj, jakie jaja jedzą.</li>
+  <li><b>Dokument sprzedaży.</b> Weź pisemne potwierdzenie zakupu z gatunkiem, datą urodzenia i danymi sprzedawcy.</li>
+  <li><b>Przepisy.</b> <i>Dasypeltis scabra</i> i popularne pończoszniki nie są w CITES ani w aneksach UE, więc nie wymagają rejestracji w starostwie. Przy rzadkich podgatunkach (np. <i>T. s. tetrataenia</i>) zapytaj sprzedawcę o dokumenty i sprawdź status przed zakupem.</li>
+  <li><b>Kwarantanna.</b> Nowy wąż przez 4–8 tygodni w osobnym terrarium, z dala od innych zwierząt.</li>
+  <li><b>Wysyłka.</b> Przesyłka żywych zwierząt tylko w odpowiedniej temperaturze, z firmą przewożącą zwierzęta. Odbiór osobisty lub na targach jest bezpieczniejszy.</li>
+</ul>
+</div>
+
+<footer>
+<p>Źródła: ogłoszenia OLX.pl, forum terrarium.pl, terraristik.com, reptileforums.co.uk, Reptiles Magazine, Ogród Zoobotaniczny w Toruniu, Wikipedia (<i>Dasypeltis</i>, <i>Dasypeltis scabra</i>). Ceny i ogłoszenia ze stanu na październik 2026 – mogą być nieaktualne.</p>
+</footer>
+
+</div>
+</body>
+</html>
