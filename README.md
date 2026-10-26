@@ -38,7 +38,7 @@ Każdy gatunek jest sprzedawany w paczkach po 10 sztuk w 3 wariantach: nimfy, mi
   packs: { nymph: 12, mix: 18, adult: 25 }   # cena w zł za 10 szt.
 ```
 
-Wariant, którego akurat nie masz, po prostu pomiń. Klient wybiera wariant na stronie, a przycisk „Zamów” otwiera e-mail z tematem, np. „Zamówienie: Blaptica dubia – 10 szt., mix”. Profil gatunku, który jest w cenniku, pokazuje ten sam wybór wariantu.
+Wariant, którego akurat nie masz, po prostu pomiń (na liście pojawi się „—”). Strona /cennik/ to prosta lista: nazwa łacińska i ceny za 10 szt. w każdym wariancie. Kliknięcie nazwy otwiera profil hodowlany gatunku (pole `profile`), gdzie klient wybiera wariant i zamawia. Gatunek bez `profile` jest na liście bez linku.
 
 ### Zdjęcia z Wikimedia Commons
 
@@ -49,8 +49,8 @@ Zdjęcia gatunków są w `src/data/photos.ts`. Każde ma nazwę pliku na Commons
 1. Zaimportuj repozytorium na [vercel.com/new](https://vercel.com/new). Astro zostanie wykryte automatycznie.
 2. W projekcie na Vercelu otwórz **Settings → Domains** i dodaj `blattodea.pl` oraz `www.blattodea.pl`.
 3. W panelu OVH otwórz **Domeny → blattodea.pl → Strefa DNS** i ustaw:
-   - rekord `A` dla `blattodea.pl` (pole subdomeny puste) na `76.76.21.21`, a stare rekordy `A` i `AAAA` dla domeny głównej usuń,
-   - rekord `CNAME` dla `www` na `cname.vercel-dns.com.`.
+   - rekord `A` dla `blattodea.pl` (pole subdomeny puste) na `216.198.79.1`, a stare rekordy `A` i `AAAA` dla domeny głównej usuń,
+   - rekord `CNAME` dla `www` na adres podany przez Vercel w **Settings → Domains** (np. `48d1dbff176cd3ce.vercel-dns-017.com.`).
 4. Poczekaj, aż DNS się odświeży (zwykle do kilku godzin). Vercel sam wystawi certyfikat HTTPS.
 
 Każda zmiana wypchnięta na gałąź główną publikuje się automatycznie.
