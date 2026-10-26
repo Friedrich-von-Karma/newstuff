@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
-import { formatPrice, getPricelist, getSpecies, minPackPrice } from '../lib/content';
+import { formatPrice, getPricelist, getSpecies } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -110,7 +110,7 @@ for (const s of species) {
     difficulty: String(d.difficulty),
     climbs: String(d.climbs),
     flies: String(d.flies),
-    price: p ? `${minPackPrice(p.packs)}|${p.status}` : '',
+    price: p ? `${p.price}|${p.stage}|${p.status}` : '',
   };
 }
 const ids = species.map((s) => s.id);
@@ -284,7 +284,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                               {p ? (
                                 <span class="pr">
                                   <span class="from">
-                                    <small>{t.from}</small> {formatPrice(minPackPrice(p.packs), lang)} <small>/ {tr('pack.pcs')}</small>
+                                    {formatPrice(p.price, lang)} <small>/ {tr('pack.pcs')} · {tr(`pack.${p.stage}`)}</small>
                                   </span>
                                   <span class={`status st-${p.status}`}>{tr(`status.${p.status}`)}</span>
                                 </span>

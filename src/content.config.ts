@@ -75,14 +75,10 @@ const pricelist = defineCollection({
     profile: z.string().optional(),
     status: z.enum(['available', 'low', 'out', 'soon']),
     note: t.optional(),
-    /** Cena (zł) za paczkę 10 szt. w danym wariancie. Wariant pominięty = niedostępny. */
-    packs: z
-      .object({
-        nymph: z.number().positive().nullish(),
-        adult: z.number().positive().nullish(),
-        mix: z.number().positive().nullish(),
-      })
-      .refine((p) => Object.values(p).some((v) => typeof v === 'number'), 'Podaj cenę co najmniej jednego wariantu'),
+    /** Co jest w paczce: nymph (nimfy), mix (nimfy i imago) albo adult (imago). Każdy gatunek ma jeden wariant. */
+    stage: z.enum(['nymph', 'mix', 'adult']),
+    /** Cena (zł) za paczkę 10 szt. */
+    price: z.number().positive(),
     sample: z.boolean().default(false),
   }),
 });

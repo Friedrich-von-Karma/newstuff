@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
 import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
-import { formatPrice, getPricelist, getPricelistUpdated, getSpecies, packKinds } from '../lib/content';
+import { formatPrice, getPricelist, getPricelistUpdated, getSpecies } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -25,7 +25,7 @@ const t = pl
       h1a: 'Cennik',
       h1b: 'na żywo',
       intro:
-        'Ceny za paczkę <strong>10 sztuk</strong> – nimfy, mix (nimfy i imago) albo imago. Kliknij nazwę gatunku, żeby zobaczyć jego profil hodowlany i zamówić.',
+        'Ceny za paczkę <strong>10 sztuk</strong>. Każdy gatunek sprzedaję w jednym wariancie – jako nimfy, mix (nimfy i imago) albo imago. Kliknij nazwę gatunku, żeby zobaczyć jego profil hodowlany i zamówić.',
       updated: 'cennik zaktualizowany',
       pack: 'Paczka = 10 sztuk wybranego wariantu',
       cart: 'Zobacz koszyk',
@@ -38,20 +38,22 @@ const t = pl
       howH: 'Trzy kroki',
       howHem: 'do paczki',
       steps: [
-        ['Kliknij gatunek', 'Na liście powyżej. Otworzy się jego profil hodowlany z wyborem wariantu: nimfy, mix albo imago.'],
-        ['Dodaj do koszyka', 'Możesz zebrać kilka gatunków i wariantów, także po kilka paczek tego samego.'],
+        ['Kliknij gatunek', 'Na liście powyżej. Otworzy się jego profil hodowlany z ceną i przyciskiem „Do koszyka”.'],
+        ['Dodaj do koszyka', 'Możesz zebrać kilka gatunków, także po kilka paczek tego samego.'],
         ['Wyślij jednym mailem', 'Koszyk przygotuje wiadomość z całym zamówieniem. W odpowiedzi dostaniesz potwierdzenie dostępności i koszt wysyłki.'],
       ],
       wait: 'Gatunku chwilowo brak albo pojawi się wkrótce? Kliknij „Powiadom mnie” w jego profilu – wiadomość zapisze Cię na listę oczekujących.',
       note: 'Ceny w złotych za paczkę 10 szt. · stan hodowli zmienia się z tygodnia na tydzień',
       compare: 'Porównaj gatunki',
+      stageH: 'W paczce',
+      priceH: 'Cena za 10 szt.',
     }
   : {
       num: 'Scene I · price list',
       h1a: 'Price list',
       h1b: 'live',
       intro:
-        'Prices per pack of <strong>10</strong> – nymphs, a mix (nymphs and adults) or adults. Click a species name to see its care sheet and order.',
+        'Prices per pack of <strong>10</strong>. Each species is sold in one form – as nymphs, a mix (nymphs and adults) or adults. Click a species name to see its care sheet and order.',
       updated: 'price list updated',
       pack: 'Pack = 10 individuals of the chosen option',
       cart: 'View cart',
@@ -64,13 +66,15 @@ const t = pl
       howH: 'Three steps',
       howHem: 'to a parcel',
       steps: [
-        ['Click a species', 'In the list above. Its care sheet opens with the options: nymphs, a mix or adults.'],
-        ['Add it to the cart', 'Collect several species and options – or several packs of the same one.'],
+        ['Click a species', 'In the list above. Its care sheet opens with the price and an “Add to cart” button.'],
+        ['Add it to the cart', 'Collect several species – or several packs of the same one.'],
         ['Send one e-mail', 'The cart prepares a message with your whole order. The reply confirms availability and the shipping cost.'],
       ],
       wait: 'Species out of stock or coming soon? Click “Notify me” on its care sheet – the message adds you to the waiting list.',
       note: 'Prices in PLN per pack of 10 · stock changes from week to week',
       compare: 'Compare species',
+      stageH: 'In the pack',
+      priceH: 'Price per 10',
     };
 
 ---
@@ -98,7 +102,8 @@ const t = pl
       <div class="list rv" style="--d:.2s" role="table" aria-label={tr('pricelist.title')}>
         <div class="row head" role="row">
           <span role="columnheader">{tr('pricelist.species')}</span>
-          {packKinds.map((k) => <span class="pc" role="columnheader">{tr(`pack.${k}`)}</span>)}
+          <span class="stg" role="columnheader">{t.stageH}</span>
+          <span class="pc" role="columnheader">{t.priceH}</span>
         </div>
         {
           items.map((item) => {
@@ -118,14 +123,8 @@ const t = pl
                   )}
                   {d.status !== 'available' && <span class={`st st-${d.status}`}>{tr(`status.${d.status}`)}</span>}
                 </span>
-                {packKinds.map((k) => {
-                  const v = d.packs[k];
-                  return (
-                    <span class="pc" role="cell" data-label={tr(`pack.${k}`)}>
-                      {typeof v === 'number' ? formatPrice(v, lang) : <span class="none">—</span>}
-                    </span>
-                  );
-                })}
+                <span class="stg" role="cell">{tr(`pack.${d.stage}`)}</span>
+                <span class="pc" role="cell">{formatPrice(d.price, lang)}</span>
               </div>
             );
           })
@@ -205,7 +204,7 @@ const t = pl
   }
   .row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) repeat(3, 7.5rem);
+    grid-template-columns: minmax(0, 1fr) 9rem 9rem;
     align-items: baseline;
     gap: 12px 20px;
     padding: 18px 8px;
@@ -232,8 +231,14 @@ const t = pl
     font-size: clamp(18px, 1.6vw, 22px);
     color: var(--amber2);
   }
-  .none {
-    color: var(--dim);
+  .stg {
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fern);
+  }
+  .head .stg {
+    color: var(--muted);
   }
   .name {
     display: flex;
@@ -420,24 +425,12 @@ const t = pl
       display: none;
     }
     .row {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px 16px;
       padding: 16px 4px;
     }
     .name {
       grid-column: 1 / -1;
-    }
-    .pc {
-      text-align: left;
-    }
-    .row .pc::before {
-      content: attr(data-label);
-      display: block;
-      font-family: var(--sans);
-      font-size: 10.5px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 2px;
     }
   }
 </style>

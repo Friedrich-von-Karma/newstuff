@@ -5,7 +5,8 @@
 #    id:      unikalny identyfikator (najlepiej jak nazwa pliku profilu)
 #    profile: nazwa pliku z src/content/species (bez .yaml) – tylko jeśli gatunek ma profil
 #    status:  available (dostępne) | low (mało) | out (brak) | soon (wkrótce)
-#    packs:   cena w zł za 10 szt. – nymph (nimfy), adult (imago), mix (nimfy + imago); brakujący wariant pomiń
+#    stage:   co jest w paczce – nymph (nimfy), mix (nimfy + imago) albo adult (imago)
+#    price:   cena w zł za paczkę 10 szt.
 updated: "2026-10-23"
 items:
   - id: blaptica-dubia
@@ -13,13 +14,15 @@ items:
     latin: Blaptica dubia
     profile: blaptica-dubia
     status: available
-    packs: { nymph: 12, adult: 25, mix: 18 }
+    stage: mix
+    price: 18
   - id: shelfordella-lateralis
     sample: true
     latin: Shelfordella lateralis
     profile: shelfordella-lateralis
     status: low
-    packs: { nymph: 6, adult: 10, mix: 8 }
+    stage: nymph
+    price: 6
   - id: panchlora-nivea
     sample: true
     latin: Panchlora nivea
@@ -27,10 +30,12 @@ items:
     note:
       pl: "lata – potrzebny szczelny pojemnik"
       en: "flies – needs a tight enclosure"
-    packs: { nymph: 40, mix: 55 }
+    stage: nymph
+    price: 40
   - id: gromphadorhina-portentosa
     sample: true
     latin: Gromphadorhina portentosa
     profile: gromphadorhina-portentosa
     status: out
-    packs: { nymph: 30, adult: 120 }
+    stage: adult
+    price: 120

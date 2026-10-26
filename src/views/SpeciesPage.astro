@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import PackPicker from '../components/PackPicker.astro';
 import { formatDate, routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
-import { formatPrice, getGallery, getPriceForProfile, getSpecies, getSpeciesNote, minPackPrice } from '../lib/content';
+import { getGallery, getPriceForProfile, getSpecies, getSpeciesNote } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -188,9 +188,6 @@ const t = pl
                   <span class="lbl">{t.buyLbl}</span>
                   <span class={`status st-${price.data.status}`}>{tr(`status.${price.data.status}`)}</span>
                 </div>
-                <p class="from">
-                  <small>{tr('species.fromPrice')}</small> {formatPrice(minPackPrice(price.data.packs), lang)}
-                </p>
                 {price.data.note && <p class="pnote">{price.data.note[lang]}</p>}
                 <PackPicker item={price} lang={lang} />
               </section>
