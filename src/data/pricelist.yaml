@@ -7,35 +7,29 @@
 #    status:  available (dostępne) | low (mało) | out (brak) | soon (wkrótce)
 #    stage:   co jest w paczce – nymph (nimfy), mix (nimfy + imago) albo adult (imago)
 #    price:   cena w zł za paczkę 10 szt.
-updated: "2026-10-23"
+updated: "2026-10-27"
 items:
-  - id: blaptica-dubia
-    sample: true
-    latin: Blaptica dubia
-    profile: blaptica-dubia
+  - id: oxyhaloa-deusta
+    latin: Oxyhaloa deusta
+    profile: oxyhaloa-deusta
     status: available
     stage: mix
-    price: 18
-  - id: shelfordella-lateralis
-    sample: true
-    latin: Shelfordella lateralis
-    profile: shelfordella-lateralis
-    status: low
+    price: 15
+  - id: hormetica-sp-colombia
+    latin: Hormetica sp. "Colombia"
+    profile: hormetica-sp-colombia
+    status: available
+    stage: mix
+    price: 30
+  - id: eublaberus-sp-ivory
+    latin: Eublaberus sp. "Ivory"
+    profile: eublaberus-sp-ivory
+    status: available
+    stage: mix
+    price: 10
+  - id: polyphaga-obscura
+    latin: Polyphaga obscura
+    profile: polyphaga-obscura
+    status: available
     stage: nymph
-    price: 6
-  - id: panchlora-nivea
-    sample: true
-    latin: Panchlora nivea
-    status: soon
-    note:
-      pl: "lata – potrzebny szczelny pojemnik"
-      en: "flies – needs a tight enclosure"
-    stage: nymph
-    price: 40
-  - id: gromphadorhina-portentosa
-    sample: true
-    latin: Gromphadorhina portentosa
-    profile: gromphadorhina-portentosa
-    status: out
-    stage: adult
-    price: 120
+    price: 350
