@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
-import { formatPrice, getPricelist, getSpecies, minPackPrice } from '../lib/content';
+import { formatPrice, getPricelist, getSpecies } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -131,8 +131,8 @@ const t = pl
                   <div class="foot">
                     {price ? (
                       <span class="from">
-                        <small>{tr('species.fromPrice')}</small> {formatPrice(minPackPrice(price.packs), lang)}
-                        <small>/ {tr('pack.pcs')}</small>
+                        {formatPrice(price.price, lang)}
+                        <small>/ {tr('pack.pcs')} · {tr(`pack.${price.stage}`)}</small>
                       </span>
                     ) : (
                       <span class="lbl">{t.noPrice}</span>

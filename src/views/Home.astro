@@ -67,15 +67,15 @@ const latestDate = latest ? splitDate(latest.data.date) : null;
 const t = pl
   ? {
       scene: 'Scena',
-      heroAlt: 'Karaczan madagaskarski (Gromphadorhina portentosa)',
+      heroAlt: 'Macropanesthia rhinoceros – największy karaczan świata',
       readTop: 'w cenniku',
       readSpecies: plural(pricelist.length, 'gatunek', 'gatunki', 'gatunków'),
       readBottom: `${orderable.length} do zamówienia · ${taxa.length} w kluczu`,
       cue: 'Zejdź w ściółkę',
       priceH: ['Cennik', 'na żywo'],
-      priceP: 'Każdy gatunek w paczkach po 10 sztuk: nimfy, mix (nimfy i imago) albo imago. Wybierz wariant i dodaj do koszyka – albo zamów od razu mailem. Przy braku towaru zapisz się na powiadomienie.',
+      priceP: 'Każdy gatunek w paczkach po 10 sztuk – zależnie od gatunku są to nimfy, mix (nimfy i imago) albo imago. Dodaj do koszyka albo zamów od razu mailem. Przy braku towaru zapisz się na powiadomienie.',
       updatedLbl: 'cennik zaktualizowany',
-      packNote: 'Paczka = 10 sztuk wybranego wariantu',
+      packNote: 'Paczka = 10 sztuk',
       shipLbl: 'wysyłka, odbiór, płatność',
       shipH: 'Jak podróżują paczki',
       fullPrice: 'Pełny cennik',
@@ -116,15 +116,15 @@ const t = pl
     }
   : {
       scene: 'Scene',
-      heroAlt: 'Madagascar hissing cockroach (Gromphadorhina portentosa)',
+      heroAlt: 'Macropanesthia rhinoceros – the heaviest cockroach in the world',
       readTop: 'in the price list',
       readSpecies: plural(pricelist.length, 'species', 'species', 'species'),
       readBottom: `${orderable.length} to order · ${taxa.length} in the key`,
       cue: 'Down into the leaf litter',
       priceH: ['Price list', 'live'],
-      priceP: 'Every species comes in packs of 10: nymphs, a mix (nymphs and adults) or adults. Pick an option and add it to the cart – or order straight away by e-mail. If something is out of stock, sign up for a notification.',
+      priceP: 'Every species comes in packs of 10 – nymphs, a mix (nymphs and adults) or adults, depending on the species. Add it to the cart or order straight away by e-mail. If something is out of stock, sign up for a notification.',
       updatedLbl: 'price list updated',
-      packNote: 'One pack = 10 of the chosen option',
+      packNote: 'One pack = 10 individuals',
       shipLbl: 'shipping, pickup, payment',
       shipH: 'How the parcels travel',
       fullPrice: 'Full price list',
@@ -164,7 +164,7 @@ const t = pl
       contactNum: 'Scene VI · Contact',
     };
 const roman = ['I', 'II', 'III', 'IV', 'V', 'VI'];
-const heroPhoto = 'gromphadorhina-portentosa';
+const heroPhoto = 'macropanesthia-rhinoceros';
 const interPhoto = 'ectobius-sylvestris';
 const keyTiles = [
   { href: L('key'), title: t.keyTile, big: String(taxa.length), unit: t.keyNum, sub: t.keySub, photo: 'ectobius-lapponicus' },

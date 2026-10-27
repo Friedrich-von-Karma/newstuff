@@ -46,7 +46,7 @@ export const ui = {
 
     'home.lead': 'Aktualny cennik, profile hodowlane gatunków, notatki z hodowli i terenu oraz klucz do oznaczania karaczanów występujących w Polsce.',
     'home.sections': 'Działy',
-    'home.pricelist.desc': 'Dostępne gatunki, ceny według stadium i zasady wysyłki.',
+    'home.pricelist.desc': 'Dostępne gatunki, ceny za paczkę 10 szt. i zasady wysyłki.',
     'home.species.desc': 'Karty gatunków: warunki, pokarm, rozmnażanie i zdjęcia.',
     'home.blog.desc': 'Notatki z hodowli, obserwacje terenowe i nowości.',
     'home.key.desc': 'Zaznacz widoczne cechy i zawęź listę gatunków krajowych.',
@@ -55,7 +55,7 @@ export const ui = {
     'home.plate': 'Tablica I',
 
     'pricelist.title': 'Cennik',
-    'pricelist.lead': 'Każdy gatunek sprzedaję w paczkach po 10 sztuk – do wyboru nimfy, imago albo mix. Ceny w złotych. Wybierz wariant i kliknij „Zamów” – odpowiem mailem z potwierdzeniem dostępności i kosztów wysyłki.',
+    'pricelist.lead': 'Każdy gatunek sprzedaję w paczkach po 10 sztuk – jako nimfy, mix (nimfy i imago) albo imago, zależnie od gatunku. Ceny w złotych. Kliknij gatunek i zamów – odpowiem mailem z potwierdzeniem dostępności i kosztów wysyłki.',
     'pricelist.updated': 'Ostatnia aktualizacja',
     'pricelist.species': 'Gatunek',
     'pricelist.status': 'Dostępność',
@@ -139,7 +139,7 @@ export const ui = {
     'contact.messenger': 'Messenger',
     'contact.facebook': 'Facebook',
     'contact.instagram': 'Instagram',
-    'contact.orderHint': 'Przy zamówieniu podaj gatunek, wariant (nimfy, imago lub mix), liczbę paczek po 10 szt. oraz miejscowość (do wyceny wysyłki).',
+    'contact.orderHint': 'Przy zamówieniu podaj gatunek, liczbę paczek po 10 szt. oraz miejscowość (do wyceny wysyłki).',
     'contact.idHint': 'Do oznaczenia karaczana przyślij ostre zdjęcie z góry i z boku, długość ciała oraz miejsce i datę znalezienia.',
 
     'footer.rights': 'Wszystkie zdjęcia i teksty są własnością autora.',
@@ -169,7 +169,7 @@ export const ui = {
 
     'home.lead': 'Current price list, care sheets, notes from the breeding room and the field, and an identification key to the cockroaches of Poland.',
     'home.sections': 'Sections',
-    'home.pricelist.desc': 'Available species, prices by life stage and shipping terms.',
+    'home.pricelist.desc': 'Available species, prices per pack of 10 and shipping terms.',
     'home.species.desc': 'Species sheets: conditions, diet, breeding and photos.',
     'home.blog.desc': 'Breeding notes, field observations and news.',
     'home.key.desc': 'Tick the visible features to narrow down the Polish species.',
@@ -178,7 +178,7 @@ export const ui = {
     'home.plate': 'Plate I',
 
     'pricelist.title': 'Price list',
-    'pricelist.lead': 'Every species is sold in packs of 10 – choose nymphs, adults or a mix. Prices in Polish złoty (PLN). Pick an option and click “Order” – I will confirm availability and shipping costs.',
+    'pricelist.lead': 'Every species is sold in packs of 10 – as nymphs, a mix (nymphs and adults) or adults, depending on the species. Prices in Polish złoty (PLN). Click a species and order – I will confirm availability and shipping costs.',
     'pricelist.updated': 'Last updated',
     'pricelist.species': 'Species',
     'pricelist.status': 'Availability',
@@ -262,7 +262,7 @@ export const ui = {
     'contact.messenger': 'Messenger',
     'contact.facebook': 'Facebook',
     'contact.instagram': 'Instagram',
-    'contact.orderHint': 'When ordering, include the species, option (nymphs, adults or mix), number of 10-packs and your town (for a shipping quote).',
+    'contact.orderHint': 'When ordering, include the species, the number of 10-packs and your town (for a shipping quote).',
     'contact.idHint': 'For an identification, send a sharp photo from above and from the side, the body length, and where and when it was found.',
 
     'footer.rights': 'All photos and texts are the property of the author.',

@@ -1,12 +1,12 @@
 ---
 /**
- * Wybór wariantu paczki 10 szt. (nimfy / mix / imago), cena, „Do koszyka” i „Zamów od razu”.
+ * Paczka 10 szt. (jeden wariant na gatunek: nimfy, mix albo imago), cena, „Do koszyka” i „Zamów od razu”.
  * Gdy gatunku brak lub jest „wkrótce” – zamiast zamawiania przycisk „Powiadom mnie” (zapis na listę oczekujących).
  */
 import type { CollectionEntry } from 'astro:content';
 import { site } from '../data/site';
 import { useTranslations, type Lang, type UiKey } from '../i18n/ui';
-import { formatPrice, packOptions } from '../lib/content';
+import { formatPrice } from '../lib/content';
 
 interface Props {
   item: CollectionEntry<'pricelist'>;
@@ -20,7 +20,7 @@ const { item, lang, initial, big = false } = Astro.props;
 const tr = useTranslations(lang);
 const pl = lang === 'pl';
 const d = item.data;
-const options = packOptions(d.packs);
+const options = [{ kind: d.stage, price: d.price }];
 const orderable = d.status === 'available' || d.status === 'low';
 const first = options.find((o) => o.kind === initial) ?? options[0];
 const group = `pack-${item.id}-${Math.random().toString(36).slice(2, 6)}`;
@@ -28,7 +28,7 @@ const label = (k: string) => tr(`pack.${k}` as UiKey);
 const subjectFor = (k: string) => `${tr('pack.order')}: ${d.latin} – ${tr('pack.pcs')}, ${label(k)}`;
 const t = pl
   ? {
-      choose: 'Wariant paczki',
+      choose: 'W paczce',
       add: 'Do koszyka',
       added: 'Dodano',
       now: 'Zamów od razu',
@@ -39,7 +39,7 @@ const t = pl
       per: '/ 10 szt.',
     }
   : {
-      choose: 'Pack option',
+      choose: 'In the pack',
       add: 'Add to cart',
       added: 'Added',
       now: 'Order now',
@@ -77,10 +77,7 @@ const waitHref = (k: string) =>
             data-label={label(o.kind)}
             data-subject={subjectFor(o.kind)}
           />
-          <span>
-            <small>{label(o.kind)}</small>
-            {formatPrice(o.price, lang)}
-          </span>
+          <span>{label(o.kind)}</span>
         </label>
       ))
     }
@@ -173,9 +170,7 @@ const waitHref = (k: string) =>
     position: relative;
   }
   .variants {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    display: block;
     border: 0;
     padding: 0;
     margin: 0;
@@ -186,12 +181,13 @@ const waitHref = (k: string) =>
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--dim);
-    margin-bottom: 8px;
+    float: left;
+    margin: 0 10px 0 0;
     padding: 0;
+    line-height: 22px;
   }
   .var {
     position: relative;
-    cursor: pointer;
   }
   .var input {
     position: absolute;
@@ -199,39 +195,11 @@ const waitHref = (k: string) =>
     pointer-events: none;
   }
   .var span {
-    display: flex;
-    flex-direction: column;
-    padding: 8px 13px 7px;
-    border: 1px solid var(--line2);
-    background: rgba(11, 18, 13, 0.55);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    font-size: 12.5px;
-    line-height: 1.25;
-    color: var(--muted);
-    transition: all 0.35s;
-    border-radius: 2px;
-  }
-  .var span small {
-    font-family: var(--serif);
-    font-size: 16px;
-    color: var(--text);
-  }
-  .var:hover span {
-    border-color: rgba(232, 165, 71, 0.6);
-  }
-  .var input:checked + span {
-    background: rgba(232, 165, 71, 0.16);
-    border-color: var(--amber);
-    color: var(--amber2);
-    box-shadow: inset 0 0 20px rgba(232, 165, 71, 0.12);
-  }
-  .var input:checked + span small {
-    color: var(--amber2);
-  }
-  .var input:focus-visible + span {
-    outline: 2px solid var(--amber2);
-    outline-offset: 2px;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 22px;
+    color: var(--fern);
   }
   .buy {
     display: flex;

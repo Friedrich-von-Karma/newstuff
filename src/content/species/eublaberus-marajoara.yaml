@@ -1,0 +1,31 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/eublaberus-marajoara/ i dopisz w gallery.
+latin: "Eublaberus marajoara"
+author: "Rocha e Silva, 1972"
+family: "Blaberidae"
+origin:
+  pl: "Brazylia (Amazonia)"
+  en: "Brazil (Amazonia)"
+size:
+  pl: "ok. 45–55 mm"
+  en: "approx. 45–55 mm"
+temperature: "24–28 °C"
+humidity:
+  pl: "ok. 60–70%; część podłoża wilgotna, część sucha"
+  en: "approx. 60–70%; part of the substrate damp, part dry"
+substrate:
+  pl: "głęboka warstwa (min. 5 cm) włókna kokosowego lub ziemi z liśćmi i korą"
+  en: "a deep layer (at least 5 cm) of coco fibre or soil with leaves and bark"
+food:
+  pl: "owoce, warzywa, sucha karma, suche liście"
+  en: "fruit, vegetables, dry food, dry leaves"
+reproduction:
+  pl: "jajożyworodny, ok. 20–30 nimf w miocie"
+  en: "ovoviviparous, approx. 20–30 nymphs per litter"
+development:
+  pl: "ok. 5–12 miesięcy"
+  en: "approx. 5–12 months"
+difficulty: 1
+climbs: false
+flies: false
+gallery: []

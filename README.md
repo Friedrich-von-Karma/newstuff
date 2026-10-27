@@ -28,17 +28,18 @@ Treści przykładowe mają `sample: true` i na stronie są oznaczone jako „Dan
 
 ### Cennik
 
-Każdy gatunek jest sprzedawany w paczkach po 10 sztuk w 3 wariantach: nimfy, mix (nimfy i imago) oraz imago. Przykładowa pozycja w `src/data/pricelist.yaml`:
+Każdy gatunek jest sprzedawany w paczkach po 10 sztuk w jednym wariancie: nimfy, mix (nimfy i imago) albo imago. Przykładowa pozycja w `src/data/pricelist.yaml`:
 
 ```yaml
 - id: blaptica-dubia
   latin: Blaptica dubia
   profile: blaptica-dubia   # opcjonalnie: link do profilu hodowlanego
   status: available         # available | low | out | soon
-  packs: { nymph: 12, mix: 18, adult: 25 }   # cena w zł za 10 szt.
+  stage: mix                # nymph (nimfy) | mix (nimfy + imago) | adult (imago)
+  price: 18                 # cena w zł za paczkę 10 szt.
 ```
 
-Wariant, którego akurat nie masz, po prostu pomiń (na liście pojawi się „—”). Strona /cennik/ to prosta lista: nazwa łacińska i ceny za 10 szt. w każdym wariancie. Kliknięcie nazwy otwiera profil hodowlany gatunku (pole `profile`), gdzie klient wybiera wariant i zamawia. Gatunek bez `profile` jest na liście bez linku.
+Strona /cennik/ to prosta lista: nazwa łacińska, co jest w paczce i cena za 10 szt. Kliknięcie nazwy otwiera profil hodowlany gatunku (pole `profile`), gdzie klient dodaje paczkę do koszyka albo zamawia od razu. Gatunek bez `profile` jest na liście bez linku.
 
 ### Zdjęcia z Wikimedia Commons
 

@@ -65,20 +65,10 @@ export async function hasTranslation(p: Post, target: Lang) {
   return posts.some((o) => postSlug(o) === postSlug(p));
 }
 
-/** Warianty paczek po 10 szt. – w tej kolejności pokazywane na stronie. */
+/** Warianty paczek po 10 szt. Każdy gatunek w cenniku ma dokładnie jeden. */
 export const packKinds = ['nymph', 'mix', 'adult'] as const;
 export type PackKind = (typeof packKinds)[number];
 export const PACK_SIZE = 10;
-
-type Packs = Partial<Record<PackKind, number | null>>;
-
-export function packOptions(packs: Packs) {
-  return packKinds.filter((k) => typeof packs[k] === 'number').map((k) => ({ kind: k, price: packs[k] as number }));
-}
-
-export function minPackPrice(packs: Packs) {
-  return Math.min(...packOptions(packs).map((o) => o.price));
-}
 
 /** Data ostatniej aktualizacji cennika (pole `updated` w src/data/pricelist.yaml), RRRR-MM-DD. */
 export function getPricelistUpdated(): string {

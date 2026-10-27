@@ -1,0 +1,30 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/archimandrita-marmorata/ i dopisz w gallery.
+latin: "Archimandrita marmorata ex. tesselata"
+family: "Blaberidae"
+origin:
+  pl: "Ameryka Środkowa"
+  en: "Central America"
+size:
+  pl: "ok. 55–75 mm"
+  en: "approx. 55–75 mm"
+temperature: "22–29 °C"
+humidity:
+  pl: "wysoka, ok. 70% – potrzebna do prawidłowego linienia"
+  en: "high, approx. 70% – needed for proper moulting"
+substrate:
+  pl: "warstwa ziemi z rozdrobnionymi suchymi liśćmi; pionowa kora lub wytłoczki, na których nimfy wiszą przy ostatnim linieniu"
+  en: "a layer of soil with crushed dry leaves; vertical bark or egg crate for nymphs to hang from during the final moult"
+food:
+  pl: "suche liście (podstawa), owoce, warzywa, sucha karma"
+  en: "dry leaves (staple), fruit, vegetables, dry food"
+reproduction:
+  pl: "jajożyworodny, ok. 30 nimf w miocie, 2–3 mioty w roku"
+  en: "ovoviviparous, approx. 30 nymphs per litter, 2–3 litters a year"
+development:
+  pl: "powolny – ok. 9–12 miesięcy i dłużej"
+  en: "slow – approx. 9–12 months or longer"
+difficulty: 2
+climbs: false
+flies: false
+gallery: []

@@ -69,13 +69,15 @@ collections:
                 fields:
                   - { name: pl, label: Po polsku, widget: string, required: false }
                   - { name: en, label: Po angielsku, widget: string, required: false }
-              - name: packs
-                label: Ceny za paczkę 10 szt. (zł)
-                widget: object
-                fields:
-                  - { name: nymph, label: Nimfy, widget: number, value_type: float, min: 0, required: false }
-                  - { name: mix, label: Mix (nimfy + imago), widget: number, value_type: float, min: 0, required: false }
-                  - { name: adult, label: Imago, widget: number, value_type: float, min: 0, required: false }
+              - name: stage
+                label: Co jest w paczce
+                widget: select
+                default: mix
+                options:
+                  - { label: Nimfy, value: nymph }
+                  - { label: Mix (nimfy + imago), value: mix }
+                  - { label: Imago, value: adult }
+              - { name: price, label: Cena za paczkę 10 szt. (zł), widget: number, value_type: float, min: 0 }
               - { name: sample, label: Dane przykładowe (odznacz, gdy prawdziwe), widget: boolean, default: false, required: false }
 
   # ------------------------------------------------------- PROFILE GATUNKÓW

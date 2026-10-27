@@ -1,0 +1,31 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/aeluropoda-insignis/ i dopisz w gallery.
+latin: "Aeluropoda insignis"
+author: "Butler, 1882"
+family: "Blaberidae"
+origin:
+  pl: "Madagaskar"
+  en: "Madagascar"
+size:
+  pl: "ok. 40–65 mm"
+  en: "approx. 40–65 mm"
+temperature: "22–29 °C"
+humidity:
+  pl: "umiarkowana, ok. 60–70%; strefa wilgotna i sucha"
+  en: "moderate, approx. 60–70%; a moist and a dry zone"
+substrate:
+  pl: "cienka warstwa podłoża, płaty kory i wytłoczki, dobra wentylacja; szczelna pokrywa lub pasek wazeliny – wspinają się po szkle"
+  en: "a thin layer of substrate, bark slabs and egg crate, good ventilation; tight lid or a petroleum-jelly strip – they climb glass"
+food:
+  pl: "owoce, warzywa, sucha karma"
+  en: "fruit, vegetables, dry food"
+reproduction:
+  pl: "jajożyworodny, ok. 10–20 nimf w miocie; rozmnaża się powoli"
+  en: "ovoviviparous, approx. 10–20 nymphs per litter; breeds slowly"
+development:
+  pl: "ok. 6–7 miesięcy"
+  en: "approx. 6–7 months"
+difficulty: 2
+climbs: true
+flies: false
+gallery: []

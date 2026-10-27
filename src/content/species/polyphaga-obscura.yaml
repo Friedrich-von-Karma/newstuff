@@ -1,0 +1,31 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/polyphaga-obscura/ i dopisz w gallery.
+latin: "Polyphaga obscura"
+author: "Chopard, 1929"
+family: "Corydiidae"
+origin:
+  pl: "Azja Środkowa (Afganistan, Uzbekistan, Turkmenistan)"
+  en: "Central Asia (Afghanistan, Uzbekistan, Turkmenistan)"
+size:
+  pl: "ok. 25–35 mm"
+  en: "approx. 25–35 mm"
+temperature: "24–30 °C"
+humidity:
+  pl: "niska do umiarkowanej, ok. 40–60%; 1/4–1/3 podłoża wilgotna"
+  en: "low to moderate, approx. 40–60%; 1/4–1/3 of the substrate kept damp"
+substrate:
+  pl: "5–8 cm włókna kokosowego bez piasku, na wierzchu suche liście drzew liściastych"
+  en: "5–8 cm of coco fibre without sand, with dry hardwood leaves on top"
+food:
+  pl: "suche liście, sucha karma, trochę owoców i warzyw"
+  en: "dry leaves, dry food, a little fruit and vegetables"
+reproduction:
+  pl: "jajorodny – ooteki zakopywane w podłożu, nie mogą długo leżeć w mokrym; samice bezskrzydłe, samce uskrzydlone"
+  en: "oviparous – oothecae are buried in the substrate and must not stay wet for long; females wingless, males winged"
+development:
+  pl: "do ok. roku w cieple, do ok. 2 lat w chłodniejszych warunkach"
+  en: "up to about a year when warm, up to about 2 years when cooler"
+difficulty: 3
+climbs: false
+flies: true
+gallery: []
