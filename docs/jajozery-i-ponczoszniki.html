@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jajożery i pończoszniki</title>
+<meta name="description" content="Rozbudowana analiza porównawcza hodowli jajożerów (Dasypeltis) i pończoszników (Thamnophis): potrzeby, sprzęt, żywienie, rozmnażanie oraz analiza diety pończosznika opartej na owadach i rybach.">
+<style>
+:root{
+  --bg:#f7f5f0; --surface:#ffffff; --surface-2:#efebe2; --text:#1f1d1a; --muted:#5f5a52;
+  --line:#ddd6c8; --accent:#2f6b4f; --accent-soft:#e2efe7;
+  --dasy:#8a5a2b; --dasy-soft:#f4e8da; --tham:#2f5f8a; --tham-soft:#dde9f4;
+  --ok:#2f7a45; --ok-soft:#e1f2e6; --warn:#9a6b00; --warn-soft:#fbf0d4; --bad:#a83232; --bad-soft:#f8e0e0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151412; --surface:#1e1d1a; --surface-2:#282622; --text:#ece8e0; --muted:#aaa397;
+    --line:#3a3730; --accent:#7cc3a0; --accent-soft:#1f3329;
+    --dasy:#e0a86f; --dasy-soft:#33281c; --tham:#8dbbe6; --tham-soft:#1c2a38;
+    --ok:#7fd196; --ok-soft:#1d3324; --warn:#e8c063; --warn-soft:#3a3016; --bad:#f08a8a; --bad-soft:#3d1f1f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151412; --surface:#1e1d1a; --surface-2:#282622; --text:#ece8e0; --muted:#aaa397;
+  --line:#3a3730; --accent:#7cc3a0; --accent-soft:#1f3329;
+  --dasy:#e0a86f; --dasy-soft:#33281c; --tham:#8dbbe6; --tham-soft:#1c2a38;
+  --ok:#7fd196; --ok-soft:#1d3324; --warn:#e8c063; --warn-soft:#3a3016; --bad:#f08a8a; --bad-soft:#3d1f1f;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.hero{background:var(--surface);border-bottom:1px solid var(--line)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.hero .wrap{padding-top:40px;padding-bottom:32px}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.15;margin:.3em 0 .4em}
+h2{font-size:1.55rem;margin:2.4em 0 .6em;padding-top:.4em;border-top:2px solid var(--line)}
+h3{font-size:1.15rem;margin:1.6em 0 .4em}
+p{margin:.6em 0}
+.lead{font-size:1.1rem;color:var(--muted);max-width:760px}
+a{color:var(--accent)}
+nav.toc{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:24px 0}
+nav.toc ol{margin:.3em 0 0;padding-left:1.3em;columns:2;column-gap:32px}
+@media (max-width:640px){nav.toc ol{columns:1}}
+.tag{display:inline-block;padding:.1em .55em;border-radius:999px;font-size:.82rem;font-weight:600}
+.tag.d{background:var(--dasy-soft);color:var(--dasy)}
+.tag.t{background:var(--tham-soft);color:var(--tham)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.card.d{border-top:4px solid var(--dasy)}
+.card.t{border-top:4px solid var(--tham)}
+.card h3{margin-top:.2em}
+.card ul{padding-left:1.2em;margin:.4em 0}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.95rem}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+thead th{background:var(--surface-2);font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+thead th.d{color:var(--dasy)} thead th.t{color:var(--tham)}
+tbody th{font-weight:600;width:22%}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+.note{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.note.bad{border-color:var(--bad);background:var(--bad-soft)}
+.note.ok{border-color:var(--ok);background:var(--ok-soft)}
+.verdict{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:720px){.verdict{grid-template-columns:1fr}}
+.verdict .v{border-radius:12px;padding:14px 16px;border:1px solid var(--line);background:var(--surface)}
+.verdict .v b{display:block;font-size:1.05rem;margin-bottom:.2em}
+.v.bad{border-top:4px solid var(--bad)} .v.warn{border-top:4px solid var(--warn)} .v.ok{border-top:4px solid var(--ok)}
+.yes{color:var(--ok);font-weight:700} .no{color:var(--bad);font-weight:700} .mid{color:var(--warn);font-weight:700}
+.meter{display:flex;gap:3px;margin-top:4px}
+.meter i{width:18px;height:8px;border-radius:2px;background:var(--line)}
+.meter.d i.on{background:var(--dasy)} .meter.t i.on{background:var(--tham)}
+.score td{white-space:nowrap}
+ol.steps li,ul.check li{margin:.35em 0}
+footer{margin-top:56px;padding:24px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+.small{font-size:.88rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Analiza porównawcza · terrarystyka</div>
+    <h1>Jajożery (<i>Dasypeltis</i>) i pończoszniki (<i>Thamnophis</i>): hodowla, sprzęt, żywienie i rozmnażanie</h1>
+    <p class="lead">Dwa rodzaje niewielkich, niejadowitych dla człowieka węży, które w praktyce hodowlanej różnią się niemal wszystkim: porą aktywności, temperamentem, sposobem rozrodu, a przede wszystkim dietą. Na końcu osobny rozdział o tym, czy pończosznik może jeść owady i czy da się go utrzymać wyłącznie na owadach i rybach.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<nav class="toc" aria-label="Spis treści">
+  <strong>Spis treści</strong>
+  <ol>
+    <li><a href="#skrot">Najważniejsze w skrócie</a></li>
+    <li><a href="#profile">Profile rodzajów</a></li>
+    <li><a href="#tabela">Wielka tabela porównawcza</a></li>
+    <li><a href="#terrarium">Terrarium i sprzęt</a></li>
+    <li><a href="#klimat">Temperatura, wilgotność, światło</a></li>
+    <li><a href="#zywienie">Żywienie: porównanie</a></li>
+    <li><a href="#owady-ryby">Pończosznik a owady i ryby: analiza</a></li>
+    <li><a href="#rozmnazanie">Rozmnażanie</a></li>
+    <li><a href="#zdrowie">Zdrowie i typowe problemy</a></li>
+    <li><a href="#temperament">Temperament i obsługa</a></li>
+    <li><a href="#koszty">Koszty i nakład pracy</a></li>
+    <li><a href="#prawo">Kwestie prawne w Polsce</a></li>
+    <li><a href="#werdykt">Werdykt: dla kogo który wąż</a></li>
+  </ol>
+</nav>
+
+<section id="skrot">
+<h2>1. Najważniejsze w skrócie</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span> <i>Dasypeltis</i></h3>
+    <ul>
+      <li>Je <strong>wyłącznie ptasie jaja</strong>, bez wyjątków. Nie da się go przestawić na myszy.</li>
+      <li>Aktywny o zmierzchu i w nocy, spokojny, płochliwy, praktycznie <strong>bezzębny</strong>, nie jest w stanie skutecznie ugryźć.</li>
+      <li><strong>Jajorodny</strong>: składa jaja, które trzeba inkubować 2–3 miesiące.</li>
+      <li>Największa trudność: <strong>bardzo małe jaja dla młodych</strong> (jaja zeberek, amadyn, papużek).</li>
+      <li>Hodowla tania w utrzymaniu dorosłych (jaja przepiórcze), ale wymagająca logistycznie przy rozmnażaniu.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Pończosznik</span> <i>Thamnophis</i></h3>
+    <ul>
+      <li>Dieta <strong>elastyczna</strong>: ryby, dżdżownice, płazy, gryzonie. Najlepiej prowadzić na myszach i rybach bez tiaminazy.</li>
+      <li>Aktywny w dzień, ruchliwy, ciekawski, dobrze widoczny w terrarium. Lubi się kąpać.</li>
+      <li><strong>Żyworodny</strong>: rodzi w pełni ukształtowane młode, brak inkubacji.</li>
+      <li>Do rozrodu potrzebna <strong>zimowla</strong> (hibernacja) w niskiej temperaturze.</li>
+      <li>Owady <strong>nie nadają się</strong> na podstawę diety; ryby tak, pod warunkiem doboru gatunków i suplementacji.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="profile">
+<h2>2. Profile rodzajów</h2>
+
+<h3><span class="tag d">Jajożer</span> <i>Dasypeltis</i> (Colubridae)</h3>
+<p>Rodzaj obejmuje kilkanaście gatunków z Afryki subsaharyjskiej (jeden sięga Półwyspu Arabskiego). W hodowlach zdecydowanie najczęstszy jest <strong>jajożer pospolity <i>Dasypeltis scabra</i></strong>; rzadziej spotyka się m.in. <i>D. gansi</i>, <i>D. fasciata</i>, <i>D. medici</i>. Dorosłe osobniki mają zwykle 60–90 cm (wyjątkowo ok. 1 m), są smukłe, a samice większe od samców.</p>
+<p>To skrajny specjalista pokarmowy. Zęby są szczątkowe, za to wyrostki kręgów szyjnych (hipapofizy) przebijają się do przełyku i działają jak „piłka do jaj”: wąż połyka całe jajo, rozcina skorupkę wewnątrz ciała, przełyka zawartość i zwraca sprasowaną skorupkę. Szczęki i skóra są tak elastyczne, że wąż o grubości palca połyka jajo kilka razy szersze od głowy.</p>
+<p>Obronnie jajożer naśladuje jadowite efy (<i>Echis</i>): układa ciało w pętle w kształcie litery C i pociera o siebie ząbkowane łuski boczne, wydając szeleszczący, syczący dźwięk. Do tego otwiera pysk i markuje ataki, ale ugryzienie praktycznie nie występuje albo jest nieodczuwalne.</p>
+
+<h3><span class="tag t">Pończosznik</span> <i>Thamnophis</i> (Colubridae, Natricinae)</h3>
+<p>Ok. 30–35 gatunków z Ameryki Północnej i Środkowej, od Kanady po Kostarykę. Najpopularniejsze w hodowli: <strong><i>T. sirtalis</i></strong> (wiele podgatunków i odmian barwnych, m.in. <i>T. s. similis</i>, <i>T. s. tetrataenia</i>, „flame”, albinosy), <strong><i>T. marcianus</i></strong> (najłatwiejszy, chętnie je gryzonie), <i>T. elegans</i>, <i>T. radix</i>, <i>T. proximus</i> i <i>T. sauritus</i> (wodne, typowo rybożerne). Długość dorosłych to zwykle 50–90 cm, u największych <i>T. sirtalis</i> do ok. 120 cm.</p>
+<p>Pończoszniki są blisko spokrewnione z naszymi zaskrońcami i podobnie jak one żyją w pobliżu wody, polując na ryby, płazy i dżdżownice. Mają gruczoły Duvernoya wytwarzające słabą wydzielinę, która może powodować miejscowy obrzęk lub swędzenie po dłuższym „przeżuwaniu” palca, ale dla człowieka nie stanowi realnego zagrożenia. W obronie wydzielają cuchnącą wydzielinę z gruczołów kloakalnych.</p>
+</section>
+
+<section id="tabela">
+<h2>3. Wielka tabela porównawcza</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cecha</th><th class="d">Jajożer (<i>Dasypeltis scabra</i>)</th><th class="t">Pończosznik (<i>Thamnophis</i> spp.)</th></tr></thead>
+<tbody>
+<tr><th>Pochodzenie</th><td>Afryka subsaharyjska, sawanny, zarośla, skraje lasów</td><td>Ameryka Płn. i Śr.; łąki, brzegi wód, mokradła</td></tr>
+<tr><th>Długość dorosłych</th><td>60–90 cm (do ok. 100 cm)</td><td>50–90 cm (<i>T. sirtalis</i> do ok. 120 cm)</td></tr>
+<tr><th>Budowa</th><td>Smukły, lekki, częściowo nadrzewny</td><td>Smukły, szybki, naziemno-wodny</td></tr>
+<tr><th>Aktywność</th><td>Zmierzchowa i nocna</td><td>Dzienna</td></tr>
+<tr><th>Dieta</th><td>Wyłącznie jaja ptasie</td><td>Ryby, płazy, dżdżownice, ślimaki, gryzonie</td></tr>
+<tr><th>Elastyczność diety</th><td><span class="no">Brak</span></td><td><span class="yes">Duża</span></td></tr>
+<tr><th>Częstotliwość karmienia (dorosłe)</th><td>1–3 jaja co 5–10 dni</td><td>Co 5–7 dni (młode co 2–4 dni)</td></tr>
+<tr><th>Metabolizm</th><td>Umiarkowany, dobrze znosi przerwy w karmieniu</td><td>Szybki, sporo je i sporo wydala</td></tr>
+<tr><th>Terrarium dla 1 dorosłego</th><td>min. 80×40×50 cm (wys.), z gałęziami</td><td>min. 90×45×45 cm, większe dla grupy</td></tr>
+<tr><th>Trzymanie w grupie</th><td>Możliwe pary/małe grupy, karmienie pod kontrolą</td><td>Możliwe grupy, karmienie osobno (ryzyko bójek o pokarm)</td></tr>
+<tr><th>Temperatura w dzień</th><td>26–29 °C tło, wyspa 30–33 °C</td><td>24–27 °C tło, wyspa 30–33 °C</td></tr>
+<tr><th>Temperatura w nocy</th><td>20–24 °C</td><td>18–22 °C</td></tr>
+<tr><th>Wilgotność</th><td>40–60%, kryjówka wilgotna przy linieniu</td><td>50–70%, zawsze sucha strefa i duża miska wody</td></tr>
+<tr><th>UVB</th><td>Niekonieczne, ale niski poziom (T5 5–6% albo strefa Fergusona 1–2) jest korzystny</td><td>Zalecane (T5 5–6%, strefa Fergusona 2), gatunek dzienny</td></tr>
+<tr><th>Sposób rozrodu</th><td>Jajorodny: 6–25 jaj (zwykle 10–15)</td><td>Żyworodny: 5–40 młodych (u dużych <i>T. sirtalis</i> więcej)</td></tr>
+<tr><th>Inkubacja / ciąża</th><td>Inkubacja 60–90 dni w 27–29 °C</td><td>Ciąża ok. 2–4 miesięcy, brak inkubacji</td></tr>
+<tr><th>Zimowanie do rozrodu</th><td>Schłodzenie 18–21 °C przez 6–10 tygodni</td><td>Zimowla 4–10 °C przez 8–12 tygodni</td></tr>
+<tr><th>Dojrzałość płciowa</th><td>ok. 2–3 lata</td><td>ok. 1,5–2 lata (samce szybciej)</td></tr>
+<tr><th>Długość życia w niewoli</th><td>15–20+ lat</td><td>8–15 lat</td></tr>
+<tr><th>Temperament</th><td>Spokojny, płochliwy, blef obronny, praktycznie nie gryzie</td><td>Nerwowy jako młody, z czasem oswaja się; może kąsać i „piżmować”</td></tr>
+<tr><th>Zapach / brud</th><td>Mało: rzadkie, suche odchody, zwracane skorupki</td><td>Dużo przy diecie rybnej: częste, wodniste, mocno pachnące odchody</td></tr>
+<tr><th>Trudność ogólna</th><td>Średnia (z powodu pokarmu)</td><td>Łatwa do średniej (zależy od gatunku i diety)</td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Wartości są orientacyjne i dotyczą typowych gatunków hodowlanych. Gatunki z wyższych gór lub północnych populacji (np. część <i>Thamnophis</i>) mogą wymagać chłodniejszych warunków.</p>
+</section>
+
+<section id="terrarium">
+<h2>4. Terrarium i sprzęt</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span></h3>
+    <ul>
+      <li><strong>Układ:</strong> raczej wysokie niż długie. Dorosły: 80×40×50 cm lub 90×45×60 cm. Para: 100×50×60 cm.</li>
+      <li><strong>Wentylacja:</strong> dobra, nie lubią zastoju wilgoci (choroby skóry, grzybice).</li>
+      <li><strong>Podłoże:</strong> włókno kokosowe z piaskiem, kora, torf z ziemią, ewentualnie trociny bukowe (sucho). 5–8 cm.</li>
+      <li><strong>Wystrój:</strong> gałęzie do wspinaczki, korkowe rurki, sztuczne lub żywe rośliny dające cień i osłonę.</li>
+      <li><strong>Kryjówki:</strong> min. 2 (ciepła i chłodna) plus wilgotna komora z mchem przy linieniu.</li>
+      <li><strong>Woda:</strong> stabilna, płytka miska; wąż pije chętnie, ale nie kąpie się często.</li>
+      <li><strong>Szczelność:</strong> bardzo ważna. Jajożery są smukłe i wychodzą przez szpary o grubości ołówka, szczególnie młode.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Pończosznik</span></h3>
+    <ul>
+      <li><strong>Układ:</strong> długi, z dużą powierzchnią podłogi. Dorosły: 90×45×45 cm, dla 2–3 osobników 120×50×50 cm lub więcej.</li>
+      <li><strong>Wentylacja:</strong> bardzo dobra. Ciągle mokre podłoże prowadzi do zapaleń skóry (blister disease).</li>
+      <li><strong>Podłoże:</strong> mieszanka ziemi z piaskiem lub kokosem, liście, mech. Dobrze sprawdza się układ bioaktywny (skoczogonki, równonogi) wobec dużej ilości odchodów.</li>
+      <li><strong>Wystrój:</strong> korzenie, płaskie kamienie do wygrzewania, gęste rośliny, kilka kryjówek.</li>
+      <li><strong>Woda:</strong> duża miska lub płytki basen, w którym wąż mieści się cały. Wymiana codziennie lub co 2 dni (zanieczyszczają ją szybko).</li>
+      <li><strong>Strefa sucha:</strong> obowiązkowa. Pończoszniki lubią wodę, ale nie mogą stale leżeć na mokrym.</li>
+      <li><strong>Szczelność:</strong> są szybkie i sprytne, pokrywa z zamkiem to podstawa.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Lista sprzętu (wspólna i różnice)</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Element</th><th class="d">Jajożer</th><th class="t">Pończosznik</th></tr></thead>
+<tbody>
+<tr><th>Źródło ciepła</th><td>Żarówka grzewcza / halogen nad gałęzią; ewentualnie mata pod częścią dna</td><td>Halogen lub żarówka punktowa nad kamieniem (wygrzewanie z góry, jak w naturze)</td></tr>
+<tr><th>Termostat</th><td colspan="2">Obowiązkowy dla każdego źródła ciepła (ściemniający do lamp, on/off do mat)</td></tr>
+<tr><th>Termometr / higrometr</th><td colspan="2">Cyfrowy z sondą w strefie ciepłej i chłodnej, najlepiej z zapisem min/max; pirometr do pomiaru powierzchni</td></tr>
+<tr><th>UVB</th><td>Opcjonalnie, słabe (T5 5–6%)</td><td>Zalecane: T5 5–6% na 1/2–2/3 długości</td></tr>
+<tr><th>Oświetlenie dzienne</th><td>Umiarkowane, 12 h (zimą 10 h)</td><td>Jasne, 12–14 h, ładnie eksponuje kolory</td></tr>
+<tr><th>Zraszanie</th><td>Rzadko, głównie przy linieniu</td><td>Lekko co 1–2 dni, ale bez tworzenia błota</td></tr>
+<tr><th>Pokarm „techniczny”</th><td>Mały pojemnik do przechowywania jaj, waga kuchenna do dobierania wielkości</td><td>Pęseta, miska do karmienia, zamrażarka na ryby i myszy, suplementy (wapń, witamina B1)</td></tr>
+<tr><th>Inkubator</th><td><strong>Potrzebny</strong> (inkubacja jaj)</td><td>Niepotrzebny</td></tr>
+<tr><th>Miejsce do zimowania</th><td>Chłodny pokój 18–21 °C</td><td>Lodówka winiarska / chłodna piwnica 4–10 °C</td></tr>
+<tr><th>Pojemniki dla młodych</th><td>Małe faunaboksy, pojedynczo (dużo jaj od zeberek)</td><td>Faunaboksy, pojedynczo lub w małych grupach, karmienie osobno</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="klimat">
+<h2>5. Temperatura, wilgotność, światło</h2>
+<p>Oba węże potrzebują <strong>gradientu temperatur</strong>: ciepłej wyspy do trawienia i chłodniejszej strefy do odpoczynku. Różnice są jednak istotne:</p>
+<ul>
+  <li><strong>Jajożer</strong> pochodzi z ciepłych, sezonowo suchych terenów. Lubi stabilnie ciepłe tło (26–29 °C) i nie znosi długotrwałego chłodu poza okresem zimowania. Trawienie jaj jest szybkie, ale wymaga ciepła; w zbyt niskiej temperaturze jajo może zostać zwrócone w całości.</li>
+  <li><strong>Pończosznik</strong> to wąż strefy umiarkowanej. Lepiej znosi chłód niż przegrzanie: długotrwałe tło powyżej 30 °C jest dla niego stresujące. W nocy temperatura może spokojnie spaść do 18 °C.</li>
+  <li><strong>Wilgotność:</strong> jajożer 40–60%, pończosznik 50–70%. U obu kluczowe jest, by podłoże nie było trwale mokre. Problemy skórne pończoszników prawie zawsze wynikają z brudnej wody i mokrej ściółki, a nie z „za niskiej wilgotności”.</li>
+  <li><strong>Światło:</strong> pończosznik jako wąż dzienny korzysta z UVB i jasnego światła wyraźniej (aktywność, apetyt, kolory). U nocnego jajożera UVB nie jest niezbędne, ale słabe źródło w części terrarium nie zaszkodzi, o ile wąż ma cień.</li>
+</ul>
+</section>
+
+<section id="zywienie">
+<h2>6. Żywienie: porównanie</h2>
+
+<h3><span class="tag d">Jajożer</span> tylko jaja, ale jakie?</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Etap</th><th>Rodzaj jaj</th><th>Uwagi</th></tr></thead>
+<tbody>
+<tr><th>Nowo wyklute (20–25 cm)</th><td>Zeberki (<i>Taeniopygia</i>), amadyny, mewki, czasem małe jaja papużek falistych</td><td>Jaja ok. 1 g. To najtrudniejszy etap całej hodowli: trzeba mieć własne stado ptaków lub stałego dostawcę.</td></tr>
+<tr><th>Młodzież</th><td>Większe jaja papużek, kanarków, nimf, małe przepiórcze</td><td>Jajo nie szersze niż ok. 2–3× średnica głowy węża.</td></tr>
+<tr><th>Dorosłe</th><td>Przepiórcze (podstawa), duże samice czasem bardzo małe kurze lub jaja bantamki</td><td>1–3 jaja co 5–10 dni. Jaja przepiórcze są łatwo dostępne w sklepach przez cały rok.</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+  <li>Jaja muszą być <strong>surowe i świeże</strong> (nie gotowane). Część hodowców podaje jaja zapłodnione, uważając je za pełniejsze pokarmowo, ale zwykłe sklepowe jaja przepiórcze w zupełności wystarczają.</li>
+  <li>Jaja można <strong>zamrażać</strong> na zapas (szczególnie jaja zeberek w sezonie), a potem rozmrażać do temperatury pokojowej. Nie wszystkie węże je przyjmują, a skorupka może popękać, więc to zapas awaryjny.</li>
+  <li>Skorupkę przed podaniem warto przetrzeć lub opłukać (Salmonella). Higiena rąk po obsłudze obowiązkowa.</li>
+  <li>Naturalnie jajożery jedzą sezonowo (pora lęgowa ptaków) i potrafią długo pościć. W niewoli zimą zdarzają się kilkutygodniowe przerwy, które nie są powodem do paniki przy dobrej kondycji.</li>
+  <li>Zbyt duże jajo może zostać zwrócone lub, w skrajnych przypadkach, uszkodzić przełyk. Lepiej podać dwa mniejsze niż jedno za duże.</li>
+</ul>
+
+<h3><span class="tag t">Pończosznik</span> szeroki wybór, ale z pułapkami</h3>
+<p>W naturze pończoszniki to oportuniści: zjadają ryby, kijanki, żaby, salamandry, dżdżownice, ślimaki, pijawki, czasem pisklęta i drobne gryzonie. W terrarium przyjęło się kilka modeli żywienia:</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Model</th><th>Zalety</th><th>Wady</th><th>Ocena</th></tr></thead>
+<tbody>
+<tr><th>Myszy (oseski, podrostki) lub kawałki myszy</th><td>Pełnowartościowe, wygodne, czyste, mało zapachu</td><td>Część osobników trzeba „przekonać” (nacieranie rybą lub dżdżownicą)</td><td><span class="yes">Najlepsze jako podstawa</span></td></tr>
+<tr><th>Ryby bez tiaminazy, całe</th><td>Naturalny, bardzo chętnie jedzony pokarm, zawiera kości</td><td>Trzeba znać gatunki, tłuste ryby obciążają wątrobę, więcej brudu</td><td><span class="yes">Dobre jako część diety</span></td></tr>
+<tr><th>Filety rybne</th><td>Łatwe do kupienia, wygodne porcjowanie</td><td>Brak wapnia i części składników, konieczna suplementacja</td><td><span class="mid">Tylko z suplementami</span></td></tr>
+<tr><th>Dżdżownice (rosówki <i>Lumbricus</i>)</th><td>Bardzo chętnie jedzone, dobre dla młodych</td><td>Ryzyko pasożytów i chemii z dzikich stanowisk; same w sobie nie wystarczą</td><td><span class="yes">Dobry dodatek</span></td></tr>
+<tr><th>Dżdżownice kalifornijskie (<i>Eisenia</i>)</th><td>Łatwe w hodowli</td><td>Wydzielina odstraszająca, wiele węży je wypluwa, podejrzewane o szkodliwość</td><td><span class="no">Unikać</span></td></tr>
+<tr><th>Mieszanka „kiełbaska” (ryba + dżdżownica + myszy + suplement)</th><td>Kontrola składu, łatwe porcjowanie, mrożenie</td><td>Pracochłonne przygotowanie</td><td><span class="yes">Bardzo dobre</span></td></tr>
+<tr><th>Owady</th><td>Łatwo dostępne</td><td>Rzadko akceptowane, niski wapń, chityna, brak pełnej wartości</td><td><span class="no">Nie jako dieta</span></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="owady-ryby">
+<h2>7. Czy pończosznik może jeść owady i żyć na owadach i rybach?</h2>
+
+<div class="verdict">
+  <div class="v warn"><b>Czy może jeść owady?</b>Technicznie tak. Niektóre osobniki (szczególnie młode i niektóre gatunki, np. <i>T. elegans</i>) zjedzą czasem świerszcza lub larwę. W naturze owady to jednak rzadki, przypadkowy pokarm.</div>
+  <div class="v bad"><b>Czy może żyć na samych owadach?</b><span class="no">Nie.</span> Taka dieta prowadzi do niedożywienia, niedoboru wapnia i problemów z trawieniem. To nie jest naturalna dieta pończosznika.</div>
+  <div class="v warn"><b>Czy może żyć na owadach i rybach?</b>Może przeżyć głównie dzięki rybom, ale <span class="mid">nie jest to dobry model</span>. Owady nic istotnego nie wnoszą, a ryby trzeba dobrać i suplementować. Lepiej: ryby + myszy + dżdżownice.</div>
+</div>
+
+<h3>7.1. Owady: dlaczego nie</h3>
+<ul>
+  <li><strong>To nie jest pokarm naturalny.</strong> Badania zawartości żołądków dzikich pończoszników wskazują głównie na płazy, ryby, dżdżownice i ślimaki. Owady pojawiają się sporadycznie i często przypadkiem (np. zjedzone razem z innym pokarmem).</li>
+  <li><strong>Chityna.</strong> Pancerzyki owadów są słabo trawione przez węże, które w toku ewolucji nie wykształciły do tego przystosowań. Większa ilość może powodować problemy z wypróżnianiem.</li>
+  <li><strong>Zła proporcja wapnia do fosforu.</strong> Świerszcze, mączniki czy karaczany mają dużo fosforu i mało wapnia. Węże „całożerne” (zjadające całą ofiarę z kośćmi) dostają wapń z kości, owady go nie dają.</li>
+  <li><strong>Małe porcje, dużo wysiłku.</strong> Dorosły pończosznik musiałby zjeść ogromne ilości owadów, by pokryć zapotrzebowanie energetyczne z jednej myszy czy ryby.</li>
+  <li><strong>Większość osobników po prostu odmawia.</strong> Pończoszniki polują głównie węchem i reagują na zapach ryb, płazów i dżdżownic, a nie na zapach owadów.</li>
+  <li><strong>Ślimaki i dżdżownice to nie owady.</strong> Często się to myli: dżdżownice (pierścienice) i ślimaki (mięczaki) są dla wielu pończoszników naturalnym pokarmem. Ślimaki z ogrodu niosą jednak ryzyko pasożytów i pestycydów.</li>
+</ul>
+<div class="note warn"><strong>Wniosek:</strong> owady można najwyżej potraktować jako sporadyczną „zabawę” (np. jeśli wąż sam zainteresuje się świerszczem), ale nigdy jako stały element jadłospisu. Wąż utrzymywany głównie na owadach będzie chudł, a z czasem może rozwinąć choroby metaboliczne.</div>
+
+<h3>7.2. Ryby: tak, ale z głową</h3>
+<p>Ryby są dla pończosznika naturalnym i bardzo chętnie przyjmowanym pokarmem, a dla gatunków wodnych (<i>T. sauritus</i>, <i>T. proximus</i>) wręcz podstawowym. Problemem nie jest sama ryba, tylko trzy pułapki:</p>
+
+<h4>Pułapka 1: tiaminaza (niedobór witaminy B1)</h4>
+<p>Wiele gatunków ryb zawiera enzym <strong>tiaminazę</strong>, który rozkłada witaminę B1 (tiaminę). Wąż karmiony takimi rybami przez dłuższy czas rozwija niedobór B1: drżenia, brak koordynacji, skręcanie głowy (tzw. „stargazing”), drgawki, a w końcu śmierć. <strong>Zamrażanie nie niszczy tiaminazy</strong> (zabija natomiast część pasożytów). Rozkłada ją dopiero obróbka termiczna, która jednak pogarsza inne walory pokarmu.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Ryby z tiaminazą: unikać jako podstawy</th><th>Ryby uznawane za bezpieczne (brak lub śladowa tiaminaza)</th></tr></thead>
+<tbody>
+<tr><td>
+  <ul>
+    <li>Karp i inne karpiowate, w tym karasie i <strong>złote rybki</strong> (popularne „karmówki”)</li>
+    <li>Stynka</li>
+    <li>Śledź, szprot</li>
+    <li>Sardela, sardynka</li>
+    <li>Strzebla, ukleja, płotka (karpiowate)</li>
+    <li>Rosy red (<i>Pimephales</i>)</li>
+    <li>Sum karłowaty, część innych sumów</li>
+    <li>Wiele małży i krewetek (dodatkowo słabo przyjmowane)</li>
+  </ul>
+</td><td>
+  <ul>
+    <li><strong>Tilapia</strong> (filet), najczęściej polecana</li>
+    <li><strong>Pstrąg</strong> (umiarkowanie tłusty)</li>
+    <li><strong>Łosoś</strong> (tłusty, tylko okazjonalnie)</li>
+    <li>Dorsz, mintaj, morszczuk</li>
+    <li>Okoń, sandacz</li>
+    <li>Gupiki i molinezje (z pewnego źródła, bez chorób)</li>
+  </ul>
+</td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Listy w literaturze różnią się w szczegółach, a zawartość tiaminazy waha się w obrębie gatunku. Zasada praktyczna: karpiowate, śledziowate i stynka to „czerwona lampka”; jeśli podajesz rybę niepewną, suplementuj B1.</p>
+
+<h4>Pułapka 2: wapń i filety</h4>
+<p>Cała ryba z ośćmi dostarcza wapnia. <strong>Filet</strong> praktycznie go nie zawiera, więc dieta oparta na filetach bez suplementu wapnia prowadzi do metabolicznej choroby kości, zwłaszcza u rosnących młodych. Filety trzeba obsypywać preparatem wapniowym (z D3 lub bez, zależnie od dostępu do UVB) i dodatkowo podawać multiwitaminę.</p>
+
+<h4>Pułapka 3: tłuszcz i jakość</h4>
+<ul>
+  <li>Tłuste ryby (łosoś, makrela, śledź) przy częstym podawaniu sprzyjają otłuszczeniu wątroby. Pończoszniki są „łakome” i chętnie się przejadają.</li>
+  <li>Żywe ryby z akwarium lub łowiska mogą przenosić pasożyty (np. nicienie, przywry). Rybę dziką lub sklepową najlepiej zamrozić na min. 30 dni w −20 °C przed podaniem.</li>
+  <li>Dieta rybna daje <strong>wodniste, mocno pachnące odchody</strong> i szybciej brudzi terrarium.</li>
+</ul>
+
+<h3>7.3. Czy dieta „owady + ryby” zadziała?</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Wariant</th><th>Werdykt</th><th>Komentarz</th></tr></thead>
+<tbody>
+<tr><th>Same owady</th><td><span class="no">Nie</span></td><td>Niedożywienie, niedobór wapnia, zwykle i tak odmowa jedzenia.</td></tr>
+<tr><th>Owady + złote rybki / karpiowate</th><td><span class="no">Nie</span></td><td>Wysokie ryzyko niedoboru B1, owady nie poprawiają bilansu.</td></tr>
+<tr><th>Owady + filety bez suplementów</th><td><span class="no">Nie</span></td><td>Niedobór wapnia i witamin, ryzyko MBD u młodych.</td></tr>
+<tr><th>Same ryby bez tiaminazy (całe) + suplementy B1, wapń, multiwitamina</th><td><span class="mid">Możliwe</span></td><td>Wiele pończoszników dożywa w ten sposób sędziwego wieku, ale wymaga to dyscypliny w suplementacji i kontroli kondycji.</td></tr>
+<tr><th>Ryby bez tiaminazy + dżdżownice (rosówki) + suplementy</th><td><span class="yes">Dobrze</span></td><td>Tradycyjny, sprawdzony model, szczególnie dla młodych i gatunków wodnych.</td></tr>
+<tr><th>Myszy + ryby bez tiaminazy + dżdżownice</th><td><span class="yes">Najlepiej</span></td><td>Pełnowartościowa, urozmaicona dieta, najmniej problemów zdrowotnych i najmniej brudu.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note ok"><strong>Podsumowanie rozdziału:</strong> pończosznik <strong>nie może żyć na owadach</strong> i nie powinien ich dostawać jako stałego pokarmu. <strong>Może żyć na rybach</strong>, jeśli są to ryby bez tiaminazy, podawane w całości albo jako filety z suplementacją wapnia i B1. Najzdrowszy model to dieta mieszana z udziałem gryzoni. Ryby + owady to połączenie, w którym całą pracę i tak robią ryby, a owady nie wnoszą wartości.</div>
+
+<h3>7.4. Jak przestawić pończosznika z ryb na myszy (scenting)</h3>
+<ol class="steps">
+  <li>Weź rozmrożonego oseska lub kawałek myszy i natrzyj go mocno rybą lub dżdżownicą, którą wąż zna.</li>
+  <li>Podawaj z pęsety, lekko poruszając, w porze aktywności (przed południem, w ciepłej części terrarium).</li>
+  <li>Co kolejne karmienie zmniejszaj ilość „zapachu”. Część hodowców najpierw łączy kawałek ryby z kawałkiem myszy.</li>
+  <li><i>T. marcianus</i> przestawia się zwykle bardzo łatwo; <i>T. sirtalis</i> różnie, a gatunki typowo wodne bywają uparte.</li>
+</ol>
+</section>
+
+<section id="rozmnazanie">
+<h2>8. Rozmnażanie</h2>
+
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span> jajorodny</h3>
+    <ol class="steps">
+      <li><strong>Płeć:</strong> samce mają dłuższy, grubszy u nasady ogon; samice są większe. Pewniej: sondowanie przez doświadczoną osobę.</li>
+      <li><strong>Przygotowanie:</strong> wąż w dobrej kondycji, dobrze karmiony jesienią.</li>
+      <li><strong>Schłodzenie:</strong> 6–10 tygodni w 18–21 °C, krótszy dzień, bez karmienia (ostatni posiłek ok. 2 tyg. wcześniej, by przewód był pusty). Woda cały czas.</li>
+      <li><strong>Wybudzenie:</strong> stopniowy powrót do normalnych temperatur, intensywne karmienie samicy.</li>
+      <li><strong>Kopulacja:</strong> łączenie pary po pierwszym linieniu samicy po zimowaniu. Kopulacje zwykle nocą.</li>
+      <li><strong>Ciężarna samica:</strong> ok. 1–2 miesięcy po kopulacji, często z linieniem przedgodowym na ok. 1–2 tyg. przed złożeniem jaj. Potrzebna wilgotna komora do składania (mech torfowiec, wermikulit).</li>
+      <li><strong>Zniesienie:</strong> 6–25 jaj (zwykle 10–15). Możliwe 2 zniesienia w sezonie, co mocno wyczerpuje samicę.</li>
+      <li><strong>Inkubacja:</strong> wermikulit lub perlit z wodą (ok. 1:1 wagowo), 27–29 °C, wysoka wilgotność, 60–90 dni. Jaj nie obracać.</li>
+      <li><strong>Młode:</strong> 20–25 cm, pierwsze linienie po ok. 7–14 dniach, potem karmienie jajami zeberek.</li>
+    </ol>
+    <div class="note bad"><strong>Wąskie gardło:</strong> zanim zaplanujesz rozmnażanie, zapewnij <strong>stałe źródło bardzo małych jaj</strong> na kilka miesięcy dla 10–20 młodych. Bez tego hodowla kończy się masowym głodzeniem młodych. Wielu hodowców prowadzi w tym celu własne stado zeberek.</div>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Pończosznik</span> żyworodny</h3>
+    <ol class="steps">
+      <li><strong>Płeć:</strong> samce mniejsze, z dłuższym i grubszym ogonem; dość łatwe do rozpoznania u dorosłych.</li>
+      <li><strong>Przygotowanie:</strong> jesienią intensywne karmienie, potem 2 tyg. głodówki przed zimowlą.</li>
+      <li><strong>Zimowla (kluczowa):</strong> stopniowe obniżanie temperatury przez 2–3 tygodnie, następnie 8–12 tygodni w 4–10 °C, w ciemności, z wodą. Kontrola masy co 2–3 tygodnie.</li>
+      <li><strong>Wybudzenie:</strong> stopniowo przez 1–2 tygodnie. Samce wychodzą z zimowli „gotowe”.</li>
+      <li><strong>Kopulacja:</strong> zwykle wkrótce po wybudzeniu. Typowe są „kule godowe”: kilka samców oplata jedną samicę. Po kopulacji samiec zostawia czop godowy.</li>
+      <li><strong>Ciąża:</strong> ok. 2–4 miesięcy. Samica je bardzo dużo na początku, a pod koniec często odmawia. Wymaga ciepłego miejsca do wygrzewania.</li>
+      <li><strong>Poród:</strong> 5–40 młodych (u dużych <i>T. sirtalis</i> nawet 50–80) w błonach płodowych, z których szybko się uwalniają. Obok bywają niezapłodnione „żółtka” (slugs).</li>
+      <li><strong>Młode:</strong> 12–20 cm, pierwsze linienie po kilku dniach, potem karmienie drobnymi kawałkami ryby, dżdżownicami, małymi oseskami (marcianus).</li>
+      <li><strong>Odchów:</strong> dużo młodych = dużo pojemników i karmień co 2–3 dni. Odchowu nie wolno prowadzić na owadach.</li>
+    </ol>
+    <div class="note warn"><strong>Uwaga:</strong> zimowla to stres dla organizmu. Zimujemy tylko zdrowe, dobrze odżywione osobniki. Chorego lub chudego węża nie wolno schładzać do 4–10 °C.</div>
+  </div>
+</div>
+
+<h3>Porównanie rozrodu w liczbach</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Parametr</th><th class="d">Jajożer</th><th class="t">Pończosznik</th></tr></thead>
+<tbody>
+<tr><th>Typ rozrodu</th><td>Jajorodność</td><td>Żyworodność</td></tr>
+<tr><th>Wymagane zimowanie</th><td>Łagodne schłodzenie (18–21 °C)</td><td>Prawdziwa zimowla (4–10 °C)</td></tr>
+<tr><th>Liczba potomstwa</th><td>6–25 jaj</td><td>5–40 młodych (czasem więcej)</td></tr>
+<tr><th>Czas do wylęgu / porodu</th><td>ok. 1–2 mies. do złożenia + 60–90 dni inkubacji</td><td>ok. 2–4 mies. ciąży</td></tr>
+<tr><th>Inkubator</th><td>Tak</td><td>Nie</td></tr>
+<tr><th>Wielkość młodych</th><td>20–25 cm</td><td>12–20 cm</td></tr>
+<tr><th>Pierwszy pokarm</th><td>Jaja zeberek/amadyn (trudno dostępne)</td><td>Ryby, dżdżownice, oseski (łatwo dostępne)</td></tr>
+<tr><th>Zbyt młodych</th><td>Mniejszy popyt, ale wyższa cena</td><td>Większy popyt, niższa cena; odmiany barwne cenniejsze</td></tr>
+<tr><th>Trudność rozrodu</th><td>Średnio-wysoka (odchów młodych)</td><td>Łatwa do średniej (zimowla)</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="zdrowie">
+<h2>9. Zdrowie i typowe problemy</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Problem</th><th class="d">Jajożer</th><th class="t">Pończosznik</th></tr></thead>
+<tbody>
+<tr><th>Najczęstsza przyczyna kłopotów</th><td>Brak odpowiedniej wielkości jaj, odmowa pokarmu po stresie</td><td>Zła dieta (tiaminaza, filety bez wapnia), brudna woda, mokre podłoże</td></tr>
+<tr><th>Choroby skóry</th><td>Rzadko; przy zbyt mokrym terrarium</td><td>Częste: pęcherze, grzybice, zapalenia przy wilgoci i brudzie</td></tr>
+<tr><th>Choroby metaboliczne</th><td>Rzadkie (jajo jest pełnowartościowe)</td><td>Niedobór B1, MBD przy filetach, otłuszczenie wątroby przy przekarmianiu</td></tr>
+<tr><th>Pasożyty</th><td>Głównie z odłowu (dzikie osobniki z importu)</td><td>Z ryb, dżdżownic i płazów; zalecane mrożenie pokarmu</td></tr>
+<tr><th>Problemy z linieniem</th><td>Przy zbyt suchym powietrzu, stąd wilgotna kryjówka</td><td>Rzadkie przy dostępie do wody</td></tr>
+<tr><th>Choroby układu oddechowego</th><td>Przy chłodzie i wilgoci</td><td>Przy przeciągach i zbyt niskiej temperaturze poza zimowlą</td></tr>
+<tr><th>Zwracanie pokarmu</th><td>Zbyt duże jajo, za niska temp., stres po karmieniu (normalne jest zwracanie samej skorupki!)</td><td>Przejedzenie, za niska temp., obsługa zaraz po posiłku</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note"><strong>Import vs. rozmnożone w niewoli:</strong> jajożery wciąż bywają odławiane w naturze. Osobniki z odłowu częściej mają pasożyty i trudniej się aklimatyzują. Warto szukać zwierząt CB (urodzonych w niewoli) od hodowców. Pończoszniki na rynku są niemal wyłącznie z hodowli.</div>
+</section>
+
+<section id="temperament">
+<h2>10. Temperament i obsługa</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span></h3>
+    <ul>
+      <li>Spokojny, ale płochliwy. Za dnia głównie śpi w kryjówce, więc mniej „widowiskowy”.</li>
+      <li>Pokaz obronny (szelest łusek, otwarty pysk) robi wrażenie, ale jest blefem.</li>
+      <li>Ugryzienie praktycznie niemożliwe do odczucia.</li>
+      <li>Dobrze znosi krótkie, delikatne branie na rękę; nie lubi częstej manipulacji.</li>
+      <li>Nie brać do ręki 48 h po karmieniu (ryzyko zwrócenia jaja).</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Pończosznik</span></h3>
+    <ul>
+      <li>Ruchliwy, ciekawski, aktywny w dzień, reaguje na opiekuna (szczególnie przy karmieniu).</li>
+      <li>Młode bywają nerwowe: piżmują, kąsają, wiją się. Większość uspokaja się z czasem.</li>
+      <li>Silna reakcja pokarmowa: mogą „pomylić” palec pachnący rybą z pokarmem.</li>
+      <li>Wydzielina gruczołów Duvernoya może przy dłuższym przytrzymaniu dać lekki obrzęk; u alergików warto zachować ostrożność.</li>
+      <li>Dobry wąż do obserwacji, szybki przy wyjmowaniu, więc wymaga wprawy.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="koszty">
+<h2>11. Koszty i nakład pracy</h2>
+<div class="table-wrap">
+<table class="score">
+<thead><tr><th>Kryterium (więcej = trudniej / drożej)</th><th class="d">Jajożer</th><th class="t">Pończosznik</th></tr></thead>
+<tbody>
+<tr><th>Koszt zakupu zwierzęcia</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td></tr>
+<tr><th>Koszt sprzętu startowego</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></td></tr>
+<tr><th>Koszt pokarmu (dorosłe)</th><td><div class="meter d"><i class="on"></i><i></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td></tr>
+<tr><th>Dostępność pokarmu dla młodych</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></td><td><div class="meter t"><i class="on"></i><i></i><i></i><i></i><i></i></div></td></tr>
+<tr><th>Sprzątanie</th><td><div class="meter d"><i class="on"></i><i></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td></tr>
+<tr><th>Wiedza o żywieniu</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td></tr>
+<tr><th>Trudność rozrodu</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Skala względna, porównuje te dwa węże między sobą. Ceny zwierząt różnią się zależnie od gatunku i odmiany barwnej, a pokarm dla jajożera jest tani, dopóki nie trzeba karmić młodych.</p>
+</section>
+
+<section id="prawo">
+<h2>12. Kwestie prawne w Polsce</h2>
+<ul>
+  <li>Ani <i>Dasypeltis</i>, ani <i>Thamnophis</i> nie są gatunkami jadowitymi w rozumieniu przepisów o zwierzętach niebezpiecznych, więc nie wymagają zezwolenia na posiadanie z tego tytułu.</li>
+  <li>Typowe gatunki hodowlane obu rodzajów nie figurują w załącznikach CITES ani na unijnej liście gatunków inwazyjnych obcych, więc co do zasady nie wymagają rejestracji w starostwie. Wyjątkiem mogą być rzadkie formy (np. <i>T. sirtalis tetrataenia</i> jest w USA chroniony; zwierzęta w handlu powinny mieć udokumentowane pochodzenie z hodowli).</li>
+  <li>Przepisy się zmieniają: przed zakupem warto sprawdzić aktualny stan prawny (ustawa o ochronie przyrody, ustawa o gatunkach obcych, rozporządzenia UE) i zachować dokument pochodzenia zwierzęcia.</li>
+  <li><strong>Nie wolno wypuszczać</strong> żadnych zwierząt egzotycznych do środowiska. Pończoszniki dobrze znoszą chłód i teoretycznie mogłyby przeżyć w naszym klimacie, co czyni ucieczki szczególnie niepożądanymi.</li>
+</ul>
+</section>
+
+<section id="werdykt">
+<h2>13. Werdykt: dla kogo który wąż</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3>Wybierz jajożera, jeśli…</h3>
+    <ul class="check">
+      <li>chcesz spokojnego, czystego węża z bardzo prostą dietą dorosłych (jaja przepiórcze ze sklepu),</li>
+      <li>nie chcesz karmić gryzoniami ani rybami,</li>
+      <li>akceptujesz, że wąż jest aktywny głównie wieczorem i w nocy,</li>
+      <li>planujesz rozmnażanie <strong>tylko wtedy</strong>, gdy masz pewne źródło jaj zeberek/amadyn (najlepiej własne ptaki),</li>
+      <li>interesuje cię niezwykła biologia i długowieczne zwierzę (15–20+ lat).</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3>Wybierz pończosznika, jeśli…</h3>
+    <ul class="check">
+      <li>chcesz aktywnego, dziennego węża, którego widać w terrarium,</li>
+      <li>nie przeszkadza ci częstsze sprzątanie i wymiana wody,</li>
+      <li>jesteś gotów nauczyć się zasad żywienia (tiaminaza, wapń, suplementy) lub karmić myszami,</li>
+      <li>chcesz łatwiejszego rozmnażania i od razu gotowych do jedzenia młodych,</li>
+      <li>myślisz o grupie lub kolekcji odmian barwnych (<i>T. sirtalis</i>, <i>T. marcianus</i>).</li>
+    </ul>
+  </div>
+</div>
+<div class="note"><strong>Dla początkującego:</strong> <i>Thamnophis marcianus</i> karmiony myszami jest prawdopodobnie najprostszym wyborem z tej dwójki. Jajożer jest równie łatwy w utrzymaniu jako pojedynczy dorosły wąż, ale jego rozmnażanie wymaga dobrze zaplanowanej logistyki pokarmowej.</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Opracowanie poglądowe na podstawie ogólnodostępnej wiedzy terrarystycznej i herpetologicznej. Parametry są orientacyjne: zawsze obserwuj konkretnego osobnika, a w razie problemów zdrowotnych skonsultuj się z lekarzem weterynarii specjalizującym się w gadach.</p>
+  </div>
+</footer>
+
+</body>
+</html>
