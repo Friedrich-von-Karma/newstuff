@@ -1,0 +1,31 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/oxyhaloa-deusta/ i dopisz w gallery.
+latin: "Oxyhaloa deusta"
+author: "(Thunberg, 1784)"
+family: "Blaberidae"
+origin:
+  pl: "Afryka Południowa i Wschodnia"
+  en: "southern and eastern Africa"
+size:
+  pl: "ok. 14–20 mm"
+  en: "approx. 14–20 mm"
+temperature: "24–31 °C"
+humidity:
+  pl: "umiarkowana, ok. 60–70%, przy dobrej wentylacji"
+  en: "moderate, approx. 60–70%, with good ventilation"
+substrate:
+  pl: "małe, dobrze wentylowane pudełko z wytłoczkami po jajkach; podłoże raczej suche z jednym wilgotnym rogiem; szczelna pokrywa i pasek wazeliny – świetnie się wspinają"
+  en: "a small, well-ventilated box packed with egg crate; mostly dry substrate with one damp corner; tight lid and a petroleum-jelly barrier – they are excellent climbers"
+food:
+  pl: "sucha karma, owoce, warzywa"
+  en: "dry food, fruit, vegetables"
+reproduction:
+  pl: "jajożyworodny, mioty często – mniej więcej co 3 tygodnie"
+  en: "ovoviviparous, frequent litters – roughly every 3 weeks"
+development:
+  pl: "ok. 3–5 miesięcy w cieple"
+  en: "approx. 3–5 months when kept warm"
+difficulty: 1
+climbs: true
+flies: false
+gallery: []

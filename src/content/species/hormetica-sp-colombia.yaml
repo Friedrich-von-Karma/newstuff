@@ -1,0 +1,30 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/hormetica-sp-colombia/ i dopisz w gallery.
+latin: "Hormetica sp. \"Colombia\""
+family: "Blaberidae"
+origin:
+  pl: "Kolumbia (dokładne stanowisko nieznane)"
+  en: "Colombia (exact locality unknown)"
+size:
+  pl: "ok. 35–50 mm"
+  en: "approx. 35–50 mm"
+temperature: "22–26 °C"
+humidity:
+  pl: "wysoka, ok. 70%"
+  en: "high, approx. 70%"
+substrate:
+  pl: "kilka cm włókna kokosowego z warstwą liści i kryjówkami; ok. 1/3 podłoża wilgotna"
+  en: "several cm of coco fibre with leaf litter and hides; about 1/3 of the substrate kept damp"
+food:
+  pl: "sucha karma (np. dla psa lub kota), owoce, warzywa, suche liście"
+  en: "dry food (e.g. dog or cat kibble), fruit, vegetables, dry leaves"
+reproduction:
+  pl: "jajożyworodny"
+  en: "ovoviviparous"
+development:
+  pl: "kilka miesięcy do ok. roku"
+  en: "several months to about a year"
+difficulty: 2
+climbs: false
+flies: false
+gallery: []

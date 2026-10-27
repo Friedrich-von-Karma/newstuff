@@ -85,26 +85,26 @@ export const photos: Record<string, Photo> = {
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0/',
     subject: { pl: 'osobnik dorosły', en: 'adult' },
   },
-  'blaptica-dubia': {
-    file: 'Blaptica dubia - various.jpg',
-    author: 'Drägüs',
-    license: 'CC BY-SA 3.0',
-    licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/',
-    subject: { pl: 'kilka osobników, zoo w Schwerinie', en: 'several individuals, Schwerin Zoo' },
+  'oxyhaloa-deusta': {
+    file: 'Wild Cockroach (Oxyhaloa deusta) (15862162414).jpg',
+    author: 'Bernard Dupont',
+    license: 'CC BY-SA 2.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0/',
+    subject: { pl: 'dziki osobnik, Park Narodowy Krugera, RPA', en: 'wild individual, Kruger National Park, South Africa' },
   },
-  'gromphadorhina-portentosa': {
-    file: 'Gromphadorhina portentosa (outside).jpg',
-    author: 'Markbenecke',
-    license: 'CC BY-SA 4.0',
-    licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    subject: { pl: 'samiec', en: 'male' },
+  'macropanesthia-rhinoceros': {
+    file: 'MP - Macropanesthia rhinoceros 2.jpg',
+    author: 'Mark Pellegrini (Raul654)',
+    license: 'CC BY-SA 2.5',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.5/',
+    subject: { pl: 'okaz w Audubon Insectarium, Nowy Orlean', en: 'specimen at the Audubon Insectarium, New Orleans' },
   },
-  'panchlora-nivea': {
-    file: 'Panchlora nivea.jpg',
-    author: 'Drigomf (Rodrigo de Araujo Sousa Fonseca)',
-    license: 'CC BY-SA 4.0',
-    licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-    subject: { pl: 'osobnik dorosły', en: 'adult' },
+  'archimandrita-marmorata': {
+    file: '16 Archimandrite cockroach (Archimandrita tesselata).jpg',
+    author: 'Helmmet',
+    license: 'CC BY 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+    subject: { pl: 'Archimandrita „tesselata” w insektarium', en: 'Archimandrita “tesselata” in an insectarium' },
   },
 };
 

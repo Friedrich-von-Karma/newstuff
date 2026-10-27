@@ -1,0 +1,31 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/macropanesthia-rhinoceros/ i dopisz w gallery.
+latin: "Macropanesthia rhinoceros"
+author: "Saussure, 1895"
+family: "Blaberidae"
+origin:
+  pl: "Australia (głównie Queensland)"
+  en: "Australia (mainly Queensland)"
+size:
+  pl: "75–80 mm, ok. 35 g"
+  en: "75–80 mm, approx. 35 g"
+temperature: "21–25 °C"
+humidity:
+  pl: "podłoże wilgotne, ale nie mokre; ok. 60–70%; nie przegrzewać powyżej 26 °C"
+  en: "substrate moist but not wet; approx. 60–70%; do not let it go above 26 °C"
+substrate:
+  pl: "głęboka warstwa (10–15 cm i więcej) torfu kokosowego z ziemią i piaskiem"
+  en: "a deep layer (10–15 cm or more) of coco peat mixed with soil and sand"
+food:
+  pl: "przede wszystkim suche, butwiejące liście (eukaliptus, dąb)"
+  en: "mainly dry, decaying leaves (eucalyptus, oak)"
+reproduction:
+  pl: "jajożyworodny, zwykle 1 miot w roku, do ok. 30 nimf; rodzice długo opiekują się młodymi w norze"
+  en: "ovoviviparous, usually 1 litter a year, up to about 30 nymphs; the parents care for the young in the burrow for a long time"
+development:
+  pl: "bardzo powolny – ok. 3–5 lat; dorosłe żyją 5–10 lat; najcięższy karaczan świata"
+  en: "very slow – approx. 3–5 years; adults live 5–10 years; the heaviest cockroach in the world"
+difficulty: 2
+climbs: false
+flies: false
+gallery: []

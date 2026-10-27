@@ -1,0 +1,30 @@
+# Profil hodowlany – parametry do sprawdzenia przez hodowcę.
+# Własne zdjęcia: wrzuć do public/images/species/eublaberus-sp-ivory/ i dopisz w gallery.
+latin: "Eublaberus sp. \"Ivory\""
+family: "Blaberidae"
+origin:
+  pl: "Ameryka Środkowa i Południowa (forma hodowlana)"
+  en: "Central and South America (hobby form)"
+size:
+  pl: "ok. 40–50 mm"
+  en: "approx. 40–50 mm"
+temperature: "22–30 °C"
+humidity:
+  pl: "umiarkowana, ok. 50–70%"
+  en: "moderate, approx. 50–70%"
+substrate:
+  pl: "głęboka warstwa (min. 5 cm) włókna kokosowego lub ziemi z korą – gatunek kopiący; ok. 1/5 podłoża wilgotna"
+  en: "a deep layer (at least 5 cm) of coco fibre or soil with bark – a burrowing species; about 1/5 of the substrate kept damp"
+food:
+  pl: "owoce, warzywa, sucha karma, suche liście, butwiejące drewno"
+  en: "fruit, vegetables, dry food, dry leaves, rotting wood"
+reproduction:
+  pl: "jajożyworodny, płodny"
+  en: "ovoviviparous, prolific"
+development:
+  pl: "ok. 5–12 miesięcy"
+  en: "approx. 5–12 months"
+difficulty: 1
+climbs: false
+flies: false
+gallery: []
