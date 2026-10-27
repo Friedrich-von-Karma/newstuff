@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Węże bez myszy</title>
+<meta name="description" content="Rozbudowana analiza węży, które w niewoli nie wymagają karmienia gryzoniami: ranking, ceny orientacyjne, dostępność, zasięg naturalny, pokarm, trudność i kwestie prawne.">
+<style>
+:root{
+  --bg:#f7f5f0; --surface:#fff; --surface-2:#efebe2; --text:#1f1d1a; --muted:#5f5a52; --line:#ddd6c8;
+  --accent:#2f6b4f; --accent-soft:#e2efe7;
+  --ok:#2f7a45; --ok-soft:#e1f2e6; --warn:#9a6b00; --warn-soft:#fbf0d4; --bad:#a83232; --bad-soft:#f8e0e0;
+  --c-egg:#8a5a2b; --c-fish:#2f5f8a; --c-ins:#5b7a1f; --c-snail:#7a3f7a; --c-liz:#a0522d; --c-aq:#1f7a7a; --c-border:#666;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151412; --surface:#1e1d1a; --surface-2:#282622; --text:#ece8e0; --muted:#aaa397; --line:#3a3730;
+    --accent:#7cc3a0; --accent-soft:#1f3329;
+    --ok:#7fd196; --ok-soft:#1d3324; --warn:#e8c063; --warn-soft:#3a3016; --bad:#f08a8a; --bad-soft:#3d1f1f;
+    --c-egg:#e0a86f; --c-fish:#8dbbe6; --c-ins:#b3d36a; --c-snail:#d59ad5; --c-liz:#e9a07a; --c-aq:#6fd1d1; --c-border:#aaa;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151412; --surface:#1e1d1a; --surface-2:#282622; --text:#ece8e0; --muted:#aaa397; --line:#3a3730;
+  --accent:#7cc3a0; --accent-soft:#1f3329;
+  --ok:#7fd196; --ok-soft:#1d3324; --warn:#e8c063; --warn-soft:#3a3016; --bad:#f08a8a; --bad-soft:#3d1f1f;
+  --c-egg:#e0a86f; --c-fish:#8dbbe6; --c-ins:#b3d36a; --c-snail:#d59ad5; --c-liz:#e9a07a; --c-aq:#6fd1d1; --c-border:#aaa;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--surface);border-bottom:1px solid var(--line)}
+.hero .wrap{padding-top:40px;padding-bottom:32px}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.15;margin:.3em 0 .4em}
+h2{font-size:1.55rem;margin:2.4em 0 .6em;padding-top:.4em;border-top:2px solid var(--line)}
+h3{font-size:1.15rem;margin:1.6em 0 .4em}
+p{margin:.6em 0}
+.lead{font-size:1.1rem;color:var(--muted);max-width:780px}
+a{color:var(--accent)}
+nav.toc{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:24px 0}
+nav.toc ol{margin:.3em 0 0;padding-left:1.3em;columns:2;column-gap:32px}
+@media (max-width:640px){nav.toc ol{columns:1}}
+.note{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.note.bad{border-color:var(--bad);background:var(--bad-soft)}
+.note.ok{border-color:var(--ok);background:var(--ok-soft)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+table.wide{min-width:980px}
+table.mid{min-width:680px}
+th,td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+thead th{background:var(--surface-2);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+td.num{white-space:nowrap;font-variant-numeric:tabular-nums}
+.cat{display:inline-block;padding:.05em .5em;border-radius:999px;font-size:.78rem;font-weight:700;border:1px solid currentColor;white-space:nowrap}
+.cat.egg{color:var(--c-egg)} .cat.fish{color:var(--c-fish)} .cat.ins{color:var(--c-ins)} .cat.snail{color:var(--c-snail)}
+.cat.liz{color:var(--c-liz)} .cat.aq{color:var(--c-aq)} .cat.border{color:var(--c-border)}
+.av{font-weight:700;white-space:nowrap}
+.av.hi{color:var(--ok)} .av.mid{color:var(--warn)} .av.lo{color:var(--bad)} .av.vlo{color:var(--bad);opacity:.75}
+.dots{white-space:nowrap;letter-spacing:1px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.filters button{font:inherit;font-size:.88rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.filters input{font:inherit;font-size:.9rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--text);min-width:200px;flex:1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:820px){.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.card h3,.card h4{margin-top:.2em}
+.card ul{padding-left:1.2em;margin:.4em 0}
+.card.top{border-top:4px solid var(--accent)}
+.podium{counter-reset:p}
+.podium li{margin:.5em 0}
+.sp{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:12px 0}
+.sp h4{margin:.1em 0 .3em;font-size:1.05rem}
+.sp .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.88rem;color:var(--muted);margin-bottom:.4em}
+.sp p{margin:.35em 0}
+.small{font-size:.88rem;color:var(--muted)}
+footer{margin-top:56px;padding:24px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Analiza · terrarystyka · 2026</div>
+    <h1>Węże, które nie potrzebują myszy: pełny przegląd z rankingiem, cenami i dostępnością</h1>
+    <p class="lead">Zestawienie węży, których podstawą diety w terrarium nie są gryzonie, tylko jaja, ryby, płazy, dżdżownice, ślimaki, owady albo jaszczurki. Dla każdego gatunku: zasięg naturalny, pokarm, wielkość, trudność, dostępność na rynku, orientacyjna cena w Polsce i najważniejsze pułapki.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<nav class="toc" aria-label="Spis treści">
+  <strong>Spis treści</strong>
+  <ol>
+    <li><a href="#skrot">Najważniejsze w skrócie</a></li>
+    <li><a href="#metoda">Jak czytać tę analizę</a></li>
+    <li><a href="#ranking">Ranking ogólny (TOP)</a></li>
+    <li><a href="#tabela">Wielka tabela wszystkich gatunków</a></li>
+    <li><a href="#jaja">Jajożerne</a></li>
+    <li><a href="#ryby">Ryby, płazy, dżdżownice (zaskrońcowate)</a></li>
+    <li><a href="#wodne">Węże wodne Azji (Homalopsidae, Acrochordidae)</a></li>
+    <li><a href="#owady">Owadożerne i pajęczakożerne</a></li>
+    <li><a href="#slimaki">Ślimakożerne</a></li>
+    <li><a href="#jaszczurki">Jaszczurkożerne (drzewne)</a></li>
+    <li><a href="#graniczne">Gatunki graniczne</a></li>
+    <li><a href="#odradzane">Odradzane i niedostępne</a></li>
+    <li><a href="#pokarm">Logistyka i koszt pokarmu</a></li>
+    <li><a href="#prawo">Prawo w Polsce</a></li>
+    <li><a href="#zakup">Gdzie kupić i na co uważać</a></li>
+    <li><a href="#werdykt">Werdykt</a></li>
+  </ol>
+</nav>
+
+<section id="skrot">
+<h2>1. Najważniejsze w skrócie</h2>
+<div class="grid3">
+  <div class="card top"><h3>Najlepsze wybory</h3>
+    <ul>
+      <li><strong>Pończosznik meksykański</strong> <i>Thamnophis marcianus</i></li>
+      <li><strong>Pończosznik zwyczajny</strong> <i>T. sirtalis</i></li>
+      <li><strong>Jajożer</strong> <i>Dasypeltis scabra</i></li>
+      <li><strong>Wąż psiogłowy</strong> <i>Homalopsis buccata</i></li>
+    </ul>
+    <p class="small">Dostępne, z łatwo zdobywalnym pokarmem, dobrze opisane w literaturze.</p>
+  </div>
+  <div class="card"><h3>Ciekawe, ale wymagające</h3>
+    <ul>
+      <li>Wąż zielony szorstki <i>Opheodrys aestivus</i> (owady)</li>
+      <li>Wąż mackowaty <i>Erpeton tentaculatum</i> (ryby, akwarium)</li>
+      <li>Ślimakojady <i>Pareas</i> (ślimaki)</li>
+      <li>Węże wodne <i>Nerodia</i> (ryby)</li>
+      <li>Ahetulla <i>Ahaetulla prasina</i> (jaszczurki, ryby)</li>
+    </ul>
+  </div>
+  <div class="card"><h3>Lepiej omijać</h3>
+    <ul>
+      <li><i>Acrochordus</i>: bardzo trudne</li>
+      <li><i>Farancia</i>, <i>Regina</i>: pokarm praktycznie niedostępny</li>
+      <li>Zaskroniec <i>Natrix natrix</i>: gatunek chroniony w Polsce</li>
+    </ul>
+  </div>
+</div>
+<div class="note warn"><strong>Ważne:</strong> „bez myszy” rzadko znaczy „łatwiej”. Większość węży niejedzących gryzoni to specjaliści pokarmowi. Ich pokarm (małe jaja, żywe ryby, ślimaki, owady, gekony) bywa trudniej dostępny, droższy w przeliczeniu na kaloryczność albo wymaga prowadzenia osobnej hodowli. Prawdziwie łatwe są tylko pończoszniki i jajożery.</div>
+</section>
+
+<section id="metoda">
+<h2>2. Jak czytać tę analizę</h2>
+<ul>
+  <li><strong>Kryterium:</strong> gatunek, który w niewoli może być prowadzony przez całe życie bez gryzoni. Osobno opisuję gatunki „graniczne”, które w naturze nie jedzą myszy, ale w niewoli zwykle się je na nie przestawia.</li>
+  <li><strong>Trudność:</strong> skala 1–5 (1 = dla początkującego, 5 = dla doświadczonych specjalistów).</li>
+  <li><strong>Dostępność</strong> na rynku polskim i niemieckim (giełdy, hodowcy, sklepy): <span class="av hi">wysoka</span>, <span class="av mid">średnia</span>, <span class="av lo">niska</span>, <span class="av vlo">bardzo niska</span>.</li>
+  <li><strong>Pochodzenie:</strong> CB = rozmnożone w niewoli, WC = odłowione w naturze (tańsze, ale częściej chore i zapasożycone), FH = wyklute z jaj z ferm.</li>
+  <li><strong>Zasięg:</strong> naturalny obszar występowania gatunku.</li>
+</ul>
+<div class="note ok"><strong>Bez węży mocno jadowitych.</strong> Zestawienie celowo pomija gatunki groźne dla człowieka (np. <i>Rhabdophis</i>, boomslang, <i>Thelotornis</i>, <i>Psammophis</i>, <i>Malpolon</i>). Część opisanych węży ma słabą wydzielinę jadową (gruczoły Duvernoya), m.in. pończoszniki, <i>Nerodia</i>, węże wodne Azji (<i>Homalopsis</i>, <i>Erpeton</i>, <i>Enhydris</i>, <i>Cerberus</i>), ahetulle, węże latające i <i>Heterodon</i>. U człowieka powoduje ona najwyżej miejscowy obrzęk, ból lub swędzenie, a przy krótkim ugryzieniu zwykle nic. W tabelach te gatunki oznaczono dopiskiem <em>(słabo jadowity, niegroźny)</em>.</div>
+<div class="note"><strong>O cenach:</strong> to <strong>orientacyjne przedziały</strong> za jednego osobnika (młodego lub subadulta) na rynku polskim i na dużych giełdach europejskich (np. Hamm), przeliczone na złotówki. Nie udało mi się zweryfikować aktualnych ogłoszeń z października 2026, więc ceny traktuj jako punkt wyjścia. Odmiany barwne, rzadkie podgatunki i dorosłe pary rozrodcze są wyraźnie droższe, zwierzęta WC tańsze.</div>
+</section>
+
+<section id="ranking">
+<h2>3. Ranking ogólny</h2>
+<p>Ocena łączy: dostępność zwierzęcia, dostępność i koszt pokarmu, trudność utrzymania, odporność na błędy, możliwość rozmnażania i „przyjemność z hodowli”. Skala 0–10.</p>
+<div class="table-wrap">
+<table class="mid">
+<thead><tr><th>#</th><th>Gatunek</th><th>Pokarm</th><th>Ocena</th><th>Dlaczego</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong><i>Thamnophis marcianus</i></strong><br>pończosznik meksykański</td><td><span class="cat fish">ryby / dżdżownice</span></td><td class="num"><strong>9,5</strong></td><td>Najłatwiejszy, odporny, łatwo dostępny, łatwy rozród (żyworodny). Może żyć na rybach i dżdżownicach, choć chętnie przyjmuje też myszy.</td></tr>
+<tr><td>2</td><td><strong><i>Thamnophis sirtalis</i></strong><br>pończosznik zwyczajny</td><td><span class="cat fish">ryby / dżdżownice</span></td><td class="num"><strong>9,0</strong></td><td>Piękne podgatunki i odmiany, aktywny w dzień. Nieco bardziej nerwowy i częściej odmawia innego pokarmu niż ryby.</td></tr>
+<tr><td>3</td><td><strong><i>Dasypeltis scabra</i></strong><br>jajożer pospolity</td><td><span class="cat egg">jaja</span></td><td class="num"><strong>8,5</strong></td><td>Dorosłe karmione tanimi jajami przepiórczymi, czysty, spokojny, długowieczny. Minus: pokarm dla młodych i ograniczona podaż CB.</td></tr>
+<tr><td>4</td><td><strong>Inne <i>Thamnophis</i></strong> (<i>elegans, radix, cyrtopsis, eques</i>)</td><td><span class="cat fish">ryby / dżdżownice</span></td><td class="num"><strong>8,0</strong></td><td>Jak wyżej, ale rzadziej dostępne.</td></tr>
+<tr><td>5</td><td><strong><i>Homalopsis buccata</i></strong><br>wąż psiogłowy</td><td><span class="cat aq">ryby</span></td><td class="num"><strong>7,5</strong></td><td>Tani, łatwy, je ryby z pęsety. Głównie WC, więc trzeba odrobaczyć; wymaga akwaterrarium.</td></tr>
+<tr><td>6</td><td><strong><i>Thamnophis sauritus / proximus</i></strong><br>pończoszniki wstęgowe</td><td><span class="cat fish">ryby / płazy</span></td><td class="num"><strong>7,0</strong></td><td>Bardzo ładne i aktywne, ale rybożerne „z uporem” i bardziej płochliwe.</td></tr>
+<tr><td>7</td><td><strong><i>Nerodia</i> spp.</strong><br>węże wodne</td><td><span class="cat fish">ryby</span></td><td class="num"><strong>6,5</strong></td><td>Łatwe w żywieniu, żyworodne, ale gryzą i piżmują, dużo brudzą, bywają duże.</td></tr>
+<tr><td>8</td><td><strong><i>Erpeton tentaculatum</i></strong><br>wąż mackowaty</td><td><span class="cat aq">żywe ryby</span></td><td class="num"><strong>6,5</strong></td><td>Fascynujący, w pełni wodny (akwarium). Wymaga stałej podaży żywych rybek; CB coraz częstsze.</td></tr>
+<tr><td>9</td><td><strong><i>Fowlea piscator</i></strong><br>szachownicowiec</td><td><span class="cat fish">ryby / żaby</span></td><td class="num"><strong>6,0</strong></td><td>Tani i żarłoczny, ale niemal wyłącznie WC, agresywny przy obsłudze.</td></tr>
+<tr><td>10</td><td><strong><i>Opheodrys aestivus</i></strong><br>wąż zielony szorstki</td><td><span class="cat ins">owady</span></td><td class="num"><strong>5,5</strong></td><td>Jedyny popularny prawdziwie owadożerny wąż. Łagodny, ale delikatny; zwierzęta WC często źle się aklimatyzują.</td></tr>
+<tr><td>11</td><td><strong><i>Pareas</i> spp.</strong><br>ślimakojady</td><td><span class="cat snail">ślimaki</span></td><td class="num"><strong>5,0</strong></td><td>Wyjątkowa biologia, ale trzeba hodować ślimaki; WC, wrażliwe na przegrzanie.</td></tr>
+<tr><td>12</td><td><strong><i>Ahaetulla prasina</i></strong><br>ahetulla zielona</td><td><span class="cat liz">jaszczurki / ryby</span></td><td class="num"><strong>4,5</strong></td><td>Spektakularna, ale wymaga gekonów lub nauki jedzenia ryb; stres, odwodnienie, choroby WC.</td></tr>
+<tr><td>13</td><td><strong><i>Storeria dekayi</i></strong><br>wąż brązowy</td><td><span class="cat snail">ślimaki / dżdżownice</span></td><td class="num"><strong>4,5</strong></td><td>Malutki i łagodny, pokarm do zdobycia, ale bardzo słabo dostępny w Europie.</td></tr>
+<tr><td>14</td><td><strong><i>Chrysopelea</i> spp.</strong><br>węże latające</td><td><span class="cat liz">jaszczurki</span></td><td class="num"><strong>3,5</strong></td><td>Wymagają żywych lub mrożonych gekonów; WC, nerwowe.</td></tr>
+<tr><td>15</td><td><strong><i>Acrochordus</i> spp.</strong><br>brodawczaki</td><td><span class="cat aq">ryby</span></td><td class="num"><strong>2,5</strong></td><td>Bardzo trudne, duży zbiornik, choroby skóry, długie głodówki.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="tabela">
+<h2>4. Wielka tabela wszystkich gatunków</h2>
+<p class="small">Filtruj według rodzaju pokarmu albo wpisz nazwę. Tabelę można przewijać w poziomie.</p>
+<div class="filters" role="group" aria-label="Filtry">
+  <button type="button" data-f="all" aria-pressed="true">Wszystkie</button>
+  <button type="button" data-f="egg">Jaja</button>
+  <button type="button" data-f="fish">Ryby / płazy / dżdżownice</button>
+  <button type="button" data-f="aq">Wodne Azji</button>
+  <button type="button" data-f="ins">Owady</button>
+  <button type="button" data-f="snail">Ślimaki</button>
+  <button type="button" data-f="liz">Jaszczurki</button>
+  <button type="button" data-f="border">Graniczne</button>
+  <input type="search" id="q" placeholder="Szukaj gatunku…" aria-label="Szukaj gatunku">
+</div>
+<div class="table-wrap">
+<table class="wide" id="big">
+<thead><tr><th>Gatunek</th><th>Pokarm</th><th>Zasięg naturalny</th><th>Długość</th><th>Rozród</th><th>Trudność</th><th>Dostępność</th><th>Pochodzenie</th><th>Cena orient. (zł)</th></tr></thead>
+<tbody>
+<tr data-c="egg"><td><strong><i>Dasypeltis scabra</i></strong><br>jajożer pospolity</td><td><span class="cat egg">jaja ptasie</span></td><td>Afryka subsaharyjska</td><td class="num">60–90 cm</td><td>jaja</td><td class="dots">●●●○○</td><td><span class="av mid">średnia</span></td><td>CB / WC</td><td class="num">300–700</td></tr>
+<tr data-c="egg"><td><strong><i>Dasypeltis gansi, D. fasciata, D. medici</i></strong><br>inne jajożery</td><td><span class="cat egg">jaja ptasie</span></td><td>Afryka Zach., Środk. i Wsch.</td><td class="num">60–100 cm</td><td>jaja</td><td class="dots">●●●○○</td><td><span class="av lo">niska</span></td><td>CB / WC</td><td class="num">500–1200</td></tr>
+<tr data-c="fish"><td><strong><i>Thamnophis marcianus</i></strong><br>pończosznik meksykański <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat fish">ryby, dżdżownice</span></td><td>płd.-zach. USA, Meksyk, Am. Środk.</td><td class="num">50–70 cm</td><td>żyworodny</td><td class="dots">●○○○○</td><td><span class="av hi">wysoka</span></td><td>CB</td><td class="num">100–250 (odmiany 300–1000+)</td></tr>
+<tr data-c="fish"><td><strong><i>Thamnophis sirtalis</i></strong><br>pończosznik zwyczajny <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat fish">ryby, dżdżownice, płazy</span></td><td>niemal cała Ameryka Płn.</td><td class="num">60–120 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av hi">wysoka</span></td><td>CB</td><td class="num">150–400 (odmiany, <i>tetrataenia</i> 600–2000+)</td></tr>
+<tr data-c="fish"><td><strong><i>Thamnophis elegans, radix, cyrtopsis, eques</i></strong> <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat fish">ryby, dżdżownice</span></td><td>zach. i środk. USA, Meksyk</td><td class="num">50–90 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av mid">średnia</span></td><td>CB</td><td class="num">150–450</td></tr>
+<tr data-c="fish"><td><strong><i>Thamnophis sauritus, T. proximus</i></strong><br>pończoszniki wstęgowe <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat fish">ryby, płazy</span></td><td>wsch. i centr. USA, Meksyk</td><td class="num">50–90 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av lo">niska</span></td><td>CB / WC</td><td class="num">150–350</td></tr>
+<tr data-c="fish"><td><strong><i>Nerodia fasciata, N. sipedon</i></strong><br>węże wodne <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat fish">ryby, płazy</span></td><td>wsch. i płd. USA</td><td class="num">60–120 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av lo">niska</span></td><td>CB / WC</td><td class="num">200–500</td></tr>
+<tr data-c="fish"><td><strong><i>Nerodia rhombifer, N. erythrogaster, N. cyclopion</i></strong> <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat fish">ryby</span></td><td>płd. USA, płn.-wsch. Meksyk</td><td class="num">80–150 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av vlo">bardzo niska</span></td><td>CB / WC</td><td class="num">300–700</td></tr>
+<tr data-c="fish"><td><strong><i>Natrix maura</i></strong><br>zaskroniec żmijowaty</td><td><span class="cat fish">ryby, płazy</span></td><td>Płw. Iberyjski, Francja, Afryka Płn.</td><td class="num">50–90 cm</td><td>jaja</td><td class="dots">●●○○○</td><td><span class="av vlo">bardzo niska</span></td><td>CB (dokumenty!)</td><td class="num">300–700</td></tr>
+<tr data-c="fish"><td><strong><i>Fowlea piscator</i></strong> (dawniej <i>Xenochrophis</i>)<br>szachownicowiec</td><td><span class="cat fish">ryby, żaby</span></td><td>Azja Płd. i Płd.-Wsch.</td><td class="num">80–120 cm</td><td>jaja</td><td class="dots">●●○○○</td><td><span class="av lo">niska</span></td><td>WC</td><td class="num">100–250</td></tr>
+<tr data-c="fish"><td><strong><i>Storeria dekayi</i></strong><br>wąż brązowy</td><td><span class="cat snail">ślimaki nagie, dżdżownice</span></td><td>wsch. USA, Meksyk</td><td class="num">25–35 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av vlo">bardzo niska</span></td><td>WC / CB</td><td class="num">100–250</td></tr>
+<tr data-c="fish"><td><strong><i>Carphophis amoenus, Virginia valeriae</i></strong></td><td><span class="cat fish">dżdżownice</span></td><td>wsch. USA</td><td class="num">20–35 cm</td><td>jaja / żyworodny</td><td class="dots">●●●○○</td><td><span class="av vlo">bardzo niska</span></td><td>WC</td><td class="num">100–250</td></tr>
+<tr data-c="aq"><td><strong><i>Homalopsis buccata</i></strong><br>wąż psiogłowy <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat aq">ryby</span></td><td>Azja Płd.-Wsch.</td><td class="num">70–120 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av mid">średnia</span></td><td>WC</td><td class="num">100–300</td></tr>
+<tr data-c="aq"><td><strong><i>Subsessor bocourti, Hypsiscopus plumbea, Enhydris enhydris</i></strong> <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat aq">ryby</span></td><td>Azja Płd.-Wsch., Chiny</td><td class="num">40–90 cm</td><td>żyworodny</td><td class="dots">●●○○○</td><td><span class="av lo">niska</span></td><td>WC</td><td class="num">80–300</td></tr>
+<tr data-c="aq"><td><strong><i>Erpeton tentaculatum</i></strong><br>wąż mackowaty <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat aq">żywe ryby</span></td><td>Tajlandia, Kambodża, Wietnam</td><td class="num">50–90 cm</td><td>żyworodny</td><td class="dots">●●●○○</td><td><span class="av lo">niska</span></td><td>CB / WC</td><td class="num">300–800</td></tr>
+<tr data-c="aq"><td><strong><i>Cerberus schneiderii</i></strong> (dawniej <i>C. rynchops</i>) <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat aq">ryby</span></td><td>wybrzeża Azji Płd.-Wsch.</td><td class="num">60–100 cm</td><td>żyworodny</td><td class="dots">●●●○○</td><td><span class="av lo">niska</span></td><td>WC</td><td class="num">150–350</td></tr>
+<tr data-c="aq"><td><strong><i>Acrochordus javanicus, A. granulatus</i></strong><br>brodawczaki</td><td><span class="cat aq">ryby</span></td><td>Azja Płd.-Wsch., Australia</td><td class="num">90–200 cm</td><td>żyworodny</td><td class="dots">●●●●●</td><td><span class="av vlo">bardzo niska</span></td><td>WC</td><td class="num">600–2000</td></tr>
+<tr data-c="ins"><td><strong><i>Opheodrys aestivus</i></strong><br>wąż zielony szorstki</td><td><span class="cat ins">owady, pająki</span></td><td>wsch. i płd. USA, płn.-wsch. Meksyk</td><td class="num">60–90 cm</td><td>jaja</td><td class="dots">●●●○○</td><td><span class="av mid">średnia</span> (sezonowo)</td><td>WC / CB</td><td class="num">150–400</td></tr>
+<tr data-c="ins"><td><strong><i>Opheodrys vernalis</i></strong><br>wąż zielony gładki</td><td><span class="cat ins">owady, pająki</span></td><td>płn.-wsch. USA, płd. Kanada</td><td class="num">30–50 cm</td><td>jaja</td><td class="dots">●●●●○</td><td><span class="av vlo">bardzo niska</span></td><td>WC</td><td class="num">200–500</td></tr>
+<tr data-c="ins"><td><strong><i>Indotyphlops braminus</i></strong><br>ślepucz bramiński</td><td><span class="cat ins">larwy mrówek, termity</span></td><td>pierwotnie Azja Płd., dziś tropiki świata</td><td class="num">10–17 cm</td><td>jaja, partenogeneza</td><td class="dots">●●●○○</td><td><span class="av lo">niska</span></td><td>WC</td><td class="num">50–150</td></tr>
+<tr data-c="ins"><td><strong><i>Tantilla</i>, <i>Sonora</i></strong><br>węże stonogojady, węże ziemne</td><td><span class="cat ins">skolopendry, pająki, skorpiony, owady</span></td><td>USA, Meksyk, Am. Środk.</td><td class="num">20–40 cm</td><td>jaja</td><td class="dots">●●●●○</td><td><span class="av vlo">bardzo niska</span></td><td>WC</td><td class="num">150–400</td></tr>
+<tr data-c="snail"><td><strong><i>Pareas carinatus, P. iwasakii, P. formosensis</i></strong><br>ślimakojady</td><td><span class="cat snail">ślimaki</span></td><td>Azja Płd.-Wsch., Tajwan, wyspy Japonii</td><td class="num">40–70 cm</td><td>jaja</td><td class="dots">●●●●○</td><td><span class="av lo">niska</span></td><td>WC</td><td class="num">150–450</td></tr>
+<tr data-c="snail"><td><strong><i>Dipsas</i>, <i>Sibon</i></strong><br>ślimakojady neotropikalne</td><td><span class="cat snail">ślimaki</span></td><td>Am. Środk. i Płd.</td><td class="num">40–80 cm</td><td>jaja</td><td class="dots">●●●●○</td><td><span class="av vlo">bardzo niska</span></td><td>WC / CB</td><td class="num">300–900</td></tr>
+<tr data-c="liz"><td><strong><i>Ahaetulla prasina, A. nasuta, A. mycterizans</i></strong><br>ahetulle <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat liz">jaszczurki, żaby, ryby</span></td><td>Azja Płd. i Płd.-Wsch.</td><td class="num">100–180 cm</td><td>żyworodne</td><td class="dots">●●●●○</td><td><span class="av mid">średnia</span></td><td>WC / CB</td><td class="num">250–700</td></tr>
+<tr data-c="liz"><td><strong><i>Chrysopelea ornata, C. paradisi</i></strong><br>węże latające <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat liz">jaszczurki</span></td><td>Azja Płd. i Płd.-Wsch.</td><td class="num">80–130 cm</td><td>jaja</td><td class="dots">●●●●○</td><td><span class="av lo">niska</span></td><td>WC</td><td class="num">300–800</td></tr>
+<tr data-c="liz"><td><strong><i>Dendrelaphis</i> spp.</strong><br>węże brązowogrzbiete</td><td><span class="cat liz">żaby, jaszczurki</span></td><td>Azja Płd.-Wsch., Australia</td><td class="num">80–150 cm</td><td>jaja</td><td class="dots">●●●●○</td><td><span class="av vlo">bardzo niska</span></td><td>WC</td><td class="num">200–500</td></tr>
+<tr data-c="border"><td><strong><i>Heterodon nasicus</i></strong><br>żmijowiec zachodni <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat border">w naturze płazy, gady, jaja; w niewoli myszy</span></td><td>Wielkie Równiny USA, płn. Meksyk</td><td class="num">40–80 cm</td><td>jaja</td><td class="dots">●●○○○</td><td><span class="av hi">wysoka</span></td><td>CB</td><td class="num">250–600 (odmiany do kilku tys.)</td></tr>
+<tr data-c="border"><td><strong><i>Heterodon platirhinos, H. simus</i></strong> <em class="small">(słabo jadowity, niegroźny)</em></td><td><span class="cat border">ropuchy (specjalista)</span></td><td>wsch. i płd.-wsch. USA</td><td class="num">50–100 cm</td><td>jaja</td><td class="dots">●●●●●</td><td><span class="av vlo">bardzo niska</span></td><td>CB / WC</td><td class="num">400–1500</td></tr>
+<tr data-c="border"><td><strong><i>Diadophis punctatus</i></strong><br>wąż obrączkowy</td><td><span class="cat border">dżdżownice, salamandry, małe węże; część przyjmuje myszy</span></td><td>większość USA, płd. Kanada, Meksyk</td><td class="num">25–45 cm</td><td>jaja</td><td class="dots">●●●○○</td><td><span class="av lo">niska</span></td><td>WC / CB</td><td class="num">200–500</td></tr>
+<tr data-c="border"><td><strong><i>Leptodeira septentrionalis, L. annulata</i></strong><br>węże kocie</td><td><span class="cat border">żaby, ryby; część przyjmuje myszy</span></td><td>Meksyk, Am. Środk. i Płd.</td><td class="num">50–90 cm</td><td>jaja</td><td class="dots">●●●○○</td><td><span class="av lo">niska</span></td><td>CB / WC</td><td class="num">200–450</td></tr>
+<tr data-c="border"><td><strong><i>Xenodermus javanicus</i></strong></td><td><span class="cat border">żaby</span></td><td>Indochiny, Sumatra, Jawa, Borneo</td><td class="num">50–65 cm</td><td>jaja</td><td class="dots">●●●●●</td><td><span class="av vlo">bardzo niska</span></td><td>WC</td><td class="num">200–500</td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Trudność: ● = 1 punkt z 5. Ceny orientacyjne za młodego / subadulta, nie dorosłą parę rozrodczą.</p>
+</section>
+
+<section id="jaja">
+<h2>5. Jajożerne</h2>
+<div class="sp">
+  <h4><i>Dasypeltis scabra</i> i inne jajożery</h4>
+  <div class="meta"><span>Zasięg: Afryka subsaharyjska</span><span>60–90 cm</span><span>Trudność 3/5</span><span>300–700 zł</span></div>
+  <p>Jedyna grupa węży hodowlanych żywiąca się wyłącznie jajami ptaków. Połyka jajo w całości, rozcina je wyrostkami kręgów w przełyku i zwraca skorupkę. Dorosłe karmi się jajami przepiórczymi (ok. 1–3 jaja co 5–10 dni), młode jajami zeberek, amadyn i małych papug.</p>
+  <p><strong>Plusy:</strong> spokojny, prawie bezzębny, czysty, długowieczny (15–20+ lat), pokarm dorosłych tani i dostępny cały rok. <strong>Minusy:</strong> nocny tryb życia, ograniczona podaż zwierząt CB, ogromna trudność przy odchowie młodych (bardzo małe jaja).</p>
+  <p>Inne gatunki (<i>D. gansi</i>, <i>D. fasciata</i>, <i>D. medici</i>) są rzadsze i droższe, a wymagania mają podobne. Indyjski jajożer <i>Elachistodon westermanni</i> jest chroniony i niedostępny w handlu.</p>
+  <p class="small">Szczegółowe porównanie z pończosznikiem: plik <code>jajozery-i-ponczoszniki.html</code>.</p>
+</div>
+</section>
+
+<section id="ryby">
+<h2>6. Ryby, płazy, dżdżownice (zaskrońcowate, Natricinae)</h2>
+<p>Najważniejsza i najłatwiejsza grupa. To krewni naszego zaskrońca: aktywni w dzień, żyjący przy wodzie, szybko trawiący. Większość z nich jest <strong>żyworodna</strong>, więc rozród nie wymaga inkubatora.</p>
+<div class="note warn"><strong>Wspólna pułapka całej grupy: tiaminaza.</strong> Karp, karaś, złota rybka, stynka, śledź, szprot i wiele innych ryb zawiera enzym rozkładający witaminę B1. Długie karmienie nimi prowadzi do drżeń, zaburzeń równowagi i śmierci. Bezpieczne: tilapia, pstrąg, dorsz, mintaj, morszczuk, okoń, gupiki z pewnego źródła. Do filetów dodawać wapń, przy rybach niepewnych witaminę B1. Dżdżownice: rosówki tak, kalifornijskie (<i>Eisenia</i>) nie.</div>
+
+<div class="sp">
+  <h4><i>Thamnophis marcianus</i>, pończosznik meksykański</h4>
+  <div class="meta"><span>Zasięg: płd.-zach. USA, Meksyk, Ameryka Środk.</span><span>50–70 cm</span><span>Trudność 1/5</span><span>100–250 zł, odmiany 300–1000+ zł</span></div>
+  <p>Najlepszy wąż „bez myszy” dla początkującego. Je ryby, dżdżownice, kawałki ryby z suplementem, a w razie potrzeby łatwo przechodzi na myszy. Dostępne odmiany: albino, „checkered”, „flame”, „snow”, hypo. Terrarium od 80×40×40 cm, gradient 24–32 °C, miska wody.</p>
+</div>
+<div class="sp">
+  <h4><i>Thamnophis sirtalis</i>, pończosznik zwyczajny</h4>
+  <div class="meta"><span>Zasięg: niemal cała Ameryka Płn., od Kanady po Florydę</span><span>60–120 cm</span><span>Trudność 2/5</span><span>150–400 zł; <i>T. s. tetrataenia</i> i „flame” 600–2000+ zł</span></div>
+  <p>Najbardziej zróżnicowany gatunek: <i>similis</i> (niebieski), <i>parietalis</i> (czerwone boki), <i>fitchi</i>, <i>concinnus</i>, <i>infernalis</i>, <i>tetrataenia</i> (San Francisco, w naturze ściśle chroniony; w handlu tylko z udokumentowanej hodowli). Częściej niż marcianus upiera się przy rybach. Do rozrodu wymaga zimowli 4–10 °C.</p>
+</div>
+<div class="sp">
+  <h4>Pończoszniki wstęgowe: <i>T. sauritus</i>, <i>T. proximus</i></h4>
+  <div class="meta"><span>Zasięg: wsch. i centralne USA, Meksyk</span><span>50–90 cm</span><span>Trudność 2/5</span><span>150–350 zł</span></div>
+  <p>Bardzo smukłe i szybkie, mocno związane z wodą. Jedzą prawie wyłącznie ryby i płazy, myszy przyjmują rzadko. Lubią większy zbiornik wodny, są płochliwe.</p>
+</div>
+<div class="sp">
+  <h4><i>Nerodia</i>, węże wodne</h4>
+  <div class="meta"><span>Zasięg: wschodnie i południowe USA</span><span>60–150 cm</span><span>Trudność 2/5</span><span>200–700 zł</span></div>
+  <p>Łatwe w żywieniu (ryby bez tiaminazy, filety z suplementami), żyworodne, bardzo płodne. Minusy: często gryzą przy obsłudze, piżmują, dużo jedzą i dużo brudzą, a <i>N. rhombifer</i> i <i>N. cyclopion</i> bywają masywne. Potrzebne duże terrarium z basenem i porządną filtracją lub częstą wymianą wody.</p>
+</div>
+<div class="sp">
+  <h4><i>Natrix maura</i> i inne zaskrońce europejskie</h4>
+  <div class="meta"><span>Zasięg: Płw. Iberyjski, Francja, Włochy (płn.-zach.), Afryka Płn.</span><span>50–90 cm</span><span>Trudność 2/5</span><span>300–700 zł</span></div>
+  <p>Biologicznie łatwe, ale prawnie skomplikowane: europejskie zaskrońce są chronione na mocy konwencji berneńskiej, a <i>Natrix tessellata</i> również dyrektywy siedliskowej. Można trzymać tylko zwierzęta z udokumentowanej hodowli. <strong>Zaskroniec zwyczajny <i>N. natrix</i> jest w Polsce chroniony</strong>; nie wolno go odławiać ani przetrzymywać bez zezwolenia.</p>
+</div>
+<div class="sp">
+  <h4><i>Fowlea piscator</i>, szachownicowiec</h4>
+  <div class="meta"><span>Zasięg: Pakistan, Indie, Sri Lanka, Azja Płd.-Wsch., Chiny płd.</span><span>80–120 cm</span><span>Trudność 2/5</span><span>100–250 zł</span></div>
+  <p>Bardzo żarłoczny, łatwo je ryby, ale prawie wyłącznie z odłowu: zapasożycony, nerwowy, gryzie mocno i często. Dla osób, które chcą obserwować, a nie dotykać.</p>
+</div>
+<div class="sp">
+  <h4><i>Storeria</i>, <i>Carphophis</i>, <i>Virginia</i>: maluchy na dżdżownice i ślimaki</h4>
+  <div class="meta"><span>Zasięg: wschodnie USA</span><span>20–35 cm</span><span>Trudność 2–3/5</span><span>100–250 zł</span></div>
+  <p>Bardzo małe, ukryte węże, które w całości mogą żyć na dżdżownicach i ślimakach nagich. Wystarczy im mały pojemnik z wilgotnym podłożem. W Europie dostępne sporadycznie, prawie zawsze WC. Ciekawostka raczej niż „wąż na pokaz”.</p>
+</div>
+</section>
+
+<section id="wodne">
+<h2>7. Węże wodne Azji (Homalopsidae, Acrochordidae)</h2>
+<p>Prawie całkowicie wodne węże żywiące się rybami. Zamiast terrarium potrzebują <strong>akwaterrarium</strong> (np. 100×40×40 cm z 15–25 cm wody, wyspą lub korzeniem do wychodzenia) albo pełnego akwarium. Woda 25–28 °C, filtracja, częste podmiany. Prawie wszystkie są żyworodne. Na rynku dominują zwierzęta WC: konieczne badanie kału i odrobaczenie.</p>
+<div class="sp">
+  <h4><i>Homalopsis buccata</i>, wąż psiogłowy</h4>
+  <div class="meta"><span>Zasięg: Tajlandia, Malezja, Indonezja, Indochiny</span><span>70–120 cm</span><span>Trudność 2/5</span><span>100–300 zł</span></div>
+  <p>Najłatwiejszy przedstawiciel grupy: je martwe ryby z pęsety, toleruje różne warunki. Nocny, większość czasu spędza w wodzie z wystawioną głową. Woda słodka lub lekko słonawa. Może szczypać przy obsłudze, ale zwykle się uspokaja.</p>
+</div>
+<div class="sp">
+  <h4><i>Erpeton tentaculatum</i>, wąż mackowaty</h4>
+  <div class="meta"><span>Zasięg: Tajlandia, Kambodża, płd. Wietnam</span><span>50–90 cm</span><span>Trudność 3/5</span><span>300–800 zł</span></div>
+  <p>Jedyny wąż z dwoma „mackami” na pysku. W pełni wodny, praktycznie nie wychodzi na ląd, poluje z zasadzki na <strong>żywe</strong> rybki (gupiki, molinezje, rybki bez tiaminazy). Trzymany jak ryba w akwarium z roślinami i słabym prądem. Żyworodny, rodzi w wodzie. Wymaga własnej hodowli rybek karmowych lub stałego dostawcy.</p>
+</div>
+<div class="sp">
+  <h4><i>Subsessor bocourti</i>, <i>Hypsiscopus plumbea</i>, <i>Enhydris enhydris</i>, <i>Cerberus schneiderii</i></h4>
+  <div class="meta"><span>Zasięg: Azja Płd.-Wsch.</span><span>40–100 cm</span><span>Trudność 2–3/5</span><span>80–350 zł</span></div>
+  <p>Podobne w hodowli do węża psiogłowego. <i>Cerberus</i> żyje w wodzie słonawej (namorzyny), co wymaga soli morskiej w zbiorniku; w słodkiej wodzie choruje.</p>
+</div>
+<div class="sp">
+  <h4><i>Acrochordus</i>, brodawczaki</h4>
+  <div class="meta"><span>Zasięg: Azja Płd.-Wsch., Nowa Gwinea, płn. Australia</span><span>90–200 cm</span><span>Trudność 5/5</span><span>600–2000 zł</span></div>
+  <p>Całkowicie wodne, o luźnej, workowatej skórze. Bardzo trudne: wrażliwe na jakość wody, choroby skóry, zwierzęta WC często nie jedzą miesiącami. Wymagają dużego akwarium (min. 150–200 cm). Tylko dla doświadczonych.</p>
+</div>
+</section>
+
+<section id="owady">
+<h2>8. Owadożerne i pajęczakożerne</h2>
+<p>Wąż, który przez całe życie je wyłącznie owady, to w terrarystyce rzadkość. Pończosznik do tej grupy <strong>nie należy</strong> (owady mogą być dla niego najwyżej okazjonalnym dodatkiem).</p>
+<div class="sp">
+  <h4><i>Opheodrys aestivus</i>, wąż zielony szorstki</h4>
+  <div class="meta"><span>Zasięg: wschodnie i południowe USA, płn.-wsch. Meksyk</span><span>60–90 cm</span><span>Trudność 3/5</span><span>150–400 zł</span></div>
+  <p>Smukły, jaskrawo zielony wąż drzewny, bardzo łagodny. Je świerszcze, szarańczę, gąsienice (np. barciaka, motyla jedwabnika), pająki, larwy. Owady trzeba posypywać wapniem z witaminami. Potrzebuje wysokiego terrarium (np. 45×45×90 cm) gęsto obsadzonego roślinami, UVB, wilgotności 50–70% i codziennego zraszania (pije krople z liści).</p>
+  <p><strong>Problem:</strong> większość zwierząt w handlu to WC z USA, często zestresowane, odwodnione i zapasożycone. Kupuj tylko od sprzedawców, którzy pokażą, że wąż je; szukaj CB. Rozmnażanie rzadkie: składa 3–12 jaj.</p>
+</div>
+<div class="sp">
+  <h4><i>Opheodrys vernalis</i>, wąż zielony gładki</h4>
+  <div class="meta"><span>Zasięg: płn.-wsch. USA, płd. Kanada</span><span>30–50 cm</span><span>Trudność 4/5</span><span>200–500 zł</span></div>
+  <p>Mniejszy, naziemny, jeszcze rzadszy i wrażliwszy. W niektórych stanach i prowincjach chroniony.</p>
+</div>
+<div class="sp">
+  <h4><i>Indotyphlops braminus</i>, ślepucz bramiński</h4>
+  <div class="meta"><span>Zasięg: pierwotnie Azja Płd., zawleczony do tropików całego świata</span><span>10–17 cm</span><span>Trudność 3/5</span><span>50–150 zł</span></div>
+  <p>Malutki, ryjący wąż wyglądający jak dżdżownica. Jedyny znany wąż obligatoryjnie partenogenetyczny: wszystkie osobniki to samice, które składają jaja bez samca. Je jaja i larwy mrówek oraz termity, więc trudno go wyżywić w Polsce bez dostępu do kolonii mrówek. Rzadko widoczny, prawie cały czas pod ziemią.</p>
+</div>
+<div class="sp">
+  <h4><i>Tantilla</i>, <i>Sonora</i></h4>
+  <div class="meta"><span>Zasięg: USA, Meksyk, Ameryka Środk.</span><span>20–40 cm</span><span>Trudność 4/5</span><span>150–400 zł</span></div>
+  <p><i>Tantilla</i> specjalizuje się w skolopendrach i larwach chrząszczy, <i>Sonora semiannulata</i> je pająki, skorpiony, świerszcze i larwy. Prawie niedostępne, typowa ciekawostka dla specjalistów.</p>
+</div>
+</section>
+
+<section id="slimaki">
+<h2>9. Ślimakożerne</h2>
+<div class="sp">
+  <h4><i>Pareas</i>, ślimakojady azjatyckie</h4>
+  <div class="meta"><span>Zasięg: Indochiny, Chiny płd., Tajwan, wyspy Riukiu</span><span>40–70 cm</span><span>Trudność 4/5</span><span>150–450 zł</span></div>
+  <p>Mają asymetryczną żuchwę (więcej zębów po jednej stronie), przystosowaną do wyciągania ślimaka ze skorupki skręconej w prawo. Jedzą ślimaki z muszlami i ślimaki nagie. Nocne, drzewne, łagodne. Potrzebne: wysokie, wilgotne terrarium, temperatura 22–26 °C (źle znoszą upał) i <strong>własna hodowla ślimaków</strong> (np. małe ślimaki z rodzaju <i>Cornu</i>, młode afrykańskie ślimaki <i>Achatina</i> i <i>Lissachatina</i>, ślimaki nagie). Prawie wszystkie zwierzęta są WC.</p>
+</div>
+<div class="sp">
+  <h4><i>Dipsas</i>, <i>Sibon</i>, ślimakojady neotropikalne</h4>
+  <div class="meta"><span>Zasięg: Meksyk, Ameryka Środk. i Płd.</span><span>40–80 cm</span><span>Trudność 4/5</span><span>300–900 zł</span></div>
+  <p>Odpowiednik <i>Pareas</i> z Ameryki: duże oczy, cienka szyja, nocny tryb życia. Część gatunków je też jaja płazów. Bardzo rzadkie w handlu.</p>
+</div>
+<div class="note"><strong>Ślimaki z ogrodu</strong> mogą przenosić pasożyty i pozostałości środków ślimakobójczych (metaldehyd, sole żelaza). Bezpieczniej prowadzić własną, zamkniętą hodowlę. Pamiętaj też, że wypuszczanie afrykańskich ślimaków do środowiska jest zabronione.</div>
+</section>
+
+<section id="jaszczurki">
+<h2>10. Jaszczurkożerne (drzewne)</h2>
+<p>Najtrudniejsza logistycznie grupa: naturalnym pokarmem są jaszczurki (gekony, anolisy, scynki), czyli inne gady, które trzeba hodować albo kupować. Część osobników można nauczyć jeść ryby lub myszy nacierane zapachem jaszczurki, ale wtedy przestają być „bez myszy”.</p>
+<div class="sp">
+  <h4><i>Ahaetulla</i>, ahetulle (węże bicze)</h4>
+  <div class="meta"><span>Zasięg: Indie, Sri Lanka, Azja Płd.-Wsch.</span><span>100–180 cm</span><span>Trudność 4/5</span><span>250–700 zł</span></div>
+  <p>Bardzo smukłe, zielone lub brązowe, z poziomymi źrenicami (widzenie obuoczne). Żyworodne. Jedzą jaszczurki i żaby, wiele osobników przyjmuje też rybki (gupiki, molinezje), co znacznie ułatwia hodowlę. Wymagają wysokiego, gęsto obsadzonego terrarium, wysokiej wilgotności i dobrej wentylacji, codziennego zraszania. Są tylnozębne i słabo jadowite: ugryzienie może powodować obrzęk i ból, nie stanowi poważnego zagrożenia.</p>
+</div>
+<div class="sp">
+  <h4><i>Chrysopelea</i>, węże latające</h4>
+  <div class="meta"><span>Zasięg: Indie, Azja Płd.-Wsch.</span><span>80–130 cm</span><span>Trudność 4/5</span><span>300–800 zł</span></div>
+  <p>Potrafią szybować między drzewami, spłaszczając ciało. W niewoli jedzą głównie gekony (np. <i>Hemidactylus</i>, <i>Lepidodactylus</i>), niektóre osobniki przechodzą na myszy. Nerwowe, szybkie, prawie wyłącznie WC.</p>
+</div>
+<div class="sp">
+  <h4><i>Dendrelaphis</i></h4>
+  <div class="meta"><span>Zasięg: Azja Płd.-Wsch., Australia</span><span>80–150 cm</span><span>Trudność 4/5</span><span>200–500 zł</span></div>
+  <p>Szybkie, dzienne, drzewne. Jedzą żaby i jaszczurki. Słabo dostępne, z odłowu.</p>
+</div>
+<div class="note bad"><strong>Etyka i koszty:</strong> hodowla gekonów karmowych to osobna hodowla z własnymi wymaganiami (terraria, owady, UVB). Kupowanie żywych jaszczurek jako pokarmu jest drogie i budzi wątpliwości etyczne. Zanim kupisz węża jaszczurkożernego, zaplanuj, skąd przez lata będziesz brać pokarm.</div>
+</section>
+
+<section id="graniczne">
+<h2>11. Gatunki graniczne</h2>
+<p>W naturze nie są typowymi „myszożercami”, ale w terrarium <strong>zwykle dostają myszy</strong>, bo to najprostsze i najzdrowsze rozwiązanie. Jeśli chcesz całkowicie uniknąć gryzoni, te gatunki lepiej pominąć.</p>
+<div class="table-wrap">
+<table class="mid">
+<thead><tr><th>Gatunek</th><th>Pokarm w naturze</th><th>W niewoli</th><th>Czy da się bez myszy?</th></tr></thead>
+<tbody>
+<tr><th><i>Heterodon nasicus</i></th><td>Ropuchy, jaszczurki, jaja gadów, gryzonie</td><td>Prawie zawsze myszy</td><td>Teoretycznie (ryby, jaja), ale niepraktyczne i niezdrowe na dłuższą metę</td></tr>
+<tr><th><i>Heterodon platirhinos, H. simus</i></th><td>Ropuchy, płazy</td><td>Ropuchy lub myszy nacierane zapachem ropuchy</td><td>Tylko z ropuchami, co jest w Polsce nierealne (płazy chronione)</td></tr>
+<tr><th><i>Diadophis punctatus</i></th><td>Dżdżownice, salamandry, małe węże</td><td>Dżdżownice, część osobników przyjmuje kawałki myszy</td><td>Tak, na dżdżownicach, ale część osobników to „niejadki”</td></tr>
+<tr><th><i>Leptodeira</i></th><td>Żaby, jaja żab, ryby, jaszczurki</td><td>Ryby, myszy</td><td>Tak, na rybach bez tiaminazy</td></tr>
+<tr><th><i>Xenodermus javanicus</i></th><td>Żaby</td><td>Żaby, rzadko ryby</td><td>Teoretycznie tak, bardzo delikatny gatunek</td></tr>
+<tr><th><i>Oligodon</i></th><td>Jaja gadów, żaby, pająki</td><td>Różnie, część je myszy</td><td>Trudno; gatunki rzadkie</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="odradzane">
+<h2>12. Odradzane i niedostępne</h2>
+<div class="table-wrap">
+<table class="mid">
+<thead><tr><th>Gatunek / rodzaj</th><th>Pokarm</th><th>Dlaczego nie</th></tr></thead>
+<tbody>
+<tr><th><i>Natrix natrix</i> (zaskroniec)</th><td>Płazy, ryby</td><td>Gatunek chroniony w Polsce. Nie wolno odławiać ani trzymać bez zezwolenia.</td></tr>
+<tr><th><i>Farancia</i> (wąż bagienny)</th><td>Węgorzowate płazy (<i>Amphiuma</i>, <i>Siren</i>)</td><td>Pokarm niedostępny w Europie.</td></tr>
+<tr><th><i>Regina</i>, <i>Liodytes</i></th><td>Świeżo wylinkowane raki</td><td>Pokarm bardzo trudny do zapewnienia; gatunki niemal niedostępne.</td></tr>
+<tr><th><i>Elachistodon westermanni</i></th><td>Jaja ptaków</td><td>Chroniony w Indiach, brak w handlu.</td></tr>
+<tr><th><i>Fordonia</i>, <i>Gerarda</i></th><td>Kraby</td><td>Specjaliści krabożerni, praktycznie nieobecni w hodowlach.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="pokarm">
+<h2>13. Logistyka i koszt pokarmu</h2>
+<div class="table-wrap">
+<table class="mid">
+<thead><tr><th>Pokarm</th><th>Dla kogo</th><th>Dostępność w PL</th><th>Orient. koszt</th><th>Uwagi</th></tr></thead>
+<tbody>
+<tr><th>Jaja przepiórcze</th><td>Dorosłe jajożery</td><td><span class="av hi">wysoka</span> (supermarkety)</td><td class="num">ok. 0,5–1 zł/szt.</td><td>Najtańszy pokarm w całym zestawieniu.</td></tr>
+<tr><th>Jaja zeberek, amadyn, papużek</th><td>Młode jajożery</td><td><span class="av lo">niska</span></td><td class="num">własna hodowla / hodowcy ptaków</td><td>Wąskie gardło rozmnażania jajożerów.</td></tr>
+<tr><th>Filet z tilapii, dorsza, mintaja</th><td>Pończoszniki, <i>Nerodia</i>, homalopsidy</td><td><span class="av hi">wysoka</span></td><td class="num">ok. 30–60 zł/kg</td><td>Konieczny wapń + witaminy; porcjować i mrozić.</td></tr>
+<tr><th>Całe małe rybki bez tiaminazy (gupiki, molinezje)</th><td><i>Erpeton</i>, ahetulle, młode pończoszniki</td><td><span class="av mid">średnia</span></td><td class="num">tanio przy własnej hodowli</td><td>Ryzyko chorób z kupnych rybek; najlepiej hodować samemu.</td></tr>
+<tr><th>Rosówki (<i>Lumbricus</i>)</th><td>Pończoszniki, <i>Storeria</i>, <i>Diadophis</i></td><td><span class="av mid">średnia</span> (sklepy wędkarskie)</td><td class="num">kilkanaście–kilkadziesiąt zł za opakowanie</td><td>Nie dżdżownice kalifornijskie. Z ogrodu tylko spoza pól nawożonych chemią.</td></tr>
+<tr><th>Świerszcze, szarańcza, gąsienice</th><td><i>Opheodrys</i></td><td><span class="av hi">wysoka</span></td><td class="num">ok. 10–25 zł za pudełko</td><td>Posypywać wapniem z witaminami; dużo karmień.</td></tr>
+<tr><th>Ślimaki</th><td><i>Pareas</i>, <i>Dipsas</i>, <i>Storeria</i></td><td><span class="av lo">niska</span></td><td class="num">własna hodowla</td><td>Ogrodowe niosą ryzyko pestycydów i pasożytów.</td></tr>
+<tr><th>Gekony karmowe</th><td><i>Chrysopelea</i>, <i>Ahaetulla</i>, <i>Dendrelaphis</i></td><td><span class="av vlo">bardzo niska</span></td><td class="num">drogo (własna hodowla gadów)</td><td>Najdroższa i najbardziej kłopotliwa opcja.</td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Koszty pokarmu są orientacyjne i zależą od sklepu oraz regionu.</p>
+</section>
+
+<section id="prawo">
+<h2>14. Prawo w Polsce</h2>
+<ul>
+  <li><strong>Zwierzęta niebezpieczne:</strong> ustawa o ochronie przyrody zakazuje prywatnego trzymania gatunków niebezpiecznych dla życia i zdrowia ludzi; ich listę określa rozporządzenie ministra właściwego ds. środowiska. Obejmuje ono węże jadowite, w tym część tylnozębnych węży właściwych (m.in. boomslanga i <i>Thelotornis</i>). Pończoszniki, jajożery, <i>Opheodrys</i>, <i>Nerodia</i>, <i>Homalopsis</i> czy <i>Pareas</i> nie są uważane za niebezpieczne. Przy słabo jadowitych gatunkach tylnozębnych z tej listy (<i>Ahaetulla</i>, <i>Chrysopelea</i>) dla pewności sprawdź aktualny tekst rozporządzenia przed zakupem. Nie udało mi się pobrać jego treści przy tworzeniu tego opracowania.</li>
+  <li><strong>CITES / rejestracja:</strong> żaden z gatunków polecanych w rankingu nie jest typowym gatunkiem CITES wymagającym rejestracji w starostwie. Rzadkie i lokalnie chronione formy (np. <i>T. sirtalis tetrataenia</i>, europejskie <i>Natrix</i>) wymagają dokumentów potwierdzających pochodzenie z hodowli.</li>
+  <li><strong>Gatunki rodzime:</strong> wszystkie polskie węże są chronione. Zaskrońca, gniewosza i węża Eskulapa nie wolno odławiać ani przetrzymywać bez zezwolenia.</li>
+  <li><strong>Gatunki obce inwazyjne:</strong> unijna i krajowa lista gatunków inwazyjnych jest co jakiś czas aktualizowana (w 2022 r. trafił na nią np. wąż królewski <i>Lampropeltis getula</i>). Przed zakupem warto sprawdzić aktualną listę, szczególnie dla odpornych na chłód gatunków z Ameryki Płn. (<i>Thamnophis</i>, <i>Nerodia</i>).</li>
+  <li><strong>Nigdy nie wypuszczaj</strong> węży do środowiska. Pończoszniki i <i>Nerodia</i> mogłyby przeżyć w polskim klimacie.</li>
+</ul>
+</section>
+
+<section id="zakup">
+<h2>15. Gdzie kupić i na co uważać</h2>
+<div class="grid2">
+  <div class="card">
+    <h3>Źródła</h3>
+    <ul>
+      <li>Polscy hodowcy (grupy i fora terrarystyczne, ogłoszenia) – najlepsze dla <i>Thamnophis</i> i <i>Dasypeltis</i> CB.</li>
+      <li>Giełdy terrarystyczne w Polsce (Warszawa, Kraków, Wrocław, Poznań, Łódź i inne).</li>
+      <li>Giełda w Hamm (Niemcy) – największy wybór w Europie, także rzadkich gatunków i zwierząt WC.</li>
+      <li>Sklepy zoologiczne z działem gadów – głównie popularne gatunki, ceny wyższe.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Lista kontrolna przy zakupie</h3>
+    <ul>
+      <li>Czy wąż <strong>je</strong>, co i jak często? Poproś o zdjęcie lub film z karmienia.</li>
+      <li>CB czy WC? Przy WC: badanie kału i odrobaczenie u weterynarza.</li>
+      <li>Dokument pochodzenia (szczególnie przy formach chronionych).</li>
+      <li>Kwarantanna 60–90 dni z dala od innych gadów.</li>
+      <li>Najpierw zapewnij źródło pokarmu, dopiero potem kupuj węża.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="werdykt">
+<h2>16. Werdykt</h2>
+<div class="grid2">
+  <div class="card top">
+    <h3>Pierwszy wąż bez myszy</h3>
+    <p><strong><i>Thamnophis marcianus</i></strong>, a jako drugi wybór <i>T. sirtalis</i>. Tani, dostępny, odporny, dzienny, rodzi żywe młode. Karmiony rybami bez tiaminazy i rosówkami z suplementami.</p>
+  </div>
+  <div class="card top">
+    <h3>Spokojny wąż na lata</h3>
+    <p><strong><i>Dasypeltis scabra</i></strong>. Najprostsza dieta dorosłych (jaja przepiórcze), mało sprzątania, 15–20+ lat życia. Przed rozmnażaniem zapewnij małe jaja dla młodych.</p>
+  </div>
+  <div class="card">
+    <h3>Coś nietypowego, wodnego</h3>
+    <p><strong><i>Homalopsis buccata</i></strong> (łatwiejszy) lub <strong><i>Erpeton tentaculatum</i></strong> (efektowniejszy, wymaga żywych rybek).</p>
+  </div>
+  <div class="card">
+    <h3>Dla doświadczonych</h3>
+    <p><i>Opheodrys aestivus</i> (owady), <i>Pareas</i> (ślimaki), <i>Ahaetulla</i> (jaszczurki, ryby). Ciekawe, ale z pokarmem i aklimatyzacją bywa trudno.</p>
+  </div>
+</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Opracowanie poglądowe na podstawie ogólnodostępnej wiedzy terrarystycznej i herpetologicznej. Ceny i dostępność są orientacyjne i nie zostały zweryfikowane w aktualnych ogłoszeniach. Stan prawny sprawdź w aktualnych przepisach. W sprawach zdrowia zwierząt skonsultuj się z lekarzem weterynarii specjalizującym się w gadach.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var rows=[].slice.call(document.querySelectorAll('#big tbody tr'));
+  var btns=[].slice.call(document.querySelectorAll('.filters button'));
+  var q=document.getElementById('q');
+  var cur='all';
+  function apply(){
+    var t=(q.value||'').toLowerCase().trim();
+    rows.forEach(function(r){
+      var okC=cur==='all'||r.getAttribute('data-c')===cur;
+      var okT=!t||r.textContent.toLowerCase().indexOf(t)!==-1;
+      r.style.display=okC&&okT?'':'none';
+    });
+  }
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      cur=b.getAttribute('data-f');
+      btns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      apply();
+    });
+  });
+  q.addEventListener('input',apply);
+})();
+</script>
+</body>
+</html>
