@@ -1,7 +1,7 @@
 ---
 import type { Post } from '../lib/content';
 import { postSlug, slugify } from '../lib/content';
-import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+import { formatDate, routes, useTranslations, type Lang, pick } from '../i18n/ui';
 
 interface Props {
   posts: Post[];
@@ -9,7 +9,7 @@ interface Props {
 }
 const { posts, lang } = Astro.props;
 const tr = useTranslations(lang);
-const more = lang === 'pl' ? 'Czytaj' : 'Read';
+const more = pick(lang, { pl: 'Czytaj', en: 'Read', de: 'Lesen' });
 ---
 
 <ul class="posts">

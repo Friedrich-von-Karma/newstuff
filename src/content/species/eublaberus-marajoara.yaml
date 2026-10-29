@@ -1,7 +1,7 @@
 # Profil hodowlany – parametry do sprawdzenia przez hodowcę.
 # Własne zdjęcia: wrzuć do public/images/species/eublaberus-marajoara/ i dopisz w gallery.
 latin: "Eublaberus marajoara"
-author: "Rocha e Silva, 1972"
+author: "Rocha e Silva Albuquerque, 1972"
 family: "Blaberidae"
 origin:
   pl: "Brazylia (Amazonia)"
@@ -28,4 +28,26 @@ development:
 difficulty: 1
 climbs: false
 flies: false
+taxonomy:
+  subfamily: "Blaberinae"
+  tradeNames:
+    - "ink splotch roach"
+    - "Majora's Mask roach"
+sexing:
+  adults:
+    pl: "Obie płcie mają długie skrzydła. Samce są smuklejsze; pewnie – po spodzie odwłoka."
+    en: "Both sexes have long wings. Males are slimmer; reliably – by the underside of the abdomen."
+  nymphs:
+    pl: "Nimfy: w ostatnich 2–3 stadiach po spodzie odwłoka – samica ma jedną dużą płytkę końcową, samiec węższą płytkę z 1–2 małymi segmentami za nią (często z drobnymi wyrostkami – stylikami). U młodszych nimf praktycznie nie do odróżnienia."
+    en: "Nymphs: in the last 2–3 instars, check the underside of the abdomen – females have one large terminal plate, males a narrower plate with 1–2 small extra segments behind it (often with tiny styli). Not practical in young nymphs."
+stages:
+  pl: "Nimfy mają szorstki, matowy pancerz, do którego przykleja się podłoże – inaczej niż błyszczące nimfy innych Eublaberus. Do dorosłości ok. roku. Dorosłe rzadziej kopią, siedzą w kryjówkach nad podłożem. Rysunek przedplecza jest zmienny."
+  en: "Nymphs have a rough, matte exoskeleton that substrate sticks to – unlike the glossy nymphs of other Eublaberus. About a year to adulthood. Adults burrow less and sit in hides above the substrate. The pronotum pattern varies."
+problems:
+  - pl: "Rośnie i rozmnaża się wolniej niż inne Eublaberus."
+    en: "Grows and breeds more slowly than other Eublaberus."
+  - pl: "Potrzebuje więcej miejsca i stałego ciepła; w chłodzie słabnie."
+    en: "Needs more space and steady warmth; does poorly when cool."
+  - pl: "Ekipa sprzątająca (skórniki, pleśniakowce) potrafi się nadmiernie rozmnożyć."
+    en: "Clean-up crews (dermestids, lesser mealworms) can get out of control."
 gallery: []

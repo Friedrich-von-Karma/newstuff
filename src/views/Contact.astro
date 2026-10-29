@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ContactScene from '../components/ContactScene.astro';
-import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { routes, useTranslations, type Lang, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -10,8 +10,8 @@ const { lang } = Astro.props;
 const tr = useTranslations(lang);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       num: 'Blattodea.pl · Kontakt',
       ordersLbl: 'I · zamówienia',
       orders: 'Zamówienia',
@@ -20,8 +20,8 @@ const t = pl
       id: 'Oznaczanie',
       idGo: 'Oznacz karaczana',
       key: 'Klucz',
-    }
-  : {
+  },
+  en: {
       num: 'Blattodea.pl · Contact',
       ordersLbl: 'I · orders',
       orders: 'Orders',
@@ -30,13 +30,24 @@ const t = pl
       id: 'Identification',
       idGo: 'Identify a cockroach',
       key: 'Key',
-    };
+  },
+  de: {
+      num: 'Blattodea.pl · Kontakt',
+      ordersLbl: 'I · Bestellungen',
+      orders: 'Bestellungen',
+      cart: 'Warenkorb öffnen',
+      idLbl: 'II · Bestimmung',
+      id: 'Bestimmung',
+      idGo: 'Schabe bestimmen lassen',
+      key: 'Schlüssel',
+  },
+});
 ---
 
 <Base lang={lang} title={tr('contact.title')} description={tr('contact.lead')} alt={routes.contact[other]} active="contact">
   <ContactScene lang={lang} level="h1" num={t.num} id="contact" />
 
-  <section class="wrap hints" aria-label={pl ? 'Wskazówki' : 'Tips'}>
+  <section class="wrap hints" aria-label={pick(lang, { pl: 'Wskazówki', en: 'Tips', de: 'Hinweise' })}>
     <article class="hint rv">
       <div class="lbl">{t.ordersLbl}</div>
       <h2>{t.orders}</h2>

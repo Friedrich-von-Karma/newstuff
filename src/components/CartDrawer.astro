@@ -1,4 +1,5 @@
 ---
+import { pick } from '../i18n/ui';
 /** Wysuwany koszyk – składa jedno zamówienie e-mailem z listą paczek i sumą. */
 import { site } from '../data/site';
 import type { Lang } from '../i18n/ui';
@@ -8,8 +9,8 @@ interface Props {
 }
 const { lang } = Astro.props;
 const pl = lang === 'pl';
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       title: 'Koszyk',
       empty: 'Koszyk jest pusty. Wybierz wariant w cenniku i kliknij „Do koszyka”.',
       pack: 'paczka 10 szt.',
@@ -33,8 +34,8 @@ const t = pl
       sum: 'Suma (bez wysyłki)',
       sign: 'Pozdrawiam',
       how: 'Kliknięcie otworzy Twój program pocztowy z gotową wiadomością do',
-    }
-  : {
+  },
+  en: {
       title: 'Cart',
       empty: 'Your cart is empty. Pick an option in the price list and click “Add to cart”.',
       pack: 'pack of 10',
@@ -58,7 +59,33 @@ const t = pl
       sum: 'Total (excl. shipping)',
       sign: 'Best regards',
       how: 'Clicking opens your e-mail app with a ready message to',
-    };
+  },
+  de: {
+      title: 'Warenkorb',
+      empty: 'Dein Warenkorb ist leer. Wähle eine Art in der Preisliste und klicke auf „In den Warenkorb“.',
+      pack: '10er-Packung',
+      packs: 'Packungen',
+      total: 'Summe',
+      note: 'Die Versandkosten nenne ich in meiner Antwort – sie hängen vom Wetter und deinem Wohnort ab.',
+      name: 'Name',
+      town: 'Ort / Land',
+      delivery: 'Lieferung',
+      courier: 'Kurier',
+      pickup: 'Abholung',
+      extra: 'Anmerkungen (optional)',
+      send: 'Bestellung per E-Mail senden',
+      copy: 'Bestelltext kopieren',
+      copied: 'Kopiert – füge ihn in eine Nachricht an mich ein.',
+      clear: 'Warenkorb leeren',
+      close: 'Warenkorb schließen',
+      remove: 'Entfernen',
+      subject: 'Bestellung aus dem Warenkorb',
+      greet: 'Hallo,\nich möchte bestellen:',
+      sum: 'Summe (ohne Versand)',
+      sign: 'Viele Grüße',
+      how: 'Ein Klick öffnet dein E-Mail-Programm mit einer fertigen Nachricht an',
+  },
+});
 ---
 
 <div class="cart-scrim" data-cart-scrim hidden></div>

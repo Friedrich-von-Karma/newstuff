@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { pick, routes, type Lang } from '../i18n/ui';
+import { getGuides, guideSlug } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const guides = await getGuides(lang);
+const t = pick(lang, {
+  pl: {
+    title: 'Poradniki',
+    desc: 'Poradniki hodowli karaczanów dla początkujących: pierwszy gatunek, zakładanie hodowli, roztocza i pleśń, przyjęcie paczki.',
+    num: 'Wiedza · poradniki',
+    h1a: 'Poradniki',
+    h1b: 'hodowlane',
+    lead: 'Praktyczne teksty krok po kroku – od wyboru pierwszego gatunku po radzenie sobie z roztoczami i pleśnią.',
+    level: { start: 'na start', basic: 'podstawy', advanced: 'dla zaawansowanych' },
+    min: 'min czytania',
+    read: 'Czytaj',
+  },
+  en: {
+    title: 'Guides',
+    desc: 'Cockroach keeping guides for beginners: first species, setting up a culture, mites and mould, receiving a parcel.',
+    num: 'Knowledge · guides',
+    h1a: 'Keeping',
+    h1b: 'guides',
+    lead: 'Practical step-by-step texts – from choosing your first species to dealing with mites and mould.',
+    level: { start: 'getting started', basic: 'basics', advanced: 'advanced' },
+    min: 'min read',
+    read: 'Read',
+  },
+  de: {
+    title: 'Ratgeber',
+    desc: 'Ratgeber zur Schabenhaltung für Einsteiger: erste Art, Einrichtung, Milben und Schimmel, Paketannahme.',
+    num: 'Wissen · Ratgeber',
+    h1a: 'Ratgeber',
+    h1b: 'zur Haltung',
+    lead: 'Praktische Schritt-für-Schritt-Texte – von der Wahl der ersten Art bis zum Umgang mit Milben und Schimmel.',
+    level: { start: 'Einstieg', basic: 'Grundlagen', advanced: 'Fortgeschrittene' },
+    min: 'Min. Lesezeit',
+    read: 'Lesen',
+  },
+});
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.guides[other]} active="guides">
+  <section class="scene g-scene">
+    <div class="wrap">
+      <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead} />
+      <ol class="glist">
+        {
+          guides.map((g, i) => (
+            <li class="rv" style={`--d:${(i % 4) * 0.08}s`}>
+              <a href={`${routes.guides[lang]}${guideSlug(g)}/`}>
+                <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="body">
+                  <span class="meta">
+                    {t.level[g.data.level]}
+                    {g.data.minutes && ` · ${g.data.minutes} ${t.min}`}
+                  </span>
+                  <span class="gt">{g.data.title}</span>
+                  <span class="gd">{g.data.description}</span>
+                </span>
+                <span class="go" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .g-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+  }
+  .glist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line2);
+  }
+  .glist a {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) 2rem;
+    gap: 20px;
+    align-items: center;
+    padding: clamp(20px, 2.6vw, 30px) 8px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.3s;
+  }
+  .glist a:hover {
+    background: linear-gradient(90deg, rgba(232, 165, 71, 0.07), transparent 70%);
+  }
+  .n {
+    font-family: var(--serif);
+    font-weight: 200;
+    font-size: clamp(40px, 4vw, 56px);
+    color: var(--amber2);
+    line-height: 1;
+  }
+  .meta {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fern);
+  }
+  .gt {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(24px, 2.4vw, 32px);
+    color: var(--text);
+    margin: 4px 0;
+  }
+  .gd {
+    display: block;
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 70ch;
+  }
+  .go {
+    color: var(--amber);
+    font-size: 22px;
+    transition: transform 0.4s var(--ease);
+  }
+  .glist a:hover .go {
+    transform: translateX(6px);
+  }
+  @media (max-width: 560px) {
+    .glist a {
+      grid-template-columns: 3rem minmax(0, 1fr);
+    }
+    .go {
+      display: none;
+    }
+  }
+</style>

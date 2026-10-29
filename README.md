@@ -1,6 +1,8 @@
 # Blattodea.pl
 
-Strona hodowli karaczanów: cennik, profile hodowlane, blog i klucz do karaczanów Polski. Jest w dwóch językach (PL i EN).
+Strona hodowli karaczanów: cennik, profile hodowlane, poradniki, blog, klucz i karty karaczanów Polski, kalendarz obserwacji, biblioteka. Jest w trzech językach: PL, EN i DE (adresy `/en/…` i `/de/…`).
+
+Tłumaczenia: napisy interfejsu są w `src/i18n/ui.ts`, teksty stron w plikach `src/views/*.astro` (obiekty `pick(lang, { pl, en, de })`). Treści (profile, poradniki, wpisy, klucz) mają wersje `pl` i `en`; gdy brakuje niemieckiej (`de`), strona pokazuje angielską.
 Zbudowana w [Astro](https://astro.build) jako strona statyczna.
 
 ## Uruchomienie

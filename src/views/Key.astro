@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { characters, taxa } from '../data/key';
 import { photos } from '../data/photos';
-import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { routes, useTranslations, type Lang, tl, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -13,8 +13,8 @@ const tr = useTranslations(lang);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       num: 'Klucz · oznaczanie',
       h1a: 'Klucz do karaczanów',
       h1b: 'Polski',
@@ -41,8 +41,8 @@ const t = pl
       mapBtn: 'Mapa obserwacji',
       glossBtn: 'Słowniczek pojęć',
       chars: 'cech zaznaczonych',
-    }
-  : {
+  },
+  en: {
       num: 'Key · identification',
       h1a: 'Key to the cockroaches of',
       h1b: 'Poland',
@@ -69,7 +69,36 @@ const t = pl
       mapBtn: 'Observation map',
       glossBtn: 'Glossary',
       chars: 'features ticked',
-    };
+  },
+  de: {
+      num: 'Schlüssel · Bestimmung',
+      h1a: 'Bestimmungsschlüssel der Schaben',
+      h1b: 'Polens',
+      draftB: 'Arbeitsversion',
+      draftTxt: 'Daten und Merkmale werden noch überprüft',
+      how: 'Ein Mehrwege-Schlüssel: Kreuze die sichtbaren Merkmale in beliebiger Reihenfolge an – die Artenliste wird dabei kürzer, und die Zahlen neben jedem Merkmal zeigen, wie viele Arten übrig blieben. Mehrere Zustände desselben Merkmals werden mit „oder“ verknüpft.',
+      hide: 'Merkmale ausblenden',
+      show: 'Merkmale einblenden',
+      showMobile: 'Merkmale',
+      match: 'passend',
+      clear: 'löschen',
+      remove: 'entfernen',
+      drawerHelp: 'Kreuze an, was du siehst. Eine Art ohne Angaben zu einem Merkmal (z. B. unbekanntes Männchen) wird dadurch nicht ausgeschlossen.',
+      close: 'Merkmalsfenster schließen',
+      showResults: 'Ergebnisse zeigen',
+      noPhoto: 'noch kein Foto',
+      noPhoto2: 'unter freier Lizenz',
+      ctaNum: 'Weiter',
+      ctaH1: 'Nicht',
+      ctaH2: 'sicher?',
+      ctaP: 'Schick Fotos von oben und von der Seite, die Körperlänge und den Fundort – deine Meldung geht per E-Mail an den Autor der Seite.',
+      ctaBtn: 'Meine Schabe bestimmen',
+      mapP: 'Geprüfte Funde kommen auf die Karte der Schabenbeobachtungen in Polen.',
+      mapBtn: 'Beobachtungskarte',
+      glossBtn: 'Glossar',
+      chars: 'Merkmale gewählt',
+  },
+});
 
 const statusLabel = {
   native: tr('key.native'),
@@ -80,8 +109,8 @@ const statusLabel = {
 const data = {
   characters: characters.map((c) => ({
     id: c.id,
-    name: c.name[lang],
-    states: Object.fromEntries(c.states.map((s) => [s.id, s.label[lang]])),
+    name: tl(c.name, lang),
+    states: Object.fromEntries(c.states.map((s) => [s.id, tl(s.label, lang)])),
   })),
   taxa: taxa.map((x) => ({ id: x.id, traits: x.traits })),
   i18n: { hide: t.hide, show: t.show, remove: t.remove },
@@ -133,13 +162,13 @@ const data = {
                 <fieldset class="ch">
                   <legend>
                     <span class="fn">{String(ci + 1).padStart(2, '0')}</span>
-                    {c.name[lang]}
+                    {tl(c.name, lang)}
                   </legend>
-                  {c.help && <p class="help">{c.help[lang]}</p>}
+                  {c.help && <p class="help">{tl(c.help, lang)}</p>}
                   {c.states.map((s) => (
                     <label class="stt" data-c={c.id} data-s={s.id}>
                       <input type="checkbox" name={c.id} value={s.id} />
-                      <span class="lab">{s.label[lang]}</span>
+                      <span class="lab">{tl(s.label, lang)}</span>
                       <span class="cnt">–</span>
                     </label>
                   ))}
@@ -155,7 +184,7 @@ const data = {
           <div class="results" id="results">
             {
               taxa.map((x, i) => {
-                const vern = x.name?.[lang];
+                const vern = tl(x.name, lang);
                 return (
                   <article class="tx rv" data-id={x.id} style={`--d:${(i % 3) * 0.08}s`}>
                     <div class="tx-ph">
@@ -179,8 +208,11 @@ const data = {
                       <div class="meta">
                         <span>{x.length}</span>
                       </div>
-                      <div class="hab">{x.habitat[lang]}</div>
-                      <p data-glossary>{x.note[lang]}</p>
+                      <div class="hab">{tl(x.habitat, lang)}</div>
+                      <p data-glossary>{tl(x.note, lang)}</p>
+                      <a class="prof" href={`${routes.wild[lang]}${x.id}/`}>
+                        → {pick(lang, { pl: 'Karta gatunku', en: 'Species page', de: 'Artseite' })}
+                      </a>
                       {x.profile && (
                         <a class="prof" href={`${routes.species[lang]}${x.profile}/`}>
                           → {tr('pricelist.profileLink')}

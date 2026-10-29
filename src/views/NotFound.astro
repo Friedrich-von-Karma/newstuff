@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { routes, useTranslations, type Lang } from '../i18n/ui';
+import { routes, useTranslations, type Lang, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -8,7 +8,7 @@ interface Props {
 const { lang } = Astro.props;
 const tr = useTranslations(lang);
 const pl = lang === 'pl';
-const t = pl ? { kicker: 'Błąd 404 · ciemny kąt', or: 'Albo zajrzyj do:' } : { kicker: 'Error 404 · a dark corner', or: 'Or try:' };
+const t = pick(lang, { pl: { kicker: 'Błąd 404 · ciemny kąt', or: 'Albo zajrzyj do:' }, en: { kicker: 'Error 404 · a dark corner', or: 'Or try:' }, de: { kicker: 'Fehler 404 · eine dunkle Ecke', or: 'Oder schau hier:' } });
 const links = [
   { href: routes.pricelist[lang], label: tr('nav.pricelist') },
   { href: routes.species[lang], label: tr('nav.species') },
@@ -17,7 +17,7 @@ const links = [
 ];
 ---
 
-<Base lang={lang} title={tr('404.title')} alt={pl ? routes.home.en : routes.home.pl}>
+<Base lang={lang} title={tr('404.title')} alts={{ pl: routes.home.pl, en: routes.home.en, de: routes.home.de }} noindex>
   <section class="nf">
     <div class="glowspot g1" aria-hidden="true"></div>
     <div class="glowspot g2" aria-hidden="true"></div>

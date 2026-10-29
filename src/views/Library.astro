@@ -1,0 +1,233 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { groups, library } from '../data/library';
+import { pick, routes, type Lang, tl } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const t = pick(lang, {
+  pl: {
+    title: 'Biblioteka',
+    desc: 'Literatura o karaczanach: fauna Polski i Europy Środkowej, systematyka, biologia, hodowla oraz bazy danych – z linkami do darmowych pełnych tekstów.',
+    num: 'Nauka · literatura',
+    h1a: 'Biblioteka',
+    h1b: 'literatury',
+    lead: 'Wybrane prace o karaczanach – od klasycznych kluczy i monografii fauny Polski po najnowsze badania i bazy danych. Pozycje oznaczone „otwarty dostęp” można przeczytać za darmo.',
+    filter: 'Szukaj w bibliotece',
+    ph: 'autor, tytuł, gatunek…',
+    open: 'otwarty dostęp',
+    none: 'Brak pozycji pasujących do wyszukiwania.',
+    count: 'pozycji',
+    add: 'Znasz ważną pracę, której tu brakuje? Napisz – dopiszę ją.',
+  },
+  en: {
+    title: 'Library',
+    desc: 'Literature on cockroaches: fauna of Poland and Central Europe, systematics, biology, husbandry and databases – with links to free full texts.',
+    num: 'Science · literature',
+    h1a: 'Literature',
+    h1b: 'library',
+    lead: 'Selected works on cockroaches – from classic keys and monographs of the Polish fauna to recent research and databases. Items marked “open access” can be read for free.',
+    filter: 'Search the library',
+    ph: 'author, title, species…',
+    open: 'open access',
+    none: 'No items match your search.',
+    count: 'items',
+    add: 'Know an important work that is missing? Let me know and I will add it.',
+  },
+  de: {
+    title: 'Bibliothek',
+    desc: 'Literatur über Schaben: Fauna Polens und Mitteleuropas, Systematik, Biologie, Haltung und Datenbanken – mit Links zu freien Volltexten.',
+    num: 'Wissenschaft · Literatur',
+    h1a: 'Bibliothek',
+    h1b: 'der Literatur',
+    lead: 'Ausgewählte Arbeiten über Schaben – von klassischen Schlüsseln und Monografien der polnischen Fauna bis zu aktuellen Studien und Datenbanken. Als „Open Access“ markierte Titel sind frei lesbar.',
+    filter: 'Bibliothek durchsuchen',
+    ph: 'Autor, Titel, Art…',
+    open: 'Open Access',
+    none: 'Keine Einträge passen zur Suche.',
+    count: 'Einträge',
+    add: 'Fehlt eine wichtige Arbeit? Schreib mir – ich ergänze sie.',
+  },
+});
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.library[other]} active="library">
+  <section class="scene lib-scene">
+    <div class="wrap">
+      <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead} />
+      <div class="bar rv">
+        <label class="vh" for="lib-q">{t.filter}</label>
+        <input id="lib-q" type="search" placeholder={t.ph} autocomplete="off" />
+        <span class="cnt"><b id="lib-n">{library.length}</b> {t.count}</span>
+      </div>
+      {
+        groups.map((g) => (
+          <section class="grp" data-grp>
+            <div class="gh rv">
+              <h2>{tl(g.title, lang)}</h2>
+              <p>{tl(g.lead, lang)}</p>
+            </div>
+            <ol class="items">
+              {library
+                .filter((i) => i.group === g.id)
+                .map((i) => (
+                  <li class="it" data-text={`${i.authors} ${i.year ?? ''} ${i.title} ${i.source ?? ''} ${tl(i.note, lang)}`.toLowerCase()}>
+                    <p class="cit">
+                      <span class="au">{i.authors}</span>
+                      {i.year && <span class="yr"> ({i.year})</span>}
+                      {'. '}
+                      <a href={i.url} target="_blank" rel="noopener" class="ti">{i.title}</a>
+                      {i.source && <span class="so">. {i.source}</span>}
+                      {i.doi && (
+                        <span class="doi">
+                          {' '}· DOI <a href={`https://doi.org/${i.doi}`} target="_blank" rel="noopener">{i.doi}</a>
+                        </span>
+                      )}
+                    </p>
+                    <p class="no">
+                      {tl(i.note, lang)} <span class="lng">{i.lang}</span>
+                      {i.open && <span class="oa">{t.open}</span>}
+                    </p>
+                  </li>
+                ))}
+            </ol>
+          </section>
+        ))
+      }
+      <p class="empty" id="lib-empty" hidden>{t.none}</p>
+      <p class="add rv">{t.add}</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const q = document.querySelector<HTMLInputElement>('#lib-q');
+  const items = [...document.querySelectorAll<HTMLElement>('.it')];
+  const n = document.getElementById('lib-n');
+  const empty = document.getElementById('lib-empty');
+  q?.addEventListener('input', () => {
+    const v = q.value.trim().toLowerCase();
+    let c = 0;
+    items.forEach((el) => {
+      const show = !v || (el.dataset.text ?? '').includes(v);
+      el.hidden = !show;
+      if (show) c++;
+    });
+    document.querySelectorAll<HTMLElement>('[data-grp]').forEach((g) => {
+      g.hidden = !g.querySelector('.it:not([hidden])');
+    });
+    if (n) n.textContent = String(c);
+    if (empty) empty.hidden = c > 0;
+  });
+</script>
+
+<style>
+  .lib-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+  }
+  .bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    max-width: 720px;
+  }
+  .bar input {
+    flex: 1;
+  }
+  .cnt {
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .cnt b {
+    color: var(--amber2);
+    font-weight: 400;
+    font-family: var(--serif);
+    font-size: 22px;
+  }
+  .vh {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .grp {
+    margin-top: clamp(40px, 6vw, 70px);
+  }
+  .gh {
+    border-bottom: 1px solid var(--line2);
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+  }
+  .gh h2 {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 300;
+    font-style: italic;
+  }
+  .gh p {
+    margin: 6px 0 0;
+    color: var(--muted);
+  }
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .it {
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cit {
+    margin: 0;
+    color: #d3cfbf;
+    line-height: 1.55;
+  }
+  .au {
+    color: var(--text);
+  }
+  .ti {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--amber2);
+    text-decoration: none;
+  }
+  .ti:hover {
+    text-decoration: underline;
+  }
+  .so,
+  .doi {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .doi a {
+    color: var(--muted);
+  }
+  .no {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .lng,
+  .oa {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 1px 7px;
+    border: 1px solid var(--line2);
+  }
+  .oa {
+    color: var(--fern);
+    border-color: rgba(169, 191, 127, 0.45);
+  }
+  .add {
+    margin-top: 40px;
+    color: var(--muted);
+  }
+</style>

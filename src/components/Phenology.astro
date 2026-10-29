@@ -1,0 +1,106 @@
+---
+/** Pasek 12 miesięcy: kiedy spotkać dorosłe i nimfy (albo „cały rok w budynkach”). */
+import { pick, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  adults?: number[];
+  nymphs?: number[];
+  indoors?: boolean;
+  /** pokaż nazwy miesięcy nad paskiem */
+  head?: boolean;
+  compact?: boolean;
+}
+const { lang, adults = [], nymphs = [], indoors = false, head = true, compact = false } = Astro.props;
+const months = pick(lang, {
+  pl: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'],
+  en: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+});
+const L = pick(lang, {
+  pl: { a: 'dorosłe', n: 'nimfy', in: 'cały rok w budynkach i szklarniach', none: 'brak danych' },
+  en: { a: 'adults', n: 'nymphs', in: 'all year in buildings and glasshouses', none: 'no data' },
+});
+const none = !indoors && adults.length === 0 && nymphs.length === 0;
+---
+
+<div class:list={['phen', { compact }]}>
+  {head && <div class="row months" aria-hidden="true">{months.map((m) => <span>{m}</span>)}</div>}
+  {
+    indoors ? (
+      <div class="row"><span class="all">{L.in}</span></div>
+    ) : none ? (
+      <div class="row"><span class="nod">{L.none}</span></div>
+    ) : (
+      <>
+        {adults.length > 0 && (
+          <div class="row" aria-label={`${L.a}: ${adults.map((m) => months[m - 1]).join(', ')}`}>
+            {months.map((_, i) => <span class:list={['c', 'a', { on: adults.includes(i + 1) }]} />)}
+            {!compact && <span class="lg">{L.a}</span>}
+          </div>
+        )}
+        {nymphs.length > 0 && (
+          <div class="row" aria-label={`${L.n}: ${nymphs.map((m) => months[m - 1]).join(', ')}`}>
+            {months.map((_, i) => <span class:list={['c', 'n', { on: nymphs.includes(i + 1) }]} />)}
+            {!compact && <span class="lg">{L.n}</span>}
+          </div>
+        )}
+      </>
+    )
+  }
+</div>
+
+<style>
+  .phen {
+    display: grid;
+    gap: 4px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) auto;
+    gap: 3px;
+    align-items: center;
+  }
+  .months span {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--dim);
+    text-align: center;
+  }
+  .c {
+    height: 14px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .compact .c {
+    height: 10px;
+  }
+  .c.a.on {
+    background: var(--amber);
+    box-shadow: 0 0 10px rgba(232, 165, 71, 0.35);
+  }
+  .c.n.on {
+    background: var(--fern);
+    opacity: 0.8;
+  }
+  .lg {
+    padding-left: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .all,
+  .nod {
+    grid-column: 1 / 13;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  .all {
+    background: repeating-linear-gradient(45deg, rgba(232, 165, 71, 0.18) 0 6px, rgba(232, 165, 71, 0.08) 6px 12px);
+    color: var(--amber2);
+  }
+  .nod {
+    color: var(--dim);
+    border: 1px dashed var(--line2);
+  }
+</style>

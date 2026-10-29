@@ -115,7 +115,7 @@ export const taxa: KeyTaxon[] = [
     length: '7–11 mm',
     habitat: { pl: 'lasy, zwłaszcza ich skraje i polany; ściółka, krzewy', en: 'woodland, especially edges and clearings; leaf litter, shrubs' },
     note: {
-      pl: 'Najpospolitszy leśny karaczan w Polsce. Przedplecze czarne z szerokimi, jasnymi i przezroczystymi brzegami. Samica ma wyraźnie skrócone skrzydła.',
+      pl: 'Najpospolitszy leśny karaczan w Polsce. Przedplecze czarne z wyraźnie odciętymi, jasnymi (kością słoniową) brzegami. Samica ma wyraźnie skrócone skrzydła.',
       en: 'The commonest woodland cockroach in Poland. The pronotum is black with broad, pale translucent margins. The female has clearly shortened wings.',
     },
     traits: {
@@ -150,6 +150,25 @@ export const taxa: KeyTaxon[] = [
     },
   },
   {
+    id: 'ectobius-erythronotus',
+    latin: 'Ectobius erythronotus',
+    author: 'Burr, 1898',
+    name: { pl: 'zadomka żółtoskrzydła', en: '' },
+    status: 'native',
+    verify: true,
+    length: '7–11 mm',
+    habitat: { pl: 'lasy i ich skraje – ściółka, krzewy', en: 'woodland and its edges – leaf litter, shrubs' },
+    note: {
+      pl: 'Jedna z trzech zadomek potwierdzonych w Polsce przed 2024 rokiem (obok E. sylvestris i E. lapponicus). Bywa mylona z E. lapponicus – pewne oznaczenie wymaga obejrzenia samca. Cechy w kluczu do uzupełnienia.',
+      en: 'One of the three Ectobius species confirmed in Poland before 2024 (with E. sylvestris and E. lapponicus). Easily confused with E. lapponicus – reliable identification requires a male. Key characters still to be completed.',
+    },
+    traits: {
+      length: ['lt10', '10-15'],
+      habitat: ['outdoors'],
+      wingsMale: ['full'],
+    },
+  },
+  {
     id: 'ectobius-pallidus',
     latin: 'Ectobius pallidus',
     author: '(Olivier, 1789)',
@@ -158,8 +177,8 @@ export const taxa: KeyTaxon[] = [
     length: '6–10 mm',
     habitat: { pl: 'suche, nasłonecznione skraje lasów, murawy, wrzosowiska', en: 'dry, sunny woodland edges, grassland, heath' },
     note: {
-      pl: 'Cały jasny, słomkowożółty, z drobnymi ciemnymi kropkami na pokrywach. Obie płcie mają pełne skrzydła. Rozmieszczenie w Polsce wymaga potwierdzenia.',
-      en: 'Entirely pale, straw-yellow, with tiny dark dots on the wings. Both sexes are fully winged. Distribution in Poland needs confirmation.',
+      pl: 'Cały jasny, słomkowożółty, z drobnymi ciemnymi kropkami na pokrywach. Obie płcie mają pełne skrzydła. Występowanie w Polsce niepewne – starsze dane mogą dotyczyć innych zadomek.',
+      en: 'Entirely pale, straw-yellow, with tiny dark dots on the wings. Both sexes are fully winged. Occurrence in Poland is doubtful – older records may refer to other Ectobius species.',
     },
     traits: {
       length: ['lt10'],
@@ -176,12 +195,11 @@ export const taxa: KeyTaxon[] = [
     latin: 'Ectobius vittiventris',
     author: '(A. Costa, 1847)',
     status: 'introduced',
-    verify: true,
     length: '9–12 mm',
     habitat: { pl: 'ogrody, zieleń miejska; jesienią czasem zalatuje do mieszkań', en: 'gardens, urban greenery; in autumn sometimes flies into homes' },
     note: {
-      pl: 'Gatunek południowy, który rozprzestrzenia się na północ Europy. Jest jasny, jednolicie żółtawobrązowy i lata do światła. Może być mylony z prusakiem, ale nie ma pasów na przedpleczu. Status w Polsce do weryfikacji.',
-      en: 'A southern species spreading north through Europe. Pale, uniformly yellowish-brown and attracted to light. Can be mistaken for the German cockroach but lacks the pronotal stripes. Status in Poland to be verified.',
+      pl: 'Gatunek południowy, który rozprzestrzenia się na północ Europy; pierwsze potwierdzone stwierdzenie w Polsce pochodzi z 2024 roku. Jest jasny, jednolicie żółtawobrązowy i lata do światła. Może być mylony z prusakiem, ale nie ma pasów na przedpleczu.',
+      en: 'A southern species spreading north through Europe; the first confirmed Polish record dates from 2024. Pale, uniformly yellowish-brown and attracted to light. Can be mistaken for the German cockroach but lacks the pronotal stripes.',
     },
     traits: {
       length: ['lt10', '10-15'],
@@ -285,7 +303,7 @@ export const taxa: KeyTaxon[] = [
     id: 'shelfordella-lateralis',
     latin: 'Shelfordella lateralis',
     author: '(Walker, 1868)',
-    name: { pl: 'karaczan turkiestański', en: 'Turkestan cockroach' },
+    name: { pl: 'karaczan turecki', en: 'Turkestan cockroach' },
     status: 'introduced',
     verify: true,
     length: '18–25 mm',
@@ -303,7 +321,6 @@ export const taxa: KeyTaxon[] = [
       wingsFemale: ['vestigial'],
       marks: ['creamSides'],
     },
-    profile: 'shelfordella-lateralis',
   },
   {
     id: 'periplaneta-americana',

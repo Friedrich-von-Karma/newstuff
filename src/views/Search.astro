@@ -1,0 +1,151 @@
+---
+/**
+ * Wyszukiwarka po całej stronie (Pagefind). Indeks powstaje po zbudowaniu strony
+ * (`pagefind --site …` w skrypcie build) – osobno dla każdego języka.
+ */
+import Base from '../layouts/Base.astro';
+import { pick, routes, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const t = pick(lang, {
+  pl: {
+    title: 'Szukaj',
+    desc: 'Wyszukiwarka po całej stronie Blattodea.pl: profile hodowlane, karaczany Polski, poradniki, blog i słowniczek.',
+    num: 'Wyszukiwarka',
+    h1a: 'Szukaj',
+    h1b: 'na stronie',
+    lead: 'Wpisz nazwę gatunku, termin albo temat – przeszukam profile hodowlane, karaczany Polski, poradniki, blog, słowniczek i bibliotekę.',
+    placeholder: 'np. Polyphaga, ooteka, roztocza…',
+    noIndex: 'Wyszukiwarka działa na opublikowanej stronie (indeks powstaje przy budowaniu).',
+    ui: {
+      placeholder: 'np. Polyphaga, ooteka, roztocza…',
+      clear_search: 'Wyczyść',
+      load_more: 'Pokaż więcej wyników',
+      search_label: 'Szukaj na stronie',
+      zero_results: 'Brak wyników dla „[SEARCH_TERM]”',
+      many_results: '[COUNT] wyników dla „[SEARCH_TERM]”',
+      one_result: '[COUNT] wynik dla „[SEARCH_TERM]”',
+      alt_search: 'Brak wyników dla „[SEARCH_TERM]”. Wyniki dla „[DIFFERENT_TERM]”',
+      search_suggestion: 'Brak wyników dla „[SEARCH_TERM]”. Spróbuj innego słowa:',
+      searching: 'Szukam „[SEARCH_TERM]”…',
+    },
+  },
+  en: {
+    title: 'Search',
+    desc: 'Search the whole Blattodea.pl site: care sheets, cockroaches of Poland, guides, blog and glossary.',
+    num: 'Search',
+    h1a: 'Search',
+    h1b: 'the site',
+    lead: 'Type a species name, a term or a topic – I will search the care sheets, cockroaches of Poland, guides, blog, glossary and library.',
+    placeholder: 'e.g. Polyphaga, ootheca, mites…',
+    noIndex: 'Search works on the published site (the index is built at deploy time).',
+    ui: {
+      placeholder: 'e.g. Polyphaga, ootheca, mites…',
+    },
+  },
+  de: {
+    title: 'Suche',
+    desc: 'Die ganze Seite Blattodea.pl durchsuchen: Haltungsprofile, Schaben Polens, Ratgeber, Blog und Glossar.',
+    num: 'Suche',
+    h1a: 'Auf der Seite',
+    h1b: 'suchen',
+    lead: 'Gib einen Artnamen, einen Begriff oder ein Thema ein – durchsucht werden Haltungsprofile, Schaben Polens, Ratgeber, Blog, Glossar und Bibliothek.',
+    placeholder: 'z. B. Polyphaga, Oothek, Milben…',
+    noIndex: 'Die Suche funktioniert auf der veröffentlichten Seite (der Index entsteht beim Veröffentlichen).',
+    ui: {
+      placeholder: 'z. B. Polyphaga, Oothek, Milben…',
+      clear_search: 'Löschen',
+      load_more: 'Mehr Ergebnisse',
+      search_label: 'Seite durchsuchen',
+      zero_results: 'Keine Ergebnisse für „[SEARCH_TERM]“',
+      many_results: '[COUNT] Ergebnisse für „[SEARCH_TERM]“',
+      one_result: '[COUNT] Ergebnis für „[SEARCH_TERM]“',
+      searching: 'Suche nach „[SEARCH_TERM]“…',
+    },
+  },
+});
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.search[other]} active="search" noindex>
+  <section class="scene search-scene">
+    <div class="wrap">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.num}</div>
+          <h1 class="h-display">{t.h1a} <em>{t.h1b}</em></h1>
+        </div>
+        <p class="rv lead" style="--d:.15s">{t.lead}</p>
+      </div>
+      <div id="search" class="search-box rv" data-ui={JSON.stringify(t.ui)} data-missing={t.noIndex}></div>
+    </div>
+  </section>
+</Base>
+
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+<script is:inline>
+  (function () {
+    var box = document.getElementById('search');
+    if (!box) return;
+    var s = document.createElement('script');
+    s.src = '/pagefind/pagefind-ui.js';
+    s.onload = function () {
+      var ui = new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: false,
+        resetStyles: false,
+        translations: JSON.parse(box.dataset.ui || '{}'),
+      });
+      var q = new URLSearchParams(location.search).get('q');
+      if (q) ui.triggerSearch(q);
+      var input = box.querySelector('input');
+      if (input) input.focus();
+    };
+    s.onerror = function () {
+      box.innerHTML = '<p class="empty">' + box.dataset.missing + '</p>';
+    };
+    document.head.appendChild(s);
+  })();
+</script>
+
+<style>
+  .search-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(60px, 8vw, 110px);
+    min-height: 70vh;
+  }
+  .search-box {
+    max-width: 860px;
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--amber2);
+    --pagefind-ui-text: var(--text);
+    --pagefind-ui-background: rgba(11, 18, 13, 0.75);
+    --pagefind-ui-border: var(--line2);
+    --pagefind-ui-tag: var(--bg3);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 3px;
+    --pagefind-ui-font: var(--sans);
+  }
+  .search-box :global(.pagefind-ui__search-input) {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    height: 64px;
+  }
+  .search-box :global(.pagefind-ui__result-link) {
+    font-family: var(--serif);
+    font-size: 21px;
+    color: var(--amber2);
+  }
+  .search-box :global(.pagefind-ui__result-excerpt),
+  .search-box :global(.pagefind-ui__message) {
+    color: var(--muted);
+  }
+  .search-box :global(mark) {
+    background: rgba(232, 165, 71, 0.25);
+    color: var(--amber2);
+  }
+</style>

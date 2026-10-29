@@ -138,6 +138,34 @@ collections:
       - { name: difficulty, label: 'Trudność hodowli (1 – łatwa, 2 – średnia, 3 – trudna)', widget: number, value_type: int, min: 1, max: 3, default: 1 }
       - { name: climbs, label: Wspina się po gładkich ściankach, widget: boolean, default: false }
       - { name: flies, label: Lata, widget: boolean, default: false }
+      - name: taxonomy
+        label: Taksonomia
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: subfamily, label: Podrodzina, widget: string, required: false }
+          - { name: tribe, label: Plemię, widget: string, required: false }
+          - { name: synonyms, label: Synonimy, widget: list, required: false }
+          - { name: tradeNames, label: Nazwy w handlu, widget: list, required: false }
+          - { name: csf, label: Link do Cockroach Species File, widget: string, required: false }
+      - name: sexing
+        label: Jak rozpoznać płeć
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: adults, label: Dorosłe, widget: object, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
+          - { name: nymphs, label: Nimfy, widget: object, required: false, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
+      - { name: stages, label: Stadia rozwoju, widget: object, required: false, collapsed: true, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
+      - name: problems
+        label: Typowe problemy
+        widget: list
+        required: false
+        fields:
+          - { name: pl, label: Po polsku, widget: string }
+          - { name: en, label: Po angielsku, widget: string }
+      - { name: remark, label: Warto wiedzieć (uwaga / ciekawostka), widget: object, required: false, collapsed: true, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
       - name: gallery
         label: Własne zdjęcia
         label_singular: zdjęcie
@@ -224,6 +252,44 @@ collections:
     public_folder: /images/blog
     fields: *blogfields
 
+  # ----------------------------------------------------------- PORADNIKI
+  - name: guides-pl
+    label: Poradniki (PL)
+    label_singular: poradnik
+    description: Wersja angielska = poradnik w „Poradniki (EN)” o tej samej nazwie pliku.
+    folder: src/content/guides/pl
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{slug}}'
+    summary: '{{order}}. {{title}}'
+    sortable_fields: [order, title]
+    fields: &guidefields
+      - { name: title, label: Tytuł, widget: string }
+      - { name: description, label: Krótki opis, widget: text }
+      - { name: order, label: Kolejność na liście (mniejsza = wyżej), widget: number, default: 10 }
+      - name: level
+        label: Poziom
+        widget: select
+        default: start
+        options:
+          - { label: Na start, value: start }
+          - { label: Podstawy, value: basic }
+          - { label: Dla zaawansowanych, value: advanced }
+      - { name: minutes, label: Minut czytania, widget: number, required: false }
+      - { name: updated, label: Data aktualizacji, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+      - { name: body, label: Treść, widget: markdown }
+  - name: guides-en
+    label: Poradniki (EN)
+    label_singular: poradnik (EN)
+    folder: src/content/guides/en
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{slug}}'
+    summary: '{{order}}. {{title}}'
+    fields: *guidefields
+
   # -------------------------------------------------------------- GALERIA
   - name: gallery
     label: Galeria „Z mojej hodowli”
@@ -257,6 +323,17 @@ collections:
         required: false
         fields: [{ name: pl, label: Po polsku, widget: text, required: false }, { name: en, label: Po angielsku, widget: text, required: false }]
       - { name: species, label: Gatunek (nazwa pliku profilu, np. blaptica-dubia), widget: string, required: false }
+      - name: stage
+        label: Co pokazuje (samiec/samica trafiają do „Jak rozpoznać płeć” w profilu)
+        widget: select
+        required: false
+        options:
+          - { label: Nimfa, value: nymph }
+          - { label: Subadult, value: subadult }
+          - { label: Dorosły, value: adult }
+          - { label: Samiec, value: male }
+          - { label: Samica, value: female }
+          - { label: Ooteka, value: ootheca }
       - { name: date, label: Data, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
       - { name: sample, label: Wpis przykładowy, widget: boolean, default: false, required: false }
 

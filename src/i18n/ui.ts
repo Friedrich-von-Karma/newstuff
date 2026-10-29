@@ -1,32 +1,60 @@
-export const languages = { pl: 'Polski', en: 'English' } as const;
+export const languages = { pl: 'Polski', en: 'English', de: 'Deutsch' } as const;
 export type Lang = keyof typeof languages;
 export const defaultLang: Lang = 'pl';
 
-/** Adresy podstron w obu językach. */
+/** Adresy podstron we wszystkich językach. */
 export const routes = {
-  home: { pl: '/', en: '/en/' },
-  pricelist: { pl: '/cennik/', en: '/en/price-list/' },
-  species: { pl: '/gatunki/', en: '/en/species/' },
-  blog: { pl: '/blog/', en: '/en/blog/' },
-  key: { pl: '/klucz/', en: '/en/key/' },
-  contact: { pl: '/kontakt/', en: '/en/contact/' },
-  gallery: { pl: '/galeria/', en: '/en/gallery/' },
-  compare: { pl: '/porownaj/', en: '/en/compare/' },
-  map: { pl: '/mapa/', en: '/en/map/' },
-  identify: { pl: '/oznacz/', en: '/en/identify/' },
-  glossary: { pl: '/slowniczek/', en: '/en/glossary/' },
-  thanks: { pl: '/dziekuje/', en: '/en/thank-you/' },
+  home: { pl: '/', en: '/en/', de: '/de/' },
+  pricelist: { pl: '/cennik/', en: '/en/price-list/', de: '/de/preisliste/' },
+  species: { pl: '/gatunki/', en: '/en/species/', de: '/de/arten/' },
+  blog: { pl: '/blog/', en: '/en/blog/', de: '/de/blog/' },
+  key: { pl: '/klucz/', en: '/en/key/', de: '/de/bestimmungsschluessel/' },
+  contact: { pl: '/kontakt/', en: '/en/contact/', de: '/de/kontakt/' },
+  gallery: { pl: '/galeria/', en: '/en/gallery/', de: '/de/galerie/' },
+  compare: { pl: '/porownaj/', en: '/en/compare/', de: '/de/vergleich/' },
+  map: { pl: '/mapa/', en: '/en/map/', de: '/de/karte/' },
+  identify: { pl: '/oznacz/', en: '/en/identify/', de: '/de/bestimmen/' },
+  glossary: { pl: '/slowniczek/', en: '/en/glossary/', de: '/de/glossar/' },
+  thanks: { pl: '/dziekuje/', en: '/en/thank-you/', de: '/de/danke/' },
+  search: { pl: '/szukaj/', en: '/en/search/', de: '/de/suche/' },
+  about: { pl: '/o-mnie/', en: '/en/about/', de: '/de/ueber-mich/' },
+  shipping: { pl: '/wysylka/', en: '/en/shipping/', de: '/de/versand/' },
+  guides: { pl: '/poradniki/', en: '/en/guides/', de: '/de/ratgeber/' },
+  wild: { pl: '/karaczany-polski/', en: '/en/cockroaches-of-poland/', de: '/de/schaben-polens/' },
+  calendar: { pl: '/kalendarz/', en: '/en/calendar/', de: '/de/kalender/' },
+  library: { pl: '/biblioteka/', en: '/en/library/', de: '/de/bibliothek/' },
 } as const;
 export type RouteKey = keyof typeof routes;
 
+export const langs = Object.keys(languages) as Lang[];
+
 export function getLangFromUrl(url: URL): Lang {
-  return url.pathname.startsWith('/en/') || url.pathname === '/en' ? 'en' : 'pl';
+  const m = url.pathname.match(/^\/(en|de)(\/|$)/);
+  return (m?.[1] as Lang) ?? 'pl';
+}
+
+/**
+ * Adresy tej samej strony we wszystkich językach – na podstawie tabeli `routes`
+ * (najdłuższy pasujący początek adresu + reszta, np. identyfikator gatunku).
+ */
+export function altPaths(pathname: string): Record<Lang, string> {
+  const path = pathname.endsWith('/') ? pathname : `${pathname}/`;
+  let best: { key: RouteKey; base: string } | null = null;
+  for (const key of Object.keys(routes) as RouteKey[]) {
+    for (const l of langs) {
+      const base = routes[key][l];
+      if (path.startsWith(base) && (!best || base.length > best.base.length)) best = { key, base };
+    }
+  }
+  if (!best) return Object.fromEntries(langs.map((l) => [l, routes.home[l]])) as Record<Lang, string>;
+  const rest = path.slice(best.base.length);
+  return Object.fromEntries(langs.map((l) => [l, routes[best!.key][l] + rest])) as Record<Lang, string>;
 }
 
 export const ui = {
   pl: {
     'site.tagline': 'Hodowla karaczanów · profile hodowlane · klucz do gatunków Polski',
-    'nav.home': 'Start',
+    'nav.home': 'Strona główna',
     'nav.pricelist': 'Cennik',
     'nav.species': 'Profile hodowlane',
     'nav.blog': 'Blog',
@@ -40,6 +68,13 @@ export const ui = {
     'nav.glossary': 'Słowniczek',
     'nav.cart': 'Koszyk',
     'nav.menu': 'Menu',
+    'nav.search': 'Szukaj',
+    'nav.about': 'O mnie',
+    'nav.shipping': 'Wysyłka',
+    'nav.guides': 'Poradniki',
+    'nav.wild': 'Karaczany Polski',
+    'nav.calendar': 'Kalendarz obserwacji',
+    'nav.library': 'Biblioteka',
     'lang.switch': 'English',
     'sample.badge': 'Dane przykładowe',
     'sample.note': 'To są przykładowe treści, które zostaną zastąpione prawdziwymi.',
@@ -163,6 +198,13 @@ export const ui = {
     'nav.glossary': 'Glossary',
     'nav.cart': 'Cart',
     'nav.menu': 'Menu',
+    'nav.search': 'Search',
+    'nav.about': 'About',
+    'nav.shipping': 'Shipping',
+    'nav.guides': 'Guides',
+    'nav.wild': 'Cockroaches of Poland',
+    'nav.calendar': 'Field calendar',
+    'nav.library': 'Library',
     'lang.switch': 'Polski',
     'sample.badge': 'Sample data',
     'sample.note': 'This is sample content that will be replaced with real data.',
@@ -270,20 +312,160 @@ export const ui = {
     '404.text': 'This page has scuttled under the skirting board.',
     '404.back': 'Back to the home page',
   },
+  de: {
+    'site.tagline': 'Schabenzucht · Haltungsprofile · Bestimmungsschlüssel für Polen',
+    'nav.home': 'Startseite',
+    'nav.pricelist': 'Preisliste',
+    'nav.species': 'Haltungsprofile',
+    'nav.blog': 'Blog',
+    'nav.key': 'Bestimmungsschlüssel der Schaben Polens',
+    'nav.keyShort': 'Schlüssel',
+    'nav.contact': 'Kontakt',
+    'nav.gallery': 'Galerie',
+    'nav.compare': 'Vergleich',
+    'nav.map': 'Karte',
+    'nav.identify': 'Schabe bestimmen lassen',
+    'nav.glossary': 'Glossar',
+    'nav.cart': 'Warenkorb',
+    'nav.menu': 'Menü',
+    'nav.search': 'Suche',
+    'nav.about': 'Über mich',
+    'nav.shipping': 'Versand',
+    'nav.guides': 'Ratgeber',
+    'nav.wild': 'Schaben Polens',
+    'nav.calendar': 'Beobachtungskalender',
+    'nav.library': 'Bibliothek',
+    'lang.switch': 'Sprache',
+    'sample.badge': 'Beispieldaten',
+    'sample.note': 'Dies sind Beispielinhalte, die durch echte Daten ersetzt werden.',
+
+    'home.lead': 'Aktuelle Preisliste, Haltungsprofile, Notizen aus der Zucht und aus dem Gelände sowie ein Bestimmungsschlüssel für die Schaben Polens.',
+    'home.sections': 'Bereiche',
+    'home.pricelist.desc': 'Verfügbare Arten, Preise pro 10er-Packung und Versandbedingungen.',
+    'home.species.desc': 'Artenblätter: Bedingungen, Futter, Vermehrung und Fotos.',
+    'home.blog.desc': 'Zuchtnotizen, Beobachtungen im Gelände und Neuigkeiten.',
+    'home.key.desc': 'Sichtbare Merkmale ankreuzen und die polnischen Arten eingrenzen.',
+    'home.latest': 'Neueste Beiträge',
+    'home.all': 'Alle Beiträge',
+    'home.plate': 'Tafel I',
+
+    'pricelist.title': 'Preisliste',
+    'pricelist.lead': 'Jede Art wird in Packungen zu 10 Tieren verkauft – je nach Art als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Preise in polnischen Złoty (PLN), Euro-Beträge sind Richtwerte. Art anklicken und bestellen – ich bestätige Verfügbarkeit und Versandkosten.',
+    'pricelist.updated': 'Zuletzt aktualisiert',
+    'pricelist.species': 'Art',
+    'pricelist.status': 'Verfügbarkeit',
+    'pricelist.prices': 'Preise',
+    'pricelist.profile': 'Profil',
+    'pricelist.profileLink': 'Haltungsprofil ansehen',
+    'pricelist.order': 'Bestellen',
+    'pricelist.shipping': 'Versand, Abholung und Zahlung',
+    'pack.size': '10er-Packung',
+    'pack.choose': 'Variante',
+    'pack.nymph': 'Nymphen',
+    'pack.adult': 'Adulte',
+    'pack.mix': 'Mix',
+    'pack.mixHint': 'Nymphen und Adulte',
+    'pack.order': 'Bestellung',
+    'pack.pcs': '10 Stk.',
+    'pricelist.filterAvailable': 'Nur verfügbare anzeigen',
+    'pricelist.empty': 'Keine Arten entsprechen dem Filter.',
+    'status.available': 'Verfügbar',
+    'status.low': 'Wenig',
+    'status.out': 'Ausverkauft',
+    'status.soon': 'Demnächst',
+
+    'species.title': 'Haltungsprofile',
+    'species.lead': 'Profile der Arten, die ich halte oder gehalten habe. Die Angaben sind Richtwerte – unter anderen Bedingungen können sie abweichen.',
+    'species.card': 'Artenblatt',
+    'species.family': 'Familie',
+    'species.origin': 'Herkunft',
+    'species.size': 'Größe (adult)',
+    'species.temperature': 'Temperatur',
+    'species.humidity': 'Luftfeuchtigkeit',
+    'species.substrate': 'Bodengrund',
+    'species.food': 'Futter',
+    'species.reproduction': 'Vermehrung',
+    'species.development': 'Entwicklung',
+    'species.difficulty': 'Schwierigkeit',
+    'species.climbs': 'Klettert an glatten Flächen',
+    'species.flies': 'Fliegt',
+    'species.yes': 'ja',
+    'species.no': 'nein',
+    'species.difficulty.1': 'leicht',
+    'species.difficulty.2': 'mittel',
+    'species.difficulty.3': 'anspruchsvoll',
+    'species.notes': 'Aus meiner Zucht',
+    'species.gallery': 'Galerie',
+    'species.inPricelist': 'In der Preisliste',
+    'species.fromPrice': 'ab',
+    'species.back': 'Alle Haltungsprofile',
+    'species.fig': 'Abb.',
+
+    'blog.title': 'Blog',
+    'blog.lead': 'Notizen aus der Zucht, aus dem Gelände und aus dem Leben der Schaben.',
+    'blog.tag': 'Beiträge mit dem Schlagwort',
+    'blog.allTags': 'Schlagwörter',
+    'blog.back': 'Alle Beiträge',
+    'blog.noTranslation': 'Dieser Beitrag ist noch nicht auf Deutsch verfügbar.',
+
+    'key.title': 'Bestimmungsschlüssel der Schaben Polens',
+    'key.lead': 'Kreuze die Merkmale an, die du an deinem Tier siehst – in beliebiger Reihenfolge. Die Artenliste wird dabei immer kürzer. Ist ein Merkmal nicht sichtbar oder bist du unsicher, lass es weg.',
+    'key.draft': 'Arbeitsversion – die Daten werden noch geprüft. Der Schlüssel hilft beim Eingrenzen, eine sichere Bestimmung der Ectobius-Arten erfordert aber oft die Untersuchung eines Männchens unter dem Stereomikroskop.',
+    'key.features': 'Merkmale',
+    'key.results': 'Passende Arten',
+    'key.of': 'von',
+    'key.reset': 'Auswahl löschen',
+    'key.none': 'Keine Art passt zu allen gewählten Merkmalen. Entferne das Merkmal, bei dem du am unsichersten bist.',
+    'key.native': 'heimisch',
+    'key.synanthropic': 'synanthrop',
+    'key.introduced': 'eingeschleppt',
+    'key.verify': 'zu prüfen',
+    'key.habitatLabel': 'Fundort',
+    'key.lengthLabel': 'Länge',
+    'key.howTo': 'So funktioniert es',
+    'key.mismatch': 'passt nicht',
+    'key.showAll': 'Auch nicht passende zeigen',
+    'key.noJs': 'Der Schlüssel benötigt JavaScript. Alle Arten sind unten aufgeführt.',
+
+    'contact.title': 'Kontakt',
+    'contact.lead': 'Bestellungen, Fragen zur Haltung und Hilfe beim Bestimmen gefundener Schaben – melde dich, wie es dir am besten passt.',
+    'contact.email': 'E-Mail',
+    'contact.messenger': 'Messenger',
+    'contact.facebook': 'Facebook',
+    'contact.instagram': 'Instagram',
+    'contact.orderHint': 'Gib bei der Bestellung die Art, die Anzahl der 10er-Packungen und dein Land bzw. deinen Ort an (für die Versandkosten).',
+    'contact.idHint': 'Für eine Bestimmung schick ein scharfes Foto von oben und von der Seite, die Körperlänge sowie Fundort und Funddatum.',
+
+    'footer.rights': 'Alle Fotos und Texte sind Eigentum des Autors.',
+    '404.title': 'Seite nicht gefunden',
+    '404.text': 'Diese Seite ist unter die Fußleiste gekrabbelt.',
+    '404.back': 'Zurück zur Startseite',
+  },
 } as const;
 
 export type UiKey = keyof (typeof ui)['pl'];
 
+
 export function useTranslations(lang: Lang) {
   return function tr(key: UiKey): string {
-    return ui[lang][key] ?? ui[defaultLang][key];
+    return (ui[lang] as Partial<Record<UiKey, string>>)[key] ?? (lang === 'pl' ? ui.pl[key] : ui.en[key]);
   };
 }
 
 export function localeOf(lang: Lang) {
-  return lang === 'pl' ? 'pl-PL' : 'en-GB';
+  return { pl: 'pl-PL', en: 'en-GB', de: 'de-DE' }[lang];
+}
+
+/** Tekst w wybranym języku z obiektu { pl, en, de? }; brak niemieckiego → angielski. */
+export function tl<T>(o: { pl: T; en: T; de?: T } | undefined | null, lang: Lang): T {
+  return (o?.[lang] ?? o?.en) as T;
 }
 
 export function formatDate(d: Date, lang: Lang) {
   return d.toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+/** Wybór wersji językowej obiektu z tekstami; brakujący język → angielski. */
+export function pick<T>(lang: Lang, m: { pl: T; en: T } & Partial<Record<Lang, T>>): T {
+  return (m as Partial<Record<Lang, T>>)[lang] ?? m.en;
 }

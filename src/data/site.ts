@@ -13,6 +13,34 @@ export const site = {
     instagramName: '@insectastic',
   },
 
+  /**
+   * Orientacyjny kurs euro (zł za 1 €) – do cen „≈ €” w wersji angielskiej.
+   * Zmień, gdy kurs się wyraźnie przesunie.
+   */
+  eurRate: 4.25,
+
+  /** Wysyłka za granicę (strona /wysylka/). */
+  international: {
+    pl: [
+      'Wysyłam do krajów Unii Europejskiej – przed zamówieniem napisz, do jakiego kraju, a podam koszt i termin wysyłki.',
+      'Paczki zagraniczne idą kurierem ekspresowym, żeby były w drodze jak najkrócej; termin ustalam tak, by nie trafiły na weekend.',
+      'Ceny w cenniku są w złotych; kwoty w euro przy wersji angielskiej są orientacyjne. Płatność przelewem (SEPA) przed wysyłką.',
+      'Przed zamówieniem sprawdź przepisy swojego kraju dotyczące przywozu żywych bezkręgowców – za ich zgodność odpowiada odbiorca.',
+    ],
+    en: [
+      'I ship to European Union countries – before ordering, write to me with your country and I will quote the cost and shipping date.',
+      'International parcels go by express courier so they spend as little time in transit as possible; I plan the date so they never sit over a weekend.',
+      'Prices on the price list are in Polish złoty; the euro amounts shown are approximate. Payment by bank transfer (SEPA) before shipping.',
+      'Before ordering, please check your country’s rules on importing live invertebrates – compliance is the buyer’s responsibility.',
+    ],
+    de: [
+      'Ich versende in Länder der Europäischen Union – schreib mir vor der Bestellung, in welches Land, dann nenne ich Kosten und Versandtermin.',
+      'Auslandspakete gehen per Expresskurier, damit sie so kurz wie möglich unterwegs sind; den Termin lege ich so, dass sie nie über ein Wochenende liegen.',
+      'Die Preise in der Preisliste sind in Złoty; die Euro-Beträge sind Richtwerte. Zahlung per Überweisung (SEPA) vor dem Versand.',
+      'Bitte prüfe vor der Bestellung die Einfuhrbestimmungen deines Landes für lebende Wirbellose – für deren Einhaltung ist der Käufer verantwortlich.',
+    ],
+  } as Record<'pl' | 'en' | 'de', string[]>,
+
   /** Zasady wysyłki, odbioru i płatności pokazywane pod cennikiem. */
   shipping: {
     pl: [
@@ -29,5 +57,12 @@ export const site = {
       'Payment by bank transfer or BLIK before shipping. International orders – please ask first.',
       'Live arrival is guaranteed. If anything goes wrong, send a photo of the opened parcel on the day of delivery.',
     ],
-  },
+    de: [
+      'Versand per Kurier mit Wärme- oder Kühlpack je nach Wetter, nur Montag bis Mittwoch – so liegen Pakete nie übers Wochenende im Depot.',
+      'Unter 0 °C oder über 30 °C pausiere ich den Versand oder lege ein Wärme- bzw. Kühlpack bei.',
+      'Abholung in Polen nach Absprache möglich.',
+      'Zahlung per Überweisung vor dem Versand. Auslandsbestellungen bitte vorher anfragen.',
+      'Lebendankunft garantiert. Falls etwas schiefgeht, schick am Zustelltag ein Foto des geöffneten Pakets.',
+    ],
+  } as Record<'pl' | 'en' | 'de', string[]>,
 } as const;

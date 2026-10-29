@@ -27,4 +27,28 @@ development:
 difficulty: 2
 climbs: false
 flies: false
+taxonomy:
+  subfamily: "Blaberinae"
+  tradeNames:
+    - "Colombian horned roach"
+sexing:
+  adults:
+    pl: "U rodzaju Hormetica samce mają wyraźne guzy i wyrostki na przedpleczu, samice gładsze przedplecze – dla tej formy niepotwierdzone na zdjęciach. Dorosłe obu płci mają skrzydła."
+    en: "In the genus Hormetica males have distinct bumps and projections on the pronotum, females a smoother pronotum – not yet confirmed with photos for this form. Adults of both sexes are winged."
+  nymphs:
+    pl: "Nimfy: w ostatnich 2–3 stadiach po spodzie odwłoka – samica ma jedną dużą płytkę końcową, samiec węższą płytkę z 1–2 małymi segmentami za nią (często z drobnymi wyrostkami – stylikami). U młodszych nimf praktycznie nie do odróżnienia."
+    en: "Nymphs: in the last 2–3 instars, check the underside of the abdomen – females have one large terminal plate, males a narrower plate with 1–2 small extra segments behind it (often with tiny styli). Not practical in young nymphs."
+stages:
+  pl: "Duże nimfy są ciemne i bezskrzydłe. Forma nieopisana naukowo – w hodowli europejskiej od kilku lat."
+  en: "Large nymphs are dark and wingless. The form is scientifically undescribed and has been in European culture for a few years."
+problems:
+  - pl: "Nieudane ostatnie linienie i zdeformowane skrzydła – zwłaszcza po stresie transportu."
+    en: "Failed final moults and deformed wings – especially after shipping stress."
+  - pl: "W chłodzie rośnie bardzo wolno."
+    en: "Grows very slowly when kept cool."
+  - pl: "Mało danych hodowlanych – sprawdza się głębokie, wilgotne podłoże z butwiejącym drewnem i liśćmi."
+    en: "Little husbandry data – deep, moist substrate with rotting wood and leaf litter works."
+remark:
+  pl: "Forma hodowlana bez nazwy gatunkowej; bywa łączona z H. apolinari, ale to tylko przypuszczenie."
+  en: "A hobby form without a species name; sometimes linked to H. apolinari, but that is only speculation."
 gallery: []

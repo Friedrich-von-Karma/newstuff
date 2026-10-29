@@ -1,0 +1,164 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { formatDate, langs, pick, routes, type Lang } from '../i18n/ui';
+import { entryLang, getGuides, guideSlug, type Guide } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  guide: Guide;
+}
+const { lang, guide } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const d = guide.data;
+const slug = guideSlug(guide);
+const { Content, headings } = await render(guide);
+const list = await getGuides(lang);
+const alts = Object.fromEntries(
+  await Promise.all(langs.map(async (l) => [l, (await getGuides(l)).some((g) => guideSlug(g) === slug) ? `${routes.guides[l]}${slug}/` : routes.guides[l]])),
+);
+const i = list.findIndex((g) => guide.id === g.id);
+const next = list[i + 1];
+const t = pick(lang, {
+  pl: { back: 'Wszystkie poradniki', toc: 'W tym poradniku', updated: 'Aktualizacja', next: 'Następny poradnik', min: 'min czytania' },
+  en: { back: 'All guides', toc: 'In this guide', updated: 'Updated', next: 'Next guide', min: 'min read' },
+  de: { back: 'Alle Ratgeber', toc: 'In diesem Ratgeber', updated: 'Aktualisiert', next: 'Nächster Ratgeber', min: 'Min. Lesezeit' },
+});
+const toc = headings.filter((h) => h.depth === 2);
+---
+
+<Base lang={lang} title={d.title} description={d.description} alts={alts} active="guides" jsonld={[{ '@type': 'HowTo', name: d.title, description: d.description, inLanguage: lang, dateModified: d.updated.toISOString() }]}>
+  <article class="scene guide">
+    <div class="wrap">
+      <a class="back" href={routes.guides[lang]}>← {t.back}</a>
+      <header class="gh rv">
+        <h1 class="h-display">{d.title}</h1>
+        <p class="lead">{d.description}</p>
+        {entryLang(guide) !== lang && <p class="draft" lang="de">Dieser Ratgeber ist noch nicht auf Deutsch verfügbar – hier die englische Fassung.</p>}
+        <p class="meta">
+          {t.updated}: <time datetime={d.updated.toISOString().slice(0, 10)}>{formatDate(d.updated, lang)}</time>
+          {d.minutes && ` · ${d.minutes} ${t.min}`}
+        </p>
+      </header>
+      <div class="layout">
+        {
+          toc.length > 1 && (
+            <nav class="toc" aria-label={t.toc}>
+              <div class="lbl">{t.toc}</div>
+              <ol>
+                {toc.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`}>{h.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
+        <div class="prose" data-glossary lang={entryLang(guide)}>
+          <Content />
+        </div>
+      </div>
+      {
+        next && (
+          <a class="next" href={`${routes.guides[lang]}${guideSlug(next)}/`}>
+            <span class="lbl">{t.next}</span>
+            <span class="nt">{next.data.title} →</span>
+          </a>
+        )
+      }
+    </div>
+  </article>
+</Base>
+
+<style>
+  .guide {
+    padding: clamp(110px, 13vw, 160px) 0 clamp(70px, 10vw, 130px);
+  }
+  .back {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--amber2);
+  }
+  .gh {
+    margin: 26px 0 clamp(30px, 5vw, 60px);
+    max-width: 900px;
+  }
+  .gh .h-display {
+    font-size: clamp(40px, 5.5vw, 76px);
+  }
+  .gh .lead {
+    margin-top: 16px;
+  }
+  .meta {
+    color: var(--dim);
+    font-size: 13px;
+    margin: 12px 0 0;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: clamp(30px, 5vw, 70px);
+    align-items: start;
+  }
+  .toc {
+    position: sticky;
+    top: 110px;
+  }
+  .toc ol {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    border-left: 1px solid var(--line2);
+  }
+  .toc a {
+    display: block;
+    padding-left: 14px;
+    color: var(--muted);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .toc a:hover {
+    color: var(--amber2);
+  }
+  .prose :global(h2) {
+    scroll-margin-top: 100px;
+  }
+  .prose :global(li) {
+    margin: 0.35em 0;
+  }
+  .next {
+    display: block;
+    margin-top: clamp(40px, 6vw, 70px);
+    padding: 24px;
+    border: 1px solid var(--line);
+    text-decoration: none;
+    max-width: 640px;
+  }
+  .next:hover {
+    border-color: var(--amber);
+  }
+  .nt {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 24px;
+    color: var(--amber2);
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .toc {
+      position: static;
+    }
+  }
+</style>

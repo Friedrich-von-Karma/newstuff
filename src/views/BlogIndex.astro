@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
-import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+import { formatDate, routes, useTranslations, type Lang, langs, pick } from '../i18n/ui';
 import { getPosts, postSlug, slugify } from '../lib/content';
 
 interface Props {
@@ -14,8 +14,8 @@ const tr = useTranslations(lang);
 const pl = lang === 'pl';
 const other: Lang = pl ? 'en' : 'pl';
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       num: 'Blog · notatki z hodowli i terenu',
       numTag: 'Blog · wpisy z tagiem',
       h1a: 'Notatki',
@@ -26,8 +26,8 @@ const t = pl
       sample: 'To przykładowy wpis – do podmiany na prawdziwy tekst.',
       empty: 'Nie ma jeszcze żadnych wpisów.',
       count: (n: number) => `${n} ${n === 1 ? 'wpis' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'wpisy' : 'wpisów'}`,
-    }
-  : {
+  },
+  en: {
       num: 'Blog · notes from the breeding room and the field',
       numTag: 'Blog · posts tagged',
       h1a: 'Notes',
@@ -38,14 +38,27 @@ const t = pl
       sample: 'This is a sample post – to be replaced with a real one.',
       empty: 'There are no posts yet.',
       count: (n: number) => `${n} ${n === 1 ? 'post' : 'posts'}`,
-    };
+  },
+  de: {
+      num: 'Blog · Notizen aus Zucht und Gelände',
+      numTag: 'Blog · Beiträge mit Schlagwort',
+      h1a: 'Notizen',
+      h1b: 'aus Zucht und Gelände',
+      dated: 'veröffentlicht am',
+      read: 'Beitrag lesen',
+      earlier: 'Ältere Beiträge',
+      sample: 'Dies ist ein Beispielbeitrag – er wird durch einen echten ersetzt.',
+      empty: 'Noch keine Beiträge.',
+      count: (n: number) => `${n} ${n === 1 ? 'Beitrag' : 'Beiträge'}`,
+  },
+});
 
 const all = await getPosts(lang);
 const posts = tag ? all.filter((p) => p.data.tags.some((x) => slugify(x) === tag)) : all;
 const tagName = tag ? all.flatMap((p) => p.data.tags).find((x) => slugify(x) === tag) : undefined;
 const tags = [...new Set(all.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b, lang));
 const title = tagName ? `${tr('blog.tag')} #${tagName}` : tr('blog.title');
-const alt = routes.blog[other];
+const alts = Object.fromEntries(langs.map((l) => [l, routes.blog[l]]));
 
 const [lead, ...rest] = posts;
 const day = (d: Date) => String(d.getDate());
@@ -53,7 +66,7 @@ const monthYear = (d: Date) => formatDate(d, lang).replace(/^\d+\.?\s*/, '');
 const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
 ---
 
-<Base lang={lang} title={title} description={tr('blog.lead')} alt={alt} active="blog">
+<Base lang={lang} title={title} description={tr('blog.lead')} alts={alts} active="blog">
   <section class="scene blog-scene">
     <div class="glowspot g1" aria-hidden="true"></div>
     <div class="glowspot g2" aria-hidden="true"></div>

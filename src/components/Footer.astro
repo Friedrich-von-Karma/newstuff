@@ -1,6 +1,6 @@
 ---
 import { site } from '../data/site';
-import { routes, useTranslations, type Lang, type RouteKey } from '../i18n/ui';
+import { routes, useTranslations, type Lang, type RouteKey, pick } from '../i18n/ui';
 import ExLibris from './ExLibris.astro';
 
 interface Props {
@@ -12,27 +12,33 @@ const year = new Date().getFullYear();
 const pl = lang === 'pl';
 const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
   {
-    h: pl ? 'Hodowla' : 'Breeding',
+    h: pick(lang, { pl: 'Hodowla', en: 'Breeding', de: 'Zucht' }),
     links: [
-      { key: 'pricelist', label: tr('nav.pricelist') },
       { key: 'species', label: tr('nav.species') },
+      { key: 'pricelist', label: tr('nav.pricelist') },
       { key: 'compare', label: tr('nav.compare') },
-      { key: 'gallery', label: tr('nav.gallery') },
+      { key: 'guides', label: tr('nav.guides') },
+      { key: 'shipping', label: tr('nav.shipping') },
     ],
   },
   {
-    h: pl ? 'Teren' : 'Field',
+    h: pick(lang, { pl: 'Teren', en: 'Field', de: 'Gelände' }),
     links: [
+      { key: 'wild', label: tr('nav.wild') },
       { key: 'key', label: tr('nav.key') },
       { key: 'identify', label: tr('nav.identify') },
       { key: 'map', label: tr('nav.map') },
+      { key: 'calendar', label: tr('nav.calendar') },
       { key: 'glossary', label: tr('nav.glossary') },
+      { key: 'library', label: tr('nav.library') },
     ],
   },
   {
-    h: pl ? 'Więcej' : 'More',
+    h: pick(lang, { pl: 'Więcej', en: 'More', de: 'Mehr' }),
     links: [
+      { key: 'gallery', label: tr('nav.gallery') },
       { key: 'blog', label: tr('nav.blog') },
+      { key: 'about', label: tr('nav.about') },
       { key: 'contact', label: tr('nav.contact') },
     ],
   },
@@ -63,10 +69,33 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
       ))
     }
   </div>
+  <div class="wrap news">
+    <form class="nl" action={`https://formsubmit.co/${site.contact.email}`} method="POST">
+      <input type="hidden" name="_subject" value="Newsletter – nowy zapis" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value={new URL(routes.thanks[lang], Astro.site).href} />
+      <input type="hidden" name="Język" value={lang} />
+      <div class="honey" aria-hidden="true"><label>Leave empty <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label></div>
+      <div class="nl-txt">
+        <p class="h">Newsletter</p>
+        <p>{pick(lang, { pl: 'Nowe gatunki w cenniku, poradniki i ciekawe obserwacje – raz na jakiś czas, bez spamu.', en: 'New species on the price list, guides and interesting records – now and then, no spam.', de: 'Neue Arten in der Preisliste, Ratgeber und interessante Funde – ab und zu, ohne Spam.' })}</p>
+      </div>
+      <div class="nl-row">
+        <label class="vh" for="nl-email">E-mail</label>
+        <input id="nl-email" type="email" name="email" required autocomplete="email" placeholder={pick(lang, { pl: 'twój e-mail', en: 'your e-mail', de: 'deine E-Mail' })} />
+        <button type="submit" class="btn small">{pick(lang, { pl: 'Zapisz mnie', en: 'Subscribe', de: 'Anmelden' })}</button>
+      </div>
+      <label class="nl-ok">
+        <input type="checkbox" name="Zgoda" value="tak" required />
+        <span>{pick(lang, { pl: 'Zgadzam się na wysyłanie wiadomości na podany adres. Mogę się wypisać w każdej chwili, odpisując na dowolny newsletter.', en: 'I agree to receive e-mails at this address. I can unsubscribe at any time by replying to any newsletter.', de: 'Ich bin mit dem Empfang von E-Mails an diese Adresse einverstanden. Abmelden kann ich mich jederzeit mit einer Antwort auf einen Newsletter.' })}</span>
+      </label>
+    </form>
+  </div>
   <div class="wrap legal">
     <p>© {year} {site.name}. {tr('footer.rights')}</p>
     <p>
-      {pl ? 'Zdjęcia gatunków: Wikimedia Commons – autorzy i licencje podane pod zdjęciami.' : 'Species photos: Wikimedia Commons – authors and licences shown under each photo.'}{' '}
+      {pick(lang, { pl: 'Zdjęcia gatunków: Wikimedia Commons – autorzy i licencje podane pod zdjęciami.', en: 'Species photos: Wikimedia Commons – authors and licences shown under each photo.', de: 'Artfotos: Wikimedia Commons – Autoren und Lizenzen stehen unter den Fotos.' })}{' '}
       <a href="/admin/" rel="nofollow">Panel</a>
     </p>
   </div>
@@ -91,6 +120,66 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
     border-radius: 50%;
     background: radial-gradient(circle, rgba(232, 140, 50, 0.16), transparent 65%);
     animation: breathe 9s ease-in-out infinite;
+  }
+  .news {
+    margin-top: clamp(40px, 6vw, 70px);
+  }
+  .nl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 10px 40px;
+    align-items: center;
+    padding: clamp(20px, 2.6vw, 30px);
+    border: 1px solid var(--line);
+    background: rgba(20, 33, 23, 0.4);
+  }
+  .nl-txt p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .nl-txt .h {
+    margin-bottom: 6px;
+  }
+  .nl-row {
+    display: flex;
+    gap: 10px;
+  }
+  .nl-row input {
+    flex: 1;
+    min-width: 0;
+  }
+  .nl-ok {
+    grid-column: 2;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+  .nl-ok input {
+    margin-top: 2px;
+    accent-color: var(--amber);
+  }
+  .honey {
+    position: absolute;
+    left: -9999px;
+  }
+  .vh {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  @media (max-width: 760px) {
+    .nl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .nl-ok {
+      grid-column: 1;
+    }
   }
   .grid {
     display: grid;

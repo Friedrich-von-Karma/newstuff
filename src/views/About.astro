@@ -1,0 +1,251 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ExLibris from '../components/ExLibris.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import { pick, routes, type Lang } from '../i18n/ui';
+import { getPricelist, getSpecies } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const [species, pricelist] = await Promise.all([getSpecies(), getPricelist()]);
+const offered = new Set(pricelist.map((p) => p.data.profile));
+
+const t = pick(lang, {
+  pl: {
+    title: 'O mnie',
+    desc: 'Mikołaj Stachowiak – hodowla karaczanów z pasji. Kim jestem, co hoduję i czym zajmuje się Blattodea.pl.',
+    num: 'Blattodea.pl · O mnie',
+    h1a: 'O mnie',
+    h1b: 'i o hodowli',
+    lead: 'Nazywam się Mikołaj Stachowiak. Karaczany hoduję z pasji – od gatunków łatwych na start po rzadkie, wymagające formy.',
+    aboutH: 'Czym jest Blattodea.pl',
+    about: [
+      'To strona hodowli i jednocześnie miejsce wiedzy o karaczanach: profile hodowlane, poradniki dla początkujących, klucz do oznaczania karaczanów Polski, mapa obserwacji i biblioteka literatury.',
+      'Chcę, żeby była najlepszym źródłem informacji o karaczanach w Polsce – dla hodowców, przyrodników i każdego, kto znalazł karaczana i chce wiedzieć, co to za gatunek.',
+      'Zwierzęta sprzedaję w paczkach po 10 sztuk, z wysyłką w Polsce i do krajów Unii Europejskiej.',
+    ],
+    whatH: 'Czym się zajmuję',
+    what: [
+      ['Hodowla', 'Utrzymuję i rozmnażam gatunki z cennika oraz kilka rzadszych, które opisuję w profilach hodowlanych.'],
+      ['Karaczany Polski', 'Zbieram informacje o dziko żyjących i synantropijnych karaczanach w Polsce, prowadzę klucz i mapę obserwacji.'],
+      ['Wiedza', 'Piszę poradniki i wpisy na blogu, zbieram literaturę i słowniczek pojęć.'],
+    ],
+    colH: 'Moja hodowla',
+    colLead: 'Gatunki, których profile są na stronie. Zaznaczone w cenniku można zamówić.',
+    inList: 'w cenniku',
+    contactH: 'Kontakt',
+    contactLead: 'Najszybciej złapiesz mnie mailem albo na Messengerze.',
+    note: 'Szkic – uzupełnię o kilka zdań od siebie.',
+  },
+  en: {
+    title: 'About',
+    desc: 'Mikołaj Stachowiak – breeding cockroaches out of passion. Who I am, what I keep and what Blattodea.pl is about.',
+    num: 'Blattodea.pl · About',
+    h1a: 'About me',
+    h1b: 'and the breeding room',
+    lead: 'My name is Mikołaj Stachowiak. I breed cockroaches out of passion – from easy starter species to rare, demanding ones.',
+    aboutH: 'What Blattodea.pl is',
+    about: [
+      'It is a breeding room and a knowledge base about cockroaches at the same time: care sheets, beginner guides, an identification key to the cockroaches of Poland, an observation map and a literature library.',
+      'I want it to be the best source of information about cockroaches in Poland – for keepers, naturalists and anyone who has found a cockroach and wants to know what it is.',
+      'Animals are sold in packs of 10, shipped within Poland and to European Union countries.',
+    ],
+    whatH: 'What I do',
+    what: [
+      ['Breeding', 'I keep and breed the species on the price list and a few rarer ones described in the care sheets.'],
+      ['Cockroaches of Poland', 'I collect information about wild and synanthropic cockroaches in Poland and run the identification key and the observation map.'],
+      ['Knowledge', 'I write guides and blog posts and curate the literature library and glossary.'],
+    ],
+    colH: 'My collection',
+    colLead: 'Species with a care sheet on this site. Those marked on the price list can be ordered.',
+    inList: 'on the price list',
+    contactH: 'Contact',
+    contactLead: 'The quickest way to reach me is e-mail or Messenger.',
+    note: 'Draft – a few personal words will follow.',
+  },
+  de: {
+    title: 'Über mich',
+    desc: 'Mikołaj Stachowiak – Schabenzucht aus Leidenschaft. Wer ich bin, was ich halte und worum es bei Blattodea.pl geht.',
+    num: 'Blattodea.pl · Über mich',
+    h1a: 'Über mich',
+    h1b: 'und die Zucht',
+    lead: 'Ich heiße Mikołaj Stachowiak und züchte Schaben aus Leidenschaft – von einfachen Einsteigerarten bis zu seltenen, anspruchsvollen Arten.',
+    aboutH: 'Was Blattodea.pl ist',
+    about: [
+      'Eine Zucht und zugleich eine Wissensbasis über Schaben: Haltungsprofile, Ratgeber für Einsteiger, ein Bestimmungsschlüssel für die Schaben Polens, eine Beobachtungskarte und eine Literaturbibliothek.',
+      'Sie soll die beste Informationsquelle über Schaben in Polen werden – für Halter, Naturkundler und alle, die eine Schabe gefunden haben und wissen möchten, welche Art es ist.',
+      'Die Tiere werden in Packungen zu 10 Stück verkauft und innerhalb Polens sowie in Länder der Europäischen Union versendet.',
+    ],
+    whatH: 'Was ich mache',
+    what: [
+      ['Zucht', 'Ich halte und vermehre die Arten aus der Preisliste und einige seltenere, die in den Haltungsprofilen beschrieben sind.'],
+      ['Schaben Polens', 'Ich sammle Informationen über wildlebende und synanthrope Schaben in Polen und betreue den Bestimmungsschlüssel und die Beobachtungskarte.'],
+      ['Wissen', 'Ich schreibe Ratgeber und Blogbeiträge und pflege die Literaturbibliothek und das Glossar.'],
+    ],
+    colH: 'Meine Sammlung',
+    colLead: 'Arten mit Haltungsprofil auf dieser Seite. Die in der Preisliste markierten kann man bestellen.',
+    inList: 'in der Preisliste',
+    contactH: 'Kontakt',
+    contactLead: 'Am schnellsten erreichst du mich per E-Mail oder Messenger.',
+    note: 'Entwurf – ein paar persönliche Worte folgen.',
+  },
+});
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.about[other]} active="about" jsonld={[{ '@type': 'AboutPage', name: t.title, mainEntity: { '@type': 'Person', name: 'Mikołaj Stachowiak', email: 'mikolaj.stachowiak@blattodea.pl' } }]}>
+  <section class="scene about-scene">
+    <div class="wrap">
+      <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead} />
+
+      <div class="grid">
+        <div class="rv prose">
+          <h2>{t.aboutH}</h2>
+          {t.about.map((p) => <p>{p}</p>)}
+        </div>
+        <div class="seal rv" style="--d:.15s" aria-hidden="true"><ExLibris big /></div>
+      </div>
+
+      <ol class="what">
+        {
+          t.what.map(([h, p], i) => (
+            <li class="glass rv" style={`--d:${i * 0.1}s`}>
+              <span class="roman" aria-hidden="true">{['I', 'II', 'III'][i]}</span>
+              <h3>{h}</h3>
+              <p>{p}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <section class="col rv" aria-labelledby="col-h">
+        <h2 id="col-h">{t.colH}</h2>
+        <p class="sub">{t.colLead}</p>
+        <ul>
+          {
+            species.map((s) => (
+              <li>
+                <a class="latin" href={`${routes.species[lang]}${s.id}/`}>{s.data.latin}</a>
+                {offered.has(s.id) && <span class="tag">{t.inList}</span>}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="contact rv" aria-labelledby="ct-h">
+        <h2 id="ct-h">{t.contactH}</h2>
+        <p class="sub">{t.contactLead}</p>
+        <ContactLinks lang={lang} />
+      </section>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(30px, 6vw, 90px);
+    align-items: center;
+  }
+  .grid .prose h2 {
+    margin-top: 0;
+  }
+  .seal {
+    display: grid;
+    place-items: center;
+    padding: 30px;
+    border: 1px solid var(--line);
+    background: radial-gradient(circle at 50% 45%, rgba(232, 165, 71, 0.12), transparent 65%);
+  }
+  .what {
+    list-style: none;
+    margin: clamp(50px, 7vw, 90px) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .what li {
+    padding: clamp(22px, 2.6vw, 34px);
+  }
+  .roman {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 200;
+    font-size: 54px;
+    line-height: 0.9;
+    color: var(--amber2);
+    margin-bottom: 14px;
+  }
+  .what h3 {
+    font-size: 26px;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+  .what p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .col,
+  .contact {
+    margin-top: clamp(50px, 7vw, 90px);
+  }
+  .col h2,
+  .contact h2 {
+    font-size: clamp(30px, 3vw, 42px);
+    font-weight: 300;
+    font-style: italic;
+  }
+  .sub {
+    color: var(--muted);
+    margin: 6px 0 22px;
+  }
+  .col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .col li {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    flex-wrap: wrap;
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .col .latin {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .col .latin:hover {
+    color: var(--amber2);
+  }
+  .tag {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fern);
+    border: 1px solid rgba(169, 191, 127, 0.45);
+    padding: 2px 8px;
+  }
+  @media (max-width: 860px) {
+    .grid,
+    .what {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

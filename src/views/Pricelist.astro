@@ -1,8 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
-import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
-import { formatPrice, getPricelist, getPricelistUpdated, getSpecies } from '../lib/content';
+import { formatDate, routes, useTranslations, type Lang, tl, pick } from '../i18n/ui';
+import { formatPrice, getPricelist, getPricelistUpdated, getSpecies, formatEur } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -19,8 +19,8 @@ const updatedIso = getPricelistUpdated();
 const updatedDate = updatedIso ? new Date(`${updatedIso}T12:00:00`) : null;
 const updatedText = updatedDate && !isNaN(updatedDate.valueOf()) ? formatDate(updatedDate, lang) : '';
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       num: 'Scena I · cennik',
       h1a: 'Cennik',
       h1b: 'na żywo',
@@ -47,8 +47,8 @@ const t = pl
       compare: 'Porównaj gatunki',
       stageH: 'W paczce',
       priceH: 'Cena za 10 szt.',
-    }
-  : {
+  },
+  en: {
       num: 'Scene I · price list',
       h1a: 'Price list',
       h1b: 'live',
@@ -75,7 +75,36 @@ const t = pl
       compare: 'Compare species',
       stageH: 'In the pack',
       priceH: 'Price per 10',
-    };
+  },
+  de: {
+      num: 'Szene I · Preisliste',
+      h1a: 'Preisliste',
+      h1b: 'aktuell',
+      intro:
+        'Preise pro Packung mit <strong>10</strong> Tieren. Jede Art wird in einer Form verkauft – als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Euro-Beträge sind Richtwerte. Klicke auf einen Artnamen, um das Haltungsprofil zu sehen und zu bestellen.',
+      updated: 'Preisliste aktualisiert',
+      pack: 'Packung = 10 Tiere der gewählten Variante',
+      cart: 'Warenkorb ansehen',
+      shown: 'angezeigt',
+      profile: 'Haltungsprofil',
+      nophoto: 'kein Foto',
+      shipLbl: 'Versand, Abholung, Zahlung',
+      shipH: 'Wie die Pakete reisen',
+      howNum: 'So bestellst du',
+      howH: 'Drei Schritte',
+      howHem: 'zum Paket',
+      steps: [
+        ['Art anklicken', 'In der Liste oben. Das Haltungsprofil öffnet sich mit Preis und dem Knopf „In den Warenkorb“.'],
+        ['In den Warenkorb', 'Sammle mehrere Arten – oder mehrere Packungen derselben Art.'],
+        ['Eine E-Mail senden', 'Der Warenkorb erstellt eine Nachricht mit deiner ganzen Bestellung. In der Antwort bestätige ich Verfügbarkeit und Versandkosten.'],
+      ],
+      wait: 'Art ausverkauft oder bald verfügbar? Klicke im Haltungsprofil auf „Benachrichtigen“ – die Nachricht trägt dich in die Warteliste ein.',
+      note: 'Preise in PLN pro 10er-Packung · der Bestand ändert sich von Woche zu Woche',
+      compare: 'Arten vergleichen',
+      stageH: 'In der Packung',
+      priceH: 'Preis pro 10',
+  },
+});
 
 ---
 
@@ -124,7 +153,7 @@ const t = pl
                   {d.status !== 'available' && <span class={`st st-${d.status}`}>{tr(`status.${d.status}`)}</span>}
                 </span>
                 <span class="stg" role="cell">{tr(`pack.${d.stage}`)}</span>
-                <span class="pc" role="cell">{formatPrice(d.price, lang)}</span>
+                <span class="pc" role="cell">{formatPrice(d.price, lang)}{lang !== 'pl' && <small class="eur">{formatEur(d.price, lang)}</small>}</span>
               </div>
             );
           })
@@ -136,7 +165,7 @@ const t = pl
       <div class="ship-box glass rv">
         <div class="lbl">{t.shipLbl}</div>
         <ul class="ship">
-          {site.shipping[lang].map((s) => <li>{s}</li>)}
+          {tl(site.shipping, lang).map((s) => <li>{s}</li>)}
         </ul>
       </div>
     </div>
@@ -230,6 +259,12 @@ const t = pl
     font-family: var(--serif);
     font-size: clamp(18px, 1.6vw, 22px);
     color: var(--amber2);
+  }
+  .eur {
+    display: block;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
   }
   .stg {
     font-size: 13px;

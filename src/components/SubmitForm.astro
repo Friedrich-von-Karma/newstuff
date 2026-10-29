@@ -13,7 +13,7 @@
 import 'leaflet/dist/leaflet.css';
 import { site } from '../data/site';
 import { taxa } from '../data/key';
-import { routes, type Lang } from '../i18n/ui';
+import { routes, type Lang, tl, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -27,8 +27,8 @@ const email = site.contact.email;
 const next = new URL(routes.thanks[lang], Astro.site).href;
 const MAX_MB = 8;
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       subject: obs ? 'Blattodea.pl – zgłoszenie obserwacji na mapę' : 'Blattodea.pl – prośba o oznaczenie karaczana',
       photos: 'Zdjęcia',
       top: 'Zdjęcie z góry',
@@ -83,8 +83,8 @@ const t = pl
         ['szklarnia', 'szklarnia, palmiarnia, zoo'],
         ['inne', 'inne'],
       ],
-    }
-  : {
+  },
+  en: {
       subject: obs ? 'Blattodea.pl – observation report for the map' : 'Blattodea.pl – identification request',
       photos: 'Photos',
       top: 'Photo from above',
@@ -139,7 +139,64 @@ const t = pl
         ['szklarnia', 'glasshouse, palm house, zoo'],
         ['inne', 'other'],
       ],
-    };
+  },
+  de: {
+      subject: obs ? 'Blattodea.pl – Fundmeldung für die Karte' : 'Blattodea.pl – Bitte um Bestimmung',
+      photos: 'Fotos',
+      top: 'Foto von oben',
+      side: 'Foto von der Seite',
+      req: 'Pflicht',
+      opt: 'optional',
+      pick: 'Foto auswählen oder hierher ziehen',
+      change: 'Foto ändern',
+      tooBig: `Dieses Foto ist zu groß (max. ${MAX_MB} MB). Verkleinere es oder wähle ein anderes.`,
+      notImage: 'Das sieht nicht nach einer Bilddatei aus.',
+      details: 'Angaben',
+      length: 'Körperlänge (mm)',
+      lengthHint: 'ohne Fühler, z. B. 12',
+      place: 'Fundort',
+      placeHint: 'Ort / Gegend, z. B. Kampinos-Wald bei Izabelin',
+      date: 'Datum',
+      habitat: 'Lebensraum',
+      habitatChoose: '– auswählen –',
+      species: 'Welche Art ist es deiner Meinung nach?',
+      dunno: 'Weiß nicht',
+      desc: 'Beschreibung',
+      descHint: obs
+        ? 'Was du gesehen hast, wie viele, Verhalten, eventuelle Oothek…'
+        : 'Wie sie aussieht, wo genau sie war, ob sie fliegt, wie viele…',
+      you: 'Du',
+      email: 'Deine E-Mail',
+      emailHint: 'Pflicht – damit du eine Antwort bekommst',
+      name: 'Name',
+      nameHint: obs ? 'optional – kann neben dem Kartenpunkt erscheinen' : 'optional',
+      where: 'Ort auf der Karte',
+      whereHint: 'Klicke in die Karte, um eine Nadel zu setzen (sie lässt sich verschieben).',
+      geo: 'Meinen Standort verwenden',
+      geoBusy: 'Standort wird ermittelt…',
+      geoFail: 'Standort nicht verfügbar – markiere den Ort bitte auf der Karte.',
+      clearPin: 'Nadel entfernen',
+      noPin: 'nicht gesetzt',
+      consent: 'Ich bin einverstanden, dass der Punkt (ungefähre Gegend) zusammen mit meinem Namen oder meinen Initialen auf der Beobachtungskarte veröffentlicht wird.',
+      send: obs ? 'Meldung senden' : 'Zur Bestimmung senden',
+      sending: 'Wird gesendet…',
+      info: 'Die Formulardaten und Fotos werden nur an den Autor der Seite per E-Mail gesendet und nur für die Antwort auf deine Meldung verwendet',
+      infoObs: ' sowie – mit deiner Zustimmung – zum Eintragen des Punkts auf der Karte',
+      mailAlt: 'Lieber per E-Mail?',
+      mailAlt2: 'Schreib an',
+      mailAlt3: 'und hänge die Fotos an.',
+      mailBody: obs
+        ? 'Hallo,\n\nich möchte einen Schabenfund melden.\n\nOrt (Ort / Gegend oder Koordinaten): \nDatum: \nLebensraum (Wald / Wiese / Gebäude / Gewächshaus / anderes): \nKörperlänge (mm): \nVermutete Art: \nVeröffentlichung des Punkts mit meinem Namen/Initialen: ja / nein\n\nFotos (von oben und von der Seite) im Anhang.\n'
+        : 'Hallo,\n\nkannst du mir helfen, eine Schabe zu bestimmen?\n\nOrt (Ort / Gegend): \nDatum: \nLebensraum (Wald / Wiese / Gebäude / Gewächshaus / anderes): \nKörperlänge (mm): \nBeschreibung: \n\nFotos (von oben und von der Seite) im Anhang.\n',
+      habitats: [
+        ['las', 'Wald'],
+        ['łąka', 'Wiese, Heide'],
+        ['budynek', 'Gebäude – Wohnung, Keller, Küche'],
+        ['szklarnia', 'Gewächshaus, Palmenhaus, Zoo'],
+        ['inne', 'anderes'],
+      ],
+  },
+});
 
 const mailto = `mailto:${email}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(t.mailBody)}`;
 const today = new Date().toISOString().slice(0, 10);
@@ -252,7 +309,7 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
               {speciesOptions.map((x) => (
                 <option value={x.latin}>
                   {x.latin}
-                  {x.name?.[lang] ? ` – ${x.name[lang]}` : ''}
+                  {tl(x.name, lang) ? ` – ${tl(x.name, lang)}` : ''}
                 </option>
               ))}
             </select>
