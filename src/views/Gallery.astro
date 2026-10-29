@@ -16,7 +16,7 @@
  *  Wpisy z `sample: true` bez pliku pokazują ramkę „miejsce na Twoje zdjęcie” – usuń je, gdy dodasz własne.
  */
 import Base from '../layouts/Base.astro';
-import { formatDate, routes, type Lang } from '../i18n/ui';
+import { formatDate, routes, type Lang, tl, pick } from '../i18n/ui';
 import { getGallery, getSpecies } from '../lib/content';
 import { taxa } from '../data/key';
 
@@ -27,8 +27,8 @@ const { lang } = Astro.props;
 const pl = lang === 'pl';
 const other: Lang = pl ? 'en' : 'pl';
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       title: 'Galeria',
       num: 'Galeria · z mojej hodowli',
       h1a: 'Z mojej',
@@ -53,8 +53,8 @@ const t = pl
       count: (n: number) => `${n} ${n === 1 ? 'pozycja' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'pozycje' : 'pozycji'}`,
       of: 'z',
       play: 'Odtwórz film',
-    }
-  : {
+  },
+  en: {
       title: 'Gallery',
       num: 'Gallery · from my breeding room',
       h1a: 'From my',
@@ -79,7 +79,34 @@ const t = pl
       count: (n: number) => `${n} ${n === 1 ? 'item' : 'items'}`,
       of: 'of',
       play: 'Play video',
-    };
+  },
+  de: {
+      title: 'Galerie',
+      num: 'Galerie · aus meiner Zucht',
+      h1a: 'Aus meiner',
+      h1b: 'Zucht',
+      lead: 'Fotos und kurze Clips direkt aus den Behältern: Häutungen, Ootheken, Nymphen, Fütterung. Klicke auf eine Kachel für die volle Größe.',
+      filter: 'Galerie filtern',
+      all: 'Alles',
+      photos: 'Fotos',
+      videos: 'Videos',
+      species: 'Arten',
+      placeholderPhoto: 'Platz für dein Foto',
+      placeholderVideo: 'Platz für dein Video',
+      sample: 'Beispiel',
+      video: 'Video',
+      photo: 'Foto',
+      profile: 'Zum Haltungsprofil',
+      close: 'Schließen',
+      prev: 'Zurück',
+      next: 'Weiter',
+      empty: 'In dieser Kategorie gibt es noch nichts.',
+      none: 'Die Galerie ist noch leer.',
+      count: (n: number) => `${n} ${n === 1 ? 'Eintrag' : 'Einträge'}`,
+      of: 'von',
+      play: 'Video abspielen',
+  },
+});
 
 const entries = await getGallery();
 const profiles = await getSpecies();
@@ -106,8 +133,8 @@ const items = entries.map((e, i) => {
   return {
     id: e.id,
     kind: d.kind,
-    title: d.title[lang],
-    caption: d.caption?.[lang] || '',
+    title: tl(d.title, lang),
+    caption: tl(d.caption, lang) || '',
     species: d.species,
     speciesName: d.species ? speciesName(d.species) : '',
     speciesUrl: d.species && profileIds.has(d.species) ? `${routes.species[lang]}${d.species}/` : '',
@@ -150,7 +177,7 @@ const labels = {
   placeholderPhoto: t.placeholderPhoto,
   placeholderVideo: t.placeholderVideo,
   of: t.of,
-  ...(pl ? { n_one: 'pozycja', n_few: 'pozycje', n_many: 'pozycji', n_other: 'pozycji' } : { n_one: 'item', n_other: 'items' }),
+  ...(pl ? { n_one: 'pozycja', n_few: 'pozycje', n_many: 'pozycji', n_other: 'pozycji' } : lang === 'de' ? { n_one: 'Eintrag', n_other: 'Einträge' } : { n_one: 'item', n_other: 'items' }),
 };
 ---
 

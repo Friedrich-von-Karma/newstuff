@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 import PackPicker from '../components/PackPicker.astro';
 import ContactScene from '../components/ContactScene.astro';
-import { routes, useTranslations, localeOf, type Lang, type UiKey } from '../i18n/ui';
+import { routes, useTranslations, localeOf, type Lang, type UiKey, tl, pick } from '../i18n/ui';
 import { getPosts, getSpecies, getPricelist, getPricelistUpdated, getSpeciesNote, getObservations, postSlug, slugify } from '../lib/content';
 import { taxa, characters } from '../data/key';
 import { photos, photoSrc, photoPage } from '../data/photos';
@@ -64,8 +64,8 @@ const native = taxa.filter((x) => x.status === 'native').length;
 const latest = posts[0];
 const latestDate = latest ? splitDate(latest.data.date) : null;
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       scene: 'Scena',
       heroAlt: 'Macropanesthia rhinoceros – największy karaczan świata',
       readTop: 'w cenniku',
@@ -113,8 +113,8 @@ const t = pl
       readPost: 'Czytaj wpis',
       allPosts: tr('home.all'),
       contactNum: 'Scena VI · Kontakt',
-    }
-  : {
+  },
+  en: {
       scene: 'Scene',
       heroAlt: 'Macropanesthia rhinoceros – the heaviest cockroach in the world',
       readTop: 'in the price list',
@@ -162,7 +162,57 @@ const t = pl
       readPost: 'Read the post',
       allPosts: tr('home.all'),
       contactNum: 'Scene VI · Contact',
-    };
+  },
+  de: {
+      scene: 'Szene',
+      heroAlt: 'Macropanesthia rhinoceros – die schwerste Schabe der Welt',
+      readTop: 'in der Preisliste',
+      readSpecies: pricelist.length === 1 ? 'Art' : 'Arten',
+      readBottom: `${orderable.length} bestellbar · ${taxa.length} im Schlüssel`,
+      cue: 'Hinab in die Laubstreu',
+      priceH: ['Preisliste', 'aktuell'],
+      priceP: 'Jede Art gibt es in Packungen zu 10 Tieren – je nach Art als Nymphen, Mix (Nymphen und Adulte) oder Adulte. In den Warenkorb legen oder direkt per E-Mail bestellen. Ist etwas ausverkauft, trag dich für eine Benachrichtigung ein.',
+      updatedLbl: 'Preisliste aktualisiert',
+      packNote: 'Eine Packung = 10 Tiere',
+      shipLbl: 'Versand, Abholung, Zahlung',
+      shipH: 'Wie die Pakete reisen',
+      fullPrice: 'Ganze Preisliste',
+      priceNote: 'Preise in PLN pro 10er-Packung.',
+      profileH: ['Profile', 'zur Haltung'],
+      profileP: 'Haltungsparameter: Temperatur, Luftfeuchtigkeit, Bodengrund, Futter und Entwicklungsdauer. Seitlich scrollen, ziehen oder die Pfeile nutzen.',
+      reel: 'Karussell der Haltungsprofile',
+      prev: 'Vorheriges Profil',
+      next: 'Nächstes Profil',
+      full: 'Ganzes Haltungsprofil',
+      endNum: 'Tiefer ins Dunkel…',
+      endH: 'Vergleichen und stöbern',
+      endP: 'Stell die Arten nebeneinander oder schau dir die Galerie mit Fotos und Videos aus der Zucht an.',
+      compare: 'Vergleich',
+      gallery: 'Galerie',
+      quote: ['Nicht jede Schabe lebt in der Küche. In polnischen Wäldern, unter der ', 'Laubstreu', ', leben kleine heimische Arten – es lohnt sich, sie kennenzulernen.'],
+      quoteAlt: 'Waldschabe (Ectobius sylvestris) – Weibchen mit Oothek',
+      keyH: ['Schlüssel', 'und Gelände'],
+      keyP: 'Eine Schabe im Wald, auf der Wiese oder in der Wohnung gefunden? Kreuze die sichtbaren Merkmale im Schlüssel an, schick ein Foto zur Bestimmung oder sieh nach, wo in Polen Funde bestätigt sind.',
+      draft: 'Entwurf',
+      draftTxt: 'Daten und Merkmale des Schlüssels werden noch überprüft',
+      keyTile: 'Bestimmungsschlüssel der Schaben Polens',
+      keySub: `${characters.length} Merkmale zum Ankreuzen · ${native} heimische Arten`,
+      keyNum: 'Arten',
+      idTile: 'Meine Schabe bestimmen',
+      idSub: 'Schick ein Foto und eine kurze Beschreibung deines Fundes zur Bestimmung.',
+      idNum: 'Foto + Notizen',
+      mapTile: 'Fundkarte',
+      mapNum: observations.length === 1 ? 'Fund' : 'Funde',
+      mapSub: observations.length ? 'Geprüfte Schabenfunde aus Polen.' : 'Die Karte wartet auf die ersten geprüften Funde.',
+      open: 'Öffnen',
+      blogH: ['Notizen', 'aus Zucht und Gelände'],
+      blogP: tr('blog.lead'),
+      postLbl: 'veröffentlicht am',
+      readPost: 'Beitrag lesen',
+      allPosts: tr('home.all'),
+      contactNum: 'Szene VI · Kontakt',
+  },
+});
 const roman = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 const heroPhoto = 'macropanesthia-rhinoceros';
 const interPhoto = 'ectobius-sylvestris';
@@ -183,7 +233,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
     {
       credit(heroPhoto) && (
         <div class="credit hero-credit">
-          {t.heroAlt}. {pl ? 'Fot.' : 'Photo:'} {credit(heroPhoto)!.author} ·{' '}
+          {t.heroAlt}. {pick(lang, { pl: 'Fot.', en: 'Photo:', de: 'Foto:' })} {credit(heroPhoto)!.author} ·{' '}
           <a href={credit(heroPhoto)!.licenseUrl} target="_blank" rel="noopener license">
             {credit(heroPhoto)!.license}
           </a>{' '}
@@ -204,6 +254,12 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
                 <span class="ln"><span style="--d:.15s">Hodowla</span></span>
                 <span class="ln"><span style="--d:.3s">karaczanów</span></span>
                 <span class="ln"><span style="--d:.45s">z <em>Pasji</em></span></span>
+              </>
+            ) : lang === 'de' ? (
+              <>
+                <span class="ln"><span style="--d:.15s">Schabenzucht</span></span>
+                <span class="ln"><span style="--d:.3s">aus</span></span>
+                <span class="ln"><span style="--d:.45s"><em>Leidenschaft</em></span></span>
               </>
             ) : (
               <>
@@ -246,7 +302,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
           return (
             <>
               <article class:list={['tile', 'rv', `t-${size}`]} style={`--d:${(i * 0.08).toFixed(2)}s`}>
-                <div class="sp-img">{src ? <img src={src} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" /> : <span class="nophoto"><b>{pl ? 'brak zdjęcia' : 'no photo'}</b></span>}</div>
+                <div class="sp-img">{src ? <img src={src} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" /> : <span class="nophoto"><b>{pick(lang, { pl: 'brak zdjęcia', en: 'no photo', de: 'kein Foto' })}</b></span>}</div>
                 <div class="tile-body">
                   <div>
                     <span class={`status st-${item.data.status}`}>{tr(`status.${item.data.status}` as UiKey)}</span>
@@ -257,14 +313,14 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
                     </h3>
                     {(() => {
                       const sp = species.find((s) => s.id === item.data.profile);
-                      return sp?.data.commonName ? <div class="sp-common">{sp.data.commonName[lang]}</div> : null;
+                      return sp?.data.commonName ? <div class="sp-common">{tl(sp.data.commonName, lang)}</div> : null;
                     })()}
-                    {item.data.note && <div class="sp-note" data-glossary>{item.data.note[lang]}</div>}
+                    {item.data.note && <div class="sp-note" data-glossary>{tl(item.data.note, lang)}</div>}
                   </div>
                   <PackPicker item={item} lang={lang} big={size === 'big'} />
                   {cr && (
                     <div class="credit">
-                      {pl ? 'Fot.' : 'Photo:'} {cr.author} ·{' '}
+                      {pick(lang, { pl: 'Fot.', en: 'Photo:', de: 'Foto:' })} {cr.author} ·{' '}
                       <a href={cr.licenseUrl} target="_blank" rel="noopener license">
                         {cr.license}
                       </a>{' '}
@@ -297,7 +353,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
           <div class="lbl">{t.shipLbl}</div>
           <h3>{t.shipH}</h3>
           <ul class="ship" data-glossary>
-            {site.shipping[lang].map((s) => <li>{s}</li>)}
+            {tl(site.shipping, lang).map((s) => <li>{s}</li>)}
           </ul>
         </div>
       </article>
@@ -330,16 +386,16 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
               <article class="card" data-card>
                 <div class="card-photo">
                   {src ? (
-                    <img src={src} alt={`${d.latin}${d.commonName ? ` – ${d.commonName[lang]}` : ''}`} loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false" onerror="this.style.opacity=0" />
+                    <img src={src} alt={`${d.latin}${d.commonName ? ` – ${tl(d.commonName, lang)}` : ''}`} loading="lazy" decoding="async" referrerpolicy="no-referrer" draggable="false" onerror="this.style.opacity=0" />
                   ) : (
                     <span class="nophoto">
-                      <b>{pl ? 'brak zdjęcia' : 'no photo'}</b>
+                      <b>{pick(lang, { pl: 'brak zdjęcia', en: 'no photo', de: 'kein Foto' })}</b>
                     </span>
                   )}
                   <div class="idx" aria-hidden="true">{pad(i + 1)}</div>
                   {cr && (
                     <div class="credit">
-                      {pl ? 'Fot.' : 'Photo:'} {cr.author} ·{' '}
+                      {pick(lang, { pl: 'Fot.', en: 'Photo:', de: 'Foto:' })} {cr.author} ·{' '}
                       <a href={cr.licenseUrl} target="_blank" rel="noopener license">
                         {cr.license}
                       </a>{' '}
@@ -354,7 +410,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
                   <div>
                     <h3>{d.latin}</h3>
                     <div class="card-sub">
-                      {d.commonName && <b>{d.commonName[lang]}</b>}
+                      {d.commonName && <b>{tl(d.commonName, lang)}</b>}
                       {d.commonName && ' · '}
                       {d.author && <>{d.author} · </>}
                       {d.family}
@@ -367,31 +423,31 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
                     </div>
                     <div>
                       <dt>{tr('species.size')}</dt>
-                      <dd class="big">{d.size[lang]}</dd>
+                      <dd class="big">{tl(d.size, lang)}</dd>
                     </div>
                     <div>
                       <dt>{tr('species.humidity')}</dt>
-                      <dd>{d.humidity[lang]}</dd>
+                      <dd>{tl(d.humidity, lang)}</dd>
                     </div>
                     <div>
                       <dt>{tr('species.origin')}</dt>
-                      <dd>{d.origin[lang]}</dd>
+                      <dd>{tl(d.origin, lang)}</dd>
                     </div>
                     <div class="wide">
                       <dt>{tr('species.substrate')}</dt>
-                      <dd>{d.substrate[lang]}</dd>
+                      <dd>{tl(d.substrate, lang)}</dd>
                     </div>
                     <div class="wide">
                       <dt>{tr('species.food')}</dt>
-                      <dd>{d.food[lang]}</dd>
+                      <dd>{tl(d.food, lang)}</dd>
                     </div>
                     <div>
                       <dt>{tr('species.reproduction')}</dt>
-                      <dd data-glossary>{d.reproduction[lang]}</dd>
+                      <dd data-glossary>{tl(d.reproduction, lang)}</dd>
                     </div>
                     <div>
                       <dt>{tr('species.development')}</dt>
-                      <dd>{d.development[lang]}</dd>
+                      <dd>{tl(d.development, lang)}</dd>
                     </div>
                   </dl>
                   <div class="flags">
@@ -441,7 +497,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
   </section>
 
   <!-- ============ przerywnik ============ -->
-  <section class="interlude" aria-label={pl ? 'Przerywnik' : 'Interlude'}>
+  <section class="interlude" aria-label={pick(lang, { pl: 'Przerywnik', en: 'Interlude', de: 'Zwischenspiel' })}>
     <div class="bgimg" data-par="0.18">
       {img(interPhoto, 1280) && <img src={img(interPhoto, 1280)} alt={t.quoteAlt} loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" />}
     </div>
@@ -452,7 +508,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
     {
       credit(interPhoto) && (
         <div class="credit">
-          {t.quoteAlt}. {pl ? 'Fot.' : 'Photo:'} {credit(interPhoto)!.author} ·{' '}
+          {t.quoteAlt}. {pick(lang, { pl: 'Fot.', en: 'Photo:', de: 'Foto:' })} {credit(interPhoto)!.author} ·{' '}
           <a href={credit(interPhoto)!.licenseUrl} target="_blank" rel="noopener license">
             {credit(interPhoto)!.license}
           </a>{' '}
@@ -498,7 +554,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
               </a>
               {cr && (
                 <div class="credit">
-                  <i>{taxa.find((x) => x.id === k.photo)?.latin}</i> · {pl ? 'Fot.' : 'Photo:'} {cr.author} ·{' '}
+                  <i>{taxa.find((x) => x.id === k.photo)?.latin}</i> · {pick(lang, { pl: 'Fot.', en: 'Photo:', de: 'Foto:' })} {cr.author} ·{' '}
                   <a href={cr.licenseUrl} target="_blank" rel="noopener license">
                     {cr.license}
                   </a>{' '}
@@ -513,13 +569,13 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
         })
       }
     </div>
-    <nav class="know" aria-label={pl ? 'Wiedza' : 'Knowledge'}>
+    <nav class="know" aria-label={pick(lang, { pl: 'Wiedza', en: 'Knowledge', de: 'Wissen' })}>
       {
         [
-          ['wild', pl ? 'Karaczany Polski' : 'Cockroaches of Poland', pl ? 'karty wszystkich gatunków' : 'every species'],
-          ['calendar', pl ? 'Kalendarz obserwacji' : 'Field calendar', pl ? 'kiedy szukać w terenie' : 'when to look outdoors'],
-          ['guides', pl ? 'Poradniki' : 'Guides', pl ? 'hodowla krok po kroku' : 'keeping step by step'],
-          ['library', pl ? 'Biblioteka' : 'Library', pl ? 'literatura i bazy danych' : 'literature and databases'],
+          ['wild', pick(lang, { pl: 'Karaczany Polski', en: 'Cockroaches of Poland', de: 'Schaben Polens' }), pick(lang, { pl: 'karty wszystkich gatunków', en: 'every species', de: 'alle Arten im Porträt' })],
+          ['calendar', pick(lang, { pl: 'Kalendarz obserwacji', en: 'Field calendar', de: 'Beobachtungskalender' }), pick(lang, { pl: 'kiedy szukać w terenie', en: 'when to look outdoors', de: 'wann man im Freien sucht' })],
+          ['guides', pick(lang, { pl: 'Poradniki', en: 'Guides', de: 'Ratgeber' }), pick(lang, { pl: 'hodowla krok po kroku', en: 'keeping step by step', de: 'Haltung Schritt für Schritt' })],
+          ['library', pick(lang, { pl: 'Biblioteka', en: 'Library', de: 'Bibliothek' }), pick(lang, { pl: 'literatura i bazy danych', en: 'literature and databases', de: 'Literatur und Datenbanken' })],
         ].map(([k, h, s], i) => (
           <a class="kn rv" style={`--d:${(i * 0.08).toFixed(2)}s`} href={routes[k as 'wild'][lang]}>
             <span class="kn-h">{h}</span>

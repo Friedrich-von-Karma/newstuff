@@ -3,7 +3,7 @@ import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import PackPicker from '../components/PackPicker.astro';
-import { formatDate, routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
+import { formatDate, routes, useTranslations, type Lang, type UiKey, tl, pick } from '../i18n/ui';
 import { getGallery, getPriceForProfile, getSpecies, getSpeciesNote } from '../lib/content';
 
 interface Props {
@@ -26,7 +26,7 @@ const Note = note ? (await render(note)).Content : null;
 const idx = all.findIndex((s) => s.id === entry.id);
 const next = all.length > 1 ? all[(idx + 1) % all.length] : undefined;
 const own = d.gallery;
-const description = `${d.latin}${d.commonName ? ` (${d.commonName[lang]})` : ''} – ${tr('species.card').toLowerCase()}: ${d.temperature}, ${d.humidity[lang]}, ${d.food[lang]}.`;
+const description = `${d.latin}${d.commonName ? ` (${tl(d.commonName, lang)})` : ''} – ${tr('species.card').toLowerCase()}: ${d.temperature}, ${tl(d.humidity, lang)}, ${tl(d.food, lang)}.`;
 const sexPhotos = {
   male: breeding.find((g) => g.data.stage === 'male' && g.data.src),
   female: breeding.find((g) => g.data.stage === 'female' && g.data.src),
@@ -35,8 +35,8 @@ const tx = d.taxonomy;
 const hasMore = !!(tx || d.sexing || d.stages || d.problems.length || d.remark);
 const ytEmbed = (id: string) => `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`;
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       noteH: 'Opis z hodowli',
       buyLbl: 'w cenniku · paczka 10 szt.',
       breedNum: 'Z mojej hodowli',
@@ -75,8 +75,8 @@ const t = pl
       stagesH: 'Stadia rozwoju',
       problemsH: 'Typowe problemy',
       remarkH: 'Warto wiedzieć',
-    }
-  : {
+  },
+  en: {
       noteH: 'Breeding notes',
       buyLbl: 'in the price list · pack of 10',
       breedNum: 'From my breeding room',
@@ -115,7 +115,48 @@ const t = pl
       stagesH: 'Life stages',
       problemsH: 'Common problems',
       remarkH: 'Good to know',
-    };
+  },
+  de: {
+      noteH: 'Notizen aus der Zucht',
+      buyLbl: 'in der Preisliste · 10er-Packung',
+      breedNum: 'Aus meiner Zucht',
+      breedH: 'Fotos',
+      breedHem: 'und Videos',
+      breedP: `Aufnahmen von ${d.latin} aus meiner Zucht. Klicke auf ein Foto, um es zu vergrößern.`,
+      breedEmpty: 'Fotos und Videos dieser Art erscheinen hier.',
+      slotPhoto: 'Platz für dein Foto',
+      slotVideo: 'Platz für dein Video',
+      video: 'Video',
+      photo: 'Foto',
+      fullGallery: 'Ganze Galerie',
+      compare: 'Mit anderer Art vergleichen',
+      next: 'Nächstes Profil',
+      close: 'Schließen',
+      zoom: 'Foto vergrößern',
+      climbs: 'klettert an Glas',
+      flies: 'fliegt',
+      moreNum: 'Mehr über die Art',
+      moreH: 'Geschlechter, Stadien',
+      moreHem: 'und Stolperfallen',
+      taxH: 'Taxonomie',
+      order: 'Ordnung',
+      family: 'Familie',
+      subfamily: 'Unterfamilie',
+      tribe: 'Tribus',
+      synonyms: 'Synonyme',
+      trade: 'Handelsnamen',
+      csf: 'Cockroach Species File',
+      sexH: 'Geschlechter unterscheiden',
+      adults: 'Adulte',
+      nymphs: 'Nymphen',
+      male: 'Männchen',
+      female: 'Weibchen',
+      sexSlot: 'Foto folgt',
+      stagesH: 'Entwicklungsstadien',
+      problemsH: 'Häufige Probleme',
+      remarkH: 'Gut zu wissen',
+  },
+});
 ---
 
 <Base lang={lang} title={d.latin} description={description} alt={`${routes.species[other]}${entry.id}/`} active="species" image={own[0]?.src} jsonld={[{ '@type': 'Taxon', name: d.latin, taxonRank: 'species', ...(d.author ? { scientificNameAuthorship: d.author } : {}), parentTaxon: { '@type': 'Taxon', name: d.family, taxonRank: 'family' }, url: new URL(`${routes.species[lang]}${entry.id}/`, Astro.site).href }]}>
@@ -131,11 +172,11 @@ const t = pl
           <div class="stick">
           {
             own.length > 0 ? (
-              <button type="button" class="mainph zoom" data-src={own[0].src} data-cap={own[0].caption?.[lang] ?? own[0].alt[lang]} aria-label={t.zoom}>
-                <img src={own[0].src} alt={own[0].alt[lang]} loading="eager" />
+              <button type="button" class="mainph zoom" data-src={own[0].src} data-cap={tl(own[0].caption, lang) ?? tl(own[0].alt, lang)} aria-label={t.zoom}>
+                <img src={own[0].src} alt={tl(own[0].alt, lang)} loading="eager" />
               </button>
             ) : (
-              <CommonsPhoto id={entry.id} lang={lang} alt={`${d.latin}${d.commonName ? ` – ${d.commonName[lang]}` : ''}`} width={1280} eager class="commons" />
+              <CommonsPhoto id={entry.id} lang={lang} alt={`${d.latin}${d.commonName ? ` – ${tl(d.commonName, lang)}` : ''}`} width={1280} eager class="commons" />
             )
           }
           <span class="idx" aria-hidden="true">{String(idx + 1).padStart(2, '0')}</span>
@@ -145,15 +186,15 @@ const t = pl
               <ul class="thumbs">
                 {own.slice(1).map((g) => (
                   <li>
-                    <button type="button" class="zoom" data-src={g.src} data-cap={g.caption?.[lang] ?? g.alt[lang]} aria-label={t.zoom}>
-                      <img src={g.src} alt={g.alt[lang]} loading="lazy" />
+                    <button type="button" class="zoom" data-src={g.src} data-cap={tl(g.caption, lang) ?? tl(g.alt, lang)} aria-label={t.zoom}>
+                      <img src={g.src} alt={tl(g.alt, lang)} loading="lazy" />
                     </button>
                   </li>
                 ))}
               </ul>
             )
           }
-          {own[0]?.caption && <p class="credit owncap">{own[0].caption[lang]}</p>}
+          {own[0]?.caption && <p class="credit owncap">{tl(own[0].caption, lang)}</p>}
         </div>
 
         <div class="txt">
@@ -161,7 +202,7 @@ const t = pl
             <div class="kicker">{d.family}</div>
             <h1 class="latin">{d.latin}</h1>
             <div class="sub">
-              {d.commonName && <b>{d.commonName[lang]}</b>}
+              {d.commonName && <b>{tl(d.commonName, lang)}</b>}
               {d.author && <span> · {d.author}</span>}
               <span> · {d.family}</span>
             </div>
@@ -175,31 +216,31 @@ const t = pl
             </div>
             <div>
               <dt>{tr('species.size')}</dt>
-              <dd class="big">{d.size[lang]}</dd>
+              <dd class="big">{tl(d.size, lang)}</dd>
             </div>
             <div>
               <dt>{tr('species.humidity')}</dt>
-              <dd>{d.humidity[lang]}</dd>
+              <dd>{tl(d.humidity, lang)}</dd>
             </div>
             <div>
               <dt>{tr('species.origin')}</dt>
-              <dd>{d.origin[lang]}</dd>
+              <dd>{tl(d.origin, lang)}</dd>
             </div>
             <div class="wide">
               <dt>{tr('species.substrate')}</dt>
-              <dd>{d.substrate[lang]}</dd>
+              <dd>{tl(d.substrate, lang)}</dd>
             </div>
             <div class="wide">
               <dt>{tr('species.food')}</dt>
-              <dd>{d.food[lang]}</dd>
+              <dd>{tl(d.food, lang)}</dd>
             </div>
             <div>
               <dt>{tr('species.reproduction')}</dt>
-              <dd>{d.reproduction[lang]}</dd>
+              <dd>{tl(d.reproduction, lang)}</dd>
             </div>
             <div>
               <dt>{tr('species.development')}</dt>
-              <dd>{d.development[lang]}</dd>
+              <dd>{tl(d.development, lang)}</dd>
             </div>
           </dl>
 
@@ -234,7 +275,7 @@ const t = pl
                   <span class="lbl">{t.buyLbl}</span>
                   <span class={`status st-${price.data.status}`}>{tr(`status.${price.data.status}`)}</span>
                 </div>
-                {price.data.note && <p class="pnote">{price.data.note[lang]}</p>}
+                {price.data.note && <p class="pnote">{tl(price.data.note, lang)}</p>}
                 <PackPicker item={price} lang={lang} />
               </section>
             )
@@ -281,11 +322,11 @@ const t = pl
                   })}
                 </div>
                 <h4>{t.adults}</h4>
-                <p>{d.sexing.adults[lang]}</p>
+                <p>{tl(d.sexing.adults, lang)}</p>
                 {d.sexing.nymphs && (
                   <>
                     <h4>{t.nymphs}</h4>
-                    <p>{d.sexing.nymphs[lang]}</p>
+                    <p>{tl(d.sexing.nymphs, lang)}</p>
                   </>
                 )}
               </article>
@@ -294,14 +335,14 @@ const t = pl
               {d.stages && (
                 <article class="mcard rv" style="--d:.1s" data-glossary>
                   <h3>{t.stagesH}</h3>
-                  <p>{d.stages[lang]}</p>
+                  <p>{tl(d.stages, lang)}</p>
                 </article>
               )}
               {d.problems.length > 0 && (
                 <article class="mcard rv" style="--d:.15s" data-glossary>
                   <h3>{t.problemsH}</h3>
                   <ul class="probs">
-                    {d.problems.map((p) => <li>{p[lang]}</li>)}
+                    {d.problems.map((p) => <li>{tl(p, lang)}</li>)}
                   </ul>
                 </article>
               )}
@@ -309,7 +350,7 @@ const t = pl
             {d.remark && (
               <article class="mcard remark rv">
                 <h3>{t.remarkH}</h3>
-                <p>{d.remark[lang]}</p>
+                <p>{tl(d.remark, lang)}</p>
               </article>
             )}
             {tx && (
@@ -348,8 +389,8 @@ const t = pl
           <ul class="tiles">
             {breeding.map((g, i) => {
               const gd = g.data;
-              const title = gd.title[lang];
-              const cap = gd.caption?.[lang];
+              const title = tl(gd.title, lang);
+              const cap = tl(gd.caption, lang);
               const has = gd.kind === 'photo' ? !!gd.src : !!(gd.src || gd.youtube);
               return (
                 <li class:list={['gt', 'rv', `k-${gd.kind}`, { slot: !has }]} style={`--d:${(i % 3) * 0.1}s`}>

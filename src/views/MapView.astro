@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import SubmitForm from '../components/SubmitForm.astro';
 import { taxa } from '../data/key';
 import { getObservations } from '../lib/content';
-import { routes, formatDate, type Lang } from '../i18n/ui';
+import { routes, formatDate, type Lang, tl, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -13,8 +13,8 @@ const { lang } = Astro.props;
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       title: 'Mapa obserwacji',
       desc: 'Zweryfikowane obserwacje karaczanów w Polsce – rodzimych gatunków leśnych i tych, które żyją przy człowieku. Zgłoś własne znalezisko ze zdjęciem.',
       num: 'Mapa · obserwacje',
@@ -57,8 +57,8 @@ const t = pl
       csv: 'Pobierz dane (CSV)',
       csvHint: 'Dane zgodne z filtrami powyżej – do wykorzystania w pracach naukowych z podaniem źródła: Blattodea.pl.',
       months: ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'],
-    }
-  : {
+  },
+  en: {
       title: 'Observation map',
       desc: 'Verified records of cockroaches in Poland – native woodland species and those living alongside people. Report your own find with a photo.',
       num: 'Map · records',
@@ -101,7 +101,52 @@ const t = pl
       csv: 'Download data (CSV)',
       csvHint: 'Data matching the filters above – free to use in research, citing the source: Blattodea.pl.',
       months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    };
+  },
+  de: {
+      title: 'Beobachtungskarte',
+      desc: 'Geprüfte Schabenfunde in Polen – heimische Waldarten und solche, die beim Menschen leben. Melde deinen eigenen Fund mit Foto.',
+      num: 'Karte · Funde',
+      h1a: 'Schaben',
+      h1b: 'auf der Karte Polens',
+      lead: 'Jeder Punkt ist ein mit Fotos belegter Fund, der geprüft und bestimmt wurde. Jeder neue Fund – selbst eine häufige Waldschabe – hilft festzustellen, wo die einzelnen Arten wirklich vorkommen.',
+      filter: 'Art',
+      all: 'Alle Arten',
+      shown: 'Punkte angezeigt',
+      of: 'von',
+      emptyH: 'Die ersten geprüften Funde erscheinen hier',
+      emptyP: 'Die Karte wartet noch auf ihre ersten Punkte. Eine Schabe im Wald, auf einer Wiese oder in einem Gebäude gefunden? Schick ein Foto – nach der Prüfung erscheint sie hier.',
+      emptyBtn: 'Fund melden',
+      wheel: 'Klicke in die Karte, um mit dem Mausrad zu zoomen',
+      observer: 'Beobachter',
+      profile: 'Haltungsprofil →',
+      howNum: 'So funktioniert es',
+      howH1: 'Vom Foto',
+      howH2: 'zum Punkt auf der Karte',
+      steps: [
+        ['Du meldest', 'Schick Fotos, Ort und Datum über das Formular unten oder per E-Mail.'],
+        ['Prüfung', 'Die Fotos werden angesehen und mit den Artmerkmalen verglichen; manchmal ist eine Rückfrage nötig.'],
+        ['Ein Punkt auf der Karte', 'Ein bestätigter Fund erscheint – mit deiner Zustimmung – auf der Karte, auf die ungefähre Gegend genau.'],
+        ['Ein besserer Schlüssel', 'Die Daten helfen, den Schlüssel zu verbessern: Verbreitung, Lebensräume und Merkmale der Arten in Polen.'],
+      ],
+      formNum: 'Meldung',
+      formH1: 'Fund',
+      formH2: 'melden',
+      formP: 'Am wichtigsten sind scharfe Fotos und der Fundort. Wenn du die Art nicht kennst, wähle „weiß nicht“ – oder prüfe sie zuerst mit dem Schlüssel.',
+      keyLink: 'Bestimmungsschlüssel',
+      unknown: 'unbestimmte Art',
+      year: 'Jahr',
+      allYears: 'Alle Jahre',
+      statsNum: 'Daten',
+      statsH: 'Funde',
+      statsHem: 'in Zahlen',
+      byMonth: 'Funde nach Monat',
+      latest: 'Neueste Funde',
+      noLatest: 'Noch keine Funde.',
+      csv: 'Daten herunterladen (CSV)',
+      csvHint: 'Daten gemäß den Filtern oben – frei für die Forschung nutzbar unter Angabe der Quelle: Blattodea.pl.',
+      months: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+  },
+});
 
 const obs = await getObservations();
 const byId = new Map(taxa.map((x) => [x.id, x]));
@@ -110,7 +155,7 @@ const points = obs.map((o) => {
   return {
     species: o.data.species,
     latin: tx?.latin ?? o.data.species,
-    name: tx?.name?.[lang] || '',
+    name: tl(tx?.name, lang) || '',
     profile: tx?.profile ? `${routes.species[lang]}${tx.profile}/` : '',
     lat: o.data.lat,
     lng: o.data.lng,
@@ -152,7 +197,7 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile, none
               filterOptions.map((x) => (
                 <option value={x.id} disabled={!counts.get(x.id)}>
                   {x.latin}
-                  {x.name?.[lang] ? ` – ${x.name[lang]}` : ''} ({counts.get(x.id) ?? 0})
+                  {tl(x.name, lang) ? ` – ${tl(x.name, lang)}` : ''} ({counts.get(x.id) ?? 0})
                 </option>
               ))
             }

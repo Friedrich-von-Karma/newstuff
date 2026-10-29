@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { glossary } from '../data/glossary';
-import { routes, type Lang } from '../i18n/ui';
+import { routes, type Lang, tl, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -9,10 +9,10 @@ interface Props {
 const { lang } = Astro.props;
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
-const locale = pl ? 'pl' : 'en';
+const locale = lang;
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       title: 'Słowniczek',
       desc: 'Najważniejsze pojęcia z hodowli i oznaczania karaczanów: ooteka, nimfa, linienie, przedplecze, pokrywy i inne – krótko i po polsku.',
       num: 'Słowniczek · pojęcia',
@@ -27,8 +27,8 @@ const t = pl
       key: 'Klucz do karaczanów Polski',
       species: 'Profile hodowlane',
       link: 'link do tego terminu',
-    }
-  : {
+  },
+  en: {
       title: 'Glossary',
       desc: 'Key terms from cockroach keeping and identification: ootheca, nymph, moulting, pronotum, tegmina and more – short and plain.',
       num: 'Glossary · terms',
@@ -43,10 +43,27 @@ const t = pl
       key: 'Key to the cockroaches of Poland',
       species: 'Care sheets',
       link: 'link to this term',
-    };
+  },
+  de: {
+      title: 'Glossar',
+      desc: 'Wichtige Begriffe aus Schabenhaltung und Bestimmung: Oothek, Nymphe, Häutung, Pronotum, Tegmina und mehr – kurz und verständlich.',
+      num: 'Glossar · Begriffe',
+      h1a: 'Glossar',
+      h1b: 'der Begriffe',
+      lead: 'Kurze Erklärungen der Begriffe aus den Haltungsprofilen, dem Schlüssel und dem Blog. In Texten auf der Seite sind sie gepunktet unterstrichen – mit der Maus darüber fahren oder antippen, um die Definition zu sehen.',
+      search: 'Begriff suchen',
+      placeholder: 'z. B. Oothek, Nymphe, Pronotum…',
+      none: 'Keine Begriffe passen zur Suche.',
+      count: 'Begriffe',
+      index: 'Buchstabenindex',
+      key: 'Bestimmungsschlüssel der Schaben Polens',
+      species: 'Haltungsprofile',
+      link: 'Link zu diesem Begriff',
+  },
+});
 
 const items = glossary
-  .map((g) => ({ id: g.id, term: g.term[lang], def: g.def[lang], alt: g.term[other] }))
+  .map((g) => ({ id: g.id, term: tl(g.term, lang), def: tl(g.def, lang), alt: g.term[other] }))
   .sort((a, b) => a.term.localeCompare(b.term, locale, { sensitivity: 'base' }));
 const letterOf = (s: string) => s.charAt(0).toLocaleUpperCase(locale);
 const groups: { letter: string; items: typeof items }[] = [];

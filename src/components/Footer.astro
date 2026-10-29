@@ -1,6 +1,6 @@
 ---
 import { site } from '../data/site';
-import { routes, useTranslations, type Lang, type RouteKey } from '../i18n/ui';
+import { routes, useTranslations, type Lang, type RouteKey, pick } from '../i18n/ui';
 import ExLibris from './ExLibris.astro';
 
 interface Props {
@@ -12,7 +12,7 @@ const year = new Date().getFullYear();
 const pl = lang === 'pl';
 const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
   {
-    h: pl ? 'Hodowla' : 'Breeding',
+    h: pick(lang, { pl: 'Hodowla', en: 'Breeding', de: 'Zucht' }),
     links: [
       { key: 'species', label: tr('nav.species') },
       { key: 'pricelist', label: tr('nav.pricelist') },
@@ -22,7 +22,7 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
     ],
   },
   {
-    h: pl ? 'Teren' : 'Field',
+    h: pick(lang, { pl: 'Teren', en: 'Field', de: 'Gelände' }),
     links: [
       { key: 'wild', label: tr('nav.wild') },
       { key: 'key', label: tr('nav.key') },
@@ -34,7 +34,7 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
     ],
   },
   {
-    h: pl ? 'Więcej' : 'More',
+    h: pick(lang, { pl: 'Więcej', en: 'More', de: 'Mehr' }),
     links: [
       { key: 'gallery', label: tr('nav.gallery') },
       { key: 'blog', label: tr('nav.blog') },
@@ -79,23 +79,23 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
       <div class="honey" aria-hidden="true"><label>Leave empty <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label></div>
       <div class="nl-txt">
         <p class="h">Newsletter</p>
-        <p>{pl ? 'Nowe gatunki w cenniku, poradniki i ciekawe obserwacje – raz na jakiś czas, bez spamu.' : 'New species on the price list, guides and interesting records – now and then, no spam.'}</p>
+        <p>{pick(lang, { pl: 'Nowe gatunki w cenniku, poradniki i ciekawe obserwacje – raz na jakiś czas, bez spamu.', en: 'New species on the price list, guides and interesting records – now and then, no spam.', de: 'Neue Arten in der Preisliste, Ratgeber und interessante Funde – ab und zu, ohne Spam.' })}</p>
       </div>
       <div class="nl-row">
         <label class="vh" for="nl-email">E-mail</label>
-        <input id="nl-email" type="email" name="email" required autocomplete="email" placeholder={pl ? 'twój e-mail' : 'your e-mail'} />
-        <button type="submit" class="btn small">{pl ? 'Zapisz mnie' : 'Subscribe'}</button>
+        <input id="nl-email" type="email" name="email" required autocomplete="email" placeholder={pick(lang, { pl: 'twój e-mail', en: 'your e-mail', de: 'deine E-Mail' })} />
+        <button type="submit" class="btn small">{pick(lang, { pl: 'Zapisz mnie', en: 'Subscribe', de: 'Anmelden' })}</button>
       </div>
       <label class="nl-ok">
         <input type="checkbox" name="Zgoda" value="tak" required />
-        <span>{pl ? 'Zgadzam się na wysyłanie wiadomości na podany adres. Mogę się wypisać w każdej chwili, odpisując na dowolny newsletter.' : 'I agree to receive e-mails at this address. I can unsubscribe at any time by replying to any newsletter.'}</span>
+        <span>{pick(lang, { pl: 'Zgadzam się na wysyłanie wiadomości na podany adres. Mogę się wypisać w każdej chwili, odpisując na dowolny newsletter.', en: 'I agree to receive e-mails at this address. I can unsubscribe at any time by replying to any newsletter.', de: 'Ich bin mit dem Empfang von E-Mails an diese Adresse einverstanden. Abmelden kann ich mich jederzeit mit einer Antwort auf einen Newsletter.' })}</span>
       </label>
     </form>
   </div>
   <div class="wrap legal">
     <p>© {year} {site.name}. {tr('footer.rights')}</p>
     <p>
-      {pl ? 'Zdjęcia gatunków: Wikimedia Commons – autorzy i licencje podane pod zdjęciami.' : 'Species photos: Wikimedia Commons – authors and licences shown under each photo.'}{' '}
+      {pick(lang, { pl: 'Zdjęcia gatunków: Wikimedia Commons – autorzy i licencje podane pod zdjęciami.', en: 'Species photos: Wikimedia Commons – authors and licences shown under each photo.', de: 'Artfotos: Wikimedia Commons – Autoren und Lizenzen stehen unter den Fotos.' })}{' '}
       <a href="/admin/" rel="nofollow">Panel</a>
     </p>
   </div>

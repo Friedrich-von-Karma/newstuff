@@ -54,6 +54,25 @@ const t = pick(lang, {
     legendN: 'nymphs',
     send: 'Report a dated sighting',
   },
+  de: {
+    title: 'Beobachtungskalender',
+    desc: 'Wann man in Polen nach Schaben suchen kann: Monate, in denen Adulte und Nymphen von Ectobius, Phyllodromica und anderen Arten zu finden sind.',
+    num: 'Wissenschaft · Phänologie',
+    h1a: 'Kalender',
+    h1b: 'der Beobachtungen',
+    lead: 'Wann man im Gelände adulte Schaben findet und wann nur Nymphen. Richtwerte – aus der Literatur und aus Funden in Polen und den Nachbarländern.',
+    outH: 'Im Freien',
+    inH: 'In Gebäuden und Gewächshäusern',
+    inP: 'Diese Arten findet man das ganze Jahr – alle Stadien gleichzeitig.',
+    noH: 'Keine Daten',
+    noP: 'Für diese Arten haben wir noch keine Daten zur Saison. Deine datierten Funde helfen sehr.',
+    now: 'jetzt',
+    nowH: 'Jetzt im Gelände',
+    nowNone: 'In diesem Monat findet man adulte Schaben im Freien selten – such nach Nymphen in der Laubstreu oder nach Arten in Gebäuden.',
+    legendA: 'Adulte',
+    legendN: 'Nymphen',
+    send: 'Datierten Fund melden',
+  },
 });
 const active = outdoor.filter((x) => x.info!.phenology.adults?.includes(now));
 ---

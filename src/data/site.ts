@@ -33,7 +33,13 @@ export const site = {
       'Prices on the price list are in Polish złoty; the euro amounts shown are approximate. Payment by bank transfer (SEPA) before shipping.',
       'Before ordering, please check your country’s rules on importing live invertebrates – compliance is the buyer’s responsibility.',
     ],
-  },
+    de: [
+      'Ich versende in Länder der Europäischen Union – schreib mir vor der Bestellung, in welches Land, dann nenne ich Kosten und Versandtermin.',
+      'Auslandspakete gehen per Expresskurier, damit sie so kurz wie möglich unterwegs sind; den Termin lege ich so, dass sie nie über ein Wochenende liegen.',
+      'Die Preise in der Preisliste sind in Złoty; die Euro-Beträge sind Richtwerte. Zahlung per Überweisung (SEPA) vor dem Versand.',
+      'Bitte prüfe vor der Bestellung die Einfuhrbestimmungen deines Landes für lebende Wirbellose – für deren Einhaltung ist der Käufer verantwortlich.',
+    ],
+  } as Record<'pl' | 'en' | 'de', string[]>,
 
   /** Zasady wysyłki, odbioru i płatności pokazywane pod cennikiem. */
   shipping: {
@@ -51,5 +57,12 @@ export const site = {
       'Payment by bank transfer or BLIK before shipping. International orders – please ask first.',
       'Live arrival is guaranteed. If anything goes wrong, send a photo of the opened parcel on the day of delivery.',
     ],
-  },
+    de: [
+      'Versand per Kurier mit Wärme- oder Kühlpack je nach Wetter, nur Montag bis Mittwoch – so liegen Pakete nie übers Wochenende im Depot.',
+      'Unter 0 °C oder über 30 °C pausiere ich den Versand oder lege ein Wärme- bzw. Kühlpack bei.',
+      'Abholung in Polen nach Absprache möglich.',
+      'Zahlung per Überweisung vor dem Versand. Auslandsbestellungen bitte vorher anfragen.',
+      'Lebendankunft garantiert. Falls etwas schiefgeht, schick am Zustelltag ein Foto des geöffneten Pakets.',
+    ],
+  } as Record<'pl' | 'en' | 'de', string[]>,
 } as const;

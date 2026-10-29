@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { formatDate, routes, useTranslations, type Lang } from '../i18n/ui';
+import { formatDate, routes, useTranslations, type Lang, langs, pick } from '../i18n/ui';
 import { getPosts, hasTranslation, postSlug, slugify, type Post } from '../lib/content';
 
 interface Props {
@@ -15,11 +15,13 @@ const other: Lang = pl ? 'en' : 'pl';
 const { Content } = await render(post);
 const slug = postSlug(post);
 const translated = await hasTranslation(post, other);
-const alt = translated ? `${routes.blog[other]}${slug}/` : routes.blog[other];
+const alts = Object.fromEntries(
+  await Promise.all(langs.map(async (l) => [l, (await hasTranslation(post, l)) ? `${routes.blog[l]}${slug}/` : routes.blog[l]])),
+);
 const d = post.data;
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       dated: 'wpis z dnia',
       sampleB: 'Wpis przykładowy',
       sample: 'Do podmiany na prawdziwy tekst.',
@@ -29,8 +31,8 @@ const t = pl
       tags: 'Tagi',
       draftB: 'Szkic',
       notr: 'Ten wpis nie ma jeszcze wersji angielskiej.',
-    }
-  : {
+  },
+  en: {
       dated: 'posted on',
       sampleB: 'Sample post',
       sample: 'To be replaced with a real text.',
@@ -40,7 +42,19 @@ const t = pl
       tags: 'Tags',
       draftB: 'Draft',
       notr: 'This post is not available in Polish yet.',
-    };
+  },
+  de: {
+      dated: 'veröffentlicht am',
+      sampleB: 'Beispielbeitrag',
+      sample: 'Wird durch einen echten Text ersetzt.',
+      draft: 'Entwurf – auf der veröffentlichten Seite nicht sichtbar.',
+      newer: 'Neuerer Beitrag',
+      older: 'Älterer Beitrag',
+      tags: 'Schlagwörter',
+      draftB: 'Entwurf',
+      notr: 'Dieser Beitrag ist noch nicht auf Polnisch verfügbar.',
+  },
+});
 
 const all = await getPosts(lang);
 const i = all.findIndex((p) => p.id === post.id);
@@ -51,7 +65,7 @@ const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
 const monthYear = formatDate(d.date, lang).replace(/^\d+\.?\s*/, '');
 ---
 
-<Base lang={lang} title={d.title} description={d.description} alt={alt} active="blog" image={d.cover} jsonld={[{ '@type': 'BlogPosting', headline: d.title, description: d.description, datePublished: d.date.toISOString(), inLanguage: lang, author: { '@type': 'Person', name: 'Mikołaj Stachowiak' }, url: new URL(Astro.url.pathname, Astro.site).href }]}>
+<Base lang={lang} title={d.title} description={d.description} alts={alts} active="blog" image={d.cover} jsonld={[{ '@type': 'BlogPosting', headline: d.title, description: d.description, datePublished: d.date.toISOString(), inLanguage: lang, author: { '@type': 'Person', name: 'Mikołaj Stachowiak' }, url: new URL(Astro.url.pathname, Astro.site).href }]}>
   <article class="post">
     <header class:list={['ph', { 'has-cover': d.cover }]}>
       {
@@ -105,7 +119,8 @@ const monthYear = formatDate(d.date, lang).replace(/^\d+\.?\s*/, '');
         )
       }
       {!translated && <p class="notr muted">{t.notr}</p>}
-      <div class="prose rv" data-glossary>
+      {lang === 'de' && post.id.startsWith('en/') && <p class="draft rv">{tr('blog.noTranslation')} English version below.</p>}
+      <div class="prose rv" data-glossary lang={post.id.split('/')[0]}>
         <Content />
       </div>
 

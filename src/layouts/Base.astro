@@ -8,7 +8,7 @@ import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/CartDrawer.astro';
 import Analytics from '@vercel/analytics/astro';
 import { glossary } from '../data/glossary';
-import { routes } from '../i18n/ui';
+import { altPaths, langs, routes, tl, pick } from '../i18n/ui';
 import { site } from '../data/site';
 import { useTranslations, type Lang, type RouteKey } from '../i18n/ui';
 
@@ -16,8 +16,10 @@ interface Props {
   lang: Lang;
   title?: string;
   description?: string;
-  /** Adres tej samej strony w drugim języku. */
-  alt: string;
+  /** (dawniej) adres strony w drugim języku – teraz wersje językowe liczone są automatycznie */
+  alt?: string;
+  /** adresy tej strony w innych językach, gdy automat nie wystarcza (np. wpis bez tłumaczenia) */
+  alts?: Partial<Record<Lang, string>>;
   active?: RouteKey;
   image?: string;
   /** nie pokazuj w wyszukiwarkach (np. strona podziękowania) */
@@ -26,14 +28,13 @@ interface Props {
   jsonld?: Record<string, unknown>[];
 }
 
-const { lang, title, description, alt, active, image, noindex = false, jsonld = [] } = Astro.props;
+const { lang, title, description, active, image, noindex = false, jsonld = [], alts: altsOverride } = Astro.props;
 const tr = useTranslations(lang);
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} – ${tr('site.tagline')}`;
 const desc = description ?? tr('home.lead');
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const altUrl = new URL(alt, Astro.site);
+const alts = { ...altPaths(Astro.url.pathname), ...altsOverride, [lang]: Astro.url.pathname } as Record<Lang, string>;
 const ogImage = new URL(image ?? '/og.png', Astro.site);
-const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const siteUrl = new URL('/', Astro.site).href;
 // dane strukturalne całej witryny (Google: nazwa, logo, pole wyszukiwania)
 const ld = [
@@ -72,8 +73,8 @@ const ld = [
     <meta name="description" content={desc} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
-    <link rel="alternate" hreflang={lang} href={canonical} />
-    <link rel="alternate" hreflang={other} href={altUrl} />
+    {langs.map((l) => <link rel="alternate" hreflang={l} href={new URL(alts[l], Astro.site)} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(alts.pl, Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#0b120d" />
     <meta property="og:type" content="website" />
@@ -82,16 +83,16 @@ const ld = [
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:locale" content={lang === 'pl' ? 'pl_PL' : 'en_GB'} />
+    <meta property="og:locale" content={{ pl: 'pl_PL', en: 'en_GB', de: 'de_DE' }[lang]} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
     <Analytics />
   </head>
   <body>
-    <a class="skip" href="#main">{lang === 'pl' ? 'Przejdź do treści' : 'Skip to content'}</a>
+    <a class="skip" href="#main">{pick(lang, { pl: 'Przejdź do treści', en: 'Skip to content', de: 'Zum Inhalt springen' })}</a>
     <div class="grain" aria-hidden="true"></div>
     <div class="torch" aria-hidden="true"></div>
-    <Header lang={lang} alt={alt} active={active} />
+    <Header lang={lang} alts={alts} active={active} />
     <main id="main" data-pagefind-body={noindex ? undefined : true}>
       <slot />
     </main>
@@ -102,8 +103,8 @@ const ld = [
       id="glossary-data"
       set:html={JSON.stringify({
         href: routes.glossary[lang],
-        more: lang === 'pl' ? 'Słowniczek →' : 'Glossary →',
-        terms: glossary.map((g) => ({ id: g.id, t: g.term[lang], d: g.def[lang], m: g.match[lang] })),
+        more: pick(lang, { pl: 'Słowniczek →', en: 'Glossary →', de: 'Glossar →' }),
+        terms: glossary.map((g) => ({ id: g.id, t: tl(g.term, lang), d: tl(g.def, lang), m: tl(g.match, lang) })),
       })}
     />
     <script>

@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { routes, type Lang } from '../i18n/ui';
+import { routes, type Lang, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -9,8 +9,8 @@ const { lang } = Astro.props;
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       title: 'Dziękuję za zgłoszenie',
       desc: 'Zgłoszenie zostało wysłane.',
       num: 'Zgłoszenie wysłane',
@@ -28,8 +28,8 @@ const t = pl
       map: 'Mapa obserwacji',
       home: 'Strona główna',
       again: 'Wyślij kolejne zgłoszenie',
-    }
-  : {
+  },
+  en: {
       title: 'Thank you for your submission',
       desc: 'Your submission has been sent.',
       num: 'Submission sent',
@@ -47,7 +47,27 @@ const t = pl
       map: 'Observation map',
       home: 'Home page',
       again: 'Send another submission',
-    };
+  },
+  de: {
+      title: 'Danke für deine Meldung',
+      desc: 'Deine Meldung wurde gesendet.',
+      num: 'Meldung gesendet',
+      h1a: 'Danke',
+      h1b: 'für deine Meldung',
+      lead: 'Das Formular und deine Fotos wurden gesendet und erreichen den Autor der Seite per E-Mail.',
+      nextNum: 'Wie es weitergeht',
+      steps: [
+        ['Die Fotos werden geprüft', 'und mit den Merkmalen der in Polen vorkommenden Arten verglichen.'],
+        ['Du bekommst eine Antwort per E-Mail', 'an die angegebene Adresse – manchmal mit einer Rückfrage oder der Bitte um ein weiteres Foto.'],
+        ['Ein Punkt auf der Karte', 'wenn es eine Beobachtung war und du der Veröffentlichung zugestimmt hast – nach der Prüfung erscheint sie auf der Beobachtungskarte.'],
+      ],
+      spam: 'Noch keine Antwort? Schau bitte auch im Spam-Ordner nach.',
+      key: 'Bestimmungsschlüssel',
+      map: 'Beobachtungskarte',
+      home: 'Startseite',
+      again: 'Weitere Meldung senden',
+  },
+});
 ---
 
 <Base lang={lang} title={t.title} description={t.desc} alt={routes.thanks[other]} noindex>

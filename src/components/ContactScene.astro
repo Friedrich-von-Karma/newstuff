@@ -5,7 +5,7 @@
  */
 import { site } from '../data/site';
 import { photos, photoSrc, photoPage } from '../data/photos';
-import { useTranslations, type Lang } from '../i18n/ui';
+import { useTranslations, type Lang, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -17,15 +17,16 @@ interface Props {
 }
 const { lang, level = 'h2', num, id } = Astro.props;
 const tr = useTranslations(lang);
-const pl = lang === 'pl';
 const c = site.contact;
 const [local, domain] = c.email.split('@');
 const photoId = 'blatta-orientalis';
 const p = photos[photoId];
 const H = level;
-const t = pl
-  ? { alt: 'Karaczan wschodni (Blatta orientalis) – samiec', write: 'Napisz', heading: 'Kontakt', photo: 'Fot.' }
-  : { alt: 'Oriental cockroach (Blatta orientalis) – male', write: 'Write', heading: 'Contact', photo: 'Photo:' };
+const t = pick(lang, {
+  pl: { alt: 'Karaczan wschodni (Blatta orientalis) – samiec', write: 'Napisz', heading: 'Kontakt', photo: 'Fot.' },
+  en: { alt: 'Oriental cockroach (Blatta orientalis) – male', write: 'Write', heading: 'Contact', photo: 'Photo:' },
+  de: { alt: 'Orientalische Schabe (Blatta orientalis) – Männchen', write: 'Schreiben', heading: 'Kontakt', photo: 'Foto:' },
+});
 const socials = [
   { label: tr('contact.messenger'), value: c.messenger.replace('https://', ''), href: c.messenger },
   { label: tr('contact.facebook'), value: c.facebookName, href: c.facebook },

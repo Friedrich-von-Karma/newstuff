@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import { groups, library } from '../data/library';
-import { pick, routes, type Lang } from '../i18n/ui';
+import { pick, routes, type Lang, tl } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -38,6 +38,20 @@ const t = pick(lang, {
     count: 'items',
     add: 'Know an important work that is missing? Let me know and I will add it.',
   },
+  de: {
+    title: 'Bibliothek',
+    desc: 'Literatur über Schaben: Fauna Polens und Mitteleuropas, Systematik, Biologie, Haltung und Datenbanken – mit Links zu freien Volltexten.',
+    num: 'Wissenschaft · Literatur',
+    h1a: 'Bibliothek',
+    h1b: 'der Literatur',
+    lead: 'Ausgewählte Arbeiten über Schaben – von klassischen Schlüsseln und Monografien der polnischen Fauna bis zu aktuellen Studien und Datenbanken. Als „Open Access“ markierte Titel sind frei lesbar.',
+    filter: 'Bibliothek durchsuchen',
+    ph: 'Autor, Titel, Art…',
+    open: 'Open Access',
+    none: 'Keine Einträge passen zur Suche.',
+    count: 'Einträge',
+    add: 'Fehlt eine wichtige Arbeit? Schreib mir – ich ergänze sie.',
+  },
 });
 ---
 
@@ -54,14 +68,14 @@ const t = pick(lang, {
         groups.map((g) => (
           <section class="grp" data-grp>
             <div class="gh rv">
-              <h2>{g.title[lang]}</h2>
-              <p>{g.lead[lang]}</p>
+              <h2>{tl(g.title, lang)}</h2>
+              <p>{tl(g.lead, lang)}</p>
             </div>
             <ol class="items">
               {library
                 .filter((i) => i.group === g.id)
                 .map((i) => (
-                  <li class="it" data-text={`${i.authors} ${i.year ?? ''} ${i.title} ${i.source ?? ''} ${i.note[lang]}`.toLowerCase()}>
+                  <li class="it" data-text={`${i.authors} ${i.year ?? ''} ${i.title} ${i.source ?? ''} ${tl(i.note, lang)}`.toLowerCase()}>
                     <p class="cit">
                       <span class="au">{i.authors}</span>
                       {i.year && <span class="yr"> ({i.year})</span>}
@@ -75,7 +89,7 @@ const t = pick(lang, {
                       )}
                     </p>
                     <p class="no">
-                      {i.note[lang]} <span class="lng">{i.lang}</span>
+                      {tl(i.note, lang)} <span class="lng">{i.lang}</span>
                       {i.open && <span class="oa">{t.open}</span>}
                     </p>
                   </li>

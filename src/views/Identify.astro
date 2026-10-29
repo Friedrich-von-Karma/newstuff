@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import SubmitForm from '../components/SubmitForm.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
-import { routes, type Lang } from '../i18n/ui';
+import { routes, type Lang, pick } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -11,8 +11,8 @@ const { lang } = Astro.props;
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       title: 'Oznacz mojego karaczana',
       desc: 'Znalazłeś karaczana i nie wiesz, co to za gatunek? Wyślij zdjęcia z góry i z boku, długość ciała i miejsce znalezienia.',
       num: 'Oznaczanie · zgłoszenie',
@@ -39,8 +39,8 @@ const t = pl
       safety: 'Żywego karaczana najłatwiej sfotografować po krótkim schłodzeniu w lodówce (nie zamrażarce) – na kilka minut zwalnia.',
       mapP: 'Chcesz, żeby znalezisko trafiło na mapę obserwacji?',
       mapLink: 'Zgłoś obserwację na mapę',
-    }
-  : {
+  },
+  en: {
       title: 'Identify my cockroach',
       desc: 'Found a cockroach and not sure which species it is? Send photos from above and from the side, the body length and where you found it.',
       num: 'Identification · request',
@@ -67,7 +67,36 @@ const t = pl
       safety: 'A live cockroach is easiest to photograph after a short spell in the fridge (not the freezer) – it slows down for a few minutes.',
       mapP: 'Want your find to appear on the observation map?',
       mapLink: 'Report it for the map',
-    };
+  },
+  de: {
+      title: 'Meine Schabe bestimmen',
+      desc: 'Eine Schabe gefunden und unsicher, welche Art es ist? Schick Fotos von oben und von der Seite, die Körperlänge und den Fundort.',
+      num: 'Bestimmung · Anfrage',
+      h1a: 'Meine Schabe',
+      h1b: 'bestimmen',
+      lead: 'Eine Schabe im Wald, im Keller oder in der Küche gefunden und unsicher, was es ist? Schick Fotos über das Formular – die Anfrage geht per E-Mail an den Autor der Seite, die Antwort kommt an die angegebene Adresse.',
+      keyFirst: 'Du kannst es auch erst selbst mit dem Schlüssel versuchen',
+      keyLink: 'Bestimmungsschlüssel der Schaben Polens',
+      photoAlt: 'Ectobius sylvestris – Weibchen mit Oothek',
+      tipsNum: 'Vor dem Foto',
+      tipsH1: 'So gelingt',
+      tipsH2: 'ein gutes Foto',
+      tipsP: 'Gute Fotos sind die halbe Bestimmung. Bei kleinen Waldarten zählen Details: Zeichnung des Pronotums, Flügellänge, Farbe der Ränder.',
+      tips: [
+        ['Von oben', 'Das ganze Tier im Bild, Kamera senkrecht zum Rücken. Pronotum, Flügel und Hinterleibsende sollten sichtbar sein.', 'top'],
+        ['Von der Seite', 'Ein zweites Foto im Profil – es zeigt die Flügellänge im Verhältnis zum Hinterleib und eine eventuelle Oothek.', 'side'],
+        ['Maßstab', 'Leg ein Lineal oder eine Münze daneben (eine 1-Euro-Münze misst gut 23 mm). Ohne Maßstab ist die Körperlänge schwer zu schätzen.', 'scale'],
+        ['Scharf, bei Tageslicht', 'Kein Blitz aus der Nähe – ein Platz am Fenster ist ideal. Mehrere scharfe Fotos sind besser als ein unscharfes.', 'light'],
+      ],
+      formNum: 'Anfrage',
+      formH1: 'Fotos',
+      formH2: 'senden',
+      formP: 'Pflicht sind nur das Foto von oben und deine E-Mail-Adresse. Alles andere – Länge, Ort, Datum, Lebensraum – hilft sehr.',
+      safety: 'Eine lebende Schabe lässt sich am leichtesten nach kurzer Zeit im Kühlschrank (nicht im Gefrierfach) fotografieren – sie wird für ein paar Minuten langsamer.',
+      mapP: 'Soll dein Fund auf der Beobachtungskarte erscheinen?',
+      mapLink: 'Für die Karte melden',
+  },
+});
 ---
 
 <Base lang={lang} title={t.title} description={t.desc} alt={routes.identify[other]} active="identify">

@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BlogIndex from '../../../../views/BlogIndex.astro';
+import { getPosts, slugify } from '../../../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts('de');
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags.map(slugify)))];
+  return tags.map((tag) => ({ params: { tag } }));
+}) satisfies GetStaticPaths;
+
+const { tag } = Astro.params;
+---
+
+<BlogIndex lang="de" tag={tag} />

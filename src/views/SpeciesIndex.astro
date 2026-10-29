@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
-import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
+import { routes, useTranslations, type Lang, type UiKey, tl, pick } from '../i18n/ui';
 import { formatPrice, getPricelist, getSpecies } from '../lib/content';
 
 interface Props {
@@ -16,8 +16,8 @@ const [species, pricelist] = await Promise.all([getSpecies(), getPricelist()]);
 const priceOf = new Map(pricelist.filter((p) => p.data.profile).map((p) => [p.data.profile!, p.data]));
 const anySample = species.some((s) => s.data.sample);
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       num: 'Scena II · profile',
       h1a: 'Profile',
       h1b: 'hodowlane',
@@ -35,8 +35,8 @@ const t = pl
       dbHem: 'w jednej tabeli',
       dbP: 'Nazwy, systematyka, pochodzenie i trudność hodowli – kliknij nagłówek, żeby posortować.',
       cols: ['Gatunek', 'Rodzina / podrodzina', 'Nazwy w handlu', 'Pochodzenie', 'Trudność'],
-    }
-  : {
+  },
+  en: {
       num: 'Scene II · care sheets',
       h1a: 'Care',
       h1b: 'sheets',
@@ -54,7 +54,27 @@ const t = pl
       dbHem: 'in one table',
       dbP: 'Names, classification, origin and difficulty – click a header to sort.',
       cols: ['Species', 'Family / subfamily', 'Trade names', 'Origin', 'Difficulty'],
-    };
+  },
+  de: {
+      num: 'Szene II · Haltungsprofile',
+      h1a: 'Profile',
+      h1b: 'zur Haltung',
+      open: 'Profil öffnen',
+      cmpLbl: 'Vergleich',
+      cmpH: 'Zwei oder drei Arten',
+      cmpHem: 'nebeneinander',
+      cmpP: 'Temperatur, Luftfeuchtigkeit, Futter, Entwicklungsdauer und Schwierigkeit in einer Tabelle – die Unterschiede fallen sofort auf.',
+      cmpBtn: 'Arten vergleichen',
+      climbs: 'klettert',
+      flies: 'fliegt',
+      noPrice: 'nicht in der Preisliste',
+      dbLbl: 'Artendatenbank',
+      dbH: 'Alle Arten',
+      dbHem: 'in einer Tabelle',
+      dbP: 'Namen, Systematik, Herkunft und Schwierigkeit – zum Sortieren auf eine Spaltenüberschrift klicken.',
+      cols: ['Art', 'Familie / Unterfamilie', 'Handelsnamen', 'Herkunft', 'Schwierigkeit'],
+  },
+});
 ---
 
 <Base lang={lang} title={tr('species.title')} description={tr('species.lead')} alt={routes.species[other]} active="species">
@@ -86,7 +106,7 @@ const t = pl
                   {own ? (
                     <figure class="ownph">
                       <span class="frame">
-                        <img src={own.src} alt={own.alt[lang]} loading="lazy" />
+                        <img src={own.src} alt={tl(own.alt, lang)} loading="lazy" />
                       </span>
                     </figure>
                   ) : (
@@ -103,7 +123,7 @@ const t = pl
                       </a>
                     </h2>
                     <div class="sub">
-                      {d.commonName && <b>{d.commonName[lang]}</b>}
+                      {d.commonName && <b>{tl(d.commonName, lang)}</b>}
                       {d.author && <span> · {d.author}</span>}
                       <span> · {d.family}</span>
                     </div>
@@ -115,11 +135,11 @@ const t = pl
                     </div>
                     <div>
                       <dt>{tr('species.size')}</dt>
-                      <dd class="big">{d.size[lang]}</dd>
+                      <dd class="big">{tl(d.size, lang)}</dd>
                     </div>
                     <div class="wide">
                       <dt>{tr('species.humidity')}</dt>
-                      <dd>{d.humidity[lang]}</dd>
+                      <dd>{tl(d.humidity, lang)}</dd>
                     </div>
                   </dl>
                   <div class="flags">
@@ -195,7 +215,7 @@ const t = pl
                         {d.taxonomy?.subfamily && <span class="auth">{d.taxonomy.subfamily}</span>}
                       </td>
                       <td data-v={d.taxonomy?.tradeNames.join(', ') ?? ''}>{d.taxonomy?.tradeNames.join(', ') || '—'}</td>
-                      <td data-v={d.origin[lang]}>{d.origin[lang]}</td>
+                      <td data-v={tl(d.origin, lang)}>{tl(d.origin, lang)}</td>
                       <td data-v={String(d.difficulty)}>{tr(`species.difficulty.${d.difficulty}` as UiKey)}</td>
                     </tr>
                   );

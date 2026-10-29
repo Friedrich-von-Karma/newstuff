@@ -5,7 +5,7 @@
  */
 import type { CollectionEntry } from 'astro:content';
 import { site } from '../data/site';
-import { useTranslations, type Lang, type UiKey } from '../i18n/ui';
+import { useTranslations, type Lang, type UiKey, pick } from '../i18n/ui';
 import { formatEur, formatPrice } from '../lib/content';
 
 interface Props {
@@ -26,8 +26,8 @@ const first = options.find((o) => o.kind === initial) ?? options[0];
 const group = `pack-${item.id}-${Math.random().toString(36).slice(2, 6)}`;
 const label = (k: string) => tr(`pack.${k}` as UiKey);
 const subjectFor = (k: string) => `${tr('pack.order')}: ${d.latin} – ${tr('pack.pcs')}, ${label(k)}`;
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       choose: 'W paczce',
       add: 'Do koszyka',
       added: 'Dodano',
@@ -37,8 +37,8 @@ const t = pl
       waitSubject: `Lista oczekujących: ${d.latin}`,
       waitBody: `Dzień dobry,\nproszę o wiadomość, gdy ${d.latin} będzie dostępny.\nInteresujący mnie wariant: {v} (paczka 10 szt.).\n\nPozdrawiam`,
       per: '/ 10 szt.',
-    }
-  : {
+  },
+  en: {
       choose: 'In the pack',
       add: 'Add to cart',
       added: 'Added',
@@ -48,7 +48,19 @@ const t = pl
       waitSubject: `Waiting list: ${d.latin}`,
       waitBody: `Hello,\nplease let me know when ${d.latin} is available.\nOption I am interested in: {v} (pack of 10).\n\nBest regards`,
       per: '/ 10 pcs',
-    };
+  },
+  de: {
+      choose: 'In der Packung',
+      add: 'In den Warenkorb',
+      added: 'Hinzugefügt',
+      now: 'Sofort bestellen',
+      notify: 'Benachrichtigen',
+      waitHint: d.status === 'soon' ? 'Demnächst verfügbar – trag dich in die Warteliste ein.' : 'Derzeit ausverkauft – trag dich ein, ich melde mich, sobald die Art verfügbar ist.',
+      waitSubject: `Warteliste: ${d.latin}`,
+      waitBody: `Hallo,\nbitte gib mir Bescheid, wenn ${d.latin} verfügbar ist.\nGewünschte Variante: {v} (10er-Packung).\n\nViele Grüße`,
+      per: '/ 10 Stk.',
+  },
+});
 const waitHref = (k: string) =>
   `mailto:${site.contact.email}?subject=${encodeURIComponent(t.waitSubject)}&body=${encodeURIComponent(t.waitBody.replace('{v}', label(k)))}`;
 ---

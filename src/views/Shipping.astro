@@ -36,9 +36,22 @@ const t = pick(lang, {
     ask: 'Ask about shipping',
     subject: 'International shipping – enquiry',
   },
+  de: {
+    title: 'Versand',
+    desc: 'So versende ich Schaben: Kurier mit Wärme- oder Kühlpack, Abholung, Zahlung, Lebendankunftsgarantie und Versand in EU-Länder.',
+    num: 'Blattodea.pl · Versand',
+    h1a: 'Versand',
+    h1b: 'und Zahlung',
+    lead: 'Lebende Tiere brauchen einen durchdachten Versand. So packe und verschicke ich Pakete – innerhalb Polens und ins Ausland.',
+    plH: 'Innerhalb Polens',
+    intH: 'Ins Ausland (Europäische Union)',
+    rate: 'Euro-Beträge neben den Preisen sind Richtwerte – berechnet mit etwa',
+    ask: 'Versand anfragen',
+    subject: 'Auslandsversand – Anfrage',
+  },
 });
-const plList = pick(lang, site.shipping as { pl: readonly string[]; en: readonly string[] });
-const intList = pick(lang, site.international as { pl: readonly string[]; en: readonly string[] });
+const plList = site.shipping[lang];
+const intList = site.international[lang];
 ---
 
 <Base lang={lang} title={t.title} description={t.desc} alt={routes.shipping[other]} active="shipping">
@@ -53,7 +66,7 @@ const intList = pick(lang, site.international as { pl: readonly string[]; en: re
         <article class="panel rv" style="--d:.12s">
           <h2>{t.intH}</h2>
           <ul class="ship">{intList.map((s) => <li>{s}</li>)}</ul>
-          <p class="rate">{t.rate} {site.eurRate.toFixed(2).replace('.', lang === 'pl' ? ',' : '.')} zł = 1 €.</p>
+          <p class="rate">{t.rate} {site.eurRate.toFixed(2).replace('.', lang === 'en' ? '.' : ',')} zł = 1 €.</p>
           <a class="btn" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(t.subject)}`}>{t.ask} <span class="arr">→</span></a>
         </article>
       </div>

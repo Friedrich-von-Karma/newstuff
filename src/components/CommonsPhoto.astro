@@ -1,4 +1,5 @@
 ---
+import { tl, pick } from '../i18n/ui';
 /** Zdjęcie gatunku z Wikimedia Commons z podpisem: autor, licencja, źródło. */
 import { photos, photoSrc, photoPage } from '../data/photos';
 import type { Lang } from '../i18n/ui';
@@ -25,8 +26,8 @@ const pl = lang === 'pl';
         <img src={photoSrc(p, width)} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" />
       </span>
       <figcaption class="credit">
-        {!compact && p.subject && <span class="subj">{p.subject[lang]}. </span>}
-        {pl ? 'Fot.' : 'Photo:'} {p.author} ·{' '}
+        {!compact && p.subject && <span class="subj">{tl(p.subject, lang)}. </span>}
+        {pick(lang, { pl: 'Fot.', en: 'Photo:', de: 'Foto:' })} {p.author} ·{' '}
         <a href={p.licenseUrl} target="_blank" rel="noopener license">
           {p.license}
         </a>{' '}
@@ -40,8 +41,8 @@ const pl = lang === 'pl';
     <figure class:list={['cphoto', 'missing', cls]}>
       <span class="frame">
         <span class="nophoto">
-          <b>{pl ? 'brak zdjęcia' : 'no photo'}</b>
-          {pl ? 'na wolnej licencji' : 'under a free licence yet'}
+          <b>{pick(lang, { pl: 'brak zdjęcia', en: 'no photo', de: 'noch kein Foto' })}</b>
+          {pick(lang, { pl: 'na wolnej licencji', en: 'under a free licence yet', de: 'unter freier Lizenz' })}
         </span>
       </span>
     </figure>

@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import Phenology from '../components/Phenology.astro';
-import { pick, routes, useTranslations, type Lang } from '../i18n/ui';
+import { pick, routes, useTranslations, type Lang, tl } from '../i18n/ui';
 import { getWildSpecies } from '../lib/content';
 
 interface Props {
@@ -50,11 +50,28 @@ const t = pick(lang, {
     ident: 'Send a photo for identification',
     profile: 'Care sheet',
   },
+  de: {
+    back: 'Schaben Polens',
+    rec: { confirmed: 'Vorkommen in Polen bestätigt', doubtful: 'Vorkommen in Polen unsicher', casual: 'in Polen nur eingeschleppt', culture: 'in Polen nur in Zucht' },
+    status: { native: 'heimische Art', synanthropic: 'synanthrop – in Gebäuden', introduced: 'gebietsfremde Art' },
+    len: 'Länge',
+    hab: 'Lebensraum',
+    dist: 'Verbreitung',
+    id: 'Woran man sie erkennt',
+    sim: 'Ähnliche Arten',
+    phen: 'Wann suchen',
+    src: 'Quellen',
+    verify: 'Die Angaben zu dieser Art müssen noch überprüft werden.',
+    key: 'Zum Schlüssel',
+    map: 'Fund für die Karte melden',
+    ident: 'Foto zur Bestimmung senden',
+    profile: 'Haltungsprofil',
+  },
 });
-const desc = `${x.latin}${x.name?.[lang] ? ` (${x.name[lang]})` : ''} – ${x.note[lang]}`.slice(0, 300);
+const desc = `${x.latin}${tl(x.name, lang) ? ` (${tl(x.name, lang)})` : ''} – ${tl(x.note, lang)}`.slice(0, 300);
 ---
 
-<Base lang={lang} title={x.latin} description={desc} alt={`${routes.wild[other]}${x.id}/`} active="wild" jsonld={[{ '@type': 'Taxon', name: x.latin, taxonRank: 'species', scientificNameAuthorship: x.author, ...(x.name?.[lang] ? { alternateName: x.name[lang] } : {}) }]}>
+<Base lang={lang} title={x.latin} description={desc} alt={`${routes.wild[other]}${x.id}/`} active="wild" jsonld={[{ '@type': 'Taxon', name: x.latin, taxonRank: 'species', scientificNameAuthorship: x.author, ...(tl(x.name, lang) ? { alternateName: tl(x.name, lang) } : {}) }]}>
   <article class="scene wp">
     <div class="wrap">
       <a class="back" href={routes.wild[lang]}>← {t.back}</a>
@@ -68,12 +85,12 @@ const desc = `${x.latin}${x.name?.[lang] ? ` (${x.name[lang]})` : ''} – ${x.no
             {info && <span class={`r-${info.record}`}>{t.rec[info.record]}</span>}
           </p>
           <h1 class="h-display latin">{x.latin}</h1>
-          <p class="auth">{x.author}{x.name?.[lang] && <> · <b>{x.name[lang]}</b></>}</p>
-          <p class="lead" data-glossary>{x.note[lang]}</p>
+          <p class="auth">{x.author}{tl(x.name, lang) && <> · <b>{tl(x.name, lang)}</b></>}</p>
+          <p class="lead" data-glossary>{tl(x.note, lang)}</p>
           {x.verify && <p class="draft"><b>!</b> {t.verify}</p>}
           <dl class="facts">
             <div><dt>{t.len}</dt><dd>{x.length}</dd></div>
-            <div><dt>{t.hab}</dt><dd>{x.habitat[lang]}</dd></div>
+            <div><dt>{t.hab}</dt><dd>{tl(x.habitat, lang)}</dd></div>
           </dl>
           <div class="acts">
             <a class="btn" href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
@@ -88,20 +105,20 @@ const desc = `${x.latin}${x.name?.[lang] ? ` (${x.name[lang]})` : ''} – ${x.no
           <div class="grid">
             <section class="box rv" data-glossary>
               <h2>{t.id}</h2>
-              <ul>{info.identification.map((i) => <li>{i[lang]}</li>)}</ul>
+              <ul>{info.identification.map((i) => <li>{tl(i, lang)}</li>)}</ul>
               {info.similar && (
                 <>
                   <h3>{t.sim}</h3>
-                  <p>{info.similar[lang]}</p>
+                  <p>{tl(info.similar, lang)}</p>
                 </>
               )}
             </section>
             <section class="box rv" style="--d:.1s">
               <h2>{t.dist}</h2>
-              <p>{info.distribution[lang]}</p>
+              <p>{tl(info.distribution, lang)}</p>
               <h3>{t.phen}</h3>
               <Phenology lang={lang} adults={info.phenology.adults} nymphs={info.phenology.nymphs} indoors={info.phenology.indoors} />
-              {info.phenology.note && <p class="pnote">{info.phenology.note[lang]}</p>}
+              {info.phenology.note && <p class="pnote">{tl(info.phenology.note, lang)}</p>}
               <h3>{t.src}</h3>
               <ul class="src">
                 {info.sources.map((s) => (

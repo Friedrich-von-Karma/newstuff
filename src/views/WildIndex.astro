@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import Phenology from '../components/Phenology.astro';
-import { pick, routes, type Lang } from '../i18n/ui';
+import { pick, routes, type Lang, tl } from '../i18n/ui';
 import { getWildSpecies } from '../lib/content';
 
 interface Props {
@@ -51,6 +51,25 @@ const t = pick(lang, {
     map: 'Observation map',
     send: 'Report a sighting',
   },
+  de: {
+    title: 'Schaben Polens',
+    desc: 'Alle in Polen nachgewiesenen Schaben: Waldschaben, Phyllodromica, Deutsche und Orientalische Schabe, Periplaneta und Gewächshausarten – Bestimmung, Verbreitung und wann man suchen sollte.',
+    num: 'Wissenschaft · Fauna Polens',
+    h1a: 'Schaben',
+    h1b: 'Polens',
+    lead: 'In Polen wurden mehr als ein Dutzend Schabenarten nachgewiesen, doch nur wenige leben im Freien – in Wäldern und auf Trockenrasen. Die übrigen sind an Gebäude und Gewächshäuser gebunden oder nur gelegentlich eingeschleppt.',
+    groups: {
+      wild: ['Im Freien', 'Arten, die im Freien leben – in Wäldern, Heiden, auf Trockenrasen und im Stadtgrün.'],
+      indoor: ['In Gebäuden und Gewächshäusern', 'Gebietsfremde Arten, gebunden an beheizte Räume.'],
+      rare: ['Unsicher und eingeschleppt', 'Arten mit zweifelhaftem Vorkommen oder nur Einzelfunden.'],
+    },
+    rec: { confirmed: 'bestätigt', doubtful: 'unsicher', casual: 'eingeschleppt', culture: 'nur in Zucht' },
+    open: 'Artseite',
+    key: 'Zum Schlüssel',
+    cal: 'Beobachtungskalender',
+    map: 'Beobachtungskarte',
+    send: 'Fund melden',
+  },
 });
 const groupOf = (x: (typeof all)[number]) =>
   x.info?.record === 'doubtful' || x.info?.record === 'casual' ? 'rare' : x.info?.phenology.indoors ? 'indoor' : 'wild';
@@ -86,7 +105,7 @@ const groups = (['wild', 'indoor', 'rare'] as const).map((g) => ({ id: g, items:
                     <h3>
                       <a href={`${routes.wild[lang]}${x.id}/`} class="latin">{x.latin}</a>
                     </h3>
-                    {x.name?.[lang] && <p class="pn">{x.name[lang]}</p>}
+                    {tl(x.name, lang) && <p class="pn">{tl(x.name, lang)}</p>}
                     <p class="len">{x.length}</p>
                     {x.info && <Phenology lang={lang} adults={x.info.phenology.adults} nymphs={x.info.phenology.nymphs} indoors={x.info.phenology.indoors} compact />}
                   </div>

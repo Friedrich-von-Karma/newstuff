@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
-import { routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
+import { routes, useTranslations, type Lang, type UiKey, tl, pick } from '../i18n/ui';
 import { formatPrice, getPricelist, getSpecies } from '../lib/content';
 
 interface Props {
@@ -15,8 +15,8 @@ const pl = lang === 'pl';
 const [species, pricelist] = await Promise.all([getSpecies(), getPricelist()]);
 const priceOf = new Map(pricelist.filter((p) => p.data.profile).map((p) => [p.data.profile!, p.data]));
 
-const t = pl
-  ? {
+const t = pick(lang, {
+  pl: {
       num: 'Porównywarka',
       h1a: 'Porównaj',
       h1b: 'gatunki',
@@ -36,8 +36,8 @@ const t = pl
       sheet: 'Profil',
       empty: 'Do porównania potrzebne są co najmniej dwa profile hodowlane.',
       copy: 'Link do tego porównania jest w pasku adresu – możesz go skopiować i wysłać.',
-    }
-  : {
+  },
+  en: {
       num: 'Compare',
       h1a: 'Compare',
       h1b: 'species',
@@ -57,7 +57,29 @@ const t = pl
       sheet: 'Care sheet',
       empty: 'At least two care sheets are needed for a comparison.',
       copy: 'The link to this comparison is in the address bar – copy it to share.',
-    };
+  },
+  de: {
+      num: 'Vergleich',
+      h1a: 'Arten',
+      h1b: 'vergleichen',
+      lead: 'Wähle zwei oder drei Arten – ihre Haltungsparameter stehen dann nebeneinander. Eine bernsteinfarbene Markierung zeigt die Zeilen, in denen sich die Arten unterscheiden.',
+      a: 'Art A',
+      b: 'Art B',
+      c: 'Art C (optional)',
+      none: '— keine dritte Art —',
+      onlyDiff: 'Nur Unterschiede zeigen',
+      legend: 'unterschiedlich',
+      param: 'Parameter',
+      scroll: 'Tabelle seitlich wischen →',
+      noJs: 'Ohne JavaScript zeigt der Vergleich die ersten beiden Arten.',
+      from: 'ab',
+      notIn: 'nicht in der Preisliste',
+      inList: 'Preis und Verfügbarkeit',
+      sheet: 'Haltungsprofil',
+      empty: 'Für einen Vergleich werden mindestens zwei Haltungsprofile benötigt.',
+      copy: 'Der Link zu diesem Vergleich steht in der Adresszeile – kopiere ihn zum Teilen.',
+  },
+});
 
 /** Liczby z tekstu typu „26–30 °C” albo „50–60%”. */
 function range(s: string): [number, number] | null {
@@ -99,14 +121,14 @@ for (const s of species) {
   const p = priceOf.get(s.id);
   values[s.id] = {
     family: d.family,
-    origin: d.origin[lang],
-    size: d.size[lang],
+    origin: tl(d.origin, lang),
+    size: tl(d.size, lang),
     temperature: d.temperature,
-    humidity: d.humidity[lang],
-    substrate: d.substrate[lang],
-    food: d.food[lang],
-    reproduction: d.reproduction[lang],
-    development: d.development[lang],
+    humidity: tl(d.humidity, lang),
+    substrate: tl(d.substrate, lang),
+    food: tl(d.food, lang),
+    reproduction: tl(d.reproduction, lang),
+    development: tl(d.development, lang),
     difficulty: String(d.difficulty),
     climbs: String(d.climbs),
     flies: String(d.flies),
@@ -189,7 +211,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                           <div class="ph">
                             {own ? (
                               <span class="frame ownf">
-                                <img src={own.src} alt={own.alt[lang]} loading="lazy" />
+                                <img src={own.src} alt={tl(own.alt, lang)} loading="lazy" />
                               </span>
                             ) : (
                               <CommonsPhoto id={s.id} lang={lang} alt={s.data.latin} width={500} compact />
@@ -197,7 +219,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                           </div>
                           <a class="nm" href={`${routes.species[lang]}${s.id}/`}>
                             <span class="latin">{s.data.latin}</span>
-                            {s.data.commonName && <small>{s.data.commonName[lang]}</small>}
+                            {s.data.commonName && <small>{tl(s.data.commonName, lang)}</small>}
                           </a>
                         </th>
                       );
@@ -238,10 +260,10 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                           );
                         }
                         if (r.key === 'humidity') {
-                          const rg = range(d.humidity[lang]);
+                          const rg = range(tl(d.humidity, lang));
                           return (
                             <td data-sp={s.id} hidden={hide}>
-                              {d.humidity[lang]}
+                              {tl(d.humidity, lang)}
                               {rg && rg[1] <= 100 && (
                                 <span class="scale hum" aria-hidden="true">
                                   <span class="rail">
@@ -297,8 +319,8 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                           r.key === 'family'
                             ? d.family
                             : r.key === 'size'
-                              ? d.size[lang]
-                              : (d[r.key as 'origin' | 'substrate' | 'food' | 'reproduction' | 'development'] as { pl: string; en: string })[lang];
+                              ? tl(d.size, lang)
+                              : tl(d[r.key as 'origin' | 'substrate' | 'food' | 'reproduction' | 'development'] as { pl: string; en: string }, lang);
                         return (
                           <td data-sp={s.id} hidden={hide} data-glossary={r.glossary ? '' : undefined} class:list={{ big: r.key === 'size' }}>
                             {txt}

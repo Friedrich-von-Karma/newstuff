@@ -14,7 +14,7 @@ export default defineConfig({
   devToolbar: { enabled: false },
   integrations: [
     sitemap({
-      i18n: { defaultLocale: 'pl', locales: { pl: 'pl-PL', en: 'en-GB' } },
+      i18n: { defaultLocale: 'pl', locales: { pl: 'pl-PL', en: 'en-GB', de: 'de-DE' } },
     }),
   ],
 });

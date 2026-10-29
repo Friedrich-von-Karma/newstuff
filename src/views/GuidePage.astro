@@ -1,8 +1,8 @@
 ---
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { formatDate, pick, routes, type Lang } from '../i18n/ui';
-import { getGuides, guideSlug, type Guide } from '../lib/content';
+import { formatDate, langs, pick, routes, type Lang } from '../i18n/ui';
+import { entryLang, getGuides, guideSlug, type Guide } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -13,24 +13,28 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const d = guide.data;
 const slug = guideSlug(guide);
 const { Content, headings } = await render(guide);
-const [list, otherList] = await Promise.all([getGuides(lang), getGuides(other)]);
-const alt = otherList.some((g) => guideSlug(g) === slug) ? `${routes.guides[other]}${slug}/` : routes.guides[other];
+const list = await getGuides(lang);
+const alts = Object.fromEntries(
+  await Promise.all(langs.map(async (l) => [l, (await getGuides(l)).some((g) => guideSlug(g) === slug) ? `${routes.guides[l]}${slug}/` : routes.guides[l]])),
+);
 const i = list.findIndex((g) => guide.id === g.id);
 const next = list[i + 1];
 const t = pick(lang, {
   pl: { back: 'Wszystkie poradniki', toc: 'W tym poradniku', updated: 'Aktualizacja', next: 'Następny poradnik', min: 'min czytania' },
   en: { back: 'All guides', toc: 'In this guide', updated: 'Updated', next: 'Next guide', min: 'min read' },
+  de: { back: 'Alle Ratgeber', toc: 'In diesem Ratgeber', updated: 'Aktualisiert', next: 'Nächster Ratgeber', min: 'Min. Lesezeit' },
 });
 const toc = headings.filter((h) => h.depth === 2);
 ---
 
-<Base lang={lang} title={d.title} description={d.description} alt={alt} active="guides" jsonld={[{ '@type': 'HowTo', name: d.title, description: d.description, inLanguage: lang, dateModified: d.updated.toISOString() }]}>
+<Base lang={lang} title={d.title} description={d.description} alts={alts} active="guides" jsonld={[{ '@type': 'HowTo', name: d.title, description: d.description, inLanguage: lang, dateModified: d.updated.toISOString() }]}>
   <article class="scene guide">
     <div class="wrap">
       <a class="back" href={routes.guides[lang]}>← {t.back}</a>
       <header class="gh rv">
         <h1 class="h-display">{d.title}</h1>
         <p class="lead">{d.description}</p>
+        {entryLang(guide) !== lang && <p class="draft" lang="de">Dieser Ratgeber ist noch nicht auf Deutsch verfügbar – hier die englische Fassung.</p>}
         <p class="meta">
           {t.updated}: <time datetime={d.updated.toISOString().slice(0, 10)}>{formatDate(d.updated, lang)}</time>
           {d.minutes && ` · ${d.minutes} ${t.min}`}
@@ -51,7 +55,7 @@ const toc = headings.filter((h) => h.depth === 2);
             </nav>
           )
         }
-        <div class="prose" data-glossary>
+        <div class="prose" data-glossary lang={entryLang(guide)}>
           <Content />
         </div>
       </div>
