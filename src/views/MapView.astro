@@ -46,6 +46,17 @@ const t = pl
       formP: 'Najważniejsze są ostre zdjęcia i miejsce. Jeśli nie wiesz, co to za gatunek – wybierz „nie wiem” albo najpierw sprawdź w kluczu.',
       keyLink: 'Klucz do oznaczania',
       unknown: 'gatunek nieoznaczony',
+      year: 'Rok',
+      allYears: 'Wszystkie lata',
+      statsNum: 'Dane',
+      statsH: 'Zgłoszenia',
+      statsHem: 'w liczbach',
+      byMonth: 'Zgłoszenia w poszczególnych miesiącach',
+      latest: 'Najnowsze zgłoszenia',
+      noLatest: 'Brak zgłoszeń do pokazania.',
+      csv: 'Pobierz dane (CSV)',
+      csvHint: 'Dane zgodne z filtrami powyżej – do wykorzystania w pracach naukowych z podaniem źródła: Blattodea.pl.',
+      months: ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'],
     }
   : {
       title: 'Observation map',
@@ -79,6 +90,17 @@ const t = pl
       formP: 'Sharp photos and the location matter most. If you don’t know the species, choose “I don’t know” – or check the key first.',
       keyLink: 'Identification key',
       unknown: 'unidentified species',
+      year: 'Year',
+      allYears: 'All years',
+      statsNum: 'Data',
+      statsH: 'Records',
+      statsHem: 'in numbers',
+      byMonth: 'Records by month',
+      latest: 'Latest records',
+      noLatest: 'No records to show yet.',
+      csv: 'Download data (CSV)',
+      csvHint: 'Data matching the filters above – free to use in research, citing the source: Blattodea.pl.',
+      months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     };
 
 const obs = await getObservations();
@@ -94,6 +116,8 @@ const points = obs.map((o) => {
     lng: o.data.lng,
     place: o.data.place,
     date: formatDate(o.data.date, lang),
+    iso: o.data.date.toISOString().slice(0, 10),
+    url: tx ? `${routes.wild[lang]}${tx.id}/` : '',
     observer: o.data.observer ?? '',
     note: o.data.note ?? '',
     photo: o.data.photo ?? '',
@@ -103,7 +127,8 @@ const counts = new Map<string, number>();
 for (const p of points) counts.set(p.species, (counts.get(p.species) ?? 0) + 1);
 const filterOptions = [...taxa].sort((a, b) => a.latin.localeCompare(b.latin));
 const extraIds = [...counts.keys()].filter((k) => !byId.has(k));
-const mapData = { points, i18n: { observer: t.observer, profile: t.profile } };
+const years = [...new Set(points.map((p) => p.iso.slice(0, 4)))].sort().reverse();
+const mapData = { points, i18n: { observer: t.observer, profile: t.profile, none: t.noLatest } };
 ---
 
 <Base lang={lang} title={t.title} description={t.desc} alt={routes.map[other]} active="map">
@@ -132,6 +157,13 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile } };
               ))
             }
             {extraIds.map((id) => <option value={id}>{id} ({counts.get(id)})</option>)}
+          </select>
+        </label>
+        <label class="mfilter yr">
+          <span class="lbl">{t.year}</span>
+          <select id="map-year" disabled={years.length === 0}>
+            <option value="">{t.allYears}</option>
+            {years.map((y) => <option value={y}>{y}</option>)}
           </select>
         </label>
         <div class="tally" aria-live="polite">
@@ -183,6 +215,36 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile } };
     </div>
   </section>
 
+  <section class="scene stats" aria-labelledby="stats-h">
+    <div class="wrap">
+      <div class="scene-head">
+        <div class="rv">
+          <div class="num">{t.statsNum}</div>
+          <h2 class="h-display" id="stats-h">{t.statsH} <em>{t.statsHem}</em></h2>
+        </div>
+      </div>
+      <div class="sgrid">
+        <article class="sbox rv">
+          <h3>{t.byMonth}</h3>
+          <div class="hist" id="map-hist" role="img" aria-label={t.byMonth}>
+            {t.months.map((m) => (
+              <div class="hb">
+                <span class="bar" style="--h:0"><b>0</b></span>
+                <span class="m">{m}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+        <article class="sbox rv" style="--d:.1s">
+          <h3>{t.latest}</h3>
+          <ol class="latest" id="map-latest"></ol>
+          <button type="button" class="btn small" id="map-csv">{t.csv} <span class="arr">↓</span></button>
+          <p class="hint">{t.csvHint}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section class="scene formscene" id="zglos">
     <div class="glowspot" style="width:700px;height:700px;right:-260px;top:120px;background:radial-gradient(circle,rgba(232,140,50,.12),transparent 62%)"></div>
     <div class="wrap nopad formgrid">
@@ -217,11 +279,13 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile } };
     observer: string;
     note: string;
     photo: string;
+    iso: string;
+    url: string;
   };
   const raw = document.getElementById('map-data')?.textContent;
   const box = document.getElementById('obs-map');
   if (raw && box) {
-    const data = JSON.parse(raw) as { points: Pt[]; i18n: { observer: string; profile: string } };
+    const data = JSON.parse(raw) as { points: Pt[]; i18n: { observer: string; profile: string; none: string } };
     const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
     const map = L.map(box, { scrollWheelZoom: false, minZoom: 4, maxZoom: 18, zoomSnap: 0.25 });
@@ -265,9 +329,52 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile } };
       );
     };
     const count = document.getElementById('map-count');
+    const fSp = document.getElementById('map-filter') as HTMLSelectElement | null;
+    const fYr = document.getElementById('map-year') as HTMLSelectElement | null;
+    let current: Pt[] = data.points;
+    const stats = (shown: Pt[]) => {
+      // wykres miesięcy
+      const byM = Array(12).fill(0) as number[];
+      shown.forEach((p) => byM[Number(p.iso.slice(5, 7)) - 1]++);
+      const max = Math.max(1, ...byM);
+      document.querySelectorAll<HTMLElement>('#map-hist .hb').forEach((el, i) => {
+        const bar = el.querySelector<HTMLElement>('.bar');
+        if (!bar) return;
+        bar.style.setProperty('--h', String(byM[i] / max));
+        bar.querySelector('b')!.textContent = String(byM[i]);
+        el.classList.toggle('zero', byM[i] === 0);
+      });
+      // najnowsze
+      const list = document.getElementById('map-latest');
+      if (list) {
+        list.textContent = '';
+        const latest = [...shown].sort((a, b) => b.iso.localeCompare(a.iso)).slice(0, 6);
+        if (!latest.length) {
+          const li = document.createElement('li');
+          li.className = 'none';
+          li.textContent = data.i18n.none;
+          list.append(li);
+        }
+        latest.forEach((p) => {
+          const li = document.createElement('li');
+          const a = document.createElement(p.url ? 'a' : 'span');
+          a.className = 'll';
+          a.textContent = p.latin;
+          if (p.url) (a as HTMLAnchorElement).href = p.url;
+          const m = document.createElement('span');
+          m.className = 'lm';
+          m.textContent = `${p.place} · ${p.date}`;
+          li.append(a, m);
+          list.append(li);
+        });
+      }
+    };
     const draw = (species: string) => {
       layer.clearLayers();
-      const shown = data.points.filter((p) => !species || p.species === species);
+      const yr = fYr?.value ?? '';
+      const shown = data.points.filter((p) => (!species || p.species === species) && (!yr || p.iso.startsWith(yr)));
+      current = shown;
+      stats(shown);
       shown.forEach((p) => L.marker([p.lat, p.lng], { icon, title: `${p.latin} – ${p.place}` }).bindPopup(popup(p), { maxWidth: 260, className: 'obs-popup' }).addTo(layer));
       if (count) count.textContent = String(shown.length);
       if (shown.length && species) {
@@ -276,12 +383,131 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile } };
       } else if (!species) map.fitBounds(poland);
     };
     draw('');
-    document.getElementById('map-filter')?.addEventListener('change', (e) => draw((e.target as HTMLSelectElement).value));
+    fSp?.addEventListener('change', () => draw(fSp.value));
+    fYr?.addEventListener('change', () => draw(fSp?.value ?? ''));
+    document.getElementById('map-csv')?.addEventListener('click', () => {
+      const q = (s: string) => `"${String(s).replace(/"/g, '""')}"`;
+      const rows = [['species', 'latin', 'date', 'lat', 'lng', 'place', 'observer', 'note'].join(',')].concat(
+        current.map((p) => [p.species, p.latin, p.iso, p.lat, p.lng, p.place, p.observer, p.note].map((v) => q(String(v))).join(',')),
+      );
+      const blob = new Blob(['\ufeff' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `blattodea-obserwacje-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    });
     if ('ResizeObserver' in window) new ResizeObserver(() => map.invalidateSize()).observe(box);
   }
 </script>
 
 <style>
+  .stats {
+    padding-top: clamp(40px, 6vw, 70px);
+    padding-bottom: 0;
+  }
+  .sgrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 14px;
+  }
+  .sbox {
+    border: 1px solid var(--line);
+    background: linear-gradient(160deg, var(--bg3), var(--bg2));
+    padding: clamp(22px, 2.6vw, 32px);
+  }
+  .sbox h3 {
+    font-size: clamp(22px, 2vw, 28px);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 18px;
+  }
+  .hist {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 6px;
+    align-items: end;
+    height: 200px;
+  }
+  .hb {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    height: 100%;
+    gap: 6px;
+  }
+  .bar {
+    align-self: end;
+    position: relative;
+    height: calc(var(--h) * 100%);
+    min-height: 3px;
+    background: linear-gradient(180deg, var(--amber2), var(--amber));
+    border-radius: 2px 2px 0 0;
+    transition: height 0.6s var(--ease);
+  }
+  .bar b {
+    position: absolute;
+    top: -18px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--amber2);
+  }
+  .zero .bar {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .zero .bar b {
+    color: var(--dim);
+  }
+  .hb .m {
+    font-size: 10.5px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .latest {
+    list-style: none;
+    margin: 0 0 18px;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .latest :global(li) {
+    display: grid;
+    gap: 2px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+  }
+  .latest :global(.ll) {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .latest :global(a.ll:hover) {
+    color: var(--amber2);
+  }
+  .latest :global(.lm),
+  .latest :global(.none) {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .hint {
+    margin: 10px 0 0;
+    font-size: 12px;
+    color: var(--dim);
+  }
+  @media (max-width: 860px) {
+    .sgrid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .mfilter.yr {
+    width: min(200px, 100%);
+  }
   .mappage {
     position: relative;
     isolation: isolate;

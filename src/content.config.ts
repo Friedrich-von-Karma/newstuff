@@ -2,8 +2,16 @@ import { defineCollection, z } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 import { load as loadYaml } from 'js-yaml';
 
-/** Pliki YAML w formacie { items: [...] } (wygodne do edycji w panelu /admin). */
-const itemsParser = (text: string) => ((loadYaml(text) as { items?: unknown[] })?.items ?? []) as Record<string, unknown>[];
+/**
+ * Pliki YAML w formacie { items: [...] } (wygodne do edycji w panelu /admin).
+ * Pozycja bez `id` dostaje identyfikator z gatunku, daty i numeru (np. z panelu /admin).
+ */
+const itemsParser = (text: string) =>
+  (((loadYaml(text) as { items?: unknown[] })?.items ?? []) as Record<string, unknown>[]).map((it, i) => {
+    if (it.id) return it;
+    const date = it.date instanceof Date ? it.date.toISOString().slice(0, 10) : String(it.date ?? '');
+    return { ...it, id: [it.species ?? it.latin ?? 'item', date, i + 1].filter(Boolean).join('-').toString().toLowerCase().replace(/[^a-z0-9-]+/g, '-') };
+  });
 
 /** Tekst w dwóch językach. */
 const t = z.object({ pl: z.string(), en: z.string() });
