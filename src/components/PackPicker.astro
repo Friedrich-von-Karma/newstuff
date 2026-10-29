@@ -6,7 +6,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { site } from '../data/site';
 import { useTranslations, type Lang, type UiKey } from '../i18n/ui';
-import { formatPrice } from '../lib/content';
+import { formatEur, formatPrice } from '../lib/content';
 
 interface Props {
   item: CollectionEntry<'pricelist'>;
@@ -86,6 +86,7 @@ const waitHref = (k: string) =>
   <div class="buy">
     <div class="price" aria-live="polite">
       <span data-price-out>{first ? formatPrice(first.price, lang) : '—'}</span>
+      {lang !== 'pl' && first && <small class="eur">{formatEur(first.price, lang)}</small>}
       <small>{t.per}</small>
     </div>
     {

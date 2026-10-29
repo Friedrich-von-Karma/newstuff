@@ -17,6 +17,7 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
       { key: 'species', label: tr('nav.species') },
       { key: 'pricelist', label: tr('nav.pricelist') },
       { key: 'compare', label: tr('nav.compare') },
+      { key: 'shipping', label: tr('nav.shipping') },
     ],
   },
   {
@@ -33,6 +34,7 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
     links: [
       { key: 'gallery', label: tr('nav.gallery') },
       { key: 'blog', label: tr('nav.blog') },
+      { key: 'about', label: tr('nav.about') },
       { key: 'contact', label: tr('nav.contact') },
     ],
   },
@@ -63,6 +65,29 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
       ))
     }
   </div>
+  <div class="wrap news">
+    <form class="nl" action={`https://formsubmit.co/${site.contact.email}`} method="POST">
+      <input type="hidden" name="_subject" value="Newsletter – nowy zapis" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value={new URL(routes.thanks[lang], Astro.site).href} />
+      <input type="hidden" name="Język" value={lang} />
+      <div class="honey" aria-hidden="true"><label>Leave empty <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label></div>
+      <div class="nl-txt">
+        <p class="h">Newsletter</p>
+        <p>{pl ? 'Nowe gatunki w cenniku, poradniki i ciekawe obserwacje – raz na jakiś czas, bez spamu.' : 'New species on the price list, guides and interesting records – now and then, no spam.'}</p>
+      </div>
+      <div class="nl-row">
+        <label class="vh" for="nl-email">E-mail</label>
+        <input id="nl-email" type="email" name="email" required autocomplete="email" placeholder={pl ? 'twój e-mail' : 'your e-mail'} />
+        <button type="submit" class="btn small">{pl ? 'Zapisz mnie' : 'Subscribe'}</button>
+      </div>
+      <label class="nl-ok">
+        <input type="checkbox" name="Zgoda" value="tak" required />
+        <span>{pl ? 'Zgadzam się na wysyłanie wiadomości na podany adres. Mogę się wypisać w każdej chwili, odpisując na dowolny newsletter.' : 'I agree to receive e-mails at this address. I can unsubscribe at any time by replying to any newsletter.'}</span>
+      </label>
+    </form>
+  </div>
   <div class="wrap legal">
     <p>© {year} {site.name}. {tr('footer.rights')}</p>
     <p>
@@ -91,6 +116,66 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
     border-radius: 50%;
     background: radial-gradient(circle, rgba(232, 140, 50, 0.16), transparent 65%);
     animation: breathe 9s ease-in-out infinite;
+  }
+  .news {
+    margin-top: clamp(40px, 6vw, 70px);
+  }
+  .nl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 10px 40px;
+    align-items: center;
+    padding: clamp(20px, 2.6vw, 30px);
+    border: 1px solid var(--line);
+    background: rgba(20, 33, 23, 0.4);
+  }
+  .nl-txt p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .nl-txt .h {
+    margin-bottom: 6px;
+  }
+  .nl-row {
+    display: flex;
+    gap: 10px;
+  }
+  .nl-row input {
+    flex: 1;
+    min-width: 0;
+  }
+  .nl-ok {
+    grid-column: 2;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+  .nl-ok input {
+    margin-top: 2px;
+    accent-color: var(--amber);
+  }
+  .honey {
+    position: absolute;
+    left: -9999px;
+  }
+  .vh {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  @media (max-width: 760px) {
+    .nl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .nl-ok {
+      grid-column: 1;
+    }
   }
   .grid {
     display: grid;

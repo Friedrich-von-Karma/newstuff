@@ -2,6 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 import { load as loadYaml } from 'js-yaml';
 import pricelistRaw from '../data/pricelist.yaml?raw';
+import { site } from '../data/site';
 
 export function slugify(s: string) {
   return s
@@ -20,6 +21,12 @@ export function formatPrice(n: number, lang: Lang) {
     currency: 'PLN',
     minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
   }).format(n);
+}
+
+/** Orientacyjna cena w euro (wersje obcojęzyczne); kurs w src/data/site.ts. */
+export function formatEur(pln: number, lang: Lang) {
+  const eur = pln / site.eurRate;
+  return '≈ ' + new Intl.NumberFormat(lang === 'pl' ? 'pl-PL' : lang === 'en' ? 'en-GB' : 'de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: eur < 20 ? 2 : 0 }).format(eur);
 }
 
 export async function getSpecies() {

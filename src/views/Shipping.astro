@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { site } from '../data/site';
+import { pick, routes, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const t = pick(lang, {
+  pl: {
+    title: 'Wysyłka',
+    desc: 'Jak wysyłam karaczany: kurier z ociepleniem lub chłodzeniem, odbiór osobisty, płatność, gwarancja żywego dotarcia, wysyłka do krajów UE.',
+    num: 'Blattodea.pl · Wysyłka',
+    h1a: 'Wysyłka',
+    h1b: 'i płatność',
+    lead: 'Żywe zwierzęta wymagają przemyślanej wysyłki. Tak pakuję i wysyłam paczki – w Polsce i za granicę.',
+    plH: 'W Polsce',
+    intH: 'Za granicę (Unia Europejska)',
+    rate: 'Kwoty w euro przy cenach są orientacyjne – liczone po kursie ok.',
+    ask: 'Zapytaj o wysyłkę',
+    subject: 'Wysyłka za granicę – zapytanie',
+  },
+  en: {
+    title: 'Shipping',
+    desc: 'How I ship cockroaches: courier with heat or cool packs, local pickup, payment, live arrival guarantee and shipping to EU countries.',
+    num: 'Blattodea.pl · Shipping',
+    h1a: 'Shipping',
+    h1b: 'and payment',
+    lead: 'Live animals need careful shipping. This is how I pack and send parcels – within Poland and abroad.',
+    plH: 'Within Poland',
+    intH: 'Abroad (European Union)',
+    rate: 'Euro amounts next to prices are approximate – calculated at about',
+    ask: 'Ask about shipping',
+    subject: 'International shipping – enquiry',
+  },
+});
+const plList = pick(lang, site.shipping as { pl: readonly string[]; en: readonly string[] });
+const intList = pick(lang, site.international as { pl: readonly string[]; en: readonly string[] });
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.shipping[other]} active="shipping">
+  <section class="scene ship-scene">
+    <div class="wrap">
+      <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead} />
+      <div class="cols">
+        <article class="panel rv">
+          <h2>{t.plH}</h2>
+          <ul class="ship">{plList.map((s) => <li>{s}</li>)}</ul>
+        </article>
+        <article class="panel rv" style="--d:.12s">
+          <h2>{t.intH}</h2>
+          <ul class="ship">{intList.map((s) => <li>{s}</li>)}</ul>
+          <p class="rate">{t.rate} {site.eurRate.toFixed(2).replace('.', lang === 'pl' ? ',' : '.')} zł = 1 €.</p>
+          <a class="btn" href={`mailto:${site.contact.email}?subject=${encodeURIComponent(t.subject)}`}>{t.ask} <span class="arr">→</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ship-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .panel {
+    padding: clamp(24px, 3vw, 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  h2 {
+    font-size: clamp(28px, 2.8vw, 38px);
+    font-weight: 300;
+    font-style: italic;
+  }
+  .ship {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: s;
+    display: grid;
+    gap: 12px;
+  }
+  .ship li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 8px;
+    font-size: 15px;
+    color: #d3cfbf;
+    line-height: 1.55;
+  }
+  .ship li::before {
+    content: counter(s, upper-roman);
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--amber);
+  }
+  .rate {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  @media (max-width: 860px) {
+    .cols {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
