@@ -51,7 +51,7 @@ const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
 const monthYear = formatDate(d.date, lang).replace(/^\d+\.?\s*/, '');
 ---
 
-<Base lang={lang} title={d.title} description={d.description} alt={alt} active="blog" image={d.cover}>
+<Base lang={lang} title={d.title} description={d.description} alt={alt} active="blog" image={d.cover} jsonld={[{ '@type': 'BlogPosting', headline: d.title, description: d.description, datePublished: d.date.toISOString(), inLanguage: lang, author: { '@type': 'Person', name: 'Mikołaj Stachowiak' }, url: new URL(Astro.url.pathname, Astro.site).href }]}>
   <article class="post">
     <header class:list={['ph', { 'has-cover': d.cover }]}>
       {

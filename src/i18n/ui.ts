@@ -16,6 +16,13 @@ export const routes = {
   identify: { pl: '/oznacz/', en: '/en/identify/' },
   glossary: { pl: '/slowniczek/', en: '/en/glossary/' },
   thanks: { pl: '/dziekuje/', en: '/en/thank-you/' },
+  search: { pl: '/szukaj/', en: '/en/search/' },
+  about: { pl: '/o-mnie/', en: '/en/about/' },
+  shipping: { pl: '/wysylka/', en: '/en/shipping/' },
+  guides: { pl: '/poradniki/', en: '/en/guides/' },
+  wild: { pl: '/karaczany-polski/', en: '/en/cockroaches-of-poland/' },
+  calendar: { pl: '/kalendarz/', en: '/en/calendar/' },
+  library: { pl: '/biblioteka/', en: '/en/library/' },
 } as const;
 export type RouteKey = keyof typeof routes;
 
@@ -40,6 +47,13 @@ export const ui = {
     'nav.glossary': 'Słowniczek',
     'nav.cart': 'Koszyk',
     'nav.menu': 'Menu',
+    'nav.search': 'Szukaj',
+    'nav.about': 'O mnie',
+    'nav.shipping': 'Wysyłka',
+    'nav.guides': 'Poradniki',
+    'nav.wild': 'Karaczany Polski',
+    'nav.calendar': 'Kalendarz obserwacji',
+    'nav.library': 'Biblioteka',
     'lang.switch': 'English',
     'sample.badge': 'Dane przykładowe',
     'sample.note': 'To są przykładowe treści, które zostaną zastąpione prawdziwymi.',
@@ -163,6 +177,13 @@ export const ui = {
     'nav.glossary': 'Glossary',
     'nav.cart': 'Cart',
     'nav.menu': 'Menu',
+    'nav.search': 'Search',
+    'nav.about': 'About',
+    'nav.shipping': 'Shipping',
+    'nav.guides': 'Guides',
+    'nav.wild': 'Cockroaches of Poland',
+    'nav.calendar': 'Field calendar',
+    'nav.library': 'Library',
     'lang.switch': 'Polski',
     'sample.badge': 'Sample data',
     'sample.note': 'This is sample content that will be replaced with real data.',
@@ -286,4 +307,9 @@ export function localeOf(lang: Lang) {
 
 export function formatDate(d: Date, lang: Lang) {
   return d.toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+/** Wybór wersji językowej obiektu z tekstami; brakujący język → angielski. */
+export function pick<T>(lang: Lang, m: { pl: T; en: T } & Partial<Record<Lang, T>>): T {
+  return (m as Partial<Record<Lang, T>>)[lang] ?? m.en;
 }

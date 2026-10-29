@@ -50,6 +50,11 @@ const extra: { key: RouteKey; label: string }[] = [
     </span>
   </nav>
   <div class="tools">
+    <a class="searchbtn" href={routes.search[lang]} aria-label={tr('nav.search')} title={tr('nav.search')}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 21 21"></path>
+      </svg>
+    </a>
     <a class="lang" href={alt} hreflang={lang === 'pl' ? 'en' : 'pl'} lang={lang === 'pl' ? 'en' : 'pl'}>
       {lang === 'pl' ? 'EN' : 'PL'}<span class="vh"> – {tr('lang.switch')}</span>
     </a>
@@ -174,6 +179,23 @@ const extra: { key: RouteKey; label: string }[] = [
   .lang:hover {
     color: var(--amber2);
     border-color: var(--amber);
+  }
+  .searchbtn {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    color: var(--muted);
+    border-radius: 50%;
+    transition: color 0.3s;
+  }
+  .searchbtn:hover,
+  .searchbtn:focus-visible {
+    color: var(--amber2);
+  }
+  .searchbtn svg {
+    width: 19px;
+    height: 19px;
   }
   .cartbtn {
     position: relative;

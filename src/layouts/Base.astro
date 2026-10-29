@@ -6,6 +6,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/CartDrawer.astro';
+import Analytics from '@vercel/analytics/astro';
 import { glossary } from '../data/glossary';
 import { routes } from '../i18n/ui';
 import { site } from '../data/site';
@@ -21,9 +22,11 @@ interface Props {
   image?: string;
   /** nie pokazuj w wyszukiwarkach (np. strona podziękowania) */
   noindex?: boolean;
+  /** dodatkowe dane strukturalne schema.org (JSON-LD) dla tej strony */
+  jsonld?: Record<string, unknown>[];
 }
 
-const { lang, title, description, alt, active, image, noindex = false } = Astro.props;
+const { lang, title, description, alt, active, image, noindex = false, jsonld = [] } = Astro.props;
 const tr = useTranslations(lang);
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} – ${tr('site.tagline')}`;
 const desc = description ?? tr('home.lead');
@@ -31,6 +34,32 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const altUrl = new URL(alt, Astro.site);
 const ogImage = new URL(image ?? '/og.png', Astro.site);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const siteUrl = new URL('/', Astro.site).href;
+// dane strukturalne całej witryny (Google: nazwa, logo, pole wyszukiwania)
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.name,
+    url: siteUrl,
+    inLanguage: lang,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${new URL(routes.search[lang], Astro.site).href}?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: site.name,
+    url: siteUrl,
+    logo: new URL('/logo/blattodea-ikona-512.png', Astro.site).href,
+    email: site.contact.email,
+    sameAs: [site.contact.facebook, site.contact.instagram],
+  },
+  ...jsonld.map((j) => ({ '@context': 'https://schema.org', ...j })),
+];
 ---
 
 <!doctype html>
@@ -55,13 +84,15 @@ const other: Lang = lang === 'pl' ? 'en' : 'pl';
     <meta property="og:image" content={ogImage} />
     <meta property="og:locale" content={lang === 'pl' ? 'pl_PL' : 'en_GB'} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <Analytics />
   </head>
   <body>
     <a class="skip" href="#main">{lang === 'pl' ? 'Przejdź do treści' : 'Skip to content'}</a>
     <div class="grain" aria-hidden="true"></div>
     <div class="torch" aria-hidden="true"></div>
     <Header lang={lang} alt={alt} active={active} />
-    <main id="main">
+    <main id="main" data-pagefind-body={noindex ? undefined : true}>
       <slot />
     </main>
     <Footer lang={lang} />

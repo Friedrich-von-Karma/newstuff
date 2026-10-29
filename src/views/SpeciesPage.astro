@@ -72,7 +72,7 @@ const t = pl
     };
 ---
 
-<Base lang={lang} title={d.latin} description={description} alt={`${routes.species[other]}${entry.id}/`} active="species" image={own[0]?.src}>
+<Base lang={lang} title={d.latin} description={description} alt={`${routes.species[other]}${entry.id}/`} active="species" image={own[0]?.src} jsonld={[{ '@type': 'Taxon', name: d.latin, taxonRank: 'species', ...(d.author ? { scientificNameAuthorship: d.author } : {}), parentTaxon: { '@type': 'Taxon', name: d.family, taxonRank: 'family' }, url: new URL(`${routes.species[lang]}${entry.id}/`, Astro.site).href }]}>
   <article class="sp">
     <div class="glowspot" style="width:700px;height:700px;right:-240px;top:-80px;background:radial-gradient(circle,rgba(232,165,71,.14),transparent 65%)"></div>
     <div class="wrap">
