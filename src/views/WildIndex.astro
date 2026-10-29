@@ -1,0 +1,213 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
+import Phenology from '../components/Phenology.astro';
+import { pick, routes, type Lang } from '../i18n/ui';
+import { getWildSpecies } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const all = await getWildSpecies();
+const t = pick(lang, {
+  pl: {
+    title: 'Karaczany Polski',
+    desc: 'Wszystkie karaczany stwierdzone w Polsce: zadomki leśne, bezżyłka, prusak, karaczan wschodni, przybyszki i gatunki szklarniowe – rozpoznawanie, występowanie, kiedy ich szukać.',
+    num: 'Nauka · fauna Polski',
+    h1a: 'Karaczany',
+    h1b: 'Polski',
+    lead: 'W Polsce stwierdzono kilkanaście gatunków karaczanów, ale tylko kilka żyje na wolności – w lasach i na murawach. Pozostałe to gatunki związane z budynkami i szklarniami albo pojedyncze zawleczenia.',
+    groups: {
+      wild: ['W naturze', 'Gatunki żyjące na wolności – w lasach, na wrzosowiskach, murawach i w zieleni miejskiej.'],
+      indoor: ['W budynkach i szklarniach', 'Gatunki obce, związane z ogrzewanymi pomieszczeniami.'],
+      rare: ['Niepewne i zawlekane', 'Gatunki, których występowanie jest wątpliwe albo ograniczone do pojedynczych przypadków.'],
+    },
+    rec: { confirmed: 'potwierdzony', doubtful: 'niepewny', casual: 'zawlekany', culture: 'tylko w hodowli' },
+    open: 'Karta gatunku',
+    key: 'Oznacz w kluczu',
+    cal: 'Kalendarz obserwacji',
+    map: 'Mapa obserwacji',
+    send: 'Zgłoś obserwację',
+  },
+  en: {
+    title: 'Cockroaches of Poland',
+    desc: 'All cockroaches recorded in Poland: wood cockroaches, Phyllodromica, German and Oriental cockroaches, Periplaneta and glasshouse species – identification, distribution and when to look.',
+    num: 'Science · Polish fauna',
+    h1a: 'Cockroaches',
+    h1b: 'of Poland',
+    lead: 'More than a dozen cockroach species have been recorded in Poland, but only a few live in the wild – in woodland and grassland. The rest are tied to buildings and glasshouses or are occasional imports.',
+    groups: {
+      wild: ['In the wild', 'Species living outdoors – in woodland, heath, grassland and urban greenery.'],
+      indoor: ['In buildings and glasshouses', 'Alien species tied to heated rooms.'],
+      rare: ['Doubtful and casual', 'Species whose occurrence is doubtful or limited to single cases.'],
+    },
+    rec: { confirmed: 'confirmed', doubtful: 'doubtful', casual: 'casual', culture: 'culture only' },
+    open: 'Species page',
+    key: 'Use the key',
+    cal: 'Field calendar',
+    map: 'Observation map',
+    send: 'Report a sighting',
+  },
+});
+const groupOf = (x: (typeof all)[number]) =>
+  x.info?.record === 'doubtful' || x.info?.record === 'casual' ? 'rare' : x.info?.phenology.indoors ? 'indoor' : 'wild';
+const groups = (['wild', 'indoor', 'rare'] as const).map((g) => ({ id: g, items: all.filter((x) => groupOf(x) === g) }));
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.wild[other]} active="wild">
+  <section class="scene w-scene">
+    <div class="wrap">
+      <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead}>
+        <div class="acts rv">
+          <a class="btn" href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
+          <a class="btn quiet" href={routes.calendar[lang]}>{t.cal}</a>
+          <a class="btn quiet" href={routes.map[lang]}>{t.map}</a>
+        </div>
+      </PageHead>
+
+      {
+        groups.map((g) => (
+          <section class="grp" aria-labelledby={`g-${g.id}`}>
+            <div class="gh rv">
+              <h2 id={`g-${g.id}`}>{t.groups[g.id][0]}</h2>
+              <p>{t.groups[g.id][1]}</p>
+            </div>
+            <ul class="cards">
+              {g.items.map((x, i) => (
+                <li class="card rv" style={`--d:${(i % 3) * 0.08}s`}>
+                  <a href={`${routes.wild[lang]}${x.id}/`} class="ph" tabindex="-1" aria-hidden="true">
+                    <CommonsPhoto id={x.id} lang={lang} alt={x.latin} width={500} compact />
+                  </a>
+                  <div class="cb">
+                    <span class={`rec r-${x.info?.record}`}>{x.info ? t.rec[x.info.record] : ''}</span>
+                    <h3>
+                      <a href={`${routes.wild[lang]}${x.id}/`} class="latin">{x.latin}</a>
+                    </h3>
+                    {x.name?.[lang] && <p class="pn">{x.name[lang]}</p>}
+                    <p class="len">{x.length}</p>
+                    {x.info && <Phenology lang={lang} adults={x.info.phenology.adults} nymphs={x.info.phenology.nymphs} indoors={x.info.phenology.indoors} compact />}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .w-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+  }
+  .acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
+    margin-top: 10px;
+  }
+  .grp {
+    margin-top: clamp(40px, 6vw, 80px);
+  }
+  .gh {
+    display: flex;
+    gap: 10px 30px;
+    align-items: baseline;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line2);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+  .gh h2 {
+    font-size: clamp(30px, 3.2vw, 44px);
+    font-weight: 300;
+    font-style: italic;
+  }
+  .gh p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    background: linear-gradient(160deg, var(--bg3), var(--bg2));
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.4s;
+  }
+  .card:hover {
+    border-color: rgba(232, 165, 71, 0.45);
+  }
+  .ph :global(.cphoto) {
+    margin: 0;
+  }
+  .ph :global(.frame) {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .ph :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cb {
+    padding: 16px 18px 20px;
+    display: grid;
+    gap: 6px;
+  }
+  .rec {
+    justify-self: start;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1px solid var(--line2);
+    color: var(--muted);
+  }
+  .r-confirmed {
+    color: var(--fern);
+    border-color: rgba(169, 191, 127, 0.45);
+  }
+  .r-doubtful,
+  .r-casual {
+    color: var(--amber2);
+    border-color: rgba(232, 165, 71, 0.4);
+  }
+  h3 {
+    margin: 4px 0 0;
+  }
+  .latin {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .latin:hover {
+    color: var(--amber2);
+  }
+  .pn {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .len {
+    margin: 0 0 8px;
+    font-family: var(--serif);
+    color: var(--amber2);
+  }
+</style>

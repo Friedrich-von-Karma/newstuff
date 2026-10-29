@@ -181,6 +181,9 @@ const data = {
                       </div>
                       <div class="hab">{x.habitat[lang]}</div>
                       <p data-glossary>{x.note[lang]}</p>
+                      <a class="prof" href={`${routes.wild[lang]}${x.id}/`}>
+                        → {lang === 'pl' ? 'Karta gatunku' : 'Species page'}
+                      </a>
                       {x.profile && (
                         <a class="prof" href={`${routes.species[lang]}${x.profile}/`}>
                           → {tr('pricelist.profileLink')}

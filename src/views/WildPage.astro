@@ -1,0 +1,274 @@
+---
+import Base from '../layouts/Base.astro';
+import CommonsPhoto from '../components/CommonsPhoto.astro';
+import Phenology from '../components/Phenology.astro';
+import { pick, routes, useTranslations, type Lang } from '../i18n/ui';
+import { getWildSpecies } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  id: string;
+}
+const { lang, id } = Astro.props;
+const tr = useTranslations(lang);
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const all = await getWildSpecies();
+const x = all.find((s) => s.id === id)!;
+const info = x.info;
+const t = pick(lang, {
+  pl: {
+    back: 'Karaczany Polski',
+    rec: { confirmed: 'występowanie w Polsce potwierdzone', doubtful: 'występowanie w Polsce niepewne', casual: 'w Polsce tylko zawlekany', culture: 'w Polsce tylko w hodowli' },
+    status: { native: 'gatunek rodzimy', synanthropic: 'synantrop – w budynkach', introduced: 'gatunek obcy' },
+    len: 'Długość',
+    hab: 'Siedlisko',
+    dist: 'Rozmieszczenie',
+    id: 'Jak rozpoznać',
+    sim: 'Podobne gatunki',
+    phen: 'Kiedy szukać',
+    src: 'Źródła',
+    verify: 'Dane o tym gatunku wymagają jeszcze weryfikacji.',
+    key: 'Oznacz w kluczu',
+    map: 'Zgłoś obserwację na mapę',
+    ident: 'Wyślij zdjęcie do oznaczenia',
+    profile: 'Profil hodowlany',
+  },
+  en: {
+    back: 'Cockroaches of Poland',
+    rec: { confirmed: 'occurrence in Poland confirmed', doubtful: 'occurrence in Poland doubtful', casual: 'only imported to Poland', culture: 'in Poland only in culture' },
+    status: { native: 'native species', synanthropic: 'synanthropic – in buildings', introduced: 'alien species' },
+    len: 'Length',
+    hab: 'Habitat',
+    dist: 'Distribution',
+    id: 'How to recognise it',
+    sim: 'Similar species',
+    phen: 'When to look',
+    src: 'Sources',
+    verify: 'Data on this species still need verification.',
+    key: 'Use the key',
+    map: 'Report a sighting for the map',
+    ident: 'Send a photo for identification',
+    profile: 'Care sheet',
+  },
+});
+const desc = `${x.latin}${x.name?.[lang] ? ` (${x.name[lang]})` : ''} – ${x.note[lang]}`.slice(0, 300);
+---
+
+<Base lang={lang} title={x.latin} description={desc} alt={`${routes.wild[other]}${x.id}/`} active="wild" jsonld={[{ '@type': 'Taxon', name: x.latin, taxonRank: 'species', scientificNameAuthorship: x.author, ...(x.name?.[lang] ? { alternateName: x.name[lang] } : {}) }]}>
+  <article class="scene wp">
+    <div class="wrap">
+      <a class="back" href={routes.wild[lang]}>← {t.back}</a>
+      <div class="top">
+        <div class="ph rv">
+          <CommonsPhoto id={x.id} lang={lang} alt={x.latin} width={960} eager />
+        </div>
+        <div class="hd rv" style="--d:.1s">
+          <p class="tags">
+            <span>{t.status[x.status]}</span>
+            {info && <span class={`r-${info.record}`}>{t.rec[info.record]}</span>}
+          </p>
+          <h1 class="h-display latin">{x.latin}</h1>
+          <p class="auth">{x.author}{x.name?.[lang] && <> · <b>{x.name[lang]}</b></>}</p>
+          <p class="lead" data-glossary>{x.note[lang]}</p>
+          {x.verify && <p class="draft"><b>!</b> {t.verify}</p>}
+          <dl class="facts">
+            <div><dt>{t.len}</dt><dd>{x.length}</dd></div>
+            <div><dt>{t.hab}</dt><dd>{x.habitat[lang]}</dd></div>
+          </dl>
+          <div class="acts">
+            <a class="btn" href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
+            <a class="btn quiet small" href={`${routes.map[lang]}#zglos`}>{t.map}</a>
+            {x.profile && <a class="btn quiet small" href={`${routes.species[lang]}${x.profile}/`}>{t.profile}</a>}
+          </div>
+        </div>
+      </div>
+
+      {
+        info && (
+          <div class="grid">
+            <section class="box rv" data-glossary>
+              <h2>{t.id}</h2>
+              <ul>{info.identification.map((i) => <li>{i[lang]}</li>)}</ul>
+              {info.similar && (
+                <>
+                  <h3>{t.sim}</h3>
+                  <p>{info.similar[lang]}</p>
+                </>
+              )}
+            </section>
+            <section class="box rv" style="--d:.1s">
+              <h2>{t.dist}</h2>
+              <p>{info.distribution[lang]}</p>
+              <h3>{t.phen}</h3>
+              <Phenology lang={lang} adults={info.phenology.adults} nymphs={info.phenology.nymphs} indoors={info.phenology.indoors} />
+              {info.phenology.note && <p class="pnote">{info.phenology.note[lang]}</p>}
+              <h3>{t.src}</h3>
+              <ul class="src">
+                {info.sources.map((s) => (
+                  <li>
+                    <a href={s.url} target="_blank" rel="noopener">{s.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+        )
+      }
+    </div>
+  </article>
+</Base>
+
+<style>
+  .wp {
+    padding: clamp(110px, 13vw, 160px) 0 clamp(70px, 10vw, 130px);
+  }
+  .back {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--amber2);
+  }
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(24px, 4vw, 60px);
+    margin-top: 26px;
+    align-items: start;
+  }
+  .ph :global(.frame) {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .ph :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 0 0 14px;
+  }
+  .tags span {
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border: 1px solid var(--line2);
+    color: var(--muted);
+  }
+  .tags .r-confirmed {
+    color: var(--fern);
+    border-color: rgba(169, 191, 127, 0.45);
+  }
+  .tags .r-doubtful,
+  .tags .r-casual {
+    color: var(--amber2);
+    border-color: rgba(232, 165, 71, 0.4);
+  }
+  .latin {
+    font-style: italic;
+    font-size: clamp(40px, 5vw, 70px);
+  }
+  .auth {
+    color: var(--muted);
+    margin: 8px 0 18px;
+  }
+  .auth b {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .draft {
+    margin: 14px 0 0;
+  }
+  .facts {
+    margin: 20px 0 0;
+    display: grid;
+    gap: 10px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 10px;
+  }
+  .facts dt {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 3px;
+  }
+  .facts dd {
+    margin: 0;
+    color: var(--text);
+  }
+  .acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: clamp(40px, 6vw, 70px);
+  }
+  .box {
+    border: 1px solid var(--line);
+    background: linear-gradient(160deg, var(--bg3), var(--bg2));
+    padding: clamp(22px, 2.6vw, 34px);
+  }
+  .box h2 {
+    font-size: clamp(26px, 2.4vw, 32px);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .box h3 {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 22px 0 10px;
+  }
+  .box p,
+  .box li {
+    color: #d3cfbf;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .box p {
+    margin: 0;
+  }
+  .box ul {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+  }
+  .pnote {
+    margin-top: 8px !important;
+    font-size: 13px !important;
+    color: var(--muted) !important;
+  }
+  .src a {
+    color: var(--amber2);
+  }
+  @media (max-width: 860px) {
+    .top,
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

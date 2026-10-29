@@ -1,0 +1,226 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Phenology from '../components/Phenology.astro';
+import { pick, routes, type Lang } from '../i18n/ui';
+import { getWildSpecies } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'pl' ? 'en' : 'pl';
+const all = await getWildSpecies();
+const outdoor = all.filter((x) => x.info && (x.info.phenology.adults?.length || x.info.phenology.nymphs?.length));
+const indoor = all.filter((x) => x.info?.phenology.indoors && x.info.record !== 'culture');
+const nodata = all.filter((x) => x.info && !x.info.phenology.indoors && !x.info.phenology.adults?.length && !x.info.phenology.nymphs?.length);
+const now = new Date().getMonth() + 1;
+const t = pick(lang, {
+  pl: {
+    title: 'Kalendarz obserwacji',
+    desc: 'Kiedy szukać karaczanów w Polsce: miesiące pojawu dorosłych i nimf zadomek, bezżyłki i innych gatunków.',
+    num: 'Nauka · fenologia',
+    h1a: 'Kalendarz',
+    h1b: 'obserwacji',
+    lead: 'Kiedy w terenie spotkasz dorosłe karaczany, a kiedy tylko nimfy. Dane orientacyjne – z literatury i obserwacji z Polski i krajów sąsiednich.',
+    outH: 'W terenie',
+    inH: 'W budynkach i szklarniach',
+    inP: 'Te gatunki spotkasz przez cały rok – wszystkie stadia jednocześnie.',
+    noH: 'Brak danych',
+    noP: 'Do tych gatunków nie mamy jeszcze danych o pojawie. Twoje obserwacje z datą bardzo pomogą.',
+    now: 'teraz',
+    nowH: 'Teraz w terenie',
+    nowNone: 'W tym miesiącu dorosłe karaczany w terenie spotyka się rzadko – szukaj nimf w ściółce albo gatunków w budynkach.',
+    legendA: 'dorosłe',
+    legendN: 'nimfy',
+    send: 'Zgłoś obserwację z datą',
+  },
+  en: {
+    title: 'Field calendar',
+    desc: 'When to look for cockroaches in Poland: months when adults and nymphs of Ectobius, Phyllodromica and other species are found.',
+    num: 'Science · phenology',
+    h1a: 'Field',
+    h1b: 'calendar',
+    lead: 'When you can find adult cockroaches in the field and when only nymphs. Approximate data – from the literature and records from Poland and neighbouring countries.',
+    outH: 'Outdoors',
+    inH: 'In buildings and glasshouses',
+    inP: 'These species can be found all year round – all stages at once.',
+    noH: 'No data',
+    noP: 'We have no seasonal data for these species yet. Your dated records will help a lot.',
+    now: 'now',
+    nowH: 'In the field now',
+    nowNone: 'This month adult cockroaches are rarely found outdoors – look for nymphs in leaf litter or for species in buildings.',
+    legendA: 'adults',
+    legendN: 'nymphs',
+    send: 'Report a dated sighting',
+  },
+});
+const active = outdoor.filter((x) => x.info!.phenology.adults?.includes(now));
+---
+
+<Base lang={lang} title={t.title} description={t.desc} alt={routes.calendar[other]} active="calendar">
+  <section class="scene cal-scene">
+    <div class="wrap">
+      <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead} />
+
+      <aside class="nowbox rv" data-now-box data-none={t.nowNone} data-sp={JSON.stringify(outdoor.map((x) => ({ l: x.latin, u: `${routes.wild[lang]}${x.id}/`, a: x.info!.phenology.adults ?? [] })))}>
+        <div class="lbl">{t.nowH}</div>
+        <p data-now-list>
+          {active.length ? active.map((x, i) => <>{i > 0 && ', '}<a class="latin" href={`${routes.wild[lang]}${x.id}/`}>{x.latin}</a></>) : t.nowNone}
+        </p>
+      </aside>
+
+      <section class="tbl rv" aria-labelledby="out-h">
+        <h2 id="out-h">{t.outH}</h2>
+        <p class="legend"><i class="a"></i>{t.legendA} <i class="n"></i>{t.legendN}</p>
+        <div class="rows">
+          {
+            outdoor.map((x, i) => (
+              <div class="r">
+                <a class="latin" href={`${routes.wild[lang]}${x.id}/`}>{x.latin}</a>
+                <Phenology lang={lang} adults={x.info!.phenology.adults} nymphs={x.info!.phenology.nymphs} head={i === 0} compact />
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <div class="two">
+        <section class="side rv">
+          <h2>{t.inH}</h2>
+          <p>{t.inP}</p>
+          <ul>{indoor.map((x) => <li><a class="latin" href={`${routes.wild[lang]}${x.id}/`}>{x.latin}</a></li>)}</ul>
+        </section>
+        {nodata.length > 0 && (
+          <section class="side rv" style="--d:.1s">
+            <h2>{t.noH}</h2>
+            <p>{t.noP}</p>
+            <ul>{nodata.map((x) => <li><a class="latin" href={`${routes.wild[lang]}${x.id}/`}>{x.latin}</a></li>)}</ul>
+            <a class="btn small" href={`${routes.map[lang]}#zglos`}>{t.send} <span class="arr">→</span></a>
+          </section>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // „Teraz w terenie” liczone w przeglądarce, według bieżącego miesiąca
+  const box = document.querySelector<HTMLElement>('[data-now-box]');
+  const out = box?.querySelector<HTMLElement>('[data-now-list]');
+  if (box && out) {
+    const m = new Date().getMonth() + 1;
+    const sp = JSON.parse(box.dataset.sp ?? '[]') as { l: string; u: string; a: number[] }[];
+    const act = sp.filter((s) => s.a.includes(m));
+    out.textContent = '';
+    if (!act.length) out.textContent = box.dataset.none ?? '';
+    act.forEach((s, i) => {
+      if (i) out.append(', ');
+      const a = document.createElement('a');
+      a.className = 'latin';
+      a.href = s.u;
+      a.textContent = s.l;
+      out.append(a);
+    });
+  }
+</script>
+
+<style>
+  .cal-scene {
+    padding: clamp(120px, 14vw, 170px) 0 clamp(70px, 10vw, 130px);
+  }
+  .nowbox {
+    border: 1px solid rgba(232, 165, 71, 0.4);
+    background: radial-gradient(circle at 10% 0%, rgba(232, 165, 71, 0.12), transparent 60%);
+    padding: 20px 24px;
+    margin-bottom: clamp(30px, 5vw, 50px);
+  }
+  .nowbox p {
+    margin: 8px 0 0;
+    color: #d3cfbf;
+  }
+  .latin,
+  .nowbox :global(.latin) {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .latin:hover {
+    color: var(--amber2);
+  }
+  h2 {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 300;
+    font-style: italic;
+  }
+  .legend {
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 6px 0 16px;
+  }
+  .legend i {
+    display: inline-block;
+    width: 22px;
+    height: 10px;
+    border-radius: 2px;
+    margin-left: 10px;
+  }
+  .legend i.a {
+    background: var(--amber);
+  }
+  .legend i.n {
+    background: var(--fern);
+  }
+  .rows {
+    border-top: 1px solid var(--line2);
+  }
+  .r {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .r .latin {
+    font-size: 20px;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: clamp(40px, 6vw, 70px);
+  }
+  .side {
+    border: 1px solid var(--line);
+    background: linear-gradient(160deg, var(--bg3), var(--bg2));
+    padding: clamp(22px, 2.6vw, 32px);
+  }
+  .side p {
+    color: var(--muted);
+    margin: 8px 0 14px;
+  }
+  .side ul {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+  }
+  .side .latin {
+    font-size: 19px;
+  }
+  @media (max-width: 760px) {
+    .r {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+    .two {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

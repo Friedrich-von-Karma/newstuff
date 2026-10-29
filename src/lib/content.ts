@@ -107,3 +107,10 @@ export async function getGuides(lang: Lang) {
 export function guideSlug(g: Guide) {
   return g.id.split('/').slice(1).join('/');
 }
+
+/** Karaczany Polski: gatunek z klucza + szczegóły (src/data/wild.ts). */
+export async function getWildSpecies() {
+  const { taxa } = await import('../data/key');
+  const { wild } = await import('../data/wild');
+  return taxa.map((t) => ({ ...t, info: wild[t.id] }));
+}

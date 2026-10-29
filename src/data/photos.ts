@@ -85,6 +85,13 @@ export const photos: Record<string, Photo> = {
     licenseUrl: 'https://creativecommons.org/licenses/by-sa/2.0/',
     subject: { pl: 'osobnik dorosły', en: 'adult' },
   },
+  'pycnoscelus-surinamensis': {
+    file: 'Pycnoscelus surinamensis nymph.png',
+    author: 'Piterkeo',
+    license: 'CC BY-SA 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
+    subject: { pl: 'nimfa', en: 'nymph' },
+  },
   'oxyhaloa-deusta': {
     file: 'Wild Cockroach (Oxyhaloa deusta) (15862162414).jpg',
     author: 'Bernard Dupont',
