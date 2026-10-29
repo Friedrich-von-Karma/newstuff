@@ -26,7 +26,7 @@ export function getLangFromUrl(url: URL): Lang {
 export const ui = {
   pl: {
     'site.tagline': 'Hodowla karaczanów · profile hodowlane · klucz do gatunków Polski',
-    'nav.home': 'Start',
+    'nav.home': 'Strona główna',
     'nav.pricelist': 'Cennik',
     'nav.species': 'Profile hodowlane',
     'nav.blog': 'Blog',

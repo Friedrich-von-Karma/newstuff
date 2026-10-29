@@ -14,10 +14,9 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
   {
     h: pl ? 'Hodowla' : 'Breeding',
     links: [
-      { key: 'pricelist', label: tr('nav.pricelist') },
       { key: 'species', label: tr('nav.species') },
+      { key: 'pricelist', label: tr('nav.pricelist') },
       { key: 'compare', label: tr('nav.compare') },
-      { key: 'gallery', label: tr('nav.gallery') },
     ],
   },
   {
@@ -32,6 +31,7 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
   {
     h: pl ? 'Więcej' : 'More',
     links: [
+      { key: 'gallery', label: tr('nav.gallery') },
       { key: 'blog', label: tr('nav.blog') },
       { key: 'contact', label: tr('nav.contact') },
     ],

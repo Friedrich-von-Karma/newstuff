@@ -11,11 +11,12 @@ const { lang, alt, active } = Astro.props;
 const tr = useTranslations(lang);
 
 const nav: { key: RouteKey; label: string }[] = [
-  { key: 'pricelist', label: tr('nav.pricelist') },
+  { key: 'home', label: tr('nav.home') },
   { key: 'species', label: tr('nav.species') },
-  { key: 'gallery', label: tr('nav.gallery') },
+  { key: 'pricelist', label: tr('nav.pricelist') },
   { key: 'key', label: tr('nav.keyShort') },
   { key: 'map', label: tr('nav.map') },
+  { key: 'gallery', label: tr('nav.gallery') },
   { key: 'blog', label: tr('nav.blog') },
   { key: 'contact', label: tr('nav.contact') },
 ];
