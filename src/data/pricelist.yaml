@@ -7,7 +7,7 @@
 #    status:  available (dostępne) | low (mało) | out (brak) | soon (wkrótce)
 #    stage:   co jest w paczce – nymph (nimfy), mix (nimfy + imago) albo adult (imago)
 #    price:   cena w zł za paczkę 10 szt.
-updated: "2026-10-27"
+updated: "2026-10-29"
 items:
   - id: oxyhaloa-deusta
     latin: Oxyhaloa deusta
@@ -30,6 +30,6 @@ items:
   - id: polyphaga-obscura
     latin: Polyphaga obscura
     profile: polyphaga-obscura
-    status: available
+    status: out
     stage: nymph
     price: 350
