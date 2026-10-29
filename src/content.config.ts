@@ -37,6 +37,24 @@ const species = defineCollection({
     climbs: z.boolean(),
     flies: z.boolean(),
     gallery: z.array(image).default([]),
+    /** Taksonomia: podrodzina, plemię, synonimy, nazwy handlowe, link do Cockroach Species File. */
+    taxonomy: z
+      .object({
+        subfamily: z.string().optional(),
+        tribe: z.string().optional(),
+        synonyms: z.array(z.string()).default([]),
+        tradeNames: z.array(z.string()).default([]),
+        csf: z.string().url().optional(),
+      })
+      .optional(),
+    /** Jak rozpoznać płeć – dorosłe i (jeśli się da) nimfy. Zdjęcia: galeria z stage: male / female. */
+    sexing: z.object({ adults: t, nymphs: t.optional() }).optional(),
+    /** Stadia rozwoju – jak wyglądają nimfy, ile wylinek itp. */
+    stages: t.optional(),
+    /** Typowe problemy w hodowli. */
+    problems: z.array(t).default([]),
+    /** Ważna uwaga lub ciekawostka (np. o pochodzeniu hodowlanych linii). */
+    remark: t.optional(),
     /** Dane przykładowe – oznaczane na stronie jako do podmiany. */
     sample: z.boolean().default(false),
   }),
@@ -101,6 +119,8 @@ const gallery = defineCollection({
     caption: t.optional(),
     /** identyfikator gatunku (nazwa pliku profilu lub id z klucza) */
     species: z.string().optional(),
+    /** co pokazuje zdjęcie: stadium lub płeć (zdjęcia male/female trafiają do sekcji „Jak rozpoznać płeć”) */
+    stage: z.enum(['nymph', 'subadult', 'adult', 'male', 'female', 'ootheca']).optional(),
     date: z.coerce.date(),
     sample: z.boolean().default(false),
   }),

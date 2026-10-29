@@ -138,6 +138,34 @@ collections:
       - { name: difficulty, label: 'Trudność hodowli (1 – łatwa, 2 – średnia, 3 – trudna)', widget: number, value_type: int, min: 1, max: 3, default: 1 }
       - { name: climbs, label: Wspina się po gładkich ściankach, widget: boolean, default: false }
       - { name: flies, label: Lata, widget: boolean, default: false }
+      - name: taxonomy
+        label: Taksonomia
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: subfamily, label: Podrodzina, widget: string, required: false }
+          - { name: tribe, label: Plemię, widget: string, required: false }
+          - { name: synonyms, label: Synonimy, widget: list, required: false }
+          - { name: tradeNames, label: Nazwy w handlu, widget: list, required: false }
+          - { name: csf, label: Link do Cockroach Species File, widget: string, required: false }
+      - name: sexing
+        label: Jak rozpoznać płeć
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: adults, label: Dorosłe, widget: object, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
+          - { name: nymphs, label: Nimfy, widget: object, required: false, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
+      - { name: stages, label: Stadia rozwoju, widget: object, required: false, collapsed: true, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
+      - name: problems
+        label: Typowe problemy
+        widget: list
+        required: false
+        fields:
+          - { name: pl, label: Po polsku, widget: string }
+          - { name: en, label: Po angielsku, widget: string }
+      - { name: remark, label: Warto wiedzieć (uwaga / ciekawostka), widget: object, required: false, collapsed: true, fields: [{ name: pl, label: Po polsku, widget: text }, { name: en, label: Po angielsku, widget: text }] }
       - name: gallery
         label: Własne zdjęcia
         label_singular: zdjęcie
@@ -257,6 +285,17 @@ collections:
         required: false
         fields: [{ name: pl, label: Po polsku, widget: text, required: false }, { name: en, label: Po angielsku, widget: text, required: false }]
       - { name: species, label: Gatunek (nazwa pliku profilu, np. blaptica-dubia), widget: string, required: false }
+      - name: stage
+        label: Co pokazuje (samiec/samica trafiają do „Jak rozpoznać płeć” w profilu)
+        widget: select
+        required: false
+        options:
+          - { label: Nimfa, value: nymph }
+          - { label: Subadult, value: subadult }
+          - { label: Dorosły, value: adult }
+          - { label: Samiec, value: male }
+          - { label: Samica, value: female }
+          - { label: Ooteka, value: ootheca }
       - { name: date, label: Data, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
       - { name: sample, label: Wpis przykładowy, widget: boolean, default: false, required: false }
 

@@ -28,4 +28,27 @@ development:
 difficulty: 1
 climbs: true
 flies: false
+taxonomy:
+  subfamily: "Oxyhaloinae"
+  tradeNames:
+    - "red-head roach"
+sexing:
+  adults:
+    pl: "Samice są wyraźnie większe i szersze (ok. 18–20 mm), samce smuklejsze (ok. 12–14 mm). Przy zalotach samiec unosi skrzydła i odsłania gruczoły na grzbiecie."
+    en: "Females are clearly larger and broader (approx. 18–20 mm), males slimmer (approx. 12–14 mm). When courting, the male raises his wings and exposes glands on his back."
+  nymphs:
+    pl: "Nimfy: w ostatnich 2–3 stadiach po spodzie odwłoka – samica ma jedną dużą płytkę końcową, samiec węższą płytkę z 1–2 małymi segmentami za nią (często z drobnymi wyrostkami – stylikami). U młodszych nimf praktycznie nie do odróżnienia."
+    en: "Nymphs: in the last 2–3 instars, check the underside of the abdomen – females have one large terminal plate, males a narrower plate with 1–2 small extra segments behind it (often with tiny styli). Not practical in young nymphs."
+stages:
+  pl: "Dorosłe i starsze nimfy są ciemne, śliwkowo-brązowe, z rudopomarańczową głową. Wszystkie stadia wspinają się po gładkich powierzchniach; niepokojone wydzielają nieprzyjemny zapach."
+  en: "Adults and older nymphs are dark plum-brown with a reddish-orange head. All stages climb smooth surfaces and release a defensive odour when disturbed."
+problems:
+  - pl: "Szybko giną po przesuszeniu – trzymaj wilgotną strefę (ok. 1/3 pojemnika)."
+    en: "They die quickly if they dry out – keep a damp zone (about 1/3 of the box)."
+  - pl: "Za mokro bez wentylacji też szkodzi – zapewnij dobry przepływ powietrza."
+    en: "Too wet without ventilation is harmful too – keep good airflow."
+  - pl: "Przy niskiej wilgotności samice porzucają ooteki, z których nic się nie wykluwa."
+    en: "At low humidity females drop oothecae that never hatch."
+  - pl: "Uciekają po szkle – pasek wazeliny lub szczelna pokrywa."
+    en: "They escape up glass – use a petroleum-jelly strip or a tight lid."
 gallery: []

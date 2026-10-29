@@ -1,6 +1,7 @@
 # Profil hodowlany – parametry do sprawdzenia przez hodowcę.
 # Własne zdjęcia: wrzuć do public/images/species/archimandrita-marmorata/ i dopisz w gallery.
 latin: "Archimandrita marmorata ex. tesselata"
+author: "(Stoll, 1813)"
 family: "Blaberidae"
 origin:
   pl: "Ameryka Środkowa"
@@ -27,4 +28,31 @@ development:
 difficulty: 2
 climbs: false
 flies: false
+taxonomy:
+  subfamily: "Blaberinae"
+  synonyms:
+    - "Blatta marmorata Stoll, 1813"
+  tradeNames:
+    - "peppered roach"
+    - "giant peppered roach"
+sexing:
+  adults:
+    pl: "Obie płcie mają pełne skrzydła. Samce są dłuższe i smuklejsze, samice krótsze, szersze i cięższe, z większym przedpleczem; samce mają dłuższe czułki."
+    en: "Both sexes are fully winged. Males are longer and slimmer, females shorter, broader and heavier with a larger pronotum; males have longer antennae."
+  nymphs:
+    pl: "Nimfy: w ostatnich 2–3 stadiach po spodzie odwłoka – samica ma jedną dużą płytkę końcową, samiec węższą płytkę z 1–2 małymi segmentami za nią (często z drobnymi wyrostkami – stylikami). U młodszych nimf praktycznie nie do odróżnienia."
+    en: "Nymphs: in the last 2–3 instars, check the underside of the abdomen – females have one large terminal plate, males a narrower plate with 1–2 small extra segments behind it (often with tiny styli). Not practical in young nymphs."
+stages:
+  pl: "Nimfy są bezskrzydłe, płaskie, marmurkowo-brązowe i kopią w podłożu. Dorosłe są jasne, beżowo-szare, „pieprzowe”. Gatunek duży i wolno rosnący."
+  en: "Nymphs are wingless, flat, mottled brown burrowers. Adults are pale, tan-grey and “peppered”. A large, slow-growing species."
+problems:
+  - pl: "Nieudane ostatnie linienie – przy tłoku, braku pionowych kryjówek, chłodzie lub suchym powietrzu."
+    en: "Failed final moults – with crowding, no vertical hides, low temperature or dry air."
+  - pl: "Stęchłe, mokre powietrze bez wentylacji: padnięcia, pleśń, roztocza."
+    en: "Stale wet air without ventilation: deaths, mould, mites."
+  - pl: "Powolne przesuszanie dorosłych – trzymaj wilgotne podłoże."
+    en: "Slow dehydration of adults – keep the substrate moist."
+remark:
+  pl: "Linie hodowlane sprzedawane dawniej jako A. tesselata okazały się A. marmorata – stąd dopisek „ex. tesselata”. A. tessellata Rehn, 1903 to osobny gatunek; pewne oznaczenie wymaga badania genitaliów samców."
+  en: "Hobby lines formerly sold as A. tesselata turned out to be A. marmorata – hence the “ex. tesselata” label. A. tessellata Rehn, 1903 is a separate species; reliable identification requires examining male genitalia."
 gallery: []

@@ -28,4 +28,26 @@ development:
 difficulty: 3
 climbs: false
 flies: true
+taxonomy:
+  subfamily: "Corydiinae"
+sexing:
+  adults:
+    pl: "U rodzaju Polyphaga samce są smukłe, uskrzydlone i latają, a samice bezskrzydłe, zaokrąglone, przypominające pancernika."
+    en: "In the genus Polyphaga males are slender, winged and fly, while females are wingless and rounded, armadillo-like."
+  nymphs:
+    pl: "Nimfy wyglądają jak małe samice – rozpoznawanie płci jest niepraktyczne."
+    en: "Nymphs look like small females – sexing them is not practical."
+stages:
+  pl: "Ooteki zakopywane w podłożu – wylęg trwa nawet ok. 6 miesięcy. Rozwój powolny. Dorosłe są ciemniejsze niż P. saussurei, a ooteki prostsze i sztywniejsze."
+  en: "Oothecae are buried in the substrate – hatching can take about 6 months. Development is slow. Adults are darker than P. saussurei and the oothecae straighter and more rigid."
+problems:
+  - pl: "Wysoka śmiertelność nimf; opisywano zakażenia bakteryjne."
+    en: "High nymph mortality; bacterial infections have been reported."
+  - pl: "Ooteki łatwo przesuszyć albo zgnoić – nie ruszaj ich i pilnuj wilgotnego rogu."
+    en: "Oothecae are easy to dry out or rot – leave them alone and keep a damp corner."
+  - pl: "Mały apetyt – podstawą jest sucha karma białkowa, owoce i warzywa często ignorują."
+    en: "Small appetite – dry protein food is the staple; fruit and vegetables are often ignored."
+remark:
+  pl: "Wiele hodowlanych kultur „obscura” to podobno źle oznaczona P. saussurei. Prawdziwe linie P. obscura w hodowli mają być partenogenetyczne – same samice."
+  en: "Many “obscura” cultures are reportedly mislabelled P. saussurei. True P. obscura lines in culture are said to be parthenogenetic – females only."
 gallery: []

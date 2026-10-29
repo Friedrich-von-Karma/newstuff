@@ -30,6 +30,11 @@ const t = pl
       climbs: 'wspina się',
       flies: 'lata',
       noPrice: 'poza cennikiem',
+      dbLbl: 'baza gatunków',
+      dbH: 'Wszystkie gatunki',
+      dbHem: 'w jednej tabeli',
+      dbP: 'Nazwy, systematyka, pochodzenie i trudność hodowli – kliknij nagłówek, żeby posortować.',
+      cols: ['Gatunek', 'Rodzina / podrodzina', 'Nazwy w handlu', 'Pochodzenie', 'Trudność'],
     }
   : {
       num: 'Scene II · care sheets',
@@ -44,6 +49,11 @@ const t = pl
       climbs: 'climbs',
       flies: 'flies',
       noPrice: 'not in the price list',
+      dbLbl: 'species database',
+      dbH: 'All species',
+      dbHem: 'in one table',
+      dbP: 'Names, classification, origin and difficulty – click a header to sort.',
+      cols: ['Species', 'Family / subfamily', 'Trade names', 'Origin', 'Difficulty'],
     };
 ---
 
@@ -160,9 +170,64 @@ const t = pl
           {t.cmpBtn} <span class="arr">→</span>
         </a>
       </aside>
+
+      <section class="db rv" aria-labelledby="db-h">
+        <div class="lbl">{t.dbLbl}</div>
+        <h2 id="db-h">{t.dbH} <em>{t.dbHem}</em></h2>
+        <p class="dbp">{t.dbP}</p>
+        <div class="tbl-wrap">
+          <table class="tbl" data-sort-table>
+            <thead>
+              <tr>{t.cols.map((c, i) => <th scope="col"><button type="button" data-col={i}>{c}</button></th>)}</tr>
+            </thead>
+            <tbody>
+              {
+                species.map((s) => {
+                  const d = s.data;
+                  return (
+                    <tr>
+                      <td data-v={d.latin}>
+                        <a class="latin" href={`${routes.species[lang]}${s.id}/`}>{d.latin}</a>
+                        {d.author && <span class="auth">{d.author}</span>}
+                      </td>
+                      <td data-v={`${d.family} ${d.taxonomy?.subfamily ?? ''}`}>
+                        {d.family}
+                        {d.taxonomy?.subfamily && <span class="auth">{d.taxonomy.subfamily}</span>}
+                      </td>
+                      <td data-v={d.taxonomy?.tradeNames.join(', ') ?? ''}>{d.taxonomy?.tradeNames.join(', ') || '—'}</td>
+                      <td data-v={d.origin[lang]}>{d.origin[lang]}</td>
+                      <td data-v={String(d.difficulty)}>{tr(`species.difficulty.${d.difficulty}` as UiKey)}</td>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   </section>
 </Base>
+
+<script>
+  document.querySelectorAll<HTMLTableElement>('[data-sort-table]').forEach((tbl) => {
+    const body = tbl.tBodies[0];
+    let col = -1;
+    let dir = 1;
+    tbl.querySelectorAll<HTMLButtonElement>('th button').forEach((b) => {
+      b.addEventListener('click', () => {
+        const c = Number(b.dataset.col);
+        dir = c === col ? -dir : 1;
+        col = c;
+        const rows = [...body.rows].sort(
+          (x, y) => dir * (x.cells[c].dataset.v ?? '').localeCompare(y.cells[c].dataset.v ?? '', undefined, { numeric: true }),
+        );
+        rows.forEach((r) => body.appendChild(r));
+        tbl.querySelectorAll('th').forEach((th, i) => th.setAttribute('aria-sort', i === c ? (dir > 0 ? 'ascending' : 'descending') : 'none'));
+      });
+    });
+  });
+</script>
 
 <style>
   .sp-scene {
@@ -429,5 +494,75 @@ const t = pl
     color: var(--muted);
     margin: 0;
     max-width: 56ch;
+  }
+  .db {
+    margin-top: clamp(60px, 8vw, 110px);
+  }
+  .db h2 {
+    font-size: clamp(32px, 3.4vw, 48px);
+    font-weight: 300;
+  }
+  .dbp {
+    color: var(--muted);
+    margin: 8px 0 22px;
+  }
+  .tbl-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+  }
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+    font-size: 14px;
+  }
+  .tbl th {
+    text-align: left;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--line2);
+  }
+  .tbl th button {
+    all: unset;
+    cursor: pointer;
+    display: block;
+    padding: 12px 14px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .tbl th button:hover,
+  .tbl th button:focus-visible {
+    color: var(--amber2);
+  }
+  .tbl th[aria-sort='ascending'] button::after {
+    content: ' ↑';
+  }
+  .tbl th[aria-sort='descending'] button::after {
+    content: ' ↓';
+  }
+  .tbl td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    color: #d3cfbf;
+    vertical-align: top;
+  }
+  .tbl tr:hover td {
+    background: rgba(232, 165, 71, 0.05);
+  }
+  .tbl .latin {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .tbl .latin:hover {
+    color: var(--amber2);
+  }
+  .auth {
+    display: block;
+    font-size: 12px;
+    color: var(--dim);
   }
 </style>

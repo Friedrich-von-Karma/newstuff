@@ -27,4 +27,28 @@ development:
 difficulty: 1
 climbs: false
 flies: false
+taxonomy:
+  subfamily: "Blaberinae"
+  tradeNames:
+    - "ivory head roach"
+sexing:
+  adults:
+    pl: "Obie płcie mają pełne skrzydła, więc skrzydła nie pomagają. Samce są smuklejsze, samice szersze i cięższe; pewnie – po spodzie odwłoka."
+    en: "Both sexes are fully winged, so wings do not help. Males are slimmer, females broader and heavier; reliably – by the underside of the abdomen."
+  nymphs:
+    pl: "Nimfy: w ostatnich 2–3 stadiach po spodzie odwłoka – samica ma jedną dużą płytkę końcową, samiec węższą płytkę z 1–2 małymi segmentami za nią (często z drobnymi wyrostkami – stylikami). U młodszych nimf praktycznie nie do odróżnienia."
+    en: "Nymphs: in the last 2–3 instars, check the underside of the abdomen – females have one large terminal plate, males a narrower plate with 1–2 small extra segments behind it (often with tiny styli). Not practical in young nymphs."
+stages:
+  pl: "Nimfy są bezskrzydłe i kopią w podłożu; są wyraźniej ubarwione niż nimfy E. distanti. Rysunek przedplecza dorosłych jest zmienny. Do dorosłości do ok. roku."
+  en: "Nymphs are wingless burrowers, more vividly marked than E. distanti nymphs. The adult pronotum pattern varies. Up to about a year to adulthood."
+problems:
+  - pl: "Przy braku białka zjadają linieją­ce osobniki – podawaj suchą karmę wysokobiałkową."
+    en: "Without enough protein they eat moulting individuals – provide high-protein dry food."
+  - pl: "Dorosłe potrzebują kryjówek nad podłożem, z dala od nimf."
+    en: "Adults need hides above the substrate, away from the nymphs."
+  - pl: "Poniżej ok. 20 °C wyraźnie zwalnia."
+    en: "Slows down markedly below about 20 °C."
+remark:
+  pl: "Bywa sprzedawany jako E. distanti „Ivory” – przynależność gatunkowa nie jest ustalona."
+  en: "Sometimes sold as E. distanti “Ivory” – the species identity is not settled."
 gallery: []

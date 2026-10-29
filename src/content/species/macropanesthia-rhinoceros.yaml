@@ -28,4 +28,28 @@ development:
 difficulty: 2
 climbs: false
 flies: false
+taxonomy:
+  subfamily: "Geoscapheinae"
+  tradeNames:
+    - "giant burrowing cockroach"
+    - "rhinoceros cockroach"
+sexing:
+  adults:
+    pl: "Obie płcie są bezskrzydłe. Samiec ma wyraźnie powiększoną, zadartą „łopatę” na przedzie przedplecza, samica mniejszą i płaską. Od spodu: samica ma jedną dużą płytkę końcową, samiec maleńki dodatkowy segment."
+    en: "Both sexes are wingless. The male has a clearly enlarged, upturned “scoop” at the front of the pronotum; the female’s is smaller and flatter. Underneath: the female has one large terminal plate, the male a tiny extra segment."
+  nymphs:
+    pl: "Tylko u najstarszych nimf, metodą płytek pod odwłokiem – różnice są subtelne. „Łopata” wykształca się dopiero u dorosłych."
+    en: "Only in the oldest nymphs, by the plates under the abdomen – the differences are subtle. The scoop develops only in adults."
+stages:
+  pl: "Ok. 12–13 linień (źródła się różnią), do dorosłości 3–5 lat. Nimfy są bezskrzydłymi miniaturami dorosłych bez „łopaty”. W naturze młode zostają z matką w norze kilka miesięcy."
+  en: "About 12–13 moults (sources differ), 3–5 years to adulthood. Nymphs are wingless miniatures of the adults without the scoop. In the wild the young stay with the mother in the burrow for several months."
+problems:
+  - pl: "Śmiertelne deformacje przy linieniu, gdy osypuje się luźne podłoże – nimfom daj płytkie, zbite podłoże."
+    en: "Fatal moulting deformities when loose substrate collapses – give nymphs shallow, firm substrate."
+  - pl: "Niesezonowane lub aromatyczne liście eukaliptusa mogą być trujące – tylko suche, przeleżałe liście."
+    en: "Unaged or aromatic eucalyptus leaves can be toxic – use only dry, aged leaves."
+  - pl: "Przyspieszanie wzrostu ciepłem zabija nimfy albo daje karłowate dorosłe; za zimno – nimfy stoją w miejscu."
+    en: "Forcing growth with heat kills nymphs or gives stunted adults; too cold – nymphs stall."
+  - pl: "Rozmnaża się bardzo wolno – zwykle jeden miot w roku."
+    en: "Breeds very slowly – usually one litter a year."
 gallery: []

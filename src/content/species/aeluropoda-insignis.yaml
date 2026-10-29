@@ -28,4 +28,26 @@ development:
 difficulty: 2
 climbs: true
 flies: false
+taxonomy:
+  subfamily: "Oxyhaloinae"
+  tribe: "Gromphadorhinini"
+  tradeNames:
+    - "flat-horned hisser"
+sexing:
+  adults:
+    pl: "Obie płcie są bezskrzydłe. Samce są większe (ok. 7 cm wobec ok. 5 cm), bardzo płaskie, z głęboko wyciętym przednim brzegiem przedplecza – duże samce mają na końcach wycięcia płaskie „różki”. Samice mają gładkie przedplecze."
+    en: "Both sexes are wingless. Males are larger (approx. 7 cm vs approx. 5 cm), very flat, with a deeply notched front edge of the pronotum – large males carry flat “horns” at the tips of the notch. Females have a smooth pronotum."
+  nymphs:
+    pl: "Nimfy: w ostatnich 2–3 stadiach po spodzie odwłoka – samica ma jedną dużą płytkę końcową, samiec węższą płytkę z 1–2 małymi segmentami za nią (często z drobnymi wyrostkami – stylikami). U młodszych nimf praktycznie nie do odróżnienia."
+    en: "Nymphs: in the last 2–3 instars, check the underside of the abdomen – females have one large terminal plate, males a narrower plate with 1–2 small extra segments behind it (often with tiny styli). Not practical in young nymphs."
+stages:
+  pl: "Nimfy są płaskie, bezskrzydłe, bez ozdób na przedpleczu. Samce bywają bardzo różnej wielkości."
+  en: "Nymphs are flat and wingless, without pronotal ornaments. Males vary a lot in size."
+problems:
+  - pl: "Rzadki w hodowli – mała pula genetyczna, drogie stado założycielskie."
+    en: "Rare in culture – small gene pool and an expensive founder group."
+  - pl: "W chłodzie i suchu rozmnaża się słabo; dobrze – w cieple i wilgoci."
+    en: "Breeds poorly when cool and dry; well when warm and humid."
+  - pl: "Roztocza zbożowe oznaczają, że jest za mokro."
+    en: "Grain mites mean it is too wet."
 gallery: []
