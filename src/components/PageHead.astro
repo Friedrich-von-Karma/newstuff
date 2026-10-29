@@ -1,0 +1,19 @@
+---
+/** Nagłówek podstrony: numer sceny, duży tytuł (druga część kursywą) i lead. */
+interface Props {
+  num: string;
+  h1a: string;
+  h1b?: string;
+  lead?: string;
+}
+const { num, h1a, h1b, lead } = Astro.props;
+---
+
+<div class="scene-head">
+  <div class="rv">
+    <div class="num">{num}</div>
+    <h1 class="h-display">{h1a} {h1b && <em>{h1b}</em>}</h1>
+  </div>
+  {lead && <p class="rv lead" style="--d:.15s" data-glossary>{lead}</p>}
+  <slot />
+</div>
