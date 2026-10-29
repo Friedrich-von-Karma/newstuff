@@ -21,9 +21,15 @@ const nav: { key: RouteKey; label: string }[] = [
   { key: 'contact', label: tr('nav.contact') },
 ];
 const extra: { key: RouteKey; label: string }[] = [
+  { key: 'wild', label: tr('nav.wild') },
+  { key: 'calendar', label: tr('nav.calendar') },
+  { key: 'guides', label: tr('nav.guides') },
+  { key: 'library', label: tr('nav.library') },
   { key: 'identify', label: tr('nav.identify') },
   { key: 'compare', label: tr('nav.compare') },
   { key: 'glossary', label: tr('nav.glossary') },
+  { key: 'about', label: tr('nav.about') },
+  { key: 'shipping', label: tr('nav.shipping') },
 ];
 ---
 
@@ -331,6 +337,30 @@ const extra: { key: RouteKey; label: string }[] = [
     :global(.menu-open) .nav {
       opacity: 1;
       pointer-events: auto;
+    }
+  }
+  @media (max-width: 440px) {
+    .top {
+      gap: 8px;
+    }
+    .tools {
+      gap: 6px;
+    }
+    .searchbtn {
+      width: 32px;
+    }
+    .lang {
+      padding: 6px 8px;
+      letter-spacing: 0.1em;
+    }
+    .cartbtn,
+    .burger {
+      width: 40px;
+      height: 40px;
+    }
+    .brand :global(.exl) {
+      transform: scale(0.9);
+      transform-origin: left center;
     }
     .burger {
       display: block;

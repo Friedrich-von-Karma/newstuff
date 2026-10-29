@@ -513,6 +513,22 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
         })
       }
     </div>
+    <nav class="know" aria-label={pl ? 'Wiedza' : 'Knowledge'}>
+      {
+        [
+          ['wild', pl ? 'Karaczany Polski' : 'Cockroaches of Poland', pl ? 'karty wszystkich gatunków' : 'every species'],
+          ['calendar', pl ? 'Kalendarz obserwacji' : 'Field calendar', pl ? 'kiedy szukać w terenie' : 'when to look outdoors'],
+          ['guides', pl ? 'Poradniki' : 'Guides', pl ? 'hodowla krok po kroku' : 'keeping step by step'],
+          ['library', pl ? 'Biblioteka' : 'Library', pl ? 'literatura i bazy danych' : 'literature and databases'],
+        ].map(([k, h, s], i) => (
+          <a class="kn rv" style={`--d:${(i * 0.08).toFixed(2)}s`} href={routes[k as 'wild'][lang]}>
+            <span class="kn-h">{h}</span>
+            <span class="kn-s">{s}</span>
+            <span class="arr" aria-hidden="true">→</span>
+          </a>
+        ))
+      }
+    </nav>
   </section>
 
   <!-- ============ SCENA V – BLOG ============ -->
@@ -1758,6 +1774,56 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
     }
     .reel {
       scroll-behavior: auto;
+    }
+  }
+  .know {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .kn {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    padding: 20px 46px 20px 22px;
+    border: 1px solid var(--line);
+    background: linear-gradient(160deg, var(--bg3), var(--bg2));
+    text-decoration: none;
+    transition: border-color 0.4s;
+  }
+  .kn:hover {
+    border-color: rgba(232, 165, 71, 0.5);
+  }
+  .kn-h {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text);
+  }
+  .kn-s {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .kn .arr {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    translate: 0 -50%;
+    color: var(--amber);
+    transition: transform 0.4s var(--ease);
+  }
+  .kn:hover .arr {
+    transform: translateX(5px);
+  }
+  @media (max-width: 1000px) {
+    .know {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 520px) {
+    .know {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>
