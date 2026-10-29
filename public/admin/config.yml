@@ -252,6 +252,44 @@ collections:
     public_folder: /images/blog
     fields: *blogfields
 
+  # ----------------------------------------------------------- PORADNIKI
+  - name: guides-pl
+    label: Poradniki (PL)
+    label_singular: poradnik
+    description: Wersja angielska = poradnik w „Poradniki (EN)” o tej samej nazwie pliku.
+    folder: src/content/guides/pl
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{slug}}'
+    summary: '{{order}}. {{title}}'
+    sortable_fields: [order, title]
+    fields: &guidefields
+      - { name: title, label: Tytuł, widget: string }
+      - { name: description, label: Krótki opis, widget: text }
+      - { name: order, label: Kolejność na liście (mniejsza = wyżej), widget: number, default: 10 }
+      - name: level
+        label: Poziom
+        widget: select
+        default: start
+        options:
+          - { label: Na start, value: start }
+          - { label: Podstawy, value: basic }
+          - { label: Dla zaawansowanych, value: advanced }
+      - { name: minutes, label: Minut czytania, widget: number, required: false }
+      - { name: updated, label: Data aktualizacji, widget: datetime, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+      - { name: body, label: Treść, widget: markdown }
+  - name: guides-en
+    label: Poradniki (EN)
+    label_singular: poradnik (EN)
+    folder: src/content/guides/en
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{slug}}'
+    summary: '{{order}}. {{title}}'
+    fields: *guidefields
+
   # -------------------------------------------------------------- GALERIA
   - name: gallery
     label: Galeria „Z mojej hodowli”

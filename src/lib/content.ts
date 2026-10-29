@@ -95,3 +95,15 @@ export async function getGallery(species?: string) {
   const all = await getCollection('gallery', (g) => !species || g.data.species === species);
   return all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
+
+export type Guide = CollectionEntry<'guides'>;
+
+/** Poradniki w danym języku, w kolejności `order`. */
+export async function getGuides(lang: Lang) {
+  const all = await getCollection('guides', (g) => g.id.startsWith(`${lang}/`));
+  return all.sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
+}
+
+export function guideSlug(g: Guide) {
+  return g.id.split('/').slice(1).join('/');
+}

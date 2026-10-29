@@ -14,7 +14,7 @@ humidity:
   pl: "umiarkowana, ok. 60–70%, przy dobrej wentylacji"
   en: "moderate, approx. 60–70%, with good ventilation"
 substrate:
-  pl: "małe, dobrze wentylowane pudełko z wytłoczkami po jajkach; podłoże raczej suche z jednym wilgotnym rogiem; szczelna pokrywa i pasek wazeliny – świetnie się wspinają"
+  pl: "małe, dobrze wentylowane pudełko z wytłoczkami po jajkach; podłoże raczej suche z jednym wilgotnym rogiem; szczelne wieczko i pasek wazeliny – świetnie się wspinają"
   en: "a small, well-ventilated box packed with egg crate; mostly dry substrate with one damp corner; tight lid and a petroleum-jelly barrier – they are excellent climbers"
 food:
   pl: "sucha karma, owoce, warzywa"
@@ -49,6 +49,6 @@ problems:
     en: "Too wet without ventilation is harmful too – keep good airflow."
   - pl: "Przy niskiej wilgotności samice porzucają ooteki, z których nic się nie wykluwa."
     en: "At low humidity females drop oothecae that never hatch."
-  - pl: "Uciekają po szkle – pasek wazeliny lub szczelna pokrywa."
+  - pl: "Uciekają po szkle – pasek wazeliny lub szczelne wieczko."
     en: "They escape up glass – use a petroleum-jelly strip or a tight lid."
 gallery: []

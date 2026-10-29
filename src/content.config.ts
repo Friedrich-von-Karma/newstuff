@@ -84,6 +84,22 @@ const blog = defineCollection({
   }),
 });
 
+/**
+ * Poradniki: src/content/guides/pl/<poradnik>.md i en/<poradnik>.md (ta sama nazwa pliku = tłumaczenie).
+ * order – kolejność na liście (mniejsza liczba wyżej).
+ */
+const guides = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    order: z.number().default(100),
+    level: z.enum(['start', 'basic', 'advanced']).default('start'),
+    minutes: z.number().optional(),
+    updated: z.coerce.date(),
+  }),
+});
+
 /** Cennik – jeden plik src/data/pricelist.yaml. Każda pozycja to paczka 10 sztuk. */
 const pricelist = defineCollection({
   loader: file('./src/data/pricelist.yaml', { parser: itemsParser }),
@@ -144,4 +160,4 @@ const observations = defineCollection({
   }),
 });
 
-export const collections = { species, speciesNotes, blog, pricelist, gallery, observations };
+export const collections = { species, speciesNotes, blog, guides, pricelist, gallery, observations };
