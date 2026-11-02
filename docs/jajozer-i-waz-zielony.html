@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jajożer i wąż zielony</title>
+<meta name="description" content="Rozbudowana analiza porównawcza hodowli jajożerów (Dasypeltis) i węży zielonych (Opheodrys): potrzeby, sprzęt, żywienie, rozmnażanie, zdrowie, koszty.">
+<style>
+:root{
+  --bg:#f7f5f0; --surface:#ffffff; --surface-2:#efebe2; --text:#1f1d1a; --muted:#5f5a52;
+  --line:#ddd6c8; --accent:#2f6b4f; --accent-soft:#e2efe7;
+  --dasy:#8a5a2b; --dasy-soft:#f4e8da; --tham:#3d7a1f; --tham-soft:#e4f0d8;
+  --ok:#2f7a45; --ok-soft:#e1f2e6; --warn:#9a6b00; --warn-soft:#fbf0d4; --bad:#a83232; --bad-soft:#f8e0e0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151412; --surface:#1e1d1a; --surface-2:#282622; --text:#ece8e0; --muted:#aaa397;
+    --line:#3a3730; --accent:#7cc3a0; --accent-soft:#1f3329;
+    --dasy:#e0a86f; --dasy-soft:#33281c; --tham:#a8d67a; --tham-soft:#223018;
+    --ok:#7fd196; --ok-soft:#1d3324; --warn:#e8c063; --warn-soft:#3a3016; --bad:#f08a8a; --bad-soft:#3d1f1f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151412; --surface:#1e1d1a; --surface-2:#282622; --text:#ece8e0; --muted:#aaa397;
+  --line:#3a3730; --accent:#7cc3a0; --accent-soft:#1f3329;
+  --dasy:#e0a86f; --dasy-soft:#33281c; --tham:#a8d67a; --tham-soft:#223018;
+  --ok:#7fd196; --ok-soft:#1d3324; --warn:#e8c063; --warn-soft:#3a3016; --bad:#f08a8a; --bad-soft:#3d1f1f;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.hero{background:var(--surface);border-bottom:1px solid var(--line)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.hero .wrap{padding-top:40px;padding-bottom:32px}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.15;margin:.3em 0 .4em}
+h2{font-size:1.55rem;margin:2.4em 0 .6em;padding-top:.4em;border-top:2px solid var(--line)}
+h3{font-size:1.15rem;margin:1.6em 0 .4em}
+p{margin:.6em 0}
+.lead{font-size:1.1rem;color:var(--muted);max-width:760px}
+a{color:var(--accent)}
+nav.toc{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:24px 0}
+nav.toc ol{margin:.3em 0 0;padding-left:1.3em;columns:2;column-gap:32px}
+@media (max-width:640px){nav.toc ol{columns:1}}
+.tag{display:inline-block;padding:.1em .55em;border-radius:999px;font-size:.82rem;font-weight:600}
+.tag.d{background:var(--dasy-soft);color:var(--dasy)}
+.tag.t{background:var(--tham-soft);color:var(--tham)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.card.d{border-top:4px solid var(--dasy)}
+.card.t{border-top:4px solid var(--tham)}
+.card h3{margin-top:.2em}
+.card ul{padding-left:1.2em;margin:.4em 0}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.95rem}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+thead th{background:var(--surface-2);font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+thead th.d{color:var(--dasy)} thead th.t{color:var(--tham)}
+tbody th{font-weight:600;width:22%}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+.note{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.note.bad{border-color:var(--bad);background:var(--bad-soft)}
+.note.ok{border-color:var(--ok);background:var(--ok-soft)}
+.verdict{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:720px){.verdict{grid-template-columns:1fr}}
+.verdict .v{border-radius:12px;padding:14px 16px;border:1px solid var(--line);background:var(--surface)}
+.verdict .v b{display:block;font-size:1.05rem;margin-bottom:.2em}
+.v.bad{border-top:4px solid var(--bad)} .v.warn{border-top:4px solid var(--warn)} .v.ok{border-top:4px solid var(--ok)}
+.yes{color:var(--ok);font-weight:700} .no{color:var(--bad);font-weight:700} .mid{color:var(--warn);font-weight:700}
+.meter{display:flex;gap:3px;margin-top:4px}
+.meter i{width:18px;height:8px;border-radius:2px;background:var(--line)}
+.meter.d i.on{background:var(--dasy)} .meter.t i.on{background:var(--tham)}
+.score td{white-space:nowrap}
+ol.steps li,ul.check li{margin:.35em 0}
+footer{margin-top:56px;padding:24px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+.small{font-size:.88rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Analiza porównawcza · terrarystyka</div>
+    <h1>Jajożer (<i>Dasypeltis</i>) i wąż zielony (<i>Opheodrys</i>): hodowla, sprzęt, żywienie i rozmnażanie</h1>
+    <p class="lead">Dwa smukłe, łagodne i niejadowite węże, które nie jedzą myszy. Jeden je wyłącznie ptasie jaja i jest aktywny nocą, drugi żywi się owadami i spędza dzień wśród liści. Poniżej porównanie wszystkiego, co ważne w hodowli: od terrarium, przez pokarm, po rozmnażanie i koszty.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<nav class="toc" aria-label="Spis treści">
+  <strong>Spis treści</strong>
+  <ol>
+    <li><a href="#skrot">Najważniejsze w skrócie</a></li>
+    <li><a href="#profile">Profile rodzajów</a></li>
+    <li><a href="#tabela">Wielka tabela porównawcza</a></li>
+    <li><a href="#terrarium">Terrarium i sprzęt</a></li>
+    <li><a href="#klimat">Temperatura, wilgotność, światło, woda</a></li>
+    <li><a href="#zywienie">Żywienie</a></li>
+    <li><a href="#rozmnazanie">Rozmnażanie</a></li>
+    <li><a href="#zdrowie">Zdrowie i typowe problemy</a></li>
+    <li><a href="#temperament">Zachowanie, oswajanie, branie na ręce</a></li>
+    <li><a href="#aklimatyzacja">Pierwsze tygodnie po zakupie</a></li>
+    <li><a href="#plan">Plan opieki</a></li>
+    <li><a href="#bledy">Najczęstsze błędy</a></li>
+    <li><a href="#zakup">Gdzie kupić: ceny, hodowcy, linki</a></li>
+    <li><a href="#koszty">Koszty i nakład pracy</a></li>
+    <li><a href="#prawo">Kwestie prawne</a></li>
+    <li><a href="#werdykt">Werdykt</a></li>
+  </ol>
+</nav>
+
+<section id="skrot">
+<h2>1. Najważniejsze w skrócie</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span> <i>Dasypeltis scabra</i></h3>
+    <ul>
+      <li>Je <strong>wyłącznie ptasie jaja</strong>. Dorosłe dostają 1–3 jaja przepiórcze co 5–10 dni.</li>
+      <li>Aktywny <strong>o zmierzchu i w nocy</strong>, w dzień zwykle śpi w kryjówce.</li>
+      <li>Odporny i długowieczny (zwykle 10–15 lat, przy dobrej opiece dłużej), mało sprzątania.</li>
+      <li>Bezzębny w praktyce, ugryzienie nieodczuwalne.</li>
+      <li>Najtrudniej jest z rozmnażaniem: młode potrzebują bardzo małych jaj (zeberki, amadyny).</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span> <i>Opheodrys aestivus</i></h3>
+    <ul>
+      <li>Je <strong>owady i pająki</strong>: świerszcze, szarańczę, gąsienice. Karmienie co 2–3 dni.</li>
+      <li>Aktywny <strong>w dzień</strong>, nadrzewny, przepięknie zielony, ale doskonale znika w liściach.</li>
+      <li>Delikatny: łatwo się odwadnia i stresuje, potrzebuje UVB i codziennego zraszania.</li>
+      <li>Bardzo łagodny, praktycznie nie gryzie.</li>
+      <li>Większość zwierząt w handlu pochodzi z odłowu (WC), co jest największym ryzykiem.</li>
+    </ul>
+  </div>
+</div>
+<div class="note"><strong>W jednym zdaniu:</strong> jajożer jest łatwiejszy w codziennej opiece i odporniejszy, ale trudny w rozmnażaniu. Wąż zielony wymaga więcej pracy każdego dnia (zraszanie, częste karmienie owadami, UVB) i jest wrażliwszy, za to jest aktywny i widoczny w dzień.</div>
+</section>
+
+<section id="profile">
+<h2>2. Profile rodzajów</h2>
+
+<h3><span class="tag d">Jajożer</span> <i>Dasypeltis</i></h3>
+<p>Rodzaj z Afryki subsaharyjskiej (jeden gatunek sięga Półwyspu Arabskiego). W hodowlach dominuje <strong><i>D. scabra</i></strong>, rzadziej spotyka się <i>D. gansi</i>, <i>D. fasciata</i> i <i>D. medici</i>. Dorosłe mają zwykle 60–90 cm. Zęby są szczątkowe. Wąż połyka całe jajo, w przełyku rozcina je wyrostkami kręgów szyjnych, przełyka zawartość i zwraca sprasowaną skorupkę. W obronie naśladuje jadowite efy: zwija się w pętle i pociera łuskami, wydając szelest, a do tego otwiera pysk. To blef.</p>
+
+<h3><span class="tag t">Wąż zielony</span> <i>Opheodrys</i></h3>
+<p>Dwa gatunki z Ameryki Północnej:</p>
+<ul>
+  <li><strong><i>O. aestivus</i>, wąż zielony szorstki</strong> (rough green snake): wschodnie i południowe USA oraz płn.-wsch. Meksyk. Ma 60–90 cm (rekordowo ok. 115 cm) i jest bardzo smukły. Łuski grzbietowe są ożebrowane, stąd „szorstki”. Żyje w krzewach i na drzewach przy wodzie, poluje w dzień na owady i pająki. To gatunek spotykany w handlu.</li>
+  <li><strong><i>O. vernalis</i>, wąż zielony gładki</strong> (smooth green snake), często umieszczany w osobnym rodzaju <i>Liochlorophis</i>: płn.-wsch. USA i płd. Kanada. Jest mniejszy (30–50 cm), naziemny, żyje na łąkach i chłodniej. W handlu prawie niespotykany, w części stanów i prowincji chroniony. Dalej w tekście chodzi o <i>O. aestivus</i>.</li>
+</ul>
+<p>Węże zielone mają dwie ciekawe cechy. Ich ubarwienie jest „żywe”: po śmierci zielony szybko przechodzi w niebieski, bo żółty barwnik nietrwale maskuje niebieską strukturę łusek. Poruszają się też, kołysząc się jak gałązka na wietrze. Nie mają żadnego jadu.</p>
+</section>
+
+<section id="tabela">
+<h2>3. Wielka tabela porównawcza</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cecha</th><th class="d">Jajożer (<i>D. scabra</i>)</th><th class="t">Wąż zielony (<i>O. aestivus</i>)</th></tr></thead>
+<tbody>
+<tr><th>Zasięg naturalny</th><td>Afryka subsaharyjska: sawanny, zarośla, skraje lasów</td><td>Wsch. i płd. USA, płn.-wsch. Meksyk: zarośla i drzewa przy wodzie</td></tr>
+<tr><th>Długość dorosłych</th><td>60–90 cm (do ok. 100 cm)</td><td>60–90 cm (do ok. 115 cm), bardzo cienki</td></tr>
+<tr><th>Masa dorosłego</th><td>ok. 50–150 g</td><td>ok. 15–40 g</td></tr>
+<tr><th>Tryb życia</th><td>Naziemno-nadrzewny, nocny</td><td>Nadrzewny, dzienny</td></tr>
+<tr><th>Pokarm</th><td>Wyłącznie jaja ptasie</td><td>Owady, pająki, gąsienice, ślimaki (rzadko)</td></tr>
+<tr><th>Częstotliwość karmienia</th><td>Co 5–10 dni (młode co 4–5 dni)</td><td>Co 2–3 dni, po kilka owadów</td></tr>
+<tr><th>Suplementacja</th><td>Niepotrzebna (jajo jest pełnowartościowe)</td><td>Obowiązkowa: wapń przy każdym karmieniu, multiwitamina co 1–2 tyg.</td></tr>
+<tr><th>Terrarium (1 dorosły)</th><td>min. 80×40×50 cm</td><td>min. 45×45×60 cm, lepiej 45×45×90 cm (wysokie)</td></tr>
+<tr><th>Trzymanie w grupie</th><td>Pary lub małe grupy, możliwe</td><td>Dobrze znosi małe grupy, karmienie pod kontrolą</td></tr>
+<tr><th>Temperatura dzień</th><td>26–29 °C, wyspa 30–33 °C</td><td>25–28 °C, wyspa 30–32 °C</td></tr>
+<tr><th>Temperatura noc</th><td>20–24 °C</td><td>20–22 °C</td></tr>
+<tr><th>Wilgotność</th><td>40–60%</td><td>50–70%, codzienne zraszanie</td></tr>
+<tr><th>UVB</th><td>Opcjonalne</td><td>Zalecane, praktycznie obowiązkowe (T5 5–6%)</td></tr>
+<tr><th>Picie</th><td>Z miski</td><td>Głównie krople z liści, często nie korzysta z miski</td></tr>
+<tr><th>Rozród</th><td>Jajorodny: 6–25 jaj (zwykle 10–15)</td><td>Jajorodny: 3–12 jaj (zwykle 4–8)</td></tr>
+<tr><th>Inkubacja</th><td>60–90 dni w 27–29 °C</td><td>ok. 35–70 dni w 26–28 °C (część rozwoju zachodzi jeszcze w samicy)</td></tr>
+<tr><th>Zimowanie do rozrodu</th><td>Schłodzenie 18–21 °C przez 6–10 tyg.</td><td>Zimowla 10–15 °C przez 8–12 tyg.</td></tr>
+<tr><th>Długość życia w niewoli</th><td>zwykle 10–15 lat, przy dobrej opiece dłużej</td><td>CB: ok. 5–8 lat (czasem dłużej); WC często tylko 1–3 lata</td></tr>
+<tr><th>Temperament</th><td>Spokojny, płochliwy, blef obronny</td><td>Bardzo łagodny, ale łatwo się stresuje</td></tr>
+<tr><th>Ugryzienie</th><td>Praktycznie niemożliwe do odczucia</td><td>Bardzo rzadkie, nieszkodliwe</td></tr>
+<tr><th>Jad</th><td>Brak</td><td>Brak</td></tr>
+<tr><th>Pochodzenie zwierząt w handlu</th><td>CB i WC</td><td>Głównie WC</td></tr>
+<tr><th>Cena (znalezione oferty)</th><td>ok. 450–700 zł (DE: 110–150 €)</td><td>PL prywatnie ok. 150–200 zł; CB z DE ok. 150–160 € (650–700 zł)</td></tr>
+<tr><th>Trudność ogólna</th><td>Średnia (z powodu pokarmu młodych)</td><td>Średnia do wysokiej (wrażliwość, aklimatyzacja)</td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Wartości orientacyjne. Ceny na podstawie ofert znalezionych w październiku 2026 (szczegóły i linki w rozdziale 13).</p>
+</section>
+
+<section id="terrarium">
+<h2>4. Terrarium i sprzęt</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span></h3>
+    <ul>
+      <li><strong>Wymiary:</strong> dorosły 80×40×50 cm, para 100×50×60 cm. Ważniejsza jest powierzchnia niż sama wysokość, ale gałęzie są mile widziane.</li>
+      <li><strong>Podłoże:</strong> suche lub lekko wilgotne: włókno kokosowe z piaskiem, kora, trociny bukowe. Warstwa 5–8 cm.</li>
+      <li><strong>Wystrój:</strong> gałęzie, rurki korkowe, rośliny sztuczne lub żywe.</li>
+      <li><strong>Kryjówki:</strong> co najmniej dwie (ciepła i chłodna) oraz wilgotna komora z mchem na czas linienia.</li>
+      <li><strong>Woda:</strong> stabilna, płytka miska.</li>
+      <li><strong>Wentylacja:</strong> dobra, bez zastoju wilgoci.</li>
+      <li><strong>Szczelność:</strong> kluczowa. Młode wychodzą przez bardzo wąskie szpary.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span></h3>
+    <ul>
+      <li><strong>Wymiary:</strong> <strong>wysokie</strong>. Dla 1–2 dorosłych 45×45×90 cm, dla małej grupy 60×45×90 cm lub więcej.</li>
+      <li><strong>Podłoże:</strong> trzymające wilgoć: ziemia z kokosem, liście, mech. Dobrze sprawdza się terrarium bioaktywne (skoczogonki, równonogi).</li>
+      <li><strong>Wystrój:</strong> to najważniejszy element. Potrzeba <strong>gęstej roślinności</strong> (żywe epipremnum, figowce, bromelie albo dużo roślin sztucznych) oraz wielu cienkich, poziomych gałązek na różnych wysokościach. Wąż czuje się bezpiecznie tylko wtedy, gdy może się schować w liściach.</li>
+      <li><strong>Kryjówki:</strong> głównie roślinność; dodatkowo jedna kryjówka przy ziemi.</li>
+      <li><strong>Woda:</strong> miska plus zraszanie liści. Wiele osobników pije tylko krople.</li>
+      <li><strong>Wentylacja:</strong> bardzo dobra, najlepiej siatka w górnej części. Wilgoć tak, zastój nie.</li>
+      <li><strong>Lokalizacja:</strong> spokojne miejsce, bez ruchu tuż obok szyby (stres).</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Lista sprzętu</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Element</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Ogrzewanie</th><td>Żarówka grzewcza lub halogen nad gałęzią; ewentualnie mata pod częścią dna</td><td>Halogen nad górnymi gałęziami (ciepło z góry, jak słońce w koronie krzewu)</td></tr>
+<tr><th>Termostat</th><td colspan="2">Obowiązkowy dla każdego źródła ciepła</td></tr>
+<tr><th>Termometr, higrometr</th><td colspan="2">Cyfrowy z sondą, najlepiej z zapisem min/max; pirometr do pomiaru miejsca wygrzewania</td></tr>
+<tr><th>UVB</th><td>Opcjonalnie, słabe (T5 5–6%) w części terrarium</td><td><strong>Zalecane:</strong> T5 5–6% na górze terrarium, z cieniem niżej</td></tr>
+<tr><th>Oświetlenie</th><td>Umiarkowane, 12 h</td><td>Jasne, 12–14 h, także dla żywych roślin</td></tr>
+<tr><th>Zraszanie</th><td>Rzadko, głównie przy linieniu</td><td><strong>1–2 razy dziennie</strong>; warto rozważyć automatyczny zraszacz</td></tr>
+<tr><th>Akcesoria do karmienia</th><td>Pojemnik na jaja, waga do dobierania wielkości</td><td>Pęseta lub miseczka na owady (z gładkimi ściankami), suplement wapnia, multiwitamina, pojemniki do hodowli lub przetrzymywania owadów</td></tr>
+<tr><th>Inkubator</th><td colspan="2">Potrzebny (oba są jajorodne)</td></tr>
+<tr><th>Zimowanie</th><td>Chłodny pokój 18–21 °C</td><td>Chłodniejsze miejsce 10–15 °C</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="klimat">
+<h2>5. Temperatura, wilgotność, światło, woda</h2>
+<ul>
+  <li><strong>Temperatura:</strong> wymagania są dość podobne. Jajożer lubi nieco cieplejsze, stabilne tło (26–29 °C), wąż zielony 25–28 °C. W obu przypadkach potrzebny jest gradient z miejscem do wygrzewania ok. 30–32 °C. Wąż zielony wygrzewa się wysoko w gałęziach, więc ciepło musi być u góry.</li>
+  <li><strong>Wilgotność:</strong> u węża zielonego wyższa (50–70%) i ważniejsza. Zbyt sucho prowadzi u niego do odwodnienia i złego linienia, ale stale mokre podłoże bez wentylacji powoduje choroby skóry i układu oddechowego. Jajożerowi wystarczy 40–60% i wilgotna kryjówka do linienia.</li>
+  <li><strong>Woda:</strong> to <strong>najczęstszy błąd</strong> przy wężu zielonym. W naturze pije rosę i krople deszczu z liści, a z miski korzysta niechętnie. Bez codziennego zraszania potrafi się odwodnić mimo pełnej miski. Jajożer pije normalnie z miski.</li>
+  <li><strong>Światło UVB:</strong> wąż zielony to dzienny wąż wygrzewający się w słońcu. UVB wspiera jego metabolizm wapnia (ważne przy diecie owadziej) i ogólną aktywność. U nocnego jajożera UVB jest dodatkiem, nie koniecznością.</li>
+</ul>
+</section>
+
+<section id="zywienie">
+<h2>6. Żywienie</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span>: jaja</h3>
+    <ul>
+      <li><strong>Dorosłe:</strong> jaja przepiórcze (1–3 sztuki co 5–10 dni), duże samice okazjonalnie bardzo małe jaja kurze lub jaja bantamki.</li>
+      <li><strong>Młode:</strong> jaja zeberek, amadyn, mewek, potem papużek i kanarków.</li>
+      <li>Jaja <strong>surowe, nie gotowane</strong>. Przed podaniem warto opłukać skorupkę (Salmonella).</li>
+      <li>Jajo nie powinno być szersze niż ok. 2–3 średnice głowy. Lepiej podać dwa mniejsze niż jedno za duże.</li>
+      <li>Suplementy niepotrzebne.</li>
+      <li>Zimą zdarzają się kilkutygodniowe przerwy w jedzeniu. Przy dobrej kondycji to normalne.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span>: owady</h3>
+    <ul>
+      <li><strong>Podstawa:</strong> świerszcze (domowe, bananowe, kubańskie), szarańcza, gąsienice (jedwabnik, zawisaki), larwy barciaka (tylko jako dodatek, są tłuste), pająki.</li>
+      <li><strong>Karaczany:</strong> świeżo wylinkowane, miękkie nimfy (np. <i>Shelfordella lateralis</i>, małe <i>Blaptica dubia</i>) część osobników przyjmuje. Najlepiej podawać je z pęsety lub w miseczce, bo karaczany szybko chowają się w podłożu.</li>
+      <li><strong>Ilość:</strong> dorosły 3–6 średnich owadów co 2–3 dni, młode 2–4 małe owady co 1–2 dni. Owad nie szerszy niż głowa węża.</li>
+      <li><strong>Suplementy:</strong> wapń przy każdym karmieniu (z D3, jeśli brak UVB), multiwitamina co 1–2 tygodnie. Owady przed podaniem dobrze odżywić (gut loading).</li>
+      <li><strong>Bezpieczeństwo:</strong> nie zostawiaj niezjedzonych świerszczy na noc, bo mogą podgryzać śpiącego węża. Nie podawaj owadów dzikich (pestycydy, pasożyty) ani świetlików (toksyczne).</li>
+      <li>Wiele osobników lubi polować na owady chodzące po gałęziach i liściach. Niektóre jedzą z pęsety.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Porównanie logistyki pokarmu</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Kryterium</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Dostępność pokarmu (dorosłe)</th><td><span class="yes">Bardzo dobra</span>: jaja przepiórcze w każdym supermarkecie</td><td><span class="yes">Dobra</span>: owady w sklepach zoologicznych i od hodowców</td></tr>
+<tr><th>Dostępność pokarmu (młode)</th><td><span class="no">Słaba</span>: jaja zeberek trzeba mieć z własnej hodowli lub od hodowców ptaków</td><td><span class="yes">Dobra</span>: małe świerszcze, młode gąsienice, małe pająki</td></tr>
+<tr><th>Częstotliwość karmienia</th><td>Raz na tydzień–półtora</td><td>2–3 razy w tygodniu</td></tr>
+<tr><th>Przechowywanie pokarmu</th><td>Lodówka (kilka tygodni), ewentualnie zamrażarka</td><td>Żywe owady trzeba utrzymywać przy życiu i karmić, albo prowadzić własną hodowlę</td></tr>
+<tr><th>Orient. koszt miesięczny (dorosły)</th><td class="num">ok. 5–15 zł</td><td class="num">ok. 30–70 zł (owady + suplementy)</td></tr>
+<tr><th>Ryzyko błędów żywieniowych</th><td>Niskie (za duże jajo, zbyt rzadko podawane)</td><td>Średnie (brak wapnia, za mało karmień, odwodnienie)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note"><strong>Dla hodowcy karaczanów:</strong> przy wężu zielonym własna hodowla owadów karmowych jest dużym atutem. Świeżo wylinkowane nimfy karaczanów mogą być urozmaiceniem diety, choć podstawą u większości osobników pozostają świerszcze, szarańcza i gąsienice. Jajożerowi owady w ogóle się nie przydadzą.</div>
+</section>
+
+<section id="rozmnazanie">
+<h2>7. Rozmnażanie</h2>
+<p>Oba węże są <strong>jajorodne</strong> i u obu do rozrodu potrzebny jest okres schłodzenia. Różnią się liczbą jaj, temperaturą zimowania i przede wszystkim trudnością wykarmienia młodych.</p>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span></h3>
+    <ol class="steps">
+      <li><strong>Płeć:</strong> samce mają dłuższy, grubszy u nasady ogon, samice są większe. Pewniej: sondowanie.</li>
+      <li><strong>Schłodzenie:</strong> 6–10 tygodni w 18–21 °C, krótszy dzień, bez karmienia (ostatni posiłek ok. 2 tygodnie wcześniej). Woda cały czas.</li>
+      <li><strong>Wybudzenie:</strong> stopniowo, potem intensywne karmienie samicy.</li>
+      <li><strong>Kopulacja:</strong> po pierwszym linieniu samicy po zimowaniu, zwykle nocą.</li>
+      <li><strong>Złożenie jaj:</strong> ok. 1–2 miesiące po kopulacji, w wilgotnej komorze (mech, wermikulit). 6–25 jaj, możliwe 2 zniesienia w sezonie.</li>
+      <li><strong>Inkubacja:</strong> wermikulit lub perlit z wodą, 27–29 °C, 60–90 dni. Jaj nie obracać.</li>
+      <li><strong>Młode:</strong> 20–25 cm, pierwsze linienie po 7–14 dniach, potem jaja zeberek co 4–5 dni.</li>
+    </ol>
+    <div class="note bad"><strong>Wąskie gardło:</strong> 10–20 młodych potrzebuje przez kilka miesięcy setek bardzo małych jaj. Bez własnego stada zeberek lub amadyn albo pewnego dostawcy nie planuj rozmnażania.</div>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span></h3>
+    <ol class="steps">
+      <li><strong>Płeć:</strong> samce mają dłuższy ogon i są zwykle mniejsze. Rozpoznanie bywa trudne, pomaga sondowanie u doświadczonej osoby.</li>
+      <li><strong>Zimowla:</strong> po kilkutygodniowym stopniowym obniżaniu temperatury 8–12 tygodni w 10–15 °C, z wodą, bez karmienia. Zimujemy tylko zdrowe, dobrze odżywione osobniki.</li>
+      <li><strong>Wybudzenie:</strong> stopniowe, potem częste karmienie z suplementami.</li>
+      <li><strong>Kopulacja:</strong> wiosną, po wybudzeniu. W grupie zwykle przebiega bez problemów.</li>
+      <li><strong>Złożenie jaj:</strong> zwykle w czerwcu–lipcu. 3–12 wydłużonych jaj, w wilgotnym podłożu, mchu lub dziupli. Samice potrafią składać jaja wspólnie z innymi.</li>
+      <li><strong>Inkubacja:</strong> wilgotny wermikulit lub perlit, 26–28 °C. Jaja są składane z częściowo rozwiniętymi zarodkami, więc wylęg następuje już po ok. 5–10 tygodniach.</li>
+      <li><strong>Młode:</strong> ok. 18–20 cm, bardzo cienkie. Je się karmi małymi świerszczami (1–2 tygodnie po wykluciu), małymi pająkami i gąsienicami, co 1–2 dni, z wapniem.</li>
+    </ol>
+    <div class="note warn"><strong>Uwaga:</strong> rozmnażanie w niewoli zdarza się rzadko, głównie dlatego, że trudno o zdrową, zaaklimatyzowaną parę. Ciężarne samice z odłowu często składają jaja w terrarium, ale bywają osłabione.</div>
+  </div>
+</div>
+
+<h3>Rozród w liczbach</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Parametr</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Typ rozrodu</th><td>Jajorodny</td><td>Jajorodny</td></tr>
+<tr><th>Zimowanie</th><td>Łagodne (18–21 °C)</td><td>Chłodniejsze (10–15 °C)</td></tr>
+<tr><th>Liczba jaj</th><td>6–25 (zwykle 10–15)</td><td>3–12 (zwykle 4–8)</td></tr>
+<tr><th>Czas inkubacji</th><td>60–90 dni</td><td>ok. 35–70 dni</td></tr>
+<tr><th>Wielkość młodych</th><td>20–25 cm</td><td>ok. 18–20 cm</td></tr>
+<tr><th>Pierwszy pokarm</th><td>Jaja zeberek, amadyn (trudne)</td><td>Małe świerszcze, pająki (łatwe)</td></tr>
+<tr><th>Dojrzałość płciowa</th><td>ok. 2–3 lata</td><td>ok. 2 lata</td></tr>
+<tr><th>Trudność rozrodu</th><td>Średnio-wysoka (wykarmienie młodych)</td><td>Wysoka (zdrowa para, wrażliwe młode)</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="zdrowie">
+<h2>8. Zdrowie i typowe problemy</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Problem</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Najczęstsza przyczyna kłopotów</th><td>Brak jaj odpowiedniej wielkości, odmowa jedzenia po stresie</td><td>Odwodnienie, stres, pasożyty u zwierząt z odłowu</td></tr>
+<tr><th>Odwodnienie</th><td>Rzadkie</td><td><strong>Częste</strong>: pomarszczona skóra, zapadnięte oczy, złe linienie</td></tr>
+<tr><th>Pasożyty</th><td>Głównie u zwierząt WC</td><td>Bardzo częste u zwierząt WC: badanie kału obowiązkowe</td></tr>
+<tr><th>Choroby metaboliczne</th><td>Rzadkie</td><td>Możliwe przy braku wapnia i UVB (MBD)</td></tr>
+<tr><th>Choroby skóry</th><td>Przy zbyt mokrym terrarium</td><td>Przy mokrym podłożu bez wentylacji; rany od świerszczy</td></tr>
+<tr><th>Choroby układu oddechowego</th><td>Przy chłodzie i wilgoci</td><td>Przy chłodzie, przeciągach i zastoju wilgoci</td></tr>
+<tr><th>Zwracanie pokarmu</th><td>Zbyt duże jajo, za niska temperatura, stres (zwracanie samej skorupki jest normalne)</td><td>Rzadkie; przy stresie lub za niskiej temperaturze</td></tr>
+<tr><th>Zmiana koloru</th><td>Nie dotyczy</td><td>Niebieskawy odcień za życia może oznaczać poważną chorobę lub stan przedśmiertny</td></tr>
+<tr><th>Śmiertelność po zakupie</th><td>Niska przy zwierzętach CB</td><td><strong>Wysoka u zwierząt WC</strong> w pierwszych miesiącach</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note warn"><strong>Kwarantanna:</strong> każdego nowego węża, a zwłaszcza węża zielonego z odłowu, trzymaj 60–90 dni osobno. Na początku zrób badanie kału u weterynarza od gadów i dopiero potem wpuszczaj go do docelowego terrarium lub do grupy.</div>
+</section>
+
+<section id="temperament">
+<h2>9. Zachowanie, oswajanie i branie na ręce</h2>
+<p>Węże nie przywiązują się do człowieka jak ssaki. „Oswojenie” oznacza tu, że wąż przestaje traktować opiekuna jako zagrożenie: nie ucieka, nie przyjmuje postawy obronnej i spokojnie znosi krótkie trzymanie. Oba gatunki są pod tym względem łagodne, ale różnią się bardzo tym, <strong>ile kontaktu im służy</strong>.</p>
+
+<h3>Zachowanie na co dzień</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Zachowanie</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Kiedy go widać</th><td>Wieczorem i w nocy: patroluje terrarium, wspina się, szuka „gniazd”. W dzień zwykle śpi w kryjówce lub na gałęzi w cieniu.</td><td>W dzień: wygrzewa się wysoko w gałęziach, powoli przemieszcza się między liśćmi, poluje. W nocy śpi rozciągnięty na gałązkach.</td></tr>
+<tr><th>Sposób poruszania</th><td>Spokojny, ostrożny, dużo „sprawdzania” językiem.</td><td>Bardzo powolny, często kołysze się jak gałązka na wietrze (kamuflaż). Potrafi nagle przyspieszyć przy ucieczce.</td></tr>
+<tr><th>Polowanie / jedzenie</th><td>Węchem odnajduje jajo, obwąchuje je, mierzy pyskiem, potem połyka 10–30 minut. Po kilku godzinach do 2 dni zwraca sprasowaną skorupkę.</td><td>Wzrokowiec: obserwuje ruch owada, powoli się zbliża i chwyta szybkim wyrzutem głowy. Często poluje na owady chodzące po liściach.</td></tr>
+<tr><th>Reakcja na człowieka przy szybie</th><td>Zwykle obojętna; czasem chowa się.</td><td>Na początku zamiera lub ucieka w liście. Z czasem przestaje reagować na znanego opiekuna.</td></tr>
+<tr><th>Reakcja obronna</th><td>Spektakularny blef: zwija się w pętle w kształcie litery C, pociera łuskami (głośny syczący szelest jak u efy), otwiera czarny pysk, markuje ataki. Ugryzienie praktycznie nie występuje lub jest nieodczuwalne (brak funkcjonalnych zębów).</td><td>Najczęściej ucieczka lub zamieranie. Rzadko otwiera pysk; ugryzienie zdarza się bardzo rzadko i jest nieszkodliwe. Może opróżnić kloakę przy pierwszym chwytaniu.</td></tr>
+<tr><th>Stres widoczny jako</th><td>Ciągłe pokazy obronne, odmowa jaj, zwracanie całych jaj.</td><td>Odmowa jedzenia, ciągłe ukrywanie się przy ziemi zamiast w gałęziach, chudnięcie, ciemniejszy lub matowy kolor, odwodnienie.</td></tr>
+<tr><th>Zachowanie w grupie</th><td>Toleruje inne jajożery; karmić pod kontrolą, by dwa węże nie złapały jednego jaja.</td><td>Dobrze znosi małe grupy, często leżą razem na gałęziach. Przy karmieniu sprawdzać, czy każdy coś zjadł.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Czy da się je oswoić?</h3>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span>: tak, w rozsądnych granicach</h3>
+    <ul>
+      <li>Zwierzęta urodzone w niewoli (CB) zwykle szybko przestają robić pokazy obronne. Zwierzęta z odłowu (WC) na początku są bardzo defensywne, ale większość się uspokaja.</li>
+      <li>Po kilku tygodniach regularnych, krótkich sesji wiele osobników spokojnie przechodzi z ręki do ręki.</li>
+      <li>Najczęściej uspokaja się szybciej, gdy podchodzimy z boku, a nie od góry. Dlatego lepsze jest terrarium otwierane od przodu niż od góry (ruch z góry przypomina atak ptaka).</li>
+      <li>Nigdy nie pokaże „sympatii”, ale może być bardzo spokojnym wężem do krótkiego trzymania.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span>: spokojny, ale nie do noszenia</h3>
+    <ul>
+      <li>Rzadko gryzie i często wydaje się „spokojny” na ręce. To w dużej mierze <strong>reakcja zamierania ze stresu</strong>, a nie zadowolenie.</li>
+      <li>Częste branie na ręce prowadzi do odmowy jedzenia, chorób i skrócenia życia. Zalecenie hodowców: dotykać tylko przy sprzątaniu, kontroli zdrowia lub przenoszeniu.</li>
+      <li>„Oswojenie” u węża zielonego polega na tym, że przestaje się chować, gdy podchodzisz do terrarium, i spokojnie je przy tobie, czasem z pęsety.</li>
+      <li>To wąż do oglądania w ładnie urządzonym terrarium, nie do noszenia na ramieniu.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Branie na ręce krok po kroku</h3>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span></h3>
+    <ol class="steps">
+      <li><strong>Nie wcześniej niż 2–3 tygodnie po zakupie</strong> i po co najmniej 2–3 zjedzonych posiłkach.</li>
+      <li>Wybierz porę wieczorną, gdy wąż jest aktywny. Nie budź śpiącego w kryjówce.</li>
+      <li><strong>Nie dotykaj 48 godzin po karmieniu</strong> (ryzyko zwrócenia jaja) i w czasie linienia.</li>
+      <li>Podejdź z boku, spokojnie. Lekko dotknij ciała hakiem lub dłonią, żeby wąż wiedział, że to nie atak.</li>
+      <li>Podnieś, podtrzymując ciało w 2–3 miejscach. Nie chwytaj za głowę ani ogon.</li>
+      <li>Pozwól mu przechodzić z ręki do ręki („bieżnia”), nie zaciskaj dłoni.</li>
+      <li>Pierwsze sesje 2–5 minut, potem do 10–15 minut, 1–2 razy w tygodniu.</li>
+      <li>Jeśli zaczyna szeleścić łuskami i otwierać pysk: odłóż go spokojnie, nie karz, spróbuj za kilka dni.</li>
+    </ol>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span></h3>
+    <ol class="steps">
+      <li>Przez pierwsze <strong>4–6 tygodni nie bierz go na ręce wcale</strong>, a u zwierząt z odłowu jeszcze dłużej. Najpierw musi regularnie jeść i być nawodniony.</li>
+      <li>Wybierz porę dnia, gdy jest ciepły i aktywny.</li>
+      <li>Nie dotykaj w dniu karmienia i w czasie linienia.</li>
+      <li>Nie wyciągaj go siłą z gałęzi. Podstaw dłoń przed głowę i pozwól mu na nią wejść.</li>
+      <li>Podtrzymuj całe ciało; jest bardzo cienki i delikatny. Nigdy nie chwytaj za ogon.</li>
+      <li>Krótko: 1–3 minuty, najlepiej nad terrarium lub nad miękkim podłożem.</li>
+      <li>Najwyżej raz w tygodniu albo rzadziej. Jeśli po sesji przestaje jeść, ogranicz kontakt do minimum.</li>
+      <li>Ręce bez zapachu owadów i bez kremów. Zawsze myj ręce przed i po.</li>
+    </ol>
+  </div>
+</div>
+<div class="note"><strong>Podsumowanie:</strong> jeśli chcesz węża, którego można regularnie (krótko) potrzymać, z tej dwójki lepszy jest <strong>jajożer</strong>. Wąż zielony to gatunek „do patrzenia”.</div>
+</section>
+
+<section id="aklimatyzacja">
+<h2>10. Pierwsze tygodnie po zakupie (aklimatyzacja)</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span></h3>
+    <ul>
+      <li><strong>Dzień 0:</strong> terrarium gotowe i nagrzane co najmniej 2–3 dni wcześniej. Wpuść węża, zostaw w spokoju.</li>
+      <li><strong>Dni 1–7:</strong> nie dotykaj, nie karm. Wieczorem sprawdzaj z daleka, czy pije i eksploruje.</li>
+      <li><strong>Po ok. tygodniu:</strong> pierwsze jajo, na noc, przy kryjówce. Zapytaj sprzedawcę, jakie jaja jadł (przepiórcze czy mniejsze).</li>
+      <li><strong>Tygodnie 2–4:</strong> regularne karmienie, ważenie co 2 tygodnie. Zwierzę z odłowu: badanie kału.</li>
+      <li><strong>Po ok. miesiącu:</strong> pierwsze krótkie sesje na ręce.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span></h3>
+    <ul>
+      <li><strong>Dzień 0:</strong> terrarium gęsto obsadzone, nagrzane, z UVB. Od razu lekko zrosić liście.</li>
+      <li><strong>Dni 1–3:</strong> zraszanie rano i wieczorem, obserwuj, czy pije krople. Nie karm.</li>
+      <li><strong>Dni 3–5:</strong> pierwsze karmienie: 2–3 małe świerszcze lub gąsienice. Niezjedzone owady wyłap na noc.</li>
+      <li><strong>Tygodnie 1–6:</strong> karmienie co 2–3 dni z wapniem, codzienne zraszanie, ważenie raz w tygodniu (waga z dokładnością 0,1 g). Zwierzę z odłowu: badanie kału i odrobaczenie wg weterynarza.</li>
+      <li><strong>Sygnały alarmowe:</strong> brak jedzenia dłużej niż 2 tygodnie, pomarszczona skóra, zapadnięte oczy, siedzenie na dnie, niebieskawy odcień. Weterynarz od gadów od razu.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="plan">
+<h2>11. Plan opieki: codziennie, co tydzień, co miesiąc</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Kiedy</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Codziennie</th><td>Rzut oka na temperatury i wodę (1 min)</td><td>Zraszanie 1–2 razy, kontrola temperatur, sprawdzenie, czy wąż jest wysoko w gałęziach (5–10 min)</td></tr>
+<tr><th>Co 2–3 dni</th><td>Nic</td><td>Karmienie owadami z suplementem, wyłapanie niezjedzonych owadów</td></tr>
+<tr><th>Co tydzień</th><td>Wymiana wody, usunięcie odchodów i skorupek (zwykle 1 jajo), karmienie co 5–10 dni</td><td>Wymiana wody, usunięcie odchodów, przycięcie lub podlanie roślin, karmienie owadów karmowych</td></tr>
+<tr><th>Co 2 tygodnie</th><td>Ważenie</td><td>Ważenie (lub co tydzień przy problemach)</td></tr>
+<tr><th>Co miesiąc</th><td>Częściowa wymiana podłoża, czyszczenie szyb</td><td>Kontrola roślin i podłoża, czyszczenie szyb, wymiana UVB co 9–12 miesięcy</td></tr>
+<tr><th>Raz w roku</th><td>Zimowe schłodzenie (opcjonalnie, konieczne do rozrodu)</td><td>Zimowla (opcjonalnie, konieczna do rozrodu), wymiana świetlówki UVB</td></tr>
+<tr><th>Czas w tygodniu</th><td class="num">ok. 15–30 min</td><td class="num">ok. 1,5–2 h</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="bledy">
+<h2>12. Najczęstsze błędy</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3><span class="tag d">Jajożer</span></h3>
+    <ul>
+      <li>Zakup bez sprawdzenia, czy wąż je i jakie jaja (młode węże bez dostępu do małych jaj).</li>
+      <li>Zbyt duże jajo, przez które wąż zwraca całość lub się męczy.</li>
+      <li>Branie na ręce zaraz po jedzeniu.</li>
+      <li>Panika przy zimowej przerwie w jedzeniu u zdrowego, dobrze odżywionego węża.</li>
+      <li>Nieszczelne terrarium (smukłe węże, zwłaszcza młode, uciekają przez szpary).</li>
+      <li>Jaja gotowane lub stare.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3><span class="tag t">Wąż zielony</span></h3>
+    <ul>
+      <li>Niska, pusta „szafka” zamiast wysokiego, gęsto obsadzonego terrarium.</li>
+      <li>Tylko miska z wodą, bez zraszania (odwodnienie).</li>
+      <li>Owady bez wapnia i brak UVB.</li>
+      <li>Zostawianie świerszczy na noc (gryzą śpiącego węża).</li>
+      <li>Za częste branie na ręce.</li>
+      <li>Kupowanie najtańszych zwierząt z odłowu bez kwarantanny i badania kału.</li>
+      <li>Owady łapane w ogrodzie (pestycydy, pasożyty) i świetliki (toksyczne).</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="zakup">
+<h2>13. Zakup: ceny, dostępność, gdzie kupić</h2>
+<p class="small">Stan wyszukiwania: październik 2026. Ogłoszenia szybko się dezaktualizują. Przed wyjazdem lub przelewem zawsze potwierdź dostępność, pochodzenie (CB/WC) i to, czy wąż je. Ceny w euro przeliczone orientacyjnie (ok. 4,3 zł za 1 €).</p>
+
+<h3>Ceny znalezione w sieci</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Źródło</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Ogłoszenia prywatne w Polsce</th><td>ok. 600 zł (<i>D. gansi</i>, ok. 1 rok, z fermy, ogłoszenie już nieaktywne)</td><td>ok. 150–200 zł (forum terrarium.pl, prywatni sprzedawcy i hodowca)</td></tr>
+<tr><th>Polskie sklepy</th><td>brak aktualnej oferty w wynikach</td><td>420–470 zł (sklep Bazyliszek, w chwili sprawdzania brak na stanie)</td></tr>
+<tr><th>Niemieckie sklepy</th><td>ok. 110–150 € (ok. 470–650 zł) za <i>D. scabra</i> i <i>D. gansi</i>, często chwilowo niedostępne</td><td>zwierzęta z odłowu w sklepach; własna hodowla (NZ) w wybranych sklepach</td></tr>
+<tr><th>Niemieckie ogłoszenia (CB)</th><td>oferty pojawiają się głównie przed giełdą w Hamm</td><td>ok. 150–160 € (ok. 650–700 zł) za własne młode z 2025 r.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Wniosek: w Polsce wąż zielony bywa tani (150–200 zł), ale zwykle nie wiadomo, czy pochodzi z hodowli. Pewne zwierzęta CB z Niemiec są wyraźnie droższe. Jajożery są rzadkie w obu krajach i kosztują zwykle 450–700 zł.</p>
+
+<h3>Konkretne oferty i hodowcy znalezieni w sieci</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Kto / gdzie</th><th>Gatunek</th><th>Co oferuje</th><th>Link</th></tr></thead>
+<tbody>
+<tr><th>Prywatny hodowca, Berkheim (DE)</th><td><i>O. aestivus</i></td><td>Własne młode z 2025 r., 160 €/szt. (150 € przy 3 szt.), odbiór lub przekazanie na giełdzie w Hamm</td><td><a href="https://www.terraristik.com/tb/kaufen-und-verkaufen/raue-grasnatter-opheodrys-aestivus/a1069427/" target="_blank" rel="noopener">terraristik.com</a></td></tr>
+<tr><th>Prywatny hodowca, Hildesheim (DE)</th><td><i>O. aestivus</i></td><td>2 szt. z niemieckiej hodowli z 2024 r., jedzą małe szarańcze, odbiór lub Hamm</td><td><a href="https://www.terraristik.com/tb/kaufen-und-verkaufen/0-0-2-opheodrys-aestivus-raue-grasnatter/a1088764/" target="_blank" rel="noopener">terraristik.com</a></td></tr>
+<tr><th>Dragonzoo24 (DE, sklep)</th><td><i>O. aestivus</i></td><td>Oferta oznaczona jako „eigene Nachzucht” (własna hodowla)</td><td><a href="https://dragonzoo24.de/produkt/grasnatter/" target="_blank" rel="noopener">dragonzoo24.de</a></td></tr>
+<tr><th>Interaquaristik (DE, sklep)</th><td><i>D. scabra</i></td><td>ok. 120 €, w chwili sprawdzania niedostępny (można zapisać się na powiadomienie)</td><td><a href="https://www.interaquaristik.de/terrarientiere/reptilien/schlangen/afrikanische-eierschlange-dasypeltis-scabra/a-100013" target="_blank" rel="noopener">interaquaristik.de</a></td></tr>
+<tr><th>Interaquaristik (DE, sklep)</th><td><i>D. gansi</i></td><td>ok. 110–120 €, w chwili sprawdzania niedostępny</td><td><a href="https://www.interaquaristik.de/gansi-eierschlange-dasypeltis-gansi/a-100055" target="_blank" rel="noopener">interaquaristik.de</a></td></tr>
+<tr><th>Interaquaristik (DE, sklep)</th><td><i>O. aestivus</i></td><td>Według informacji sklepu zwierzęta z odłowu (WC)</td><td><a href="https://www.interaquaristik.de/raue-grasnatter-opheodrys-aestivus/a-102982" target="_blank" rel="noopener">interaquaristik.de</a></td></tr>
+<tr><th>MS-Reptilien (DE, sklep)</th><td><i>D. gansi</i></td><td>Para z własnej hodowli (NZ), w chwili sprawdzania niedostępna; warto pytać o kolejne</td><td><a href="https://www.ms-reptilien.de/afrikanische-eierschlange-nz-siehe-beschreibung-dasypeltis-gansi" target="_blank" rel="noopener">ms-reptilien.de</a></td></tr>
+<tr><th>Snail-Express (DE, sklep)</th><td><i>D. gansi</i></td><td>ok. 150 €, w chwili sprawdzania brak na stanie</td><td><a href="https://www.snail-express.de/p/dasypeltis-ganssi-goldene-eierschlange" target="_blank" rel="noopener">snail-express.de</a></td></tr>
+<tr><th>Bazyliszek (PL, sklep)</th><td><i>O. aestivus</i></td><td>420–470 zł, w chwili sprawdzania brak na stanie</td><td><a href="https://e-bazyliszek.pl/weze/447-waz-trawny-opheodrys-aestivus-trawne.html" target="_blank" rel="noopener">e-bazyliszek.pl</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="note warn"><strong>W Polsce nie znalazłem aktywnego, publicznie ogłaszającego się hodowcy żadnego z tych gatunków.</strong> Najlepsza droga to ogłoszenia na forum, zapytania w grupach terrarystycznych i giełdy. W Niemczech ogłoszenia pojawiają się regularnie, głównie przed giełdą w Hamm, gdzie wielu sprzedawców przekazuje zwierzęta osobiście.</div>
+
+<h3>Ogłoszenia i wyszukiwarki</h3>
+<ul>
+  <li><a href="https://www.terraristik.com/tb/buy-and-sell/all-herp-ads/01/?split=0&amp;ftsearch=dasypeltis" target="_blank" rel="noopener">terraristik.com: ogłoszenia „dasypeltis”</a> (największa giełda ogłoszeń w Europie; ogłoszenia także po angielsku)</li>
+  <li><a href="https://www.terraristik.com/tb/buy-and-sell/all-herp-ads/01/?split=0&amp;ftsearch=opheodrys" target="_blank" rel="noopener">terraristik.com: ogłoszenia „opheodrys”</a></li>
+  <li><a href="https://www.olx.pl/oferty/q-jajo%C5%BCer/" target="_blank" rel="noopener">OLX: „jajożer”</a> i <a href="https://www.olx.pl/oferty/q-opheodrys/" target="_blank" rel="noopener">OLX: „opheodrys”</a> (szukaj też „dasypeltis”, „wąż trawny”, „wąż zielony szorstki”)</li>
+  <li><a href="https://www.terrarium.pl/t/species/_/dasypeltis-scabra-waz-jajozer-r2984" target="_blank" rel="noopener">terrarium.pl: opis gatunku <i>Dasypeltis scabra</i></a> oraz <a href="https://www.terrarium.pl/topic/497148-opheodrys-aestivus-waz-trawny/" target="_blank" rel="noopener">wątek o <i>Opheodrys aestivus</i></a>. Na forum działa też dział ogłoszeń „Sprzedam / Kupię” (część treści po zalogowaniu).</li>
+</ul>
+
+<h3>Giełdy terrarystyczne</h3>
+<ul>
+  <li><a href="https://www.terrarium.com.pl/wydarzenia/" target="_blank" rel="noopener">Kalendarz giełd w Polsce (terrarium.com.pl)</a> oraz <a href="https://www.darewit.pl/gieldy-i-targi-terrarystyczne-w-polsce" target="_blank" rel="noopener">lista giełd i targów (darewit.pl)</a></li>
+  <li>ZooEgzotyka (m.in. Warszawa, Wrocław): <a href="https://pik.wroclaw.pl/gielda-terrarystyczno-akwarystyczna-animals-live-wroclaw/" target="_blank" rel="noopener">informacja o edycji we Wrocławiu</a></li>
+  <li>Exoticarium (m.in. Łódź, Kalisz, Tarnów, Nowy Sącz, Rzeszów): <a href="https://www.ebilet.pl/biznes/targi/exoticarium" target="_blank" rel="noopener">terminy i bilety</a></li>
+  <li>Terraristika Hamm (Niemcy), największa giełda w Europie, zwykle kilka razy w roku (m.in. marzec, wrzesień, grudzień): <a href="https://www.terraristika.de" target="_blank" rel="noopener">terraristika.de</a>. Daty w serwisach zbiorczych się różnią, więc potwierdź je u organizatora.</li>
+</ul>
+<p class="small">Na giełdzie możesz obejrzeć zwierzę, zapytać o karmienie i pochodzenie, a często dogadać się z hodowcą z wyprzedzeniem (rezerwacja przez terraristik.com z odbiorem w Hamm).</p>
+
+<h3>Lektura</h3>
+<ul>
+  <li><a href="https://vantisterra.pl/vt/portal-terrarystyczny/blog/gady/weze/jajozer-dasypeltis-gansi" target="_blank" rel="noopener">Vantis Terra: Jajożer (<i>Dasypeltis gansi</i>)</a></li>
+  <li><a href="https://www.terrarium.com.pl/opheodrys-aestivus-waz-trawny/" target="_blank" rel="noopener">terrarium.com.pl: <i>Opheodrys aestivus</i></a> oraz <a href="https://terranpolska.pl/aktualnosci/n/295/opheodrys-aestivus-waz-zielony-nadrzewny" target="_blank" rel="noopener">Terran Polska: <i>Opheodrys aestivus</i></a></li>
+  <li>Książka: <a href="https://egzotic-room.com/product/literatura-waz-trawny-opheodrys-aestivus-yvonne-thomas-klesius/" target="_blank" rel="noopener">Y. i T. Klesius, „Wąż trawny <i>Opheodrys aestivus</i>”</a></li>
+  <li><a href="https://reptilesmagazine.com/rough-green-snake-care-sheet/" target="_blank" rel="noopener">Reptiles Magazine: Rough Green Snake Care Sheet</a> (ang.)</li>
+</ul>
+
+<h3>Jak nie dać się oszukać</h3>
+<ul>
+  <li>W sieci działa wiele <strong>fałszywych „sklepów z egzotycznymi zwierzętami”</strong>: ładne strony, niskie ceny, płatność wyłącznie przelewem lub kryptowalutą, „wysyłka kurierem z certyfikatem”. Po wpłacie kontakt się urywa. Nie kupuj ze stron bez adresu, numeru firmy i opinii.</li>
+  <li>Najbezpieczniej: odbiór osobisty lub giełda, zdjęcie lub film węża jedzącego, rozmowa telefoniczna z hodowcą.</li>
+  <li>Pytaj o: datę wyklucia, CB/WC, co i jak często je, ostatnie linienie, płeć (czy sondowana), dokument sprzedaży z informacją o pochodzeniu.</li>
+  <li>Transport z Niemiec: legalny w UE dla tych gatunków, ale w zimie tylko z ociepleniem i krótko. Wysyłka zwierząt kurierem nie jest dozwolona u wszystkich przewoźników.</li>
+</ul>
+</section>
+
+<section id="koszty">
+<h2>14. Koszty i nakład pracy</h2>
+<div class="table-wrap">
+<table class="score">
+<thead><tr><th>Kryterium (więcej = trudniej / drożej)</th><th class="d">Jajożer</th><th class="t">Wąż zielony</th></tr></thead>
+<tbody>
+<tr><th>Koszt zakupu zwierzęcia</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td></tr>
+<tr><th>Koszt sprzętu startowego</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td></tr>
+<tr><th>Koszt pokarmu (miesięcznie)</th><td><div class="meter d"><i class="on"></i><i></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></td></tr>
+<tr><th>Codzienna praca (zraszanie, karmienie)</th><td><div class="meter d"><i class="on"></i><i></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td></tr>
+<tr><th>Wrażliwość na błędy</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td></tr>
+<tr><th>Ryzyko przy zakupie (WC, pasożyty)</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td></tr>
+<tr><th>Trudność rozrodu</th><td><div class="meter d"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></td></tr>
+<tr><th>Sprzątanie</th><td><div class="meter d"><i class="on"></i><i></i><i></i><i></i><i></i></div></td><td><div class="meter t"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Skala względna, porównuje te dwa węże między sobą. Wyższy koszt sprzętu u węża zielonego wynika z wysokiego terrarium, UVB, roślin i ewentualnego zraszacza.</p>
+</section>
+
+<section id="prawo">
+<h2>15. Kwestie prawne</h2>
+<ul>
+  <li>Oba węże są <strong>niejadowite</strong> i nie należą do zwierząt niebezpiecznych w rozumieniu polskich przepisów.</li>
+  <li>Żaden z nich nie jest typowym gatunkiem CITES wymagającym rejestracji w starostwie. Warto mieć dokument zakupu z informacją o pochodzeniu (CB lub WC).</li>
+  <li><i>O. vernalis</i> jest chroniony w części stanów USA i prowincji Kanady. Zwierzęta tego gatunku w handlu powinny mieć udokumentowane legalne pochodzenie.</li>
+  <li>Przepisy się zmieniają: przed zakupem sprawdź aktualny stan prawny. <strong>Nigdy nie wypuszczaj</strong> węży do środowiska.</li>
+</ul>
+</section>
+
+<section id="werdykt">
+<h2>16. Werdykt: dla kogo który wąż</h2>
+<div class="grid2">
+  <div class="card d">
+    <h3>Wybierz jajożera, jeśli…</h3>
+    <ul class="check">
+      <li>chcesz odpornego węża, który wybacza drobne błędy,</li>
+      <li>masz mało czasu na codzienną opiekę (karmienie raz na tydzień, bez codziennego zraszania),</li>
+      <li>nie przeszkadza ci, że wąż jest aktywny wieczorem i w nocy,</li>
+      <li>chcesz zwierzęcia na kilkanaście lat,</li>
+      <li>planujesz rozmnażanie tylko wtedy, gdy masz pewne źródło bardzo małych jaj.</li>
+    </ul>
+  </div>
+  <div class="card t">
+    <h3>Wybierz węża zielonego, jeśli…</h3>
+    <ul class="check">
+      <li>chcesz węża aktywnego w dzień, w pięknym, roślinnym terrarium,</li>
+      <li>masz czas na zraszanie codziennie i karmienie co 2–3 dni,</li>
+      <li>masz łatwy dostęp do owadów karmowych (albo własną hodowlę),</li>
+      <li>wolisz obserwować niż brać węża na rękę,</li>
+      <li>jesteś gotów zadbać o kwarantannę i weterynarza, jeśli kupisz zwierzę z odłowu.</li>
+    </ul>
+  </div>
+</div>
+<div class="note"><strong>Dla początkującego:</strong> z tej dwójki łatwiejszy jest <strong>jajożer</strong>, szczególnie jeśli kupisz zwierzę urodzone w niewoli, które już je jaja przepiórcze. Wąż zielony nie jest bardzo trudny, ale wymaga regularności i nie wybacza zaniedbań w nawadnianiu i żywieniu. Kluczowe jest kupienie zdrowego, jedzącego osobnika.</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Opracowanie poglądowe na podstawie ogólnodostępnej wiedzy terrarystycznej i herpetologicznej. Parametry są orientacyjne, a ceny i oferty pochodzą z wyszukiwania w październiku 2026 i mogą być nieaktualne. W razie problemów zdrowotnych skonsultuj się z lekarzem weterynarii specjalizującym się w gadach.</p>
+  </div>
+</footer>
+
+</body>
+</html>
