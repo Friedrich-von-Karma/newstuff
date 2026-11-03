@@ -1,0 +1,234 @@
+---
+/**
+ * Prosta lista cen (nazwa łacińska → profil hodowlany, wariant, cena za 10 szt.)
+ * i jeden przycisk „Napisz w sprawie zamówienia” na samym końcu.
+ * To nie jest sklep – zamówienia ustalane są mailowo.
+ */
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { site } from '../data/site';
+import { pick, routes, useTranslations, type Lang, type UiKey } from '../i18n/ui';
+import { formatEur, formatPrice, getPricelist, getSpecies } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tr = useTranslations(lang);
+const [items, species] = await Promise.all([getPricelist(), getSpecies()]);
+const speciesIds = new Set(species.map((s) => s.id));
+
+const t = pick(lang, {
+  pl: {
+    stageH: 'W paczce',
+    priceH: 'Cena za 10 szt.',
+    ask: 'Napisz w sprawie zamówienia',
+    subject: 'Zamówienie – blattodea.pl',
+    body: `Dzień dobry,
+chciałbym/chciałabym zamówić:
+
+Gatunek – liczba paczek po 10 szt.:
+- 
+- 
+
+Miejscowość (do wyceny wysyłki): 
+
+Pozdrawiam`,
+  },
+  en: {
+    stageH: 'In the pack',
+    priceH: 'Price per 10',
+    ask: 'E-mail about an order',
+    subject: 'Order – blattodea.pl',
+    body: `Hello,
+I would like to order:
+
+Species – number of packs of 10:
+- 
+- 
+
+Country / town (for a shipping quote): 
+
+Best regards`,
+  },
+  de: {
+    stageH: 'In der Packung',
+    priceH: 'Preis pro 10',
+    ask: 'Per E-Mail anfragen',
+    subject: 'Bestellung – blattodea.pl',
+    body: `Hallo,
+ich möchte bestellen:
+
+Art – Anzahl der 10er-Packungen:
+- 
+- 
+
+Land / Ort (für die Versandkosten): 
+
+Viele Grüße`,
+  },
+});
+const mail = `mailto:${site.contact.email}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(t.body)}`;
+---
+
+<div class="list rv" style="--d:.2s" role="table" aria-label={tr('pricelist.title')}>
+  <div class="row head" role="row">
+    <span role="columnheader">{tr('pricelist.species')}</span>
+    <span class="stg" role="columnheader">{t.stageH}</span>
+    <span class="pc" role="columnheader">{t.priceH}</span>
+  </div>
+  {
+    items.map((item) => {
+      const d = item.data;
+      const href = d.profile && speciesIds.has(d.profile) ? `${routes.species[lang]}${d.profile}/` : undefined;
+      return (
+        <div class:list={['row', { dim: d.status === 'out' }]} role="row">
+          <span class="name" role="cell">
+            {href ? (
+              <a class="latin" href={href}>
+                {d.latin}
+                <span class="arr" aria-hidden="true">→</span>
+              </a>
+            ) : (
+              <span class="latin">{d.latin}</span>
+            )}
+            {d.status !== 'available' && <Badge variant={d.status === 'low' ? 'default' : d.status === 'soon' ? 'success' : 'secondary'}>{tr(`status.${d.status}` as UiKey)}</Badge>}
+          </span>
+          <span class="stg" role="cell">{tr(`pack.${d.stage}` as UiKey)}</span>
+          <span class="pc" role="cell">
+            {formatPrice(d.price, lang)}
+            {lang !== 'pl' && <small class="eur">{formatEur(d.price, lang)}</small>}
+          </span>
+        </div>
+      );
+    })
+  }
+  {items.length === 0 && <p class="empty">{tr('pricelist.empty')}</p>}
+</div>
+<div class="order rv">
+  <a class={buttonVariants({ size: 'lg' })} href={mail}>{t.ask} <span class="arr">→</span></a>
+  <span class="order-hint">{tr('contact.orderHint')}</span>
+</div>
+
+<style>
+  .list {
+    border-top: 1px solid var(--line2);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 9rem 9rem;
+    align-items: baseline;
+    gap: 12px 20px;
+    padding: 18px 8px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.3s;
+  }
+  .row:not(.head):hover {
+    background: linear-gradient(90deg, rgba(232, 165, 71, 0.07), transparent 70%);
+  }
+  .head {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .pc {
+    text-align: right;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .row:not(.head) .pc {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.6vw, 22px);
+    color: var(--amber2);
+  }
+  .eur {
+    display: block;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .stg {
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fern);
+  }
+  .head .stg {
+    color: var(--muted);
+  }
+  .name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    min-width: 0;
+  }
+  .latin {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.15;
+    color: var(--text);
+  }
+  a.latin {
+    text-decoration: none;
+    background: linear-gradient(var(--amber), var(--amber)) 0 100% / 0 1px no-repeat;
+    transition:
+      color 0.3s,
+      background-size 0.45s var(--ease);
+  }
+  a.latin:hover,
+  a.latin:focus-visible {
+    color: var(--amber2);
+    background-size: 100% 1px;
+  }
+  .latin .arr {
+    display: inline-block;
+    margin-left: 10px;
+    font-style: normal;
+    font-size: 0.6em;
+    color: var(--amber);
+    opacity: 0.6;
+    transition:
+      transform 0.4s var(--ease),
+      opacity 0.3s;
+  }
+  a.latin:hover .arr {
+    transform: translateX(6px);
+    opacity: 1;
+  }
+  .dim .latin,
+  .dim .pc {
+    opacity: 0.55;
+  }
+  .list .empty {
+    margin: 20px 0;
+  }
+  .order {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+  }
+  .order-hint {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 46ch;
+  }
+  @media (max-width: 640px) {
+    .head {
+      display: none;
+    }
+    .row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px 16px;
+      padding: 16px 4px;
+    }
+    .name {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

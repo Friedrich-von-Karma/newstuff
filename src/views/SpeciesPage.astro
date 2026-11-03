@@ -7,9 +7,8 @@ import { buttonVariants } from '@/components/ui/button';
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
-import PackPicker from '../components/PackPicker.astro';
 import { formatDate, routes, useTranslations, type Lang, type UiKey, tl, pick } from '../i18n/ui';
-import { getGallery, getPriceForProfile, getSpecies, getSpeciesNote } from '../lib/content';
+import { formatEur, formatPrice, getGallery, getPriceForProfile, getSpecies, getSpeciesNote } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -51,6 +50,8 @@ const t = pick(lang, {
   pl: {
       noteH: 'Opis z hodowli',
       buyLbl: 'w cenniku · paczka 10 szt.',
+      per: '/ 10 szt.',
+      toOrder: 'Cennik i zamówienie',
       breedNum: 'Z mojej hodowli',
       breedH: 'Zdjęcia',
       breedHem: 'i filmy',
@@ -91,6 +92,8 @@ const t = pick(lang, {
   en: {
       noteH: 'Breeding notes',
       buyLbl: 'in the price list · pack of 10',
+      per: '/ 10 pcs',
+      toOrder: 'Price list & ordering',
       breedNum: 'From my breeding room',
       breedH: 'Photos',
       breedHem: 'and videos',
@@ -131,6 +134,8 @@ const t = pick(lang, {
   de: {
       noteH: 'Notizen aus der Zucht',
       buyLbl: 'in der Preisliste · 10er-Packung',
+      per: '/ 10 Stk.',
+      toOrder: 'Preisliste & Bestellung',
       breedNum: 'Aus meiner Zucht',
       breedH: 'Fotos',
       breedHem: 'und Videos',
@@ -289,7 +294,17 @@ const t = pick(lang, {
                   <StatusBadge status={price.data.status}>{tr(`status.${price.data.status}`)}</StatusBadge>
                 </div>
                 {price.data.note && <p class="pnote">{tl(price.data.note, lang)}</p>}
-                <PackPicker item={price} lang={lang} />
+                <div class="buy-row">
+                  <span class="stage">{tr(`pack.${price.data.stage}`)}</span>
+                  <span class="bprice">
+                    {formatPrice(price.data.price, lang)}
+                    {lang !== 'pl' && <small class="eur">{formatEur(price.data.price, lang)}</small>}
+                    <small>{t.per}</small>
+                  </span>
+                </div>
+                <a class={buttonVariants({ variant: 'outline', size: 'sm' })} href={routes.pricelist[lang]}>
+                  {t.toOrder} <span class="arr">→</span>
+                </a>
               </section>
             )
           }
@@ -298,11 +313,6 @@ const t = pick(lang, {
             <a class={buttonVariants({ variant: 'outline', size: 'sm' })} href={`${routes.compare[lang]}?a=${entry.id}`}>
               {t.compare} <span class="arr">→</span>
             </a>
-            {price && (
-              <a class="link" href={routes.pricelist[lang]}>
-                {tr('nav.pricelist')}
-              </a>
-            )}
           </div>
         </div>
       </div>
@@ -890,6 +900,38 @@ const t = pick(lang, {
     font-family: var(--sans);
     font-size: 12px;
     letter-spacing: 0.06em;
+  }
+  .buy-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+  }
+  .buy-row .stage {
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fern);
+  }
+  .bprice {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(30px, 3vw, 40px);
+    line-height: 1;
+    color: var(--amber2);
+    white-space: nowrap;
+  }
+  .bprice small {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+  .buy > a {
+    justify-self: start;
   }
   .pnote {
     margin: 0;
