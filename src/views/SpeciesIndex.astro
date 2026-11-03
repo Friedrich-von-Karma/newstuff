@@ -1,4 +1,7 @@
 ---
+import { cardSurface } from '@/components/ui/card';
+import { tableClasses } from '@/components/ui/table';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
@@ -114,7 +117,7 @@ const t = pick(lang, {
                     <CommonsPhoto id={s.id} lang={lang} alt={d.latin} width={960} compact />
                   )}
                   <span class="idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                  {price && <span class={`status st-${price.status} chip`}>{tr(`status.${price.status}`)}</span>}
+                  {price && <StatusBadge status={price.status} className="chip">{tr(`status.${price.status}`)}</StatusBadge>}
                 </div>
                 <div class="body">
                   <div>
@@ -179,7 +182,7 @@ const t = pick(lang, {
         }
       </ul>
 
-      <aside class="cmp panel rv">
+      <aside class={`cmp rv ${cardSurface}`}>
         <div>
           <div class="lbl">{t.cmpLbl}</div>
           <h2>
@@ -196,28 +199,28 @@ const t = pick(lang, {
         <div class="lbl">{t.dbLbl}</div>
         <h2 id="db-h">{t.dbH} <em>{t.dbHem}</em></h2>
         <p class="dbp">{t.dbP}</p>
-        <div class="tbl-wrap">
-          <table class="tbl" data-sort-table>
-            <thead>
-              <tr>{t.cols.map((c, i) => <th scope="col"><button type="button" data-col={i}>{c}</button></th>)}</tr>
+        <div class={tableClasses.wrap}>
+          <table class={`${tableClasses.table} min-w-[760px]`} data-sort-table>
+            <thead class={tableClasses.header}>
+              <tr>{t.cols.map((c, i) => <th scope="col" class={tableClasses.head}><button type="button" data-col={i} class="cursor-pointer uppercase tracking-[0.18em] hover:text-amber-light">{c}</button></th>)}</tr>
             </thead>
-            <tbody>
+            <tbody class={tableClasses.body}>
               {
                 species.map((s) => {
                   const d = s.data;
                   return (
-                    <tr>
-                      <td data-v={d.latin}>
+                    <tr class={tableClasses.row}>
+                      <td class={tableClasses.cell} data-v={d.latin}>
                         <a class="latin" href={`${routes.species[lang]}${s.id}/`}>{d.latin}</a>
                         {d.author && <span class="auth">{d.author}</span>}
                       </td>
-                      <td data-v={`${d.family} ${d.taxonomy?.subfamily ?? ''}`}>
+                      <td class={tableClasses.cell} data-v={`${d.family} ${d.taxonomy?.subfamily ?? ''}`}>
                         {d.family}
                         {d.taxonomy?.subfamily && <span class="auth">{d.taxonomy.subfamily}</span>}
                       </td>
-                      <td data-v={d.taxonomy?.tradeNames.join(', ') ?? ''}>{d.taxonomy?.tradeNames.join(', ') || '—'}</td>
-                      <td data-v={tl(d.origin, lang)}>{tl(d.origin, lang)}</td>
-                      <td data-v={String(d.difficulty)}>{tr(`species.difficulty.${d.difficulty}` as UiKey)}</td>
+                      <td class={tableClasses.cell} data-v={d.taxonomy?.tradeNames.join(', ') ?? ''}>{d.taxonomy?.tradeNames.join(', ') || '—'}</td>
+                      <td class={tableClasses.cell} data-v={tl(d.origin, lang)}>{tl(d.origin, lang)}</td>
+                      <td class={tableClasses.cell} data-v={String(d.difficulty)}>{tr(`species.difficulty.${d.difficulty}` as UiKey)}</td>
                     </tr>
                   );
                 })
@@ -527,58 +530,20 @@ const t = pick(lang, {
     color: var(--muted);
     margin: 8px 0 22px;
   }
-  .tbl-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--line);
-  }
-  .tbl {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 760px;
-    font-size: 14px;
-  }
-  .tbl th {
-    text-align: left;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--line2);
-  }
-  .tbl th button {
-    all: unset;
-    cursor: pointer;
-    display: block;
-    padding: 12px 14px;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .tbl th button:hover,
-  .tbl th button:focus-visible {
-    color: var(--amber2);
-  }
-  .tbl th[aria-sort='ascending'] button::after {
+  .db :global(th[aria-sort='ascending'] button)::after {
     content: ' ↑';
   }
-  .tbl th[aria-sort='descending'] button::after {
+  .db :global(th[aria-sort='descending'] button)::after {
     content: ' ↓';
   }
-  .tbl td {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--line);
-    color: #d3cfbf;
-    vertical-align: top;
-  }
-  .tbl tr:hover td {
-    background: rgba(232, 165, 71, 0.05);
-  }
-  .tbl .latin {
+  .db .latin {
     font-family: var(--serif);
     font-style: italic;
     font-size: 18px;
     color: var(--text);
     text-decoration: none;
   }
-  .tbl .latin:hover {
+  .db .latin:hover {
     color: var(--amber2);
   }
   .auth {

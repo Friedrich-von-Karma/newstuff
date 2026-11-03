@@ -1,4 +1,6 @@
 ---
+import { glassSurface } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import ExLibris from '../components/ExLibris.astro';
@@ -112,7 +114,7 @@ const t = pick(lang, {
       <ol class="what">
         {
           t.what.map(([h, p], i) => (
-            <li class="glass rv" style={`--d:${i * 0.1}s`}>
+            <li class={`rv ${glassSurface}`} style={`--d:${i * 0.1}s`}>
               <span class="roman" aria-hidden="true">{['I', 'II', 'III'][i]}</span>
               <h3>{h}</h3>
               <p>{p}</p>
@@ -129,7 +131,7 @@ const t = pick(lang, {
             species.map((s) => (
               <li>
                 <a class="latin" href={`${routes.species[lang]}${s.id}/`}>{s.data.latin}</a>
-                {offered.has(s.id) && <span class="tag">{t.inList}</span>}
+                {offered.has(s.id) && <Badge variant="success">{t.inList}</Badge>}
               </li>
             ))
           }

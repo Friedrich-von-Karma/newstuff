@@ -41,7 +41,7 @@ Każdy gatunek jest sprzedawany w paczkach po 10 sztuk w jednym wariancie: nimfy
   price: 18                 # cena w zł za paczkę 10 szt.
 ```
 
-Strona /cennik/ to prosta lista: nazwa łacińska, co jest w paczce i cena za 10 szt. Kliknięcie nazwy otwiera profil hodowlany gatunku (pole `profile`), gdzie klient dodaje paczkę do koszyka albo zamawia od razu. Gatunek bez `profile` jest na liście bez linku.
+Strona /cennik/ to prosta lista: nazwa łacińska, co jest w paczce i cena za 10 szt. Kliknięcie nazwy otwiera profil hodowlany gatunku (pole `profile`) z przyciskiem „Napisz w sprawie zamówienia” – to nie sklep, zamówienia ustalane są mailowo. Gatunek bez `profile` jest na liście bez linku.
 
 ### Zdjęcia z Wikimedia Commons
 

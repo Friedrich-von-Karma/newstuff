@@ -1,4 +1,5 @@
 ---
+import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
@@ -82,8 +83,8 @@ const desc = `${x.latin}${tl(x.name, lang) ? ` (${tl(x.name, lang)})` : ''} – 
         </div>
         <div class="hd rv" style="--d:.1s">
           <p class="tags">
-            <span>{t.status[x.status]}</span>
-            {info && <span class={`r-${info.record}`}>{t.rec[info.record]}</span>}
+            <Badge variant="secondary">{t.status[x.status]}</Badge>
+            {info && <Badge variant={info.record === 'confirmed' ? 'success' : info.record === 'culture' ? 'secondary' : 'default'}>{t.rec[info.record]}</Badge>}
           </p>
           <h1 class="h-display latin">{x.latin}</h1>
           <p class="auth">{x.author}{tl(x.name, lang) && <> · <b>{tl(x.name, lang)}</b></>}</p>

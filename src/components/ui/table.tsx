@@ -23,3 +23,14 @@ export function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
 export function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
   return <td data-slot="table-cell" className={cn('px-3.5 py-3 align-top text-[#d3cfbf]', className)} {...props} />;
 }
+
+/** Te same klasy co w komponentach powyżej – do tabel pisanych bezpośrednio w plikach .astro. */
+export const tableClasses = {
+  wrap: 'relative w-full overflow-x-auto rounded-md border border-[var(--line)]',
+  table: 'w-full caption-bottom border-collapse text-sm',
+  header: '[&_tr]:border-b [&_tr]:border-border bg-bg3',
+  body: '[&_tr:last-child]:border-0',
+  row: 'border-b border-[var(--line)] transition-colors hover:bg-primary/5',
+  head: 'h-11 whitespace-nowrap px-3.5 text-left align-middle text-[11px] font-normal uppercase tracking-[0.18em] text-muted-foreground',
+  cell: 'px-3.5 py-3 align-top text-[#d3cfbf]',
+};

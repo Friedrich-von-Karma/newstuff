@@ -1,4 +1,7 @@
 ---
+import { cardSurface } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { buttonVariants } from '@/components/ui/button';
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -168,7 +171,7 @@ const t = pick(lang, {
         <a href={routes.species[lang]}>← {tr('species.back')}</a>
       </p>
 
-      <div class="full panel rv" style="--d:.1s">
+      <div class={`full rv ${cardSurface}`} style="--d:.1s">
         <div class="photo">
           <div class="stick">
           {
@@ -274,7 +277,7 @@ const t = pick(lang, {
               <section class="buy">
                 <div class="buy-h">
                   <span class="lbl">{t.buyLbl}</span>
-                  <span class={`status st-${price.data.status}`}>{tr(`status.${price.data.status}`)}</span>
+                  <StatusBadge status={price.data.status}>{tr(`status.${price.data.status}`)}</StatusBadge>
                 </div>
                 {price.data.note && <p class="pnote">{tl(price.data.note, lang)}</p>}
                 <PackPicker item={price} lang={lang} />
@@ -429,7 +432,7 @@ const t = pick(lang, {
                     {cap && <p>{cap}</p>}
                     <div class="meta">
                       <time datetime={gd.date.toISOString().slice(0, 10)}>{formatDate(gd.date, lang)}</time>
-                      {gd.sample && <span class="smp">{tr('sample.badge')}</span>}
+                      {gd.sample && <Badge>{tr('sample.badge')}</Badge>}
                     </div>
                   </div>
                 </li>

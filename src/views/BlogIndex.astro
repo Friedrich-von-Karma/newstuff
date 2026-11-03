@@ -1,4 +1,5 @@
 ---
+import { glassSurface } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
@@ -119,7 +120,7 @@ const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
         !lead ? (
           <p class="empty rv">{t.empty}</p>
         ) : (
-          <article class="post glass rv" style="--d:.2s">
+          <article class={`post rv ${glassSurface}`} style="--d:.2s">
             <a class="post-date" href={`${routes.blog[lang]}${postSlug(lead)}/`} tabindex="-1" aria-hidden="true">
               {lead.data.cover && (
                 <span class="pd-img">

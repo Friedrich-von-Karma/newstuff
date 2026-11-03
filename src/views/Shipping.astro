@@ -1,4 +1,5 @@
 ---
+import { cardSurface } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
@@ -60,11 +61,11 @@ const intList = site.international[lang];
     <div class="wrap">
       <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead} />
       <div class="cols">
-        <article class="panel rv">
+        <article class={`rv ${cardSurface}`}>
           <h2>{t.plH}</h2>
           <ul class="ship">{plList.map((s) => <li>{s}</li>)}</ul>
         </article>
-        <article class="panel rv" style="--d:.12s">
+        <article class={`rv ${cardSurface}`} style="--d:.12s">
           <h2>{t.intH}</h2>
           <ul class="ship">{intList.map((s) => <li>{s}</li>)}</ul>
           <p class="rate">{t.rate} {site.eurRate.toFixed(2).replace('.', lang === 'en' ? '.' : ',')} zł = 1 €.</p>

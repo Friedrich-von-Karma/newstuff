@@ -1,4 +1,5 @@
 ---
+import { Badge } from '@/components/ui/badge';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import { groups, library } from '../data/library';
@@ -89,8 +90,8 @@ const t = pick(lang, {
                       )}
                     </p>
                     <p class="no">
-                      {tl(i.note, lang)} <span class="lng">{i.lang}</span>
-                      {i.open && <span class="oa">{t.open}</span>}
+                      {tl(i.note, lang)} <Badge variant="secondary" className="ml-2">{i.lang}</Badge>
+                      {i.open && <Badge variant="success" className="ml-2">{t.open}</Badge>}
                     </p>
                   </li>
                 ))}

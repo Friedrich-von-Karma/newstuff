@@ -1,4 +1,5 @@
 ---
+import { StatusBadge } from '@/components/ui/status-badge';
 import { buttonVariants } from '@/components/ui/button';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -74,7 +75,7 @@ const t = pick(lang, {
       readBottom: `${orderable.length} do zamówienia · ${taxa.length} w kluczu`,
       cue: 'Zejdź w ściółkę',
       priceH: ['Cennik', 'na żywo'],
-      priceP: 'Każdy gatunek w paczkach po 10 sztuk – zależnie od gatunku są to nimfy, mix (nimfy i imago) albo imago. Dodaj do koszyka albo zamów od razu mailem. Przy braku towaru zapisz się na powiadomienie.',
+      priceP: 'Każdy gatunek w paczkach po 10 sztuk – zależnie od gatunku są to nimfy, mix (nimfy i imago) albo imago. Zamówienia przyjmuję mailowo – przy każdym gatunku jest przycisk, który otwiera gotową wiadomość. Gdy gatunku chwilowo brak, napisz, a dam znać.',
       updatedLbl: 'cennik zaktualizowany',
       packNote: 'Paczka = 10 sztuk',
       shipLbl: 'wysyłka, odbiór, płatność',
@@ -123,7 +124,7 @@ const t = pick(lang, {
       readBottom: `${orderable.length} to order · ${taxa.length} in the key`,
       cue: 'Down into the leaf litter',
       priceH: ['Price list', 'live'],
-      priceP: 'Every species comes in packs of 10 – nymphs, a mix (nymphs and adults) or adults, depending on the species. Add it to the cart or order straight away by e-mail. If something is out of stock, sign up for a notification.',
+      priceP: 'Every species comes in packs of 10 – nymphs, a mix (nymphs and adults) or adults, depending on the species. Orders are arranged by e-mail – each species has a button that opens a ready-made message. If a species is out of stock, write to me and I will let you know.',
       updatedLbl: 'price list updated',
       packNote: 'One pack = 10 individuals',
       shipLbl: 'shipping, pickup, payment',
@@ -172,7 +173,7 @@ const t = pick(lang, {
       readBottom: `${orderable.length} bestellbar · ${taxa.length} im Schlüssel`,
       cue: 'Hinab in die Laubstreu',
       priceH: ['Preisliste', 'aktuell'],
-      priceP: 'Jede Art gibt es in Packungen zu 10 Tieren – je nach Art als Nymphen, Mix (Nymphen und Adulte) oder Adulte. In den Warenkorb legen oder direkt per E-Mail bestellen. Ist etwas ausverkauft, trag dich für eine Benachrichtigung ein.',
+      priceP: 'Jede Art gibt es in Packungen zu 10 Tieren – je nach Art als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Bestellungen laufen per E-Mail – bei jeder Art öffnet ein Knopf eine fertige Nachricht. Ist eine Art ausverkauft, schreib mir, dann melde ich mich.',
       updatedLbl: 'Preisliste aktualisiert',
       packNote: 'Eine Packung = 10 Tiere',
       shipLbl: 'Versand, Abholung, Zahlung',
@@ -306,7 +307,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
                 <div class="sp-img">{src ? <img src={src} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0" /> : <span class="nophoto"><b>{pick(lang, { pl: 'brak zdjęcia', en: 'no photo', de: 'kein Foto' })}</b></span>}</div>
                 <div class="tile-body">
                   <div>
-                    <span class={`status st-${item.data.status}`}>{tr(`status.${item.data.status}` as UiKey)}</span>
+                    <StatusBadge status={item.data.status}>{tr(`status.${item.data.status}` as UiKey)}</StatusBadge>
                   </div>
                   <div>
                     <h3 class="sp-name">

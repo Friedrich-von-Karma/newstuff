@@ -1,4 +1,6 @@
 ---
+import { glassSurface } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 /**
  * GALERIA „Z MOJEJ HODOWLI” – zdjęcia i filmy z hodowli.
  *
@@ -199,7 +201,7 @@ const labels = {
           <p class="empty rv">{t.none}</p>
         ) : (
           <>
-            <div class="gbar glass rv" style="--d:.2s" role="group" aria-label={t.filter}>
+            <div class={`gbar rv ${glassSurface}`} style="--d:.2s" role="group" aria-label={t.filter}>
               <div class="chips">
                 <button type="button" class="gchip" data-filter="all" aria-pressed="true">{t.all}</button>
                 {hasPhotos && (
@@ -257,7 +259,7 @@ const labels = {
                       <span class="m-title">{it.title}</span>
                       {it.speciesName && <span class="m-sp">{it.speciesName}</span>}
                     </span>
-                    {it.sample && <span class="smp">{t.sample}</span>}
+                    {it.sample && <Badge>{t.sample}</Badge>}
                     <span class="vh">{it.kind === 'video' ? t.play : ''}</span>
                   </button>
                 </li>

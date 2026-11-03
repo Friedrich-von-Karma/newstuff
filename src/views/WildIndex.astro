@@ -1,4 +1,5 @@
 ---
+import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
@@ -102,7 +103,7 @@ const groups = (['wild', 'indoor', 'rare'] as const).map((g) => ({ id: g, items:
                     <CommonsPhoto id={x.id} lang={lang} alt={x.latin} width={500} compact />
                   </a>
                   <div class="cb">
-                    <span class={`rec r-${x.info?.record}`}>{x.info ? t.rec[x.info.record] : ''}</span>
+                    {x.info && <Badge variant={x.info.record === 'confirmed' ? 'success' : x.info.record === 'culture' ? 'secondary' : 'default'}>{t.rec[x.info.record]}</Badge>}
                     <h3>
                       <a href={`${routes.wild[lang]}${x.id}/`} class="latin">{x.latin}</a>
                     </h3>

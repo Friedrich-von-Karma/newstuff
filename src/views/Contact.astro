@@ -1,4 +1,5 @@
 ---
+import { site } from '../data/site';
 import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import ContactScene from '../components/ContactScene.astro';
@@ -16,7 +17,7 @@ const t = pick(lang, {
       num: 'Blattodea.pl · Kontakt',
       ordersLbl: 'I · zamówienia',
       orders: 'Zamówienia',
-      cart: 'Otwórz koszyk',
+      cart: 'Napisz maila',
       idLbl: 'II · oznaczanie',
       id: 'Oznaczanie',
       idGo: 'Oznacz karaczana',
@@ -26,7 +27,7 @@ const t = pick(lang, {
       num: 'Blattodea.pl · Contact',
       ordersLbl: 'I · orders',
       orders: 'Orders',
-      cart: 'Open the cart',
+      cart: 'Write an e-mail',
       idLbl: 'II · identification',
       id: 'Identification',
       idGo: 'Identify a cockroach',
@@ -36,7 +37,7 @@ const t = pick(lang, {
       num: 'Blattodea.pl · Kontakt',
       ordersLbl: 'I · Bestellungen',
       orders: 'Bestellungen',
-      cart: 'Warenkorb öffnen',
+      cart: 'E-Mail schreiben',
       idLbl: 'II · Bestimmung',
       id: 'Bestimmung',
       idGo: 'Schabe bestimmen lassen',
@@ -54,7 +55,7 @@ const t = pick(lang, {
       <h2>{t.orders}</h2>
       <p>{tr('contact.orderHint')}</p>
       <div class="acts">
-        <button type="button" class={buttonVariants()} data-open-cart>{t.cart} <span class="arr">→</span></button>
+        <a class={buttonVariants()} href={`mailto:${site.contact.email}`}>{t.cart} <span class="arr">→</span></a>
         <a class={buttonVariants({ variant: 'secondary' })} href={routes.pricelist[lang]}>{tr('nav.pricelist')} <span class="arr">→</span></a>
       </div>
     </article>
