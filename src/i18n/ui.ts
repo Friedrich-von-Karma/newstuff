@@ -90,7 +90,7 @@ export const ui = {
     'home.plate': 'Tablica I',
 
     'pricelist.title': 'Cennik',
-    'pricelist.lead': 'Każdy gatunek sprzedaję w paczkach po 10 sztuk – jako nimfy, mix (nimfy i imago) albo imago, zależnie od gatunku. Ceny w złotych. Kliknij gatunek i zamów – odpowiem mailem z potwierdzeniem dostępności i kosztów wysyłki.',
+    'pricelist.lead': 'Każdy gatunek sprzedaję w paczkach po 10 sztuk – jako nimfy, mix (nimfy i imago) albo imago, zależnie od gatunku. Ceny w złotych. Zamówienia przyjmuję mailowo – odpowiem z potwierdzeniem dostępności i kosztów wysyłki.',
     'pricelist.updated': 'Ostatnia aktualizacja',
     'pricelist.species': 'Gatunek',
     'pricelist.status': 'Dostępność',
@@ -220,7 +220,7 @@ export const ui = {
     'home.plate': 'Plate I',
 
     'pricelist.title': 'Price list',
-    'pricelist.lead': 'Every species is sold in packs of 10 – as nymphs, a mix (nymphs and adults) or adults, depending on the species. Prices in Polish złoty (PLN). Click a species and order – I will confirm availability and shipping costs.',
+    'pricelist.lead': 'Every species is sold in packs of 10 – as nymphs, a mix (nymphs and adults) or adults, depending on the species. Prices in Polish złoty (PLN). Orders by e-mail – I will reply confirming availability and shipping costs.',
     'pricelist.updated': 'Last updated',
     'pricelist.species': 'Species',
     'pricelist.status': 'Availability',
@@ -350,7 +350,7 @@ export const ui = {
     'home.plate': 'Tafel I',
 
     'pricelist.title': 'Preisliste',
-    'pricelist.lead': 'Jede Art wird in Packungen zu 10 Tieren verkauft – je nach Art als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Preise in polnischen Złoty (PLN), Euro-Beträge sind Richtwerte. Art anklicken und bestellen – ich bestätige Verfügbarkeit und Versandkosten.',
+    'pricelist.lead': 'Jede Art wird in Packungen zu 10 Tieren verkauft – je nach Art als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Preise in polnischen Złoty (PLN), Euro-Beträge sind Richtwerte. Bestellungen per E-Mail – ich bestätige Verfügbarkeit und Versandkosten.',
     'pricelist.updated': 'Zuletzt aktualisiert',
     'pricelist.species': 'Art',
     'pricelist.status': 'Verfügbarkeit',

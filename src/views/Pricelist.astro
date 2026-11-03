@@ -1,11 +1,11 @@
 ---
 import { glassSurface } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
+import PriceList from '../components/PriceList.astro';
 import { site } from '../data/site';
 import { formatDate, routes, useTranslations, type Lang, tl, pick } from '../i18n/ui';
-import { formatPrice, getPricelist, getPricelistUpdated, getSpecies, formatEur } from '../lib/content';
+import { getPricelist, getPricelistUpdated } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -15,8 +15,7 @@ const tr = useTranslations(lang);
 const other: Lang = lang === 'pl' ? 'en' : 'pl';
 const pl = lang === 'pl';
 
-const [items, species] = await Promise.all([getPricelist(), getSpecies()]);
-const speciesById = new Map(species.map((s) => [s.id, s]));
+const items = await getPricelist();
 const anySample = items.some((i) => i.data.sample);
 const updatedIso = getPricelistUpdated();
 const updatedDate = updatedIso ? new Date(`${updatedIso}T12:00:00`) : null;
@@ -28,7 +27,7 @@ const t = pick(lang, {
       h1a: 'Cennik',
       h1b: 'na żywo',
       intro:
-        'Ceny za paczkę <strong>10 sztuk</strong>. Każdy gatunek sprzedaję w jednym wariancie – jako nimfy, mix (nimfy i imago) albo imago. Kliknij nazwę gatunku, żeby zobaczyć jego profil hodowlany i zamówić.',
+        'Ceny za paczkę <strong>10 sztuk</strong>. Każdy gatunek sprzedaję w jednym wariancie – jako nimfy, mix (nimfy i imago) albo imago. Kliknij nazwę gatunku, żeby zobaczyć jego profil hodowlany. Zamówienie – jednym mailem pod listą.',
       updated: 'cennik zaktualizowany',
       pack: 'Paczka = 10 sztuk wybranego wariantu',
       cart: 'Napisz maila',
@@ -45,7 +44,7 @@ const t = pick(lang, {
         ['Napisz maila', 'Podaj gatunek, liczbę paczek i miejscowość. Przycisk „Napisz w sprawie zamówienia” przygotuje gotową wiadomość.'],
         ['Dostaniesz odpowiedź', 'Potwierdzę dostępność, podam koszt wysyłki i termin. Płatność dopiero po ustaleniu szczegółów.'],
       ],
-      wait: 'Gatunku chwilowo brak albo pojawi się wkrótce? Kliknij „Powiadom mnie” w jego profilu – wiadomość zapisze Cię na listę oczekujących.',
+      wait: 'Gatunku chwilowo brak albo pojawi się wkrótce? Napisz maila – zapiszę Cię na listę oczekujących i dam znać, gdy będzie dostępny.',
       note: 'Ceny w złotych za paczkę 10 szt. · stan hodowli zmienia się z tygodnia na tydzień',
       compare: 'Porównaj gatunki',
       stageH: 'W paczce',
@@ -56,7 +55,7 @@ const t = pick(lang, {
       h1a: 'Price list',
       h1b: 'live',
       intro:
-        'Prices per pack of <strong>10</strong>. Each species is sold in one form – as nymphs, a mix (nymphs and adults) or adults. Click a species name to see its care sheet and order.',
+        'Prices per pack of <strong>10</strong>. Each species is sold in one form – as nymphs, a mix (nymphs and adults) or adults. Click a species name to see its care sheet. To order, send one e-mail – button below the list.',
       updated: 'price list updated',
       pack: 'Pack = 10 individuals of the chosen option',
       cart: 'Write an e-mail',
@@ -73,7 +72,7 @@ const t = pick(lang, {
         ['Write an e-mail', 'Give the species, number of packs and your town or country. The “E-mail about an order” button prepares the message for you.'],
         ['Get a reply', 'I will confirm availability, the shipping cost and date. Payment only once everything is agreed.'],
       ],
-      wait: 'Species out of stock or coming soon? Click “Notify me” on its care sheet – the message adds you to the waiting list.',
+      wait: 'Species out of stock or coming soon? Send me an e-mail – I will put you on the waiting list and let you know when it is available.',
       note: 'Prices in PLN per pack of 10 · stock changes from week to week',
       compare: 'Compare species',
       stageH: 'In the pack',
@@ -84,7 +83,7 @@ const t = pick(lang, {
       h1a: 'Preisliste',
       h1b: 'aktuell',
       intro:
-        'Preise pro Packung mit <strong>10</strong> Tieren. Jede Art wird in einer Form verkauft – als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Euro-Beträge sind Richtwerte. Klicke auf einen Artnamen, um das Haltungsprofil zu sehen und zu bestellen.',
+        'Preise pro Packung mit <strong>10</strong> Tieren. Jede Art wird in einer Form verkauft – als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Euro-Beträge sind Richtwerte. Klicke auf einen Artnamen, um das Haltungsprofil zu sehen. Bestellt wird per E-Mail – Knopf unter der Liste.',
       updated: 'Preisliste aktualisiert',
       pack: 'Packung = 10 Tiere der gewählten Variante',
       cart: 'E-Mail schreiben',
@@ -101,7 +100,7 @@ const t = pick(lang, {
         ['E-Mail schreiben', 'Nenne Art, Anzahl der Packungen und Land bzw. Ort. Der Knopf „Per E-Mail anfragen“ bereitet die Nachricht vor.'],
         ['Antwort erhalten', 'Ich bestätige Verfügbarkeit, Versandkosten und Termin. Bezahlt wird erst, wenn alles geklärt ist.'],
       ],
-      wait: 'Art ausverkauft oder bald verfügbar? Klicke im Haltungsprofil auf „Benachrichtigen“ – die Nachricht trägt dich in die Warteliste ein.',
+      wait: 'Art ausverkauft oder bald verfügbar? Schreib mir eine E-Mail – ich trage dich in die Warteliste ein und melde mich, sobald die Art verfügbar ist.',
       note: 'Preise in PLN pro 10er-Packung · der Bestand ändert sich von Woche zu Woche',
       compare: 'Arten vergleichen',
       stageH: 'In der Packung',
@@ -131,38 +130,7 @@ const t = pick(lang, {
         </div>
       </div>
 
-      <div class="list rv" style="--d:.2s" role="table" aria-label={tr('pricelist.title')}>
-        <div class="row head" role="row">
-          <span role="columnheader">{tr('pricelist.species')}</span>
-          <span class="stg" role="columnheader">{t.stageH}</span>
-          <span class="pc" role="columnheader">{t.priceH}</span>
-        </div>
-        {
-          items.map((item) => {
-            const d = item.data;
-            const profile = d.profile ? speciesById.get(d.profile) : undefined;
-            const href = profile ? `${routes.species[lang]}${profile.id}/` : undefined;
-            return (
-              <div class:list={['row', { dim: d.status === 'out' }]} role="row">
-                <span class="name" role="cell">
-                  {href ? (
-                    <a class="latin" href={href}>
-                      {d.latin}
-                      <span class="arr" aria-hidden="true">→</span>
-                    </a>
-                  ) : (
-                    <span class="latin">{d.latin}</span>
-                  )}
-                  {d.status !== 'available' && <Badge variant={d.status === 'low' ? 'default' : d.status === 'soon' ? 'success' : 'secondary'}>{tr(`status.${d.status}`)}</Badge>}
-                </span>
-                <span class="stg" role="cell">{tr(`pack.${d.stage}`)}</span>
-                <span class="pc" role="cell">{formatPrice(d.price, lang)}{lang !== 'pl' && <small class="eur">{formatEur(d.price, lang)}</small>}</span>
-              </div>
-            );
-          })
-        }
-        {items.length === 0 && <p class="empty">{tr('pricelist.empty')}</p>}
-      </div>
+      <PriceList lang={lang} />
       <div class="pack-note rv">{t.note}</div>
 
       <div class={`ship-box rv ${glassSurface}`}>
@@ -230,118 +198,6 @@ const t = pick(lang, {
     color: var(--amber2);
   }
 
-  /* lista cen */
-  .list {
-    border-top: 1px solid var(--line2);
-  }
-  .row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 9rem 9rem;
-    align-items: baseline;
-    gap: 12px 20px;
-    padding: 18px 8px;
-    border-bottom: 1px solid var(--line);
-    transition: background 0.3s;
-  }
-  .row:not(.head):hover {
-    background: linear-gradient(90deg, rgba(232, 165, 71, 0.07), transparent 70%);
-  }
-  .head {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .pc {
-    text-align: right;
-    font-variant-numeric: tabular-nums lining-nums;
-  }
-  .row:not(.head) .pc {
-    font-family: var(--serif);
-    font-size: clamp(18px, 1.6vw, 22px);
-    color: var(--amber2);
-  }
-  .eur {
-    display: block;
-    font-family: var(--sans);
-    font-size: 12px;
-    color: var(--muted);
-  }
-  .stg {
-    font-size: 13px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--fern);
-  }
-  .head .stg {
-    color: var(--muted);
-  }
-  .name {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 6px 14px;
-    min-width: 0;
-  }
-  .latin {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: clamp(22px, 2.4vw, 32px);
-    line-height: 1.15;
-    color: var(--text);
-  }
-  a.latin {
-    text-decoration: none;
-    background: linear-gradient(var(--amber), var(--amber)) 0 100% / 0 1px no-repeat;
-    transition:
-      color 0.3s,
-      background-size 0.45s var(--ease);
-  }
-  a.latin:hover,
-  a.latin:focus-visible {
-    color: var(--amber2);
-    background-size: 100% 1px;
-  }
-  .latin .arr {
-    display: inline-block;
-    margin-left: 10px;
-    font-style: normal;
-    font-size: 0.6em;
-    color: var(--amber);
-    opacity: 0.6;
-    transition:
-      transform 0.4s var(--ease),
-      opacity 0.3s;
-  }
-  a.latin:hover .arr {
-    transform: translateX(6px);
-    opacity: 1;
-  }
-  .st {
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 2px 8px;
-    border: 1px solid var(--line2);
-    color: var(--muted);
-  }
-  .st-low {
-    color: var(--amber2);
-    border-color: rgba(232, 165, 71, 0.45);
-  }
-  .st-soon {
-    color: var(--fern);
-    border-color: rgba(169, 191, 127, 0.45);
-  }
-  .dim .latin,
-  .dim .pc {
-    opacity: 0.55;
-  }
-  .list .empty {
-    margin: 20px 0;
-  }
   .pack-note {
     margin-top: 22px;
     color: var(--muted);
@@ -456,19 +312,6 @@ const t = pick(lang, {
   @media (max-width: 860px) {
     .steps {
       grid-template-columns: minmax(0, 1fr);
-    }
-  }
-  @media (max-width: 640px) {
-    .head {
-      display: none;
-    }
-    .row {
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 6px 16px;
-      padding: 16px 4px;
-    }
-    .name {
-      grid-column: 1 / -1;
     }
   }
 </style>
