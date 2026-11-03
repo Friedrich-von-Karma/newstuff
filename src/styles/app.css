@@ -1,0 +1,83 @@
+/*
+ * Blattodea.pl – arkusz główny.
+ * Kolejność warstw: Tailwind (theme, base) → dotychczasowe style strony (legacy) → komponenty → klasy narzędziowe.
+ * Dzięki temu klasy shadcn/Tailwind zawsze wygrywają ze starszymi regułami z global.css.
+ */
+@layer theme, base, legacy, components, utilities;
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './global.css' layer(legacy);
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Motyw shadcn/ui w barwach „Nocnego terrarium”.
+ * (Uwaga: --muted w global.css to kolor tekstu, dlatego tło „muted” shadcn ma tu osobną nazwę.)
+ */
+:root {
+  --radius: 0.25rem;
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--bg2);
+  --card-foreground: var(--text);
+  --popover: #0e1711;
+  --popover-foreground: var(--text);
+  --primary: var(--amber);
+  --primary-foreground: #1a1208;
+  --secondary: var(--bg3);
+  --secondary-foreground: var(--text);
+  --muted-bg: var(--bg3);
+  --muted-fg: var(--muted);
+  --accent: rgba(232, 165, 71, 0.12);
+  --accent-foreground: var(--amber2);
+  --destructive: #c8553b;
+  --border: var(--line2);
+  --input: var(--line2);
+  --ring: var(--amber2);
+  --chart-1: var(--amber);
+  --chart-2: var(--fern);
+  --chart-3: var(--moss2);
+  --chart-4: var(--ember);
+  --chart-5: var(--amber2);
+}
+
+@theme inline {
+  --font-sans: var(--sans);
+  --font-serif: var(--serif);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted-bg);
+  --color-muted-foreground: var(--muted-fg);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-amber: var(--amber);
+  --color-amber-light: var(--amber2);
+  --color-fern: var(--fern);
+  --color-moss: var(--moss2);
+  --color-dim: var(--dim);
+  --color-bg2: var(--bg2);
+  --color-bg3: var(--bg3);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}

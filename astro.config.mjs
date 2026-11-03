@@ -2,6 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
+import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://blattodea.pl',
@@ -9,10 +11,11 @@ export default defineConfig({
   // Strony zostają statyczne; tylko src/pages/api/* (logowanie do panelu /admin) działają jako funkcje Vercel.
   adapter: vercel(),
   // MapLibre (tło map) ma ok. 1 MB, ale ładuje się tylko na stronach z mapą
-  vite: { build: { chunkSizeWarningLimit: 1200 } },
+  vite: { plugins: [tailwindcss()], build: { chunkSizeWarningLimit: 1200 } },
   scopedStyleStrategy: 'class',
   devToolbar: { enabled: false },
   integrations: [
+    react(),
     sitemap({
       i18n: { defaultLocale: 'pl', locales: { pl: 'pl-PL', en: 'en-GB', de: 'de-DE' } },
     }),
