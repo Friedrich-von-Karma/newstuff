@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import ContactScene from '../components/ContactScene.astro';
 import { routes, useTranslations, type Lang, pick } from '../i18n/ui';
@@ -53,8 +54,8 @@ const t = pick(lang, {
       <h2>{t.orders}</h2>
       <p>{tr('contact.orderHint')}</p>
       <div class="acts">
-        <button type="button" class="btn" data-open-cart>{t.cart} <span class="arr">→</span></button>
-        <a class="btn quiet" href={routes.pricelist[lang]}>{tr('nav.pricelist')} <span class="arr">→</span></a>
+        <button type="button" class={buttonVariants()} data-open-cart>{t.cart} <span class="arr">→</span></button>
+        <a class={buttonVariants({ variant: 'secondary' })} href={routes.pricelist[lang]}>{tr('nav.pricelist')} <span class="arr">→</span></a>
       </div>
     </article>
     <article class="hint rv" style="--d:.12s">
@@ -62,8 +63,8 @@ const t = pick(lang, {
       <h2>{t.id}</h2>
       <p data-glossary>{tr('contact.idHint')}</p>
       <div class="acts">
-        <a class="btn" href={routes.identify[lang]}>{t.idGo} <span class="arr">→</span></a>
-        <a class="btn quiet" href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
+        <a class={buttonVariants()} href={routes.identify[lang]}>{t.idGo} <span class="arr">→</span></a>
+        <a class={buttonVariants({ variant: 'secondary' })} href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
       </div>
     </article>
   </section>

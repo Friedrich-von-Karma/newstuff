@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import { site } from '../data/site';
 import { routes, useTranslations, type Lang, type RouteKey, pick } from '../i18n/ui';
 import ExLibris from './ExLibris.astro';
@@ -84,7 +85,7 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
       <div class="nl-row">
         <label class="vh" for="nl-email">E-mail</label>
         <input id="nl-email" type="email" name="email" required autocomplete="email" placeholder={pick(lang, { pl: 'twój e-mail', en: 'your e-mail', de: 'deine E-Mail' })} />
-        <button type="submit" class="btn small">{pick(lang, { pl: 'Zapisz mnie', en: 'Subscribe', de: 'Anmelden' })}</button>
+        <button type="submit" class={buttonVariants({ size: 'sm' })}>{pick(lang, { pl: 'Zapisz mnie', en: 'Subscribe', de: 'Anmelden' })}</button>
       </div>
       <label class="nl-ok">
         <input type="checkbox" name="Zgoda" value="tak" required />

@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
@@ -81,9 +82,9 @@ const groups = (['wild', 'indoor', 'rare'] as const).map((g) => ({ id: g, items:
     <div class="wrap">
       <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead}>
         <div class="acts rv">
-          <a class="btn" href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
-          <a class="btn quiet" href={routes.calendar[lang]}>{t.cal}</a>
-          <a class="btn quiet" href={routes.map[lang]}>{t.map}</a>
+          <a class={buttonVariants()} href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
+          <a class={buttonVariants({ variant: 'secondary' })} href={routes.calendar[lang]}>{t.cal}</a>
+          <a class={buttonVariants({ variant: 'secondary' })} href={routes.map[lang]}>{t.map}</a>
         </div>
       </PageHead>
 

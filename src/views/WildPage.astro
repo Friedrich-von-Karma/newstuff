@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import Phenology from '../components/Phenology.astro';
@@ -93,9 +94,9 @@ const desc = `${x.latin}${tl(x.name, lang) ? ` (${tl(x.name, lang)})` : ''} – 
             <div><dt>{t.hab}</dt><dd>{tl(x.habitat, lang)}</dd></div>
           </dl>
           <div class="acts">
-            <a class="btn" href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
-            <a class="btn quiet small" href={`${routes.map[lang]}#zglos`}>{t.map}</a>
-            {x.profile && <a class="btn quiet small" href={`${routes.species[lang]}${x.profile}/`}>{t.profile}</a>}
+            <a class={buttonVariants()} href={routes.key[lang]}>{t.key} <span class="arr">→</span></a>
+            <a class={buttonVariants({ variant: 'secondary', size: 'sm' })} href={`${routes.map[lang]}#zglos`}>{t.map}</a>
+            {x.profile && <a class={buttonVariants({ variant: 'secondary', size: 'sm' })} href={`${routes.species[lang]}${x.profile}/`}>{t.profile}</a>}
           </div>
         </div>
       </div>

@@ -81,3 +81,12 @@
     @apply border-border outline-ring/50;
   }
 }
+
+/* strzałka w przyciskach shadcn przesuwa się po najechaniu */
+.group\/btn .arr {
+  display: inline-block;
+  transition: transform 0.35s var(--ease);
+}
+.group\/btn:hover .arr {
+  transform: translateX(4px);
+}

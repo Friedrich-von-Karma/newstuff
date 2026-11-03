@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
 import { formatDate, routes, useTranslations, type Lang, tl, pick } from '../i18n/ui';
@@ -197,8 +198,8 @@ const t = pick(lang, {
         {t.wait}
       </p>
       <div class="cta rv">
-        <button type="button" class="btn" data-open-cart>{t.cart} <span class="arr">→</span></button>
-        <a class="btn quiet" href={routes.compare[lang]}>{t.compare} <span class="arr">→</span></a>
+        <button type="button" class={buttonVariants()} data-open-cart>{t.cart} <span class="arr">→</span></button>
+        <a class={buttonVariants({ variant: 'secondary' })} href={routes.compare[lang]}>{t.compare} <span class="arr">→</span></a>
         <a class="link" href={routes.species[lang]}>{tr('nav.species')}</a>
       </div>
     </div>

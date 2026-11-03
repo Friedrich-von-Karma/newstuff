@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import 'leaflet/dist/leaflet.css';
 import Base from '../layouts/Base.astro';
 import SubmitForm from '../components/SubmitForm.astro';
@@ -226,7 +227,7 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile, none
                 <span class="beacon" aria-hidden="true" />
                 <h2>{t.emptyH}</h2>
                 <p>{t.emptyP}</p>
-                <a class="btn" href="#zglos">
+                <a class={buttonVariants()} href="#zglos">
                   {t.emptyBtn} <span class="arr">↓</span>
                 </a>
               </div>
@@ -283,7 +284,7 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile, none
         <article class="sbox rv" style="--d:.1s">
           <h3>{t.latest}</h3>
           <ol class="latest" id="map-latest"></ol>
-          <button type="button" class="btn small" id="map-csv">{t.csv} <span class="arr">↓</span></button>
+          <button type="button" class={buttonVariants({ size: 'sm' })} id="map-csv">{t.csv} <span class="arr">↓</span></button>
           <p class="hint">{t.csvHint}</p>
         </article>
       </div>

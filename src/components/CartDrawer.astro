@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import { pick } from '../i18n/ui';
 /** Wysuwany koszyk – składa jedno zamówienie e-mailem z listą paczek i sumą. */
 import { site } from '../data/site';
@@ -109,7 +110,7 @@ const t = pick(lang, {
       </fieldset>
       <label class="field"><span>{t.extra}</span><textarea data-cart-extra rows="2"></textarea></label>
     </div>
-    <a class="btn send" data-cart-send href="#">{t.send} <span class="arr">→</span></a>
+    <a class={`${buttonVariants()} send`} data-cart-send href="#">{t.send} <span class="arr">→</span></a>
     <p class="how">{t.how} {site.contact.email}</p>
     <div class="row">
       <button type="button" class="mini" data-cart-copy>{t.copy}</button>

@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
@@ -360,7 +361,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
     </div>
     <div class="scene-foot rv">
       <span class="pack-note">{t.priceNote}{anySample && <> · {tr('sample.note')}</>}</span>
-      <a class="btn ghost" href={L('pricelist')}>{t.fullPrice} <span class="arr">→</span></a>
+      <a class={buttonVariants({ variant: 'outline' })} href={L('pricelist')}>{t.fullPrice} <span class="arr">→</span></a>
     </div>
   </section>
 
@@ -469,7 +470,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
                       <Note />
                     </div>
                   )}
-                  <a class="btn ghost full" href={`${L('species')}${s.id}/`}>
+                  <a class={`${buttonVariants({ variant: 'outline' })} full`} href={`${L('species')}${s.id}/`}>
                     {t.full} <span class="arr">→</span>
                   </a>
                 </div>
@@ -482,8 +483,8 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
           <h3>{t.endH}</h3>
           <p>{t.endP}</p>
           <div class="end-links">
-            <a class="btn ghost" href={L('compare')}>{t.compare} <span class="arr">→</span></a>
-            <a class="btn quiet" href={L('gallery')}>{t.gallery} <span class="arr">→</span></a>
+            <a class={buttonVariants({ variant: 'outline' })} href={L('compare')}>{t.compare} <span class="arr">→</span></a>
+            <a class={buttonVariants({ variant: 'secondary' })} href={L('gallery')}>{t.gallery} <span class="arr">→</span></a>
           </div>
         </div>
       </div>
@@ -629,7 +630,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
               {latest.data.description}
             </p>
             {latest.data.sample && <p class="smp">{tr('sample.badge')} – {tr('sample.note')}</p>}
-            <a class="btn ghost" href={`${L('blog')}${postSlug(latest)}/`}>
+            <a class={buttonVariants({ variant: 'outline' })} href={`${L('blog')}${postSlug(latest)}/`}>
               {t.readPost} <span class="arr">→</span>
             </a>
           </div>
@@ -1700,7 +1701,7 @@ const diffLabel = (d: number) => tr(`species.difficulty.${d}` as UiKey);
     font-style: italic;
     margin: 0;
   }
-  .post-txt .btn {
+  .post-txt :global(.group\/btn) {
     margin-top: 10px;
   }
   .more-posts {

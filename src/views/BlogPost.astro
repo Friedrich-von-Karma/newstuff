@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { formatDate, routes, useTranslations, type Lang, langs, pick } from '../i18n/ui';
@@ -158,7 +159,7 @@ const monthYear = formatDate(d.date, lang).replace(/^\d+\.?\s*/, '');
             )
           }
         </nav>}
-        <p class="back"><a class="btn quiet" href={routes.blog[lang]}>← {tr('blog.back')}</a></p>
+        <p class="back"><a class={buttonVariants({ variant: 'secondary' })} href={routes.blog[lang]}>← {tr('blog.back')}</a></p>
       </footer>
     </div>
   </article>

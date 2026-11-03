@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 import { formatDate, routes, useTranslations, type Lang, langs, pick } from '../i18n/ui';
@@ -151,7 +152,7 @@ const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
                   ))}
                 </ul>
               )}
-              <a class="btn ghost" href={`${routes.blog[lang]}${postSlug(lead)}/`}>
+              <a class={buttonVariants({ variant: 'outline' })} href={`${routes.blog[lang]}${postSlug(lead)}/`}>
                 {t.read} <span class="arr">→</span>
               </a>
             </div>
@@ -317,7 +318,7 @@ const tagUrl = (x: string) => `${routes.blog[lang]}tag/${slugify(x)}/`;
     font-style: italic;
     margin: 0;
   }
-  .post-txt .btn {
+  .post-txt :global(.group\/btn) {
     margin-top: auto;
   }
 

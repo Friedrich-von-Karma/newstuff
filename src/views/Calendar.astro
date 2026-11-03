@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import Phenology from '../components/Phenology.astro';
@@ -115,7 +116,7 @@ const active = outdoor.filter((x) => x.info!.phenology.adults?.includes(now));
             <h2>{t.noH}</h2>
             <p>{t.noP}</p>
             <ul>{nodata.map((x) => <li><a class="latin" href={`${routes.wild[lang]}${x.id}/`}>{x.latin}</a></li>)}</ul>
-            <a class="btn small" href={`${routes.map[lang]}#zglos`}>{t.send} <span class="arr">→</span></a>
+            <a class={buttonVariants({ size: 'sm' })} href={`${routes.map[lang]}#zglos`}>{t.send} <span class="arr">→</span></a>
           </section>
         )}
       </div>

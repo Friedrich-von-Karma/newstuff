@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { routes, useTranslations, type Lang, type UiKey, tl, pick } from '../i18n/ui';
@@ -186,7 +187,7 @@ const t = pick(lang, {
           </h2>
           <p>{t.cmpP}</p>
         </div>
-        <a class="btn" href={routes.compare[lang]}>
+        <a class={buttonVariants()} href={routes.compare[lang]}>
           {t.cmpBtn} <span class="arr">→</span>
         </a>
       </aside>
