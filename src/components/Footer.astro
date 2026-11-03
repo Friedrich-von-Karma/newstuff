@@ -1,4 +1,5 @@
 ---
+import { inputClass, nativeCheckboxClass } from '@/components/ui/native';
 import { buttonVariants } from '@/components/ui/button';
 import { site } from '../data/site';
 import { routes, useTranslations, type Lang, type RouteKey, pick } from '../i18n/ui';
@@ -84,11 +85,11 @@ const cols: { h: string; links: { key: RouteKey; label: string }[] }[] = [
       </div>
       <div class="nl-row">
         <label class="vh" for="nl-email">E-mail</label>
-        <input id="nl-email" type="email" name="email" required autocomplete="email" placeholder={pick(lang, { pl: 'twój e-mail', en: 'your e-mail', de: 'deine E-Mail' })} />
+        <input id="nl-email" class={inputClass} type="email" name="email" required autocomplete="email" placeholder={pick(lang, { pl: 'twój e-mail', en: 'your e-mail', de: 'deine E-Mail' })} />
         <button type="submit" class={buttonVariants({ size: 'sm' })}>{pick(lang, { pl: 'Zapisz mnie', en: 'Subscribe', de: 'Anmelden' })}</button>
       </div>
       <label class="nl-ok">
-        <input type="checkbox" name="Zgoda" value="tak" required />
+        <input class={nativeCheckboxClass} type="checkbox" name="Zgoda" value="tak" required />
         <span>{pick(lang, { pl: 'Zgadzam się na wysyłanie wiadomości na podany adres. Mogę się wypisać w każdej chwili, odpisując na dowolny newsletter.', en: 'I agree to receive e-mails at this address. I can unsubscribe at any time by replying to any newsletter.', de: 'Ich bin mit dem Empfang von E-Mails an diese Adresse einverstanden. Abmelden kann ich mich jederzeit mit einer Antwort auf einen Newsletter.' })}</span>
       </label>
     </form>

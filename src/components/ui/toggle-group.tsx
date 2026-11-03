@@ -11,3 +11,7 @@ export function ToggleGroup({ className, ...props }: React.ComponentProps<typeof
 export function ToggleGroupItem({ className, ...props }: React.ComponentProps<typeof ToggleGroupPrimitive.Item>) {
   return <ToggleGroupPrimitive.Item data-slot="toggle-group-item" className={cn(toggleItemClass, className)} {...props} />;
 }
+
+/** Ten sam wygląd dla zwykłych przycisków-przełączników z aria-pressed (filtry w plikach .astro). */
+export const chipClass =
+  'inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-border bg-transparent px-3 py-2 text-[12px] uppercase tracking-[0.14em] text-muted-foreground transition-colors outline-none hover:border-primary/60 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-primary aria-pressed:bg-primary/15 aria-pressed:text-amber-light';

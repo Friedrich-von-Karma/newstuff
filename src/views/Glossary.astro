@@ -1,4 +1,5 @@
 ---
+import { inputClass } from '@/components/ui/native';
 import Base from '../layouts/Base.astro';
 import { glossary } from '../data/glossary';
 import { routes, type Lang, tl, pick } from '../i18n/ui';
@@ -92,7 +93,7 @@ const slug = (l: string) => `litera-${l.toLocaleLowerCase(locale)}`;
       <div class="glbar rv">
         <label class="gsearch">
           <span class="vh">{t.search}</span>
-          <input type="search" id="gl-q" placeholder={t.placeholder} autocomplete="off" spellcheck="false" />
+          <input class={inputClass} type="search" id="gl-q" placeholder={t.placeholder} autocomplete="off" spellcheck="false" />
         </label>
         <nav class="letters" aria-label={t.index}>
           {groups.map((g) => <a href={`#${slug(g.letter)}`} data-letter={g.letter}>{g.letter}</a>)}

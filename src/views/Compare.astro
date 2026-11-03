@@ -1,4 +1,5 @@
 ---
+import { nativeSelectClass, nativeSwitchClass } from '@/components/ui/native';
 import { glassSurface } from '@/components/ui/card';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { buttonVariants } from '@/components/ui/button';
@@ -170,7 +171,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                       <i class={`sw sw-${k}`} aria-hidden="true" />
                       {t[k]}
                     </span>
-                    <select name={k} id={`sel-${k}`}>
+                    <select class={nativeSelectClass} name={k} id={`sel-${k}`}>
                       {k === 'c' && (
                         <option value="" selected>
                           {t.none}
@@ -187,7 +188,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
               )}
               <div class="opts">
                 <label class="chk">
-                  <input type="checkbox" id="only-diff" />
+                  <input class={nativeSwitchClass} type="checkbox" role="switch" id="only-diff" />
                   <span>{t.onlyDiff}</span>
                 </label>
                 <span class="legend">
@@ -470,10 +471,6 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-  }
-  .chk input {
-    width: 16px;
-    height: 16px;
   }
   .legend {
     display: inline-flex;

@@ -1,4 +1,5 @@
 ---
+import { inputClass } from '@/components/ui/native';
 import { Badge } from '@/components/ui/badge';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
@@ -62,7 +63,7 @@ const t = pick(lang, {
       <PageHead num={t.num} h1a={t.h1a} h1b={t.h1b} lead={t.lead} />
       <div class="bar rv">
         <label class="vh" for="lib-q">{t.filter}</label>
-        <input id="lib-q" type="search" placeholder={t.ph} autocomplete="off" />
+        <input id="lib-q" class={inputClass} type="search" placeholder={t.ph} autocomplete="off" />
         <span class="cnt"><b id="lib-n">{library.length}</b> {t.count}</span>
       </div>
       {

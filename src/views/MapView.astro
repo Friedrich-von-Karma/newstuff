@@ -1,4 +1,5 @@
 ---
+import { nativeSelectClass } from '@/components/ui/native';
 import { buttonVariants } from '@/components/ui/button';
 import 'leaflet/dist/leaflet.css';
 import Base from '../layouts/Base.astro';
@@ -192,7 +193,7 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile, none
       <div class="mapbar rv">
         <label class="mfilter">
           <span class="lbl">{t.filter}</span>
-          <select id="map-filter" disabled={points.length === 0}>
+          <select class={nativeSelectClass} id="map-filter" disabled={points.length === 0}>
             <option value="">{t.all} ({points.length})</option>
             {
               filterOptions.map((x) => (
@@ -207,7 +208,7 @@ const mapData = { points, i18n: { observer: t.observer, profile: t.profile, none
         </label>
         <label class="mfilter yr">
           <span class="lbl">{t.year}</span>
-          <select id="map-year" disabled={years.length === 0}>
+          <select class={nativeSelectClass} id="map-year" disabled={years.length === 0}>
             <option value="">{t.allYears}</option>
             {years.map((y) => <option value={y}>{y}</option>)}
           </select>

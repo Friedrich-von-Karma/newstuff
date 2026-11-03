@@ -1,4 +1,6 @@
 ---
+import { chipClass } from '@/components/ui/toggle-group';
+import { cn } from '@/lib/utils';
 import Lightbox from '../components/Lightbox';
 import { glassSurface } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -204,20 +206,20 @@ const labels = {
           <>
             <div class={`gbar rv ${glassSurface}`} style="--d:.2s" role="group" aria-label={t.filter}>
               <div class="chips">
-                <button type="button" class="gchip" data-filter="all" aria-pressed="true">{t.all}</button>
+                <button type="button" class={`gchip ${chipClass}`} data-filter="all" aria-pressed="true">{t.all}</button>
                 {hasPhotos && (
-                  <button type="button" class="gchip" data-filter="photo" aria-pressed="false">
+                  <button type="button" class={`gchip ${chipClass}`} data-filter="photo" aria-pressed="false">
                     {t.photos}
                   </button>
                 )}
                 {hasVideos && (
-                  <button type="button" class="gchip" data-filter="video" aria-pressed="false">
+                  <button type="button" class={`gchip ${chipClass}`} data-filter="video" aria-pressed="false">
                     {t.videos}
                   </button>
                 )}
                 {speciesChips.length > 0 && <span class="sep" aria-hidden="true" />}
                 {speciesChips.map(([id, name]) => (
-                  <button type="button" class="gchip sp" data-filter={`sp:${id}`} aria-pressed="false">
+                  <button type="button" class={cn('gchip sp', chipClass, 'normal-case tracking-normal text-[13px]')} data-filter={`sp:${id}`} aria-pressed="false">
                     <i>{name}</i>
                   </button>
                 ))}
@@ -391,39 +393,6 @@ const labels = {
     height: 22px;
     background: var(--line2);
     margin: 0 4px;
-  }
-  .gchip {
-    cursor: pointer;
-    border: 1px solid var(--line2);
-    background: rgba(11, 18, 13, 0.55);
-    border-radius: 999px;
-    padding: 7px 14px;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    transition:
-      color 0.3s,
-      border-color 0.3s,
-      background 0.3s,
-      box-shadow 0.4s;
-  }
-  .gchip.sp {
-    text-transform: none;
-    letter-spacing: 0.01em;
-    font-family: var(--serif);
-    font-size: 15px;
-    padding: 5px 14px;
-  }
-  .gchip:hover {
-    border-color: rgba(232, 165, 71, 0.6);
-    color: var(--text);
-  }
-  .gchip[aria-pressed='true'] {
-    background: rgba(232, 165, 71, 0.16);
-    border-color: var(--amber);
-    color: var(--amber2);
-    box-shadow: inset 0 0 20px rgba(232, 165, 71, 0.12);
   }
   .tally {
     margin: 0;
