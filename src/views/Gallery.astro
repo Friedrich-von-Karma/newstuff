@@ -1,4 +1,9 @@
 ---
+import { chipClass } from '@/components/ui/toggle-group';
+import { cn } from '@/lib/utils';
+import Lightbox from '../components/Lightbox';
+import { glassSurface } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 /**
  * GALERIA „Z MOJEJ HODOWLI” – zdjęcia i filmy z hodowli.
  *
@@ -199,22 +204,22 @@ const labels = {
           <p class="empty rv">{t.none}</p>
         ) : (
           <>
-            <div class="gbar glass rv" style="--d:.2s" role="group" aria-label={t.filter}>
+            <div class={`gbar rv ${glassSurface}`} style="--d:.2s" role="group" aria-label={t.filter}>
               <div class="chips">
-                <button type="button" class="gchip" data-filter="all" aria-pressed="true">{t.all}</button>
+                <button type="button" class={`gchip ${chipClass}`} data-filter="all" aria-pressed="true">{t.all}</button>
                 {hasPhotos && (
-                  <button type="button" class="gchip" data-filter="photo" aria-pressed="false">
+                  <button type="button" class={`gchip ${chipClass}`} data-filter="photo" aria-pressed="false">
                     {t.photos}
                   </button>
                 )}
                 {hasVideos && (
-                  <button type="button" class="gchip" data-filter="video" aria-pressed="false">
+                  <button type="button" class={`gchip ${chipClass}`} data-filter="video" aria-pressed="false">
                     {t.videos}
                   </button>
                 )}
                 {speciesChips.length > 0 && <span class="sep" aria-hidden="true" />}
                 {speciesChips.map(([id, name]) => (
-                  <button type="button" class="gchip sp" data-filter={`sp:${id}`} aria-pressed="false">
+                  <button type="button" class={cn('gchip sp', chipClass, 'normal-case tracking-normal text-[13px]')} data-filter={`sp:${id}`} aria-pressed="false">
                     <i>{name}</i>
                   </button>
                 ))}
@@ -224,7 +229,7 @@ const labels = {
               </p>
             </div>
 
-            <ul class="mosaic" data-mosaic>
+            <ul class="mosaic" data-mosaic data-lightbox-root="gallery">
               {items.map((it, i) => (
                 <li class:list={['m', `m-${it.size}`, 'rv']} style={`--d:${Math.min(i, 8) * 0.07}s`} data-kind={it.kind} data-species={it.species ?? ''}>
                   <button type="button" class="m-btn" data-open={i} aria-haspopup="dialog">
@@ -257,7 +262,7 @@ const labels = {
                       <span class="m-title">{it.title}</span>
                       {it.speciesName && <span class="m-sp">{it.speciesName}</span>}
                     </span>
-                    {it.sample && <span class="smp">{t.sample}</span>}
+                    {it.sample && <Badge>{t.sample}</Badge>}
                     <span class="vh">{it.kind === 'video' ? t.play : ''}</span>
                   </button>
                 </li>
@@ -270,27 +275,12 @@ const labels = {
     </div>
   </section>
 
-  <dialog class="lb" data-lightbox aria-label={t.title}>
-    <div class="lb-in">
-      <div class="lb-top">
-        <span class="lb-count" data-lb-count></span>
-        <button type="button" class="lb-x" data-lb-close aria-label={t.close}>✕</button>
-      </div>
-      <div class="lb-stage">
-        <button type="button" class="lb-nav prev" data-lb-prev aria-label={t.prev}>←</button>
-        <div class="lb-media" data-lb-media></div>
-        <button type="button" class="lb-nav next" data-lb-next aria-label={t.next}>→</button>
-      </div>
-      <div class="lb-cap">
-        <div class="lb-head">
-          <h2 data-lb-title></h2>
-          <span class="lb-smp" data-lb-sample hidden>{t.sample}</span>
-        </div>
-        <p class="lb-meta"><time data-lb-date></time><span data-lb-species></span></p>
-        <p class="lb-text" data-lb-caption data-glossary></p>
-      </div>
-    </div>
-  </dialog>
+  <Lightbox
+    client:idle
+    root="gallery"
+    items={lightboxData}
+    labels={{ close: t.close, prev: t.prev, next: t.next, of: t.of, sample: t.sample, profile: t.profile, placeholderPhoto: t.placeholderPhoto, placeholderVideo: t.placeholderVideo }}
+  />
 
   <script is:inline type="application/json" id="gallery-data" set:html={JSON.stringify({ items: lightboxData, labels }).replace(/</g, '\\u003c')} />
 </Base>
@@ -316,8 +306,7 @@ const labels = {
   function init() {
     const raw = document.getElementById('gallery-data');
     const mosaic = document.querySelector<HTMLElement>('[data-mosaic]');
-    const dlg = document.querySelector<HTMLDialogElement>('[data-lightbox]');
-    if (!raw || !mosaic || !dlg) return;
+    if (!raw || !mosaic) return;
     const { items, labels } = JSON.parse(raw.textContent || '{}') as Data;
     const tiles = [...mosaic.querySelectorAll<HTMLLIElement>('li.m')];
     const chips = [...document.querySelectorAll<HTMLButtonElement>('.gchip')];
@@ -350,104 +339,6 @@ const labels = {
     }
     chips.forEach((c) => c.addEventListener('click', () => applyFilter(c.dataset.filter || 'all')));
 
-    // ---------- lightbox ----------
-    const media = dlg.querySelector<HTMLElement>('[data-lb-media]')!;
-    const titleEl = dlg.querySelector<HTMLElement>('[data-lb-title]')!;
-    const dateEl = dlg.querySelector<HTMLTimeElement>('[data-lb-date]')!;
-    const spEl = dlg.querySelector<HTMLElement>('[data-lb-species]')!;
-    const capEl = dlg.querySelector<HTMLElement>('[data-lb-caption]')!;
-    const smpEl = dlg.querySelector<HTMLElement>('[data-lb-sample]')!;
-    const cntEl = dlg.querySelector<HTMLElement>('[data-lb-count]')!;
-    let order: number[] = [];
-    let pos = 0;
-    let opener: HTMLElement | null = null;
-
-    const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
-
-    function render() {
-      const it = items[order[pos]];
-      media.classList.remove('show');
-      let html = '';
-      if (it.placeholder) {
-        html = `<div class="lb-ph"><span>${it.kind === 'video' ? '▶' : '◎'}</span><b>${esc(
-          it.kind === 'video' ? labels.placeholderVideo : labels.placeholderPhoto,
-        )}</b><i>${esc(it.title)}</i></div>`;
-      } else if (it.kind === 'photo') {
-        html = `<img src="${esc(it.src)}" alt="${esc(it.title)}" referrerpolicy="no-referrer">`;
-      } else if (it.youtube) {
-        html = `<div class="lb-yt"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(
-          it.youtube,
-        )}?rel=0" title="${esc(it.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
-      } else {
-        html = `<video src="${esc(it.src)}" controls playsinline preload="metadata"${it.poster ? ` poster="${esc(it.poster)}"` : ''}></video>`;
-      }
-      media.innerHTML = html;
-      requestAnimationFrame(() => media.classList.add('show'));
-      titleEl.textContent = it.title;
-      dateEl.textContent = it.date;
-      dateEl.dateTime = it.iso;
-      spEl.innerHTML = it.speciesName
-        ? it.speciesUrl
-          ? `<a href="${esc(it.speciesUrl)}"><i>${esc(it.speciesName)}</i> <small>${esc(labels.profile)} →</small></a>`
-          : `<i>${esc(it.speciesName)}</i>`
-        : '';
-      capEl.textContent = it.caption;
-      capEl.hidden = !it.caption;
-      smpEl.hidden = !it.sample;
-      cntEl.innerHTML = `<b>${pos + 1}</b> ${esc(labels.of)} ${order.length}`;
-      const single = order.length < 2;
-      dlg!.querySelectorAll<HTMLButtonElement>('.lb-nav').forEach((b) => (b.hidden = single));
-    }
-
-    function open(i: number, from: HTMLElement) {
-      order = tiles.filter((li) => !li.hidden).map((li) => Number(li.querySelector<HTMLElement>('[data-open]')!.dataset.open));
-      pos = Math.max(0, order.indexOf(i));
-      opener = from;
-      render();
-      dlg!.showModal();
-      document.documentElement.style.overflow = 'hidden';
-    }
-    function step(d: number) {
-      if (order.length < 2) return;
-      pos = (pos + d + order.length) % order.length;
-      render();
-    }
-
-    mosaic.addEventListener('click', (e) => {
-      const b = (e.target as HTMLElement).closest<HTMLElement>('[data-open]');
-      if (b) open(Number(b.dataset.open), b);
-    });
-    dlg.querySelector('[data-lb-close]')!.addEventListener('click', () => dlg.close());
-    dlg.querySelector('[data-lb-prev]')!.addEventListener('click', () => step(-1));
-    dlg.querySelector('[data-lb-next]')!.addEventListener('click', () => step(1));
-    dlg.addEventListener('click', (e) => {
-      if (e.target === dlg) dlg.close();
-    });
-    dlg.addEventListener('keydown', (e) => {
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'VIDEO' || tag === 'IFRAME') return;
-      if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        step(1);
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        step(-1);
-      }
-    });
-    // przesunięcie palcem
-    let x0: number | null = null;
-    media.addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
-    media.addEventListener('touchend', (e) => {
-      if (x0 === null) return;
-      const dx = e.changedTouches[0].clientX - x0;
-      if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
-      x0 = null;
-    });
-    dlg.addEventListener('close', () => {
-      media.innerHTML = ''; // zatrzymuje film
-      document.documentElement.style.overflow = '';
-      opener?.focus();
-    });
   }
   init();
 </script>
@@ -502,39 +393,6 @@ const labels = {
     height: 22px;
     background: var(--line2);
     margin: 0 4px;
-  }
-  .gchip {
-    cursor: pointer;
-    border: 1px solid var(--line2);
-    background: rgba(11, 18, 13, 0.55);
-    border-radius: 999px;
-    padding: 7px 14px;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    transition:
-      color 0.3s,
-      border-color 0.3s,
-      background 0.3s,
-      box-shadow 0.4s;
-  }
-  .gchip.sp {
-    text-transform: none;
-    letter-spacing: 0.01em;
-    font-family: var(--serif);
-    font-size: 15px;
-    padding: 5px 14px;
-  }
-  .gchip:hover {
-    border-color: rgba(232, 165, 71, 0.6);
-    color: var(--text);
-  }
-  .gchip[aria-pressed='true'] {
-    background: rgba(232, 165, 71, 0.16);
-    border-color: var(--amber);
-    color: var(--amber2);
-    box-shadow: inset 0 0 20px rgba(232, 165, 71, 0.12);
   }
   .tally {
     margin: 0;
@@ -798,228 +656,11 @@ const labels = {
   }
 
   /* ---------- lightbox ---------- */
-  .lb {
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--text);
-    overflow: hidden;
-  }
-  .lb::backdrop {
-    background: rgba(5, 9, 6, 0.88);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-  }
-  .lb[open] {
-    animation: lbIn 0.5s var(--ease);
-  }
   @keyframes lbIn {
     from {
       opacity: 0;
       filter: blur(10px);
     }
-  }
-  .lb-in {
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    gap: 14px;
-    padding: 16px var(--gut) 22px;
-    pointer-events: none;
-  }
-  .lb-in > * {
-    pointer-events: auto;
-  }
-  .lb-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .lb-count {
-    font-family: var(--serif);
-    font-size: 18px;
-    color: var(--muted);
-  }
-  .lb-count :global(b) {
-    font-weight: 400;
-    font-size: 28px;
-    color: var(--amber2);
-  }
-  .lb-x,
-  .lb-nav {
-    width: 52px;
-    height: 52px;
-    flex: none;
-    border-radius: 50%;
-    border: 1px solid var(--line2);
-    background: var(--glass);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    cursor: pointer;
-    font-size: 18px;
-    display: grid;
-    place-items: center;
-    transition: all 0.35s;
-  }
-  .lb-x:hover,
-  .lb-nav:hover {
-    border-color: var(--amber);
-    color: var(--amber2);
-    box-shadow: 0 0 30px rgba(232, 165, 71, 0.25);
-  }
-  .lb-stage {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 16px;
-    min-height: 0;
-  }
-  .lb-media {
-    height: 100%;
-    min-height: 0;
-    display: grid;
-    place-items: center;
-    opacity: 0;
-    transform: scale(0.98);
-    transition:
-      opacity 0.45s var(--ease),
-      transform 0.6s var(--ease);
-  }
-  .lb-media.show {
-    opacity: 1;
-    transform: none;
-  }
-  .lb-media :global(img),
-  .lb-media :global(video) {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 4px;
-    border: 1px solid var(--line);
-    box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.9);
-    background: #050906;
-  }
-  .lb-media :global(.lb-yt) {
-    width: min(100%, calc((100vh - 260px) * 16 / 9));
-    aspect-ratio: 16 / 9;
-  }
-  .lb-media :global(iframe) {
-    width: 100%;
-    height: 100%;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    background: #050906;
-  }
-  .lb-media :global(.lb-ph) {
-    width: min(100%, 640px);
-    aspect-ratio: 4 / 3;
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    text-align: center;
-    padding: 30px;
-    border: 1px solid var(--line2);
-    outline: 1px solid var(--line);
-    outline-offset: -9px;
-    border-radius: 4px;
-    background:
-      radial-gradient(60% 60% at 50% 40%, rgba(232, 165, 71, 0.1), transparent 70%),
-      repeating-linear-gradient(135deg, transparent 0 10px, rgba(235, 229, 211, 0.025) 10px 11px),
-      var(--bg2);
-  }
-  .lb-media :global(.lb-ph span) {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    border: 1px dashed rgba(232, 165, 71, 0.6);
-    color: var(--amber);
-    font-size: 20px;
-  }
-  .lb-media :global(.lb-ph b) {
-    font-weight: 500;
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-  .lb-media :global(.lb-ph i) {
-    font-family: var(--serif);
-    font-size: clamp(20px, 2.4vw, 30px);
-    color: var(--muted);
-  }
-  .lb-cap {
-    max-width: 900px;
-    margin: 0 auto;
-    width: 100%;
-    text-align: center;
-  }
-  .lb-head {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .lb-cap h2 {
-    font-size: clamp(24px, 2.8vw, 38px);
-    font-weight: 300;
-  }
-  .lb-smp {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--dim);
-    border: 1px dashed var(--line2);
-    padding: 3px 8px;
-  }
-  .lb-meta {
-    display: flex;
-    justify-content: center;
-    gap: 6px 18px;
-    flex-wrap: wrap;
-    margin: 8px 0 6px;
-    font-size: 13px;
-    color: var(--muted);
-  }
-  .lb-meta time {
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-size: 11px;
-    align-self: center;
-  }
-  .lb-meta :global(i) {
-    font-family: var(--serif);
-    font-size: 16px;
-    color: var(--fern);
-  }
-  .lb-meta :global(a) {
-    text-decoration: none;
-  }
-  .lb-meta :global(a small) {
-    margin-left: 8px;
-    color: var(--amber2);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    border-bottom: 1px solid var(--amber);
-  }
-  .lb-meta :global(a:hover small) {
-    color: var(--text);
-  }
-  .lb-text {
-    margin: 0 auto;
-    max-width: 62ch;
-    color: #d3cfbf;
-    font-size: 15px;
   }
 
   /* ---------- responsywność ---------- */
@@ -1093,27 +734,6 @@ const labels = {
     .play span {
       width: 50px;
       height: 50px;
-    }
-    .lb-stage {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: minmax(0, 1fr) auto;
-    }
-    .lb-media {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    .lb-nav {
-      grid-row: 2;
-      width: 46px;
-      height: 46px;
-    }
-    .lb-nav.prev {
-      justify-self: start;
-      grid-column: 1;
-    }
-    .lb-nav.next {
-      justify-self: end;
-      grid-column: 1;
     }
   }
 </style>

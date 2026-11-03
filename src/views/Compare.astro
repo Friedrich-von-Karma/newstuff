@@ -1,4 +1,8 @@
 ---
+import { nativeSelectClass, nativeSwitchClass } from '@/components/ui/native';
+import { glassSurface } from '@/components/ui/card';
+import { StatusBadge } from '@/components/ui/status-badge';
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
 import { routes, useTranslations, type Lang, type UiKey, tl, pick } from '../i18n/ui';
@@ -159,7 +163,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
           <p class="empty">{t.empty}</p>
         ) : (
           <>
-            <form class="pick glass rv" id="cmp-form" style="--d:.2s" action={routes.compare[lang]} method="get">
+            <form class={`pick rv ${glassSurface}`} id="cmp-form" style="--d:.2s" action={routes.compare[lang]} method="get">
               {(['a', 'b', 'c'] as const).map((k, i) =>
                 k === 'c' && species.length < 3 ? null : (
                   <label class="field">
@@ -167,7 +171,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                       <i class={`sw sw-${k}`} aria-hidden="true" />
                       {t[k]}
                     </span>
-                    <select name={k} id={`sel-${k}`}>
+                    <select class={nativeSelectClass} name={k} id={`sel-${k}`}>
                       {k === 'c' && (
                         <option value="" selected>
                           {t.none}
@@ -184,7 +188,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
               )}
               <div class="opts">
                 <label class="chk">
-                  <input type="checkbox" id="only-diff" />
+                  <input class={nativeSwitchClass} type="checkbox" role="switch" id="only-diff" />
                   <span>{t.onlyDiff}</span>
                 </label>
                 <span class="legend">
@@ -308,7 +312,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
                                   <span class="from">
                                     {formatPrice(p.price, lang)} <small>/ {tr('pack.pcs')} · {tr(`pack.${p.stage}`)}</small>
                                   </span>
-                                  <span class={`status st-${p.status}`}>{tr(`status.${p.status}`)}</span>
+                                  <StatusBadge status={p.status}>{tr(`status.${p.status}`)}</StatusBadge>
                                 </span>
                               ) : (
                                 <span class="lbl">{t.notIn}</span>
@@ -334,7 +338,7 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
             </div>
             <p class="share rv">{t.copy}</p>
             <div class="cta rv">
-              <a class="btn quiet" href={routes.species[lang]}>
+              <a class={buttonVariants({ variant: 'secondary' })} href={routes.species[lang]}>
                 {tr('nav.species')} <span class="arr">→</span>
               </a>
               <a class="link" href={routes.pricelist[lang]}>
@@ -467,10 +471,6 @@ const data = { ids, values, labels: Object.fromEntries(species.map((s) => [s.id,
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-  }
-  .chk input {
-    width: 16px;
-    height: 16px;
   }
   .legend {
     display: inline-flex;

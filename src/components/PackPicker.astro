@@ -1,180 +1,117 @@
 ---
 /**
- * Paczka 10 szt. (jeden wariant na gatunek: nimfy, mix albo imago), cena, „Do koszyka” i „Zamów od razu”.
- * Gdy gatunku brak lub jest „wkrótce” – zamiast zamawiania przycisk „Powiadom mnie” (zapis na listę oczekujących).
+ * Cena paczki 10 szt. i przycisk „Napisz w sprawie zamówienia” (mail z gotowym tematem i treścią).
+ * To nie jest sklep – zamówienia ustalane są mailowo. Gdy gatunku brak lub jest „wkrótce” – „Powiadom mnie”.
  */
 import type { CollectionEntry } from 'astro:content';
+import { buttonVariants } from '@/components/ui/button';
 import { site } from '../data/site';
-import { useTranslations, type Lang, type UiKey, pick } from '../i18n/ui';
+import { pick, useTranslations, type Lang, type UiKey } from '../i18n/ui';
 import { formatEur, formatPrice } from '../lib/content';
 
 interface Props {
   item: CollectionEntry<'pricelist'>;
   lang: Lang;
-  /** domyślnie zaznaczony wariant */
-  initial?: 'nymph' | 'mix' | 'adult';
   /** większa cena (np. na dużym kaflu) */
   big?: boolean;
 }
-const { item, lang, initial, big = false } = Astro.props;
+const { item, lang, big = false } = Astro.props;
 const tr = useTranslations(lang);
-const pl = lang === 'pl';
 const d = item.data;
-const options = [{ kind: d.stage, price: d.price }];
+const stage = tr(`pack.${d.stage}` as UiKey);
 const orderable = d.status === 'available' || d.status === 'low';
-const first = options.find((o) => o.kind === initial) ?? options[0];
-const group = `pack-${item.id}-${Math.random().toString(36).slice(2, 6)}`;
-const label = (k: string) => tr(`pack.${k}` as UiKey);
-const subjectFor = (k: string) => `${tr('pack.order')}: ${d.latin} – ${tr('pack.pcs')}, ${label(k)}`;
 const t = pick(lang, {
   pl: {
-      choose: 'W paczce',
-      add: 'Do koszyka',
-      added: 'Dodano',
-      now: 'Zamów od razu',
-      notify: 'Powiadom mnie',
-      waitHint: d.status === 'soon' ? 'Gatunek pojawi się wkrótce – zapisz się na listę oczekujących.' : 'Chwilowo brak – zapisz się, a dam znać, gdy będzie dostępny.',
-      waitSubject: `Lista oczekujących: ${d.latin}`,
-      waitBody: `Dzień dobry,\nproszę o wiadomość, gdy ${d.latin} będzie dostępny.\nInteresujący mnie wariant: {v} (paczka 10 szt.).\n\nPozdrawiam`,
-      per: '/ 10 szt.',
+    choose: 'W paczce',
+    ask: 'Napisz w sprawie zamówienia',
+    notify: 'Powiadom mnie',
+    waitHint: d.status === 'soon' ? 'Gatunek pojawi się wkrótce – napisz, a dam znać.' : 'Chwilowo brak – napisz, a dam znać, gdy będzie dostępny.',
+    subject: `Zamówienie: ${d.latin} (${stage}, paczka 10 szt.)`,
+    body: `Dzień dobry,
+interesuje mnie ${d.latin} – ${stage}, paczka 10 szt.
+
+Liczba paczek: 
+Miejscowość (do wyceny wysyłki): 
+
+Pozdrawiam`,
+    waitSubject: `Lista oczekujących: ${d.latin}`,
+    waitBody: `Dzień dobry,
+proszę o wiadomość, gdy ${d.latin} (${stage}) będzie dostępny.
+
+Pozdrawiam`,
+    per: '/ 10 szt.',
   },
   en: {
-      choose: 'In the pack',
-      add: 'Add to cart',
-      added: 'Added',
-      now: 'Order now',
-      notify: 'Notify me',
-      waitHint: d.status === 'soon' ? 'Coming soon – join the waiting list.' : 'Out of stock for now – join the list and I will let you know.',
-      waitSubject: `Waiting list: ${d.latin}`,
-      waitBody: `Hello,\nplease let me know when ${d.latin} is available.\nOption I am interested in: {v} (pack of 10).\n\nBest regards`,
-      per: '/ 10 pcs',
+    choose: 'In the pack',
+    ask: 'E-mail about an order',
+    notify: 'Notify me',
+    waitHint: d.status === 'soon' ? 'Coming soon – write to me and I will let you know.' : 'Out of stock for now – write to me and I will let you know when it is available.',
+    subject: `Order: ${d.latin} (${stage}, pack of 10)`,
+    body: `Hello,
+I am interested in ${d.latin} – ${stage}, pack of 10.
+
+Number of packs: 
+Country / town (for a shipping quote): 
+
+Best regards`,
+    waitSubject: `Waiting list: ${d.latin}`,
+    waitBody: `Hello,
+please let me know when ${d.latin} (${stage}) is available.
+
+Best regards`,
+    per: '/ 10 pcs',
   },
   de: {
-      choose: 'In der Packung',
-      add: 'In den Warenkorb',
-      added: 'Hinzugefügt',
-      now: 'Sofort bestellen',
-      notify: 'Benachrichtigen',
-      waitHint: d.status === 'soon' ? 'Demnächst verfügbar – trag dich in die Warteliste ein.' : 'Derzeit ausverkauft – trag dich ein, ich melde mich, sobald die Art verfügbar ist.',
-      waitSubject: `Warteliste: ${d.latin}`,
-      waitBody: `Hallo,\nbitte gib mir Bescheid, wenn ${d.latin} verfügbar ist.\nGewünschte Variante: {v} (10er-Packung).\n\nViele Grüße`,
-      per: '/ 10 Stk.',
+    choose: 'In der Packung',
+    ask: 'Per E-Mail anfragen',
+    notify: 'Benachrichtigen',
+    waitHint: d.status === 'soon' ? 'Demnächst verfügbar – schreib mir, dann melde ich mich.' : 'Derzeit nicht verfügbar – schreib mir, dann melde ich mich, sobald die Art verfügbar ist.',
+    subject: `Bestellung: ${d.latin} (${stage}, 10er-Packung)`,
+    body: `Hallo,
+ich interessiere mich für ${d.latin} – ${stage}, 10er-Packung.
+
+Anzahl der Packungen: 
+Land / Ort (für die Versandkosten): 
+
+Viele Grüße`,
+    waitSubject: `Warteliste: ${d.latin}`,
+    waitBody: `Hallo,
+bitte gib mir Bescheid, wenn ${d.latin} (${stage}) verfügbar ist.
+
+Viele Grüße`,
+    per: '/ 10 Stk.',
   },
 });
-const waitHref = (k: string) =>
-  `mailto:${site.contact.email}?subject=${encodeURIComponent(t.waitSubject)}&body=${encodeURIComponent(t.waitBody.replace('{v}', label(k)))}`;
+const mail = (subject: string, body: string) => `mailto:${site.contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 ---
 
-<div
-  class:list={['picker', { big }]}
-  data-picker
-  data-id={item.id}
-  data-latin={d.latin}
-  data-email={site.contact.email}
-  data-wait-subject={t.waitSubject}
-  data-wait-body={t.waitBody}
->
-  <fieldset class="variants">
-    <legend>{t.choose}</legend>
-    {
-      options.map((o) => (
-        <label class="var">
-          <input
-            type="radio"
-            name={group}
-            value={o.kind}
-            checked={o.kind === first?.kind}
-            data-price={o.price}
-            data-price-label={formatPrice(o.price, lang)}
-            data-label={label(o.kind)}
-            data-subject={subjectFor(o.kind)}
-          />
-          <span>{label(o.kind)}</span>
-        </label>
-      ))
-    }
-  </fieldset>
-
+<div class:list={['picker', { big }]}>
+  <p class="variants">
+    <span class="legend">{t.choose}</span>
+    <span class="stage">{stage}</span>
+  </p>
   <div class="buy">
-    <div class="price" aria-live="polite">
-      <span data-price-out>{first ? formatPrice(first.price, lang) : '—'}</span>
-      {lang !== 'pl' && first && <small class="eur">{formatEur(first.price, lang)}</small>}
+    <div class="price">
+      <span>{formatPrice(d.price, lang)}</span>
+      {lang !== 'pl' && <small class="eur">{formatEur(d.price, lang)}</small>}
       <small>{t.per}</small>
     </div>
-    {
-      orderable && first ? (
-        <div class="acts">
-          <button type="button" class="btn add" data-add>
-            <span data-add-label>{t.add}</span> <span class="arr">+</span>
-          </button>
-          <a class="btn ghost small now" data-now href={`mailto:${site.contact.email}?subject=${encodeURIComponent(subjectFor(first.kind))}`}>
-            {t.now}
+    <div class="acts">
+      {
+        orderable ? (
+          <a class={buttonVariants()} href={mail(t.subject, t.body)}>
+            {t.ask} <span class="arr">→</span>
           </a>
-        </div>
-      ) : (
-        first && (
-          <div class="acts">
-            <a class="btn ghost notify" data-notify href={waitHref(first.kind)}>
-              <span class="bell" aria-hidden="true">
-                ◔
-              </span>{' '}
-              {t.notify}
-            </a>
-          </div>
+        ) : (
+          <a class={buttonVariants({ variant: 'outline' })} href={mail(t.waitSubject, t.waitBody)}>
+            <span class="bell" aria-hidden="true">◔</span> {t.notify}
+          </a>
         )
-      )
-    }
+      }
+    </div>
   </div>
   {!orderable && <p class="wait">{t.waitHint}</p>}
-  <span class="added-msg" data-added-msg data-text={t.added} aria-live="polite"></span>
 </div>
-
-<script>
-  import { cart, openCart } from '../scripts/cart';
-
-  document.querySelectorAll<HTMLElement>('[data-picker]').forEach((p) => {
-    if (p.dataset.ready) return;
-    p.dataset.ready = '1';
-    const out = p.querySelector<HTMLElement>('[data-price-out]');
-    const now = p.querySelector<HTMLAnchorElement>('[data-now]');
-    const notify = p.querySelector<HTMLAnchorElement>('[data-notify]');
-    const email = p.dataset.email ?? '';
-    const sel = () => p.querySelector<HTMLInputElement>('input[type=radio]:checked');
-
-    p.addEventListener('change', () => {
-      const r = sel();
-      if (!r) return;
-      if (out) {
-        out.classList.remove('flip');
-        void out.offsetWidth;
-        out.textContent = r.dataset.priceLabel ?? '';
-        out.classList.add('flip');
-      }
-      if (now) now.href = `mailto:${email}?subject=${encodeURIComponent(r.dataset.subject ?? '')}`;
-      if (notify)
-        notify.href = `mailto:${email}?subject=${encodeURIComponent(p.dataset.waitSubject ?? '')}&body=${encodeURIComponent(
-          (p.dataset.waitBody ?? '').replace('{v}', r.dataset.label ?? ''),
-        )}`;
-    });
-
-    p.querySelector<HTMLButtonElement>('[data-add]')?.addEventListener('click', (e) => {
-      const r = sel();
-      if (!r) return;
-      cart.add({
-        id: p.dataset.id ?? '',
-        latin: p.dataset.latin ?? '',
-        kind: r.value as 'nymph' | 'mix' | 'adult',
-        kindLabel: r.dataset.label ?? r.value,
-        price: Number(r.dataset.price),
-      });
-      const btn = e.currentTarget as HTMLButtonElement;
-      btn.classList.remove('pulse');
-      void btn.offsetWidth;
-      btn.classList.add('pulse');
-      openCart();
-    });
-  });
-</script>
 
 <style>
   .picker {
@@ -189,7 +126,7 @@ const waitHref = (k: string) =>
     margin: 0;
     min-width: 0;
   }
-  .variants legend {
+  .variants .legend {
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -199,15 +136,7 @@ const waitHref = (k: string) =>
     padding: 0;
     line-height: 22px;
   }
-  .var {
-    position: relative;
-  }
-  .var input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .var span {
+  .stage {
     font-size: 13px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -241,10 +170,6 @@ const waitHref = (k: string) =>
     letter-spacing: 0.06em;
     margin-left: 6px;
   }
-  .price :global(.flip) {
-    display: inline-block;
-    animation: flip 0.45s var(--ease);
-  }
   @keyframes flip {
     from {
       opacity: 0;
@@ -257,9 +182,6 @@ const waitHref = (k: string) =>
     gap: 8px;
     flex-wrap: wrap;
     align-items: center;
-  }
-  .add.pulse {
-    animation: pulse 0.6s var(--ease);
   }
   @keyframes pulse {
     40% {
@@ -274,12 +196,5 @@ const waitHref = (k: string) =>
     margin: 0;
     font-size: 12.5px;
     color: var(--muted);
-  }
-  .added-msg {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
   }
 </style>

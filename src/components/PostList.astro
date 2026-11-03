@@ -1,4 +1,5 @@
 ---
+import { Badge } from '@/components/ui/badge';
 import type { Post } from '../lib/content';
 import { postSlug, slugify } from '../lib/content';
 import { formatDate, routes, useTranslations, type Lang, pick } from '../i18n/ui';
@@ -27,7 +28,7 @@ const more = pick(lang, { pl: 'Czytaj', en: 'Read', de: 'Lesen' });
             <div class="body">
               <div class="meta">
                 <time datetime={p.data.date.toISOString().slice(0, 10)}>{formatDate(p.data.date, lang)}</time>
-                {p.data.sample && <span class="smp">{tr('sample.badge')}</span>}
+                {p.data.sample && <Badge>{tr('sample.badge')}</Badge>}
               </div>
               <h3>
                 <a href={href}>{p.data.title}</a>

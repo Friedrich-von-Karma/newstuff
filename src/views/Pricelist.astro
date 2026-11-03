@@ -1,4 +1,7 @@
 ---
+import { glassSurface } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
 import { formatDate, routes, useTranslations, type Lang, tl, pick } from '../i18n/ui';
@@ -28,7 +31,7 @@ const t = pick(lang, {
         'Ceny za paczkę <strong>10 sztuk</strong>. Każdy gatunek sprzedaję w jednym wariancie – jako nimfy, mix (nimfy i imago) albo imago. Kliknij nazwę gatunku, żeby zobaczyć jego profil hodowlany i zamówić.',
       updated: 'cennik zaktualizowany',
       pack: 'Paczka = 10 sztuk wybranego wariantu',
-      cart: 'Zobacz koszyk',
+      cart: 'Napisz maila',
       shown: 'widoczne',
       profile: 'Profil hodowlany',
       nophoto: 'brak zdjęcia',
@@ -38,9 +41,9 @@ const t = pick(lang, {
       howH: 'Trzy kroki',
       howHem: 'do paczki',
       steps: [
-        ['Kliknij gatunek', 'Na liście powyżej. Otworzy się jego profil hodowlany z ceną i przyciskiem „Do koszyka”.'],
-        ['Dodaj do koszyka', 'Możesz zebrać kilka gatunków, także po kilka paczek tego samego.'],
-        ['Wyślij jednym mailem', 'Koszyk przygotuje wiadomość z całym zamówieniem. W odpowiedzi dostaniesz potwierdzenie dostępności i koszt wysyłki.'],
+        ['Wybierz gatunek', 'Z listy powyżej – w profilu hodowlanym znajdziesz cenę i wszystkie informacje o hodowli.'],
+        ['Napisz maila', 'Podaj gatunek, liczbę paczek i miejscowość. Przycisk „Napisz w sprawie zamówienia” przygotuje gotową wiadomość.'],
+        ['Dostaniesz odpowiedź', 'Potwierdzę dostępność, podam koszt wysyłki i termin. Płatność dopiero po ustaleniu szczegółów.'],
       ],
       wait: 'Gatunku chwilowo brak albo pojawi się wkrótce? Kliknij „Powiadom mnie” w jego profilu – wiadomość zapisze Cię na listę oczekujących.',
       note: 'Ceny w złotych za paczkę 10 szt. · stan hodowli zmienia się z tygodnia na tydzień',
@@ -56,7 +59,7 @@ const t = pick(lang, {
         'Prices per pack of <strong>10</strong>. Each species is sold in one form – as nymphs, a mix (nymphs and adults) or adults. Click a species name to see its care sheet and order.',
       updated: 'price list updated',
       pack: 'Pack = 10 individuals of the chosen option',
-      cart: 'View cart',
+      cart: 'Write an e-mail',
       shown: 'shown',
       profile: 'Care sheet',
       nophoto: 'no photo',
@@ -66,9 +69,9 @@ const t = pick(lang, {
       howH: 'Three steps',
       howHem: 'to a parcel',
       steps: [
-        ['Click a species', 'In the list above. Its care sheet opens with the price and an “Add to cart” button.'],
-        ['Add it to the cart', 'Collect several species – or several packs of the same one.'],
-        ['Send one e-mail', 'The cart prepares a message with your whole order. The reply confirms availability and the shipping cost.'],
+        ['Choose a species', 'From the list above – its care sheet shows the price and everything about keeping it.'],
+        ['Write an e-mail', 'Give the species, number of packs and your town or country. The “E-mail about an order” button prepares the message for you.'],
+        ['Get a reply', 'I will confirm availability, the shipping cost and date. Payment only once everything is agreed.'],
       ],
       wait: 'Species out of stock or coming soon? Click “Notify me” on its care sheet – the message adds you to the waiting list.',
       note: 'Prices in PLN per pack of 10 · stock changes from week to week',
@@ -84,7 +87,7 @@ const t = pick(lang, {
         'Preise pro Packung mit <strong>10</strong> Tieren. Jede Art wird in einer Form verkauft – als Nymphen, Mix (Nymphen und Adulte) oder Adulte. Euro-Beträge sind Richtwerte. Klicke auf einen Artnamen, um das Haltungsprofil zu sehen und zu bestellen.',
       updated: 'Preisliste aktualisiert',
       pack: 'Packung = 10 Tiere der gewählten Variante',
-      cart: 'Warenkorb ansehen',
+      cart: 'E-Mail schreiben',
       shown: 'angezeigt',
       profile: 'Haltungsprofil',
       nophoto: 'kein Foto',
@@ -94,9 +97,9 @@ const t = pick(lang, {
       howH: 'Drei Schritte',
       howHem: 'zum Paket',
       steps: [
-        ['Art anklicken', 'In der Liste oben. Das Haltungsprofil öffnet sich mit Preis und dem Knopf „In den Warenkorb“.'],
-        ['In den Warenkorb', 'Sammle mehrere Arten – oder mehrere Packungen derselben Art.'],
-        ['Eine E-Mail senden', 'Der Warenkorb erstellt eine Nachricht mit deiner ganzen Bestellung. In der Antwort bestätige ich Verfügbarkeit und Versandkosten.'],
+        ['Art wählen', 'Aus der Liste oben – im Haltungsprofil stehen der Preis und alles zur Haltung.'],
+        ['E-Mail schreiben', 'Nenne Art, Anzahl der Packungen und Land bzw. Ort. Der Knopf „Per E-Mail anfragen“ bereitet die Nachricht vor.'],
+        ['Antwort erhalten', 'Ich bestätige Verfügbarkeit, Versandkosten und Termin. Bezahlt wird erst, wenn alles geklärt ist.'],
       ],
       wait: 'Art ausverkauft oder bald verfügbar? Klicke im Haltungsprofil auf „Benachrichtigen“ – die Nachricht trägt dich in die Warteliste ein.',
       note: 'Preise in PLN pro 10er-Packung · der Bestand ändert sich von Woche zu Woche',
@@ -150,7 +153,7 @@ const t = pick(lang, {
                   ) : (
                     <span class="latin">{d.latin}</span>
                   )}
-                  {d.status !== 'available' && <span class={`st st-${d.status}`}>{tr(`status.${d.status}`)}</span>}
+                  {d.status !== 'available' && <Badge variant={d.status === 'low' ? 'default' : d.status === 'soon' ? 'success' : 'secondary'}>{tr(`status.${d.status}`)}</Badge>}
                 </span>
                 <span class="stg" role="cell">{tr(`pack.${d.stage}`)}</span>
                 <span class="pc" role="cell">{formatPrice(d.price, lang)}{lang !== 'pl' && <small class="eur">{formatEur(d.price, lang)}</small>}</span>
@@ -162,7 +165,7 @@ const t = pick(lang, {
       </div>
       <div class="pack-note rv">{t.note}</div>
 
-      <div class="ship-box glass rv">
+      <div class={`ship-box rv ${glassSurface}`}>
         <div class="lbl">{t.shipLbl}</div>
         <ul class="ship">
           {tl(site.shipping, lang).map((s) => <li>{s}</li>)}
@@ -184,7 +187,7 @@ const t = pick(lang, {
       <ol class="steps">
         {
           t.steps.map(([h, p], i) => (
-            <li class="step glass rv" style={`--d:${i * 0.12}s`}>
+            <li class={`step rv ${glassSurface}`} style={`--d:${i * 0.12}s`}>
               <span class="roman" aria-hidden="true">{['I', 'II', 'III'][i]}</span>
               <h3>{h}</h3>
               <p>{p}</p>
@@ -197,8 +200,8 @@ const t = pick(lang, {
         {t.wait}
       </p>
       <div class="cta rv">
-        <button type="button" class="btn" data-open-cart>{t.cart} <span class="arr">→</span></button>
-        <a class="btn quiet" href={routes.compare[lang]}>{t.compare} <span class="arr">→</span></a>
+        <a class={buttonVariants()} href={`mailto:${site.contact.email}`}>{t.cart} <span class="arr">→</span></a>
+        <a class={buttonVariants({ variant: 'secondary' })} href={routes.compare[lang]}>{t.compare} <span class="arr">→</span></a>
         <a class="link" href={routes.species[lang]}>{tr('nav.species')}</a>
       </div>
     </div>

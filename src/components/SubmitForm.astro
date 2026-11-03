@@ -1,4 +1,6 @@
 ---
+import { inputClass, nativeCheckboxClass, nativeSelectClass, textareaClass } from '@/components/ui/native';
+import { buttonVariants } from '@/components/ui/button';
 /**
  * Wspólny formularz zgłoszenia ze zdjęciami: „Oznacz mojego karaczana” (mode="identify")
  * i „Zgłoś obserwację na mapę” (mode="observation").
@@ -260,7 +262,7 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
         <p class="hint">{t.whereHint}</p>
         <div class="pickmap" data-pickmap />
         <div class="pickbar">
-          <button type="button" class="btn quiet small" data-geo>
+          <button type="button" class={buttonVariants({ variant: 'secondary', size: 'sm' })} data-geo>
             <span class="pin" aria-hidden="true" />
             <span data-geo-txt>{t.geo}</span>
           </button>
@@ -283,19 +285,19 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
     <div class="grid">
       <label class="field wide">
         <span>{t.place}{obs ? ' *' : ''}</span>
-        <input type="text" name="Miejsce" placeholder={t.placeHint} required={obs} autocomplete="address-level2" />
+        <input class={inputClass} type="text" name="Miejsce" placeholder={t.placeHint} required={obs} autocomplete="address-level2" />
       </label>
       <label class="field">
         <span>{t.date}</span>
-        <input type="date" name="Data" max={today} />
+        <input class={inputClass} type="date" name="Data" max={today} />
       </label>
       <label class="field">
         <span>{t.length}</span>
-        <input type="number" name="Długość ciała (mm)" min="1" max="120" step="0.5" inputmode="decimal" placeholder={t.lengthHint} />
+        <input class={inputClass} type="number" name="Długość ciała (mm)" min="1" max="120" step="0.5" inputmode="decimal" placeholder={t.lengthHint} />
       </label>
       <label class="field">
         <span>{t.habitat}</span>
-        <select name="Środowisko">
+        <select class={nativeSelectClass} name="Środowisko">
           <option value="">{t.habitatChoose}</option>
           {t.habitats.map(([v, l]) => <option value={v}>{l}</option>)}
         </select>
@@ -304,7 +306,7 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
         obs && (
           <label class="field">
             <span>{t.species}</span>
-            <select name="Gatunek według zgłaszającego">
+            <select class={nativeSelectClass} name="Gatunek według zgłaszającego">
               <option value="nie wiem">{t.dunno}</option>
               {speciesOptions.map((x) => (
                 <option value={x.latin}>
@@ -318,7 +320,7 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
       }
       <label class="field wide">
         <span>{t.desc}</span>
-        <textarea name="Opis" rows="4" placeholder={t.descHint}></textarea>
+        <textarea class={textareaClass} name="Opis" rows="4" placeholder={t.descHint}></textarea>
       </label>
     </div>
   </fieldset>
@@ -328,19 +330,19 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
     <div class="grid">
       <label class="field">
         <span>{t.email} *</span>
-        <input type="email" name="email" required autocomplete="email" />
+        <input class={inputClass} type="email" name="email" required autocomplete="email" />
         <small>{t.emailHint}</small>
       </label>
       <label class="field">
         <span>{t.name}</span>
-        <input type="text" name="Imię" autocomplete="given-name" />
+        <input class={inputClass} type="text" name="Imię" autocomplete="given-name" />
         <small>{t.nameHint}</small>
       </label>
     </div>
     {
       obs && (
         <label class="consent">
-          <input type="checkbox" name="Zgoda na publikację na mapie" value="tak" />
+          <input class={nativeCheckboxClass} type="checkbox" name="Zgoda na publikację na mapie" value="tak" />
           <span>{t.consent}</span>
         </label>
       )
@@ -348,7 +350,7 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
   </fieldset>
 
   <div class="send">
-    <button class="btn" type="submit" data-send>
+    <button class={buttonVariants()} type="submit" data-send>
       <span data-send-txt>{t.send}</span> <span class="arr">→</span>
     </button>
     <p class="info">{t.info}{obs ? t.infoObs : ''}.</p>
@@ -777,10 +779,10 @@ const cfg = { maxMb: MAX_MB, tooBig: t.tooBig, notImage: t.notImage, sending: t.
     gap: 14px 24px;
     margin-top: 6px;
   }
-  .send .btn {
+  .send [data-send] {
     padding: 15px 24px;
   }
-  .send .btn.busy {
+  .send [data-send].busy {
     opacity: 1;
     background: transparent;
     color: var(--amber2);

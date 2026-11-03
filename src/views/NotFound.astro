@@ -1,4 +1,5 @@
 ---
+import { buttonVariants } from '@/components/ui/button';
 import Base from '../layouts/Base.astro';
 import { routes, useTranslations, type Lang, pick } from '../i18n/ui';
 
@@ -29,7 +30,7 @@ const links = [
       <h1 class="h-display rv" style="--d:.3s">{tr('404.title')}</h1>
       <p class="lead rv" style="--d:.45s">{tr('404.text')}</p>
       <p class="acts rv" style="--d:.6s">
-        <a class="btn" href={routes.home[lang]}>{tr('404.back')} <span class="arr">→</span></a>
+        <a class={buttonVariants()} href={routes.home[lang]}>{tr('404.back')} <span class="arr">→</span></a>
       </p>
       <nav class="more rv" style="--d:.75s" aria-label={t.or}>
         <span class="lbl">{t.or}</span>

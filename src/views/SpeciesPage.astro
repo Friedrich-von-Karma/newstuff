@@ -1,4 +1,9 @@
 ---
+import Lightbox from '../components/Lightbox';
+import { cardSurface } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
+import { buttonVariants } from '@/components/ui/button';
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import CommonsPhoto from '../components/CommonsPhoto.astro';
@@ -33,6 +38,13 @@ const sexPhotos = {
 };
 const tx = d.taxonomy;
 const hasMore = !!(tx || d.sexing || d.stages || d.problems.length || d.remark);
+// zdjęcia do powiększania (shadcn Dialog): najpierw własne z profilu, potem z galerii hodowli
+const zoomOwn = own.slice(1).map((g) => ({ kind: 'photo' as const, src: g.src, title: tl(g.caption, lang) ?? tl(g.alt, lang) }));
+const zoomBreed = breeding
+  .filter((g) => g.data.kind === 'photo' && g.data.src)
+  .map((g) => ({ id: g.id, kind: 'photo' as const, src: g.data.src!, title: tl(g.data.title, lang), caption: tl(g.data.caption, lang) }));
+const zoomItems = [...zoomOwn, ...zoomBreed.map(({ id: _id, ...rest }) => rest)];
+const breedIdx = (id: string) => zoomOwn.length + zoomBreed.findIndex((z) => z.id === id);
 const ytEmbed = (id: string) => `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`;
 
 const t = pick(lang, {
@@ -160,6 +172,7 @@ const t = pick(lang, {
 ---
 
 <Base lang={lang} title={d.latin} description={description} alt={`${routes.species[other]}${entry.id}/`} active="species" image={own[0]?.src} jsonld={[{ '@type': 'Taxon', name: d.latin, taxonRank: 'species', ...(d.author ? { scientificNameAuthorship: d.author } : {}), parentTaxon: { '@type': 'Taxon', name: d.family, taxonRank: 'family' }, url: new URL(`${routes.species[lang]}${entry.id}/`, Astro.site).href }]}>
+  <div data-lightbox-root="species" class="contents">
   <article class="sp">
     <div class="glowspot" style="width:700px;height:700px;right:-240px;top:-80px;background:radial-gradient(circle,rgba(232,165,71,.14),transparent 65%)"></div>
     <div class="wrap">
@@ -167,7 +180,7 @@ const t = pick(lang, {
         <a href={routes.species[lang]}>← {tr('species.back')}</a>
       </p>
 
-      <div class="full panel rv" style="--d:.1s">
+      <div class={`full rv ${cardSurface}`} style="--d:.1s">
         <div class="photo">
           <div class="stick">
           {
@@ -184,9 +197,9 @@ const t = pick(lang, {
           {
             own.length > 1 && (
               <ul class="thumbs">
-                {own.slice(1).map((g) => (
+                {own.slice(1).map((g, j) => (
                   <li>
-                    <button type="button" class="zoom" data-src={g.src} data-cap={tl(g.caption, lang) ?? tl(g.alt, lang)} aria-label={t.zoom}>
+                    <button type="button" class="zoom" data-open={j} aria-label={t.zoom}>
                       <img src={g.src} alt={tl(g.alt, lang)} loading="lazy" />
                     </button>
                   </li>
@@ -273,7 +286,7 @@ const t = pick(lang, {
               <section class="buy">
                 <div class="buy-h">
                   <span class="lbl">{t.buyLbl}</span>
-                  <span class={`status st-${price.data.status}`}>{tr(`status.${price.data.status}`)}</span>
+                  <StatusBadge status={price.data.status}>{tr(`status.${price.data.status}`)}</StatusBadge>
                 </div>
                 {price.data.note && <p class="pnote">{tl(price.data.note, lang)}</p>}
                 <PackPicker item={price} lang={lang} />
@@ -282,7 +295,7 @@ const t = pick(lang, {
           }
 
           <div class="links">
-            <a class="btn ghost small" href={`${routes.compare[lang]}?a=${entry.id}`}>
+            <a class={buttonVariants({ variant: 'outline', size: 'sm' })} href={`${routes.compare[lang]}?a=${entry.id}`}>
               {t.compare} <span class="arr">→</span>
             </a>
             {price && (
@@ -396,7 +409,7 @@ const t = pick(lang, {
                 <li class:list={['gt', 'rv', `k-${gd.kind}`, { slot: !has }]} style={`--d:${(i % 3) * 0.1}s`}>
                   <div class="media">
                     {gd.kind === 'photo' && gd.src ? (
-                      <button type="button" class="zoom" data-src={gd.src} data-cap={cap ?? title} aria-label={`${t.zoom}: ${title}`}>
+                      <button type="button" class="zoom" data-open={breedIdx(g.id)} aria-label={`${t.zoom}: ${title}`}>
                         <img src={gd.src} alt={title} loading="lazy" />
                       </button>
                     ) : gd.kind === 'video' && gd.src ? (
@@ -428,7 +441,7 @@ const t = pick(lang, {
                     {cap && <p>{cap}</p>}
                     <div class="meta">
                       <time datetime={gd.date.toISOString().slice(0, 10)}>{formatDate(gd.date, lang)}</time>
-                      {gd.sample && <span class="smp">{tr('sample.badge')}</span>}
+                      {gd.sample && <Badge>{tr('sample.badge')}</Badge>}
                     </div>
                   </div>
                 </li>
@@ -441,10 +454,10 @@ const t = pick(lang, {
       }
 
       <div class="after rv">
-        <a class="btn quiet" href={routes.gallery[lang]}>
+        <a class={buttonVariants({ variant: 'secondary' })} href={routes.gallery[lang]}>
           {t.fullGallery} <span class="arr">→</span>
         </a>
-        <a class="btn ghost" href={`${routes.compare[lang]}?a=${entry.id}`}>
+        <a class={buttonVariants({ variant: 'outline' })} href={`${routes.compare[lang]}?a=${entry.id}`}>
           {t.compare} <span class="arr">→</span>
         </a>
         {
@@ -459,37 +472,15 @@ const t = pick(lang, {
     </div>
   </section>
 
-  <dialog class="lightbox" aria-label={tr('species.gallery')}>
-    <form method="dialog">
-      <button class="x" aria-label={t.close}>×</button>
-    </form>
-    <img alt="" />
-    <p class="cap"></p>
-  </dialog>
+  <Lightbox
+    client:idle
+    root="species"
+    items={zoomItems}
+    labels={{ close: t.close, prev: pick(lang, { pl: 'Poprzednie', en: 'Previous', de: 'Zurück' }), next: pick(lang, { pl: 'Następne', en: 'Next', de: 'Weiter' }), of: pick(lang, { pl: 'z', en: 'of', de: 'von' }), sample: tr('sample.badge'), profile: '', placeholderPhoto: t.slotPhoto, placeholderVideo: t.slotVideo }}
+  />
+  </div>
 </Base>
 
-<script>
-  const dlg = document.querySelector<HTMLDialogElement>('dialog.lightbox');
-  const img = dlg?.querySelector('img');
-  const cap = dlg?.querySelector<HTMLElement>('.cap');
-  document.querySelectorAll<HTMLButtonElement>('button.zoom').forEach((b) => {
-    b.addEventListener('click', () => {
-      if (!dlg || !img || !cap) return;
-      const src = b.dataset.src ?? '';
-      if (typeof dlg.showModal !== 'function') {
-        window.open(src, '_blank', 'noopener');
-        return;
-      }
-      img.src = src;
-      img.alt = b.querySelector('img')?.alt ?? '';
-      cap.textContent = b.dataset.cap ?? '';
-      dlg.showModal();
-    });
-  });
-  dlg?.addEventListener('click', (e) => {
-    if (e.target === dlg) dlg.close();
-  });
-</script>
 
 <style>
   .more {
@@ -1065,38 +1056,12 @@ const t = pick(lang, {
   }
 
   /* lightbox */
-  .lightbox {
-    border: 1px solid var(--line2);
-    border-radius: 4px;
-    background: rgba(12, 20, 14, 0.97);
-    color: var(--text);
-    padding: 14px;
-    max-width: min(1100px, 94vw);
-    max-height: 94vh;
-  }
-  .lightbox[open] {
-    animation: lb 0.45s var(--ease);
-  }
   @keyframes lb {
     from {
       opacity: 0;
       transform: scale(0.97);
       filter: blur(8px);
     }
-  }
-  .lightbox::backdrop {
-    background: rgba(5, 9, 6, 0.82);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-  }
-  .lightbox img {
-    max-height: 78vh;
-    width: auto;
-    margin: 0 auto;
-    border-radius: 2px;
-  }
-  .lightbox form {
-    text-align: right;
   }
   .x {
     width: 40px;
