@@ -283,98 +283,8 @@ main {
 }
 
 /* ---------- status dostępności ---------- */
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text);
-}
-.status::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--c);
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--c) 25%, transparent),
-    0 0 14px var(--c);
-}
-.st-available {
-  --c: var(--c-available);
-}
-.st-low {
-  --c: var(--c-low);
-}
-.st-out {
-  --c: var(--c-out);
-}
-.st-soon {
-  --c: var(--c-soon);
-}
 
 /* ---------- przyciski ---------- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  text-decoration: none;
-  font-size: 13px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 12px 18px;
-  border: 1px solid var(--amber);
-  color: #1a1208;
-  background: var(--amber);
-  border-radius: 2px;
-  cursor: pointer;
-  transition:
-    background 0.3s,
-    color 0.3s,
-    box-shadow 0.4s,
-    border-color 0.3s;
-}
-.btn:hover {
-  background: transparent;
-  color: var(--amber2);
-  box-shadow: 0 0 30px rgba(232, 165, 71, 0.35);
-}
-.btn .arr {
-  transition: transform 0.35s;
-}
-.btn:hover .arr {
-  transform: translateX(4px);
-}
-.btn.ghost {
-  background: transparent;
-  color: var(--amber2);
-}
-.btn.ghost:hover {
-  background: rgba(232, 165, 71, 0.12);
-}
-.btn.quiet {
-  background: transparent;
-  color: var(--text);
-  border-color: var(--line2);
-}
-.btn.quiet:hover {
-  border-color: var(--amber);
-  color: var(--amber2);
-  box-shadow: none;
-}
-.btn.small {
-  padding: 9px 14px;
-  font-size: 12px;
-}
-.btn:disabled {
-  opacity: 0.45;
-  cursor: default;
-  box-shadow: none;
-}
 .link {
   color: var(--amber2);
   text-decoration: none;
@@ -389,19 +299,6 @@ main {
 }
 
 /* ---------- karty / panele ---------- */
-.panel {
-  position: relative;
-  border: 1px solid var(--line);
-  background: linear-gradient(150deg, rgba(20, 33, 23, 0.85), rgba(11, 18, 13, 0.9));
-  border-radius: 4px;
-}
-.glass {
-  border: 1px solid var(--line);
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  border-radius: 4px;
-}
 
 /* ramka „brak zdjęcia” */
 .nophoto {
